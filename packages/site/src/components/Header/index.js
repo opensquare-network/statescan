@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import NodeSwitcher from "components/NodeSwitcher";
+
 const Container = styled.header`
   position: relative;
   padding: 0 2rem;
@@ -9,6 +11,7 @@ const Wrapper = styled.div`
   height: 68px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const Background = styled.div`
@@ -26,6 +29,7 @@ export default function Header() {
       <Background />
       <Wrapper>
         <img src="/imgs/logo.svg" alt="logo" />
+        <NodeSwitcher />
       </Wrapper>
     </Container>
   );

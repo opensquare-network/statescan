@@ -1,6 +1,7 @@
 const { getEventCollection } = require("../mongo");
+const { handleAssetsEvent } = require("./assets");
 
-async function handleEvents(events, indexer, extrinsics) {
+async function handleEvents(events, blockIndexer, extrinsics) {
   if (events.length <= 0) {
     return
   }
@@ -14,7 +15,17 @@ async function handleEvents(events, indexer, extrinsics) {
     let [phaseValue, extrinsicHash] = [null, null]
     if (!phase.isNull) {
       phaseValue = phase.isNull ? null : phase.value.toNumber()
-      extrinsicHash = extrinsics[phaseValue].hash.toHex()
+      const extrinsic = extrinsics[phaseValue]
+      const extrinsicHash = extrinsic.hash.toHex()
+      const extrinsicIndex = phaseValue;
+
+      await handleAssetsEvent(
+        event,
+        sort,
+        extrinsicIndex,
+        extrinsicHash,
+        blockIndexer,
+      );
     }
 
     const index = parseInt(event.index)
@@ -24,7 +35,7 @@ async function handleEvents(events, indexer, extrinsics) {
     const data = event.data.toJSON()
 
     bulk.insert({
-      indexer,
+      indexer: blockIndexer,
       extrinsicHash,
       phase: {
         type: phaseType,

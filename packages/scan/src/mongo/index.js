@@ -1,11 +1,24 @@
 const { MongoClient } = require("mongodb");
+const { currentChain, CHAINS } = require("../envvars");
 
-const dbName = process.env.MONGO_DB_NAME || "statescan";
+function getDbName() {
+  const chain = currentChain();
+  if (CHAINS.POLKADOT === chain) {
+    return process.env.MONGO_DB_KSM_NAME || "statescan-dot";
+  } else if (CHAINS.KUSAMA === chain) {
+    return process.env.MONGO_DB_DOT_NAME || "statescan-ksm";
+  } else {
+    return process.env.MONGO_DB_ROC_NAME || "statescan-roc";
+  }
+}
 
 const statusCollectionName = "status";
 const blockCollectionName = "block";
 const eventCollectionName = "event";
 const extrinsicCollectionName = "extrinsic";
+const assetTransferCollectionName = "assetTransfer"
+const assetCollectionName = "asset";
+const assetHolderCollectionName = "assetHolder";
 
 let client = null;
 let db = null;
@@ -15,17 +28,23 @@ let statusCol = null;
 let blockCol = null;
 let eventCol = null;
 let extrinsicCol = null;
+let assetTransferCol = null;
+let assetCol = null;
+let assetHolderCol = null;
 
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
   });
 
-  db = client.db(dbName);
+  db = client.db(getDbName());
   statusCol = db.collection(statusCollectionName);
   blockCol = db.collection(blockCollectionName);
   eventCol = db.collection(eventCollectionName);
   extrinsicCol = db.collection(extrinsicCollectionName);
+  assetTransferCol = db.collection(assetTransferCollectionName);
+  assetCol = db.collection(assetCollectionName);
+  assetHolderCol = db.collection(assetHolderCollectionName);
 
   await _createIndexes();
 }
@@ -65,9 +84,27 @@ async function getEventCollection() {
   return eventCol;
 }
 
+async function getAssetTransferCollection() {
+  await tryInit(assetTransferCol);
+  return assetTransferCol;
+}
+
+async function getAssetCollection() {
+  await tryInit(assetCol);
+  return assetCol;
+}
+
+async function getAssetHolderCollection() {
+  await tryInit(assetHolderCol);
+  return assetHolderCol;
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
   getExtrinsicCollection,
   getEventCollection,
+  getAssetTransferCollection,
+  getAssetCollection,
+  getAssetHolderCollection,
 };

@@ -11,6 +11,7 @@ async function handleBlock(block, blockEvents) {
     hash,
     blockTime,
     eventsCount: (blockEvents || []).length,
+    extrinsicsCount: (block.extrinsics || []).length,
     ...blockJson
   })
 

@@ -26,6 +26,26 @@ async function main() {
   }
 }
 
+async function test() {
+  const knownHeights = [
+    202,
+    241,
+    247,
+    254,
+    294,
+    306,
+    317,
+    488,
+    1488,
+    1502,
+    1658,
+    1663,
+  ];
+  for (const height of knownHeights) {
+    await scanBlockByHeight(height);
+  }
+}
+
 async function scanBlockByHeight(scanHeight) {
   const api = await getApi()
   const blockHash = await api.rpc.chain.getBlockHash(scanHeight)

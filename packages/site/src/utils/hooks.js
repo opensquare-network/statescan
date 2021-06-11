@@ -1,4 +1,4 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 export function useToggle(initalState = false) {
   const [state, setState] = useState(initalState);
@@ -21,4 +21,13 @@ export function useOnClickOutside(ref, handler) {
       document.removeEventListener("touchstart", listener);
     };
   });
+}
+
+export function useIsMounted() {
+  const isMountedRef = useRef(true);
+  const isMounted = useCallback(() => isMountedRef.current, []);
+  useEffect(() => {
+    return () => void (isMountedRef.current = false);
+  }, []);
+  return isMounted;
 }

@@ -1,6 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 import NodeSwitcher from "components/NodeSwitcher";
+import { useHomePage } from "utils/hooks";
+import Subheader from "./Subheader";
 
 const Container = styled.header`
   position: relative;
@@ -18,19 +20,30 @@ const Background = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
+  z-index: -1;
   height: 320px;
   background: linear-gradient(180deg, #eeeeee 0%, #ffffff 100%);
-  z-index: -1;
+  ${(p) =>
+    p.isHomePage &&
+    css`
+      height: 464px;
+      background: url(image.png),
+        linear-gradient(180deg, #eeeeee 0%, #ffffff 100%);
+    `}
 `;
 
 export default function Header() {
+  const isHomePage = useHomePage();
   return (
-    <Container>
-      <Background />
-      <Wrapper>
-        <img src="/imgs/logo.svg" alt="logo" />
-        <NodeSwitcher />
-      </Wrapper>
-    </Container>
+    <>
+      <Container>
+        <Background isHomePage={isHomePage} />
+        <Wrapper>
+          <img src="/imgs/logo.svg" alt="logo" />
+          <NodeSwitcher />
+        </Wrapper>
+      </Container>
+      {isHomePage && <Subheader />}
+    </>
   );
 }

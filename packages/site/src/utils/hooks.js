@@ -31,3 +31,7 @@ export function useIsMounted() {
   }, []);
   return isMounted;
 }
+
+export function useHomePage() {
+  return window.location.pathname === "/";
+}

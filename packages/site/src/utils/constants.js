@@ -11,3 +11,13 @@ export const transfersLatestHead = [
   { name: "To" },
   { name: "Quantity", align: "right" },
 ];
+
+export const assetsLatestHead = [
+  { name: "Asset ID" },
+  { name: "Symbol" },
+  { name: "Name" },
+  { name: "Owner" },
+  { name: "Issuer" },
+  { name: "Holders" },
+  { name: "Tody Supply", align: "right" },
+];

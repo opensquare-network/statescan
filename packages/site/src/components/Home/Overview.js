@@ -1,4 +1,9 @@
 import styled from "styled-components";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
+
+import { nodeSelector } from "store/reducers/nodeSlice";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -38,19 +43,56 @@ const Chart = styled.div`
 `;
 
 export default function Overview() {
+  const node = useSelector(nodeSelector);
+
+  const { data: blocksHeightData } = useQuery(
+    ["blocksHeight", node],
+    async () => {
+      const { data } = await axios.get(`${node}/blocks/height`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
+
+  const { data: assetsCountData } = useQuery(
+    ["assetsCount", node],
+    async () => {
+      const { data } = await axios.get(`${node}/assets/count`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
+
+  const { data: transfersCountData } = useQuery(
+    ["transfersCount", node],
+    async () => {
+      const { data } = await axios.get(`${node}/transfers/count`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
+
+  console.log({ transfersCountData });
+
   return (
     <Wrapper>
       <div>
         <Title>Block Height</Title>
-        <Text>1123123</Text>
+        <Text>{blocksHeightData ?? 0}</Text>
       </div>
       <div>
         <Title>Assets</Title>
-        <Text>123</Text>
+        <Text>{assetsCountData ?? 0}</Text>
       </div>
       <div>
         <Title>Transfers</Title>
-        <Text>23123123</Text>
+        <Text>{transfersCountData ?? 0}</Text>
       </div>
       <div>
         <Title>Holders</Title>
@@ -59,7 +101,7 @@ export default function Overview() {
       <Divider />
       <div>
         <Title>DOT Price</Title>
-        <Text>$32.22</Text>
+        <Text>$00.00</Text>
       </div>
       <Chart />
     </Wrapper>

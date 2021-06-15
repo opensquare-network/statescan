@@ -8,11 +8,12 @@ import Table from "components/Table";
 import MinorText from "components/Table/MinorText";
 import Link from "components/Link";
 import { addressEllipsis } from "utils";
-import Symbol from "components/Symbol";
 import { nodeSelector } from "store/reducers/nodeSlice";
-import { blocksLatestHead, transfersLatestHead } from "utils/constants";
-
-import { assetsData } from "utils/data";
+import {
+  blocksLatestHead,
+  transfersLatestHead,
+  assetsLatestHead,
+} from "utils/constants";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -27,18 +28,6 @@ const TableWrapper = styled.div`
 `;
 
 export default function Home() {
-  assetsData.body = assetsData.body.map((item) => {
-    item[1] = <Symbol />;
-    item[2] = <MinorText>{item[2]}</MinorText>;
-    item[3] = <Link>{addressEllipsis(item[3])}</Link>;
-    item[4] = <Link>{addressEllipsis(item[4])}</Link>;
-    return item;
-  });
-  assetsData.foot = (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <Link>View all</Link>
-    </div>
-  );
   const node = useSelector(nodeSelector);
 
   const { data: blocksLatestData } = useQuery(
@@ -56,6 +45,17 @@ export default function Home() {
     ["transfersLatest", node],
     async () => {
       const { data } = await axios.get(`${node}/transfers/latest`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
+
+  const { data: assetsLatestData } = useQuery(
+    ["assetsLatest", node],
+    async () => {
+      const { data } = await axios.get(`${node}/assets/latest`);
       return data;
     },
     {
@@ -88,7 +88,19 @@ export default function Home() {
           ])}
         />
       </TableWrapper>
-      {/* <Table title="Assets" data={assetsData} /> */}
+      <Table
+        title="Assets"
+        head={assetsLatestHead}
+        data={(assetsLatestData || []).map((item) => [
+          `#${item.assetId}`,
+          item.symbol,
+          item.name,
+          <Link>{addressEllipsis(item.owner)}</Link>,
+          <Link>{addressEllipsis(item.issuer)}</Link>,
+          item.accounts,
+          item.supply,
+        ])}
+      />
     </Wrapper>
   );
 }

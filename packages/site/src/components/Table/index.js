@@ -62,14 +62,14 @@ const StyledTable = styled.table`
   }
 `;
 
-export default function Table({ data, title }) {
+export default function Table({ title, head, data }) {
   return (
     <div>
       {title && <Title>{title}</Title>}
       <StyledTable>
         <thead>
           <tr>
-            {data.head.map((item, index) => (
+            {head.map((item, index) => (
               <th key={index} style={{ textAlign: item.align ?? "left" }}>
                 {item.name}
               </th>
@@ -77,12 +77,12 @@ export default function Table({ data, title }) {
           </tr>
         </thead>
         <tbody>
-          {data.body.map((item, index) => (
+          {(data || []).map((item, index) => (
             <tr key={index}>
               {item.map((item, index) => (
                 <td
                   key={index}
-                  style={{ textAlign: data.head[index].align ?? "left" }}
+                  style={{ textAlign: head[index].align ?? "left" }}
                 >
                   {item}
                 </td>
@@ -90,13 +90,13 @@ export default function Table({ data, title }) {
             </tr>
           ))}
         </tbody>
-        {data.foot && (
+        {/* {data.foot && (
           <tfoot>
             <tr>
               <td colSpan="100%">{data.foot}</td>
             </tr>
           </tfoot>
-        )}
+        )} */}
       </StyledTable>
     </div>
   );

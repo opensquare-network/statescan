@@ -6,21 +6,20 @@ let api = null;
 
 const defaultRocEndPoint = "wss://statemint-rococo-rpc.parity.io/";
 const defaultKsmEndPoint = "wss://statemine.kusama.elara.patract.io/";
-const defaultDotEndPoint = "wss://statemine.polkadot.elara.patract.io/";
+const defaultWndEndPoint = "wss://westmint-rpc.polkadot.io/";
 
 async function getApi() {
   if (!api) {
     const chain = currentChain();
 
-    if (chain === CHAINS.POLKADOT) {
-      ws_endpoint = process.env.WS_DOT_ENDPOINT || defaultDotEndPoint;
-    } else if (chain === CHAINS.KUSAMA) {
-      ws_endpoint = process.env.WS_KSM_ENDPOINT || defaultKsmEndPoint;
-    } else {
-      ws_endpoint = process.env.WS_ROC_ENDPOINT || defaultRocEndPoint;
+    let wsEndpoint = process.env.WS_ROC_ENDPOINT || defaultRocEndPoint;
+    if (chain === CHAINS.KUSAMA) {
+      wsEndpoint = process.env.WS_KSM_ENDPOINT || defaultKsmEndPoint;
+    } else if (chain === CHAINS.WESTEN) {
+      wsEndpoint = process.env.WS_WND_ENDPOINT || defaultWndEndPoint;
     }
 
-    provider = new WsProvider(ws_endpoint);
+    provider = new WsProvider(wsEndpoint);
     api = await ApiPromise.create({ provider });
   }
 

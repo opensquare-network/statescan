@@ -3,10 +3,10 @@ const { currentChain, CHAINS } = require("../envvars");
 
 function getDbName() {
   const chain = currentChain();
-  if (CHAINS.POLKADOT === chain) {
-    return process.env.MONGO_DB_KSM_NAME || "statescan-dot";
-  } else if (CHAINS.KUSAMA === chain) {
+  if (CHAINS.KUSAMA === chain) {
     return process.env.MONGO_DB_DOT_NAME || "statescan-ksm";
+  } else if (CHAINS.WESTEN === chain) {
+    return process.env.MONGO_DB_WND_NAME || "statescan-wnd";
   } else {
     return process.env.MONGO_DB_ROC_NAME || "statescan-roc";
   }
@@ -16,7 +16,7 @@ const statusCollectionName = "status";
 const blockCollectionName = "block";
 const eventCollectionName = "event";
 const extrinsicCollectionName = "extrinsic";
-const assetTransferCollectionName = "assetTransfer"
+const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 

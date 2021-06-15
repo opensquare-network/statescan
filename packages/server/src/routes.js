@@ -9,8 +9,7 @@ const chainFeatureRouters = [
   require("./features/assets/routes"),
 ];
 
-const commonFeatureRouters = [
-];
+const commonFeatureRouters = [];
 
 module.exports = (app) => {
   for (const r of commonFeatureRouters) {
@@ -19,7 +18,7 @@ module.exports = (app) => {
 
   for (const r of chainFeatureRouters) {
     router.use(
-      "/:chain(kusama|polkadot|rococo)",
+      "/:chain(kusama|rococo|westen)",
       r.routes(),
       r.allowedMethods({ throw: true })
     );

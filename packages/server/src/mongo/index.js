@@ -1,15 +1,15 @@
 const { DB } = require("./db");
 
 const scanDbs = {
-  rococo: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
-  polkadot: DB(process.env.SCAN_DB_DOT_NAME || "statescan-dot"),
   kusama: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
-}
+  rococo: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
+  westen: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
+};
 
-const db = (chain) => scanDbs[chain]
+const db = (chain) => scanDbs[chain];
 
 function initDb() {
-  return Promise.all(Object.values(scanDbs).map(db => db.initDb()));
+  return Promise.all(Object.values(scanDbs).map((db) => db.initDb()));
 }
 
 function getStatusCollection(chain) {

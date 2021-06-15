@@ -1,4 +1,6 @@
 import { useCallback, useState, useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import { matchPath } from "react-router";
 
 export function useToggle(initalState = false) {
   const [state, setState] = useState(initalState);
@@ -33,5 +35,11 @@ export function useIsMounted() {
 }
 
 export function useHomePage() {
-  return window.location.pathname === "/";
+  const location = useLocation();
+  const match = matchPath(location.pathname, {
+    path: "/:node",
+    exact: true,
+    strict: false,
+  });
+  return !!match;
 }

@@ -93,7 +93,7 @@ export default function Table({ data, title }) {
         {data.foot && (
           <tfoot>
             <tr>
-              <td colspan="100%">{data.foot}</td>
+              <td colSpan="100%">{data.foot}</td>
             </tr>
           </tfoot>
         )}

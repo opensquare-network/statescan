@@ -75,7 +75,7 @@ async function updateOrCreateAsset(blockIndexer, assetId) {
   ).toJSON();
   const col = await getAssetCollection();
   const result = await col.updateOne(
-    { assetId },
+    { assetId, destroyedAt: null },
     {
       $setOnInsert: {
         indexer: blockIndexer,

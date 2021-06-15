@@ -1,5 +1,9 @@
 const { hexToString } = require("@polkadot/util");
-const { getAssetTransferCollection, getAssetCollection, getAssetHolderCollection } = require("../../mongo");
+const {
+  getAssetTransferCollection,
+  getAssetCollection,
+  getAssetHolderCollection,
+} = require("../../mongo");
 const { getApi } = require("../../api");
 
 const Modules = Object.freeze({
@@ -29,53 +33,102 @@ const AssetsEvents = Object.freeze({
   Burned: "Burned",
 });
 
-async function saveNewAssetTransfer(blockIndexer, eventSort, extrinsicIndex, extrinsicHash, assetId, from, to, balance) {
+async function saveNewAssetTransfer(
+  blockIndexer,
+  eventSort,
+  extrinsicIndex,
+  extrinsicHash,
+  assetId,
+  from,
+  to,
+  balance
+) {
+  const assetCol = await getAssetCollection();
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
+  if (!asset) {
+    return;
+  }
+
   const col = await getAssetTransferCollection();
   const result = await col.insertOne({
     indexer: blockIndexer,
     eventSort,
     extrinsicIndex,
     extrinsicHash,
-    assetId,
+    assetIndexer: {
+      assetId,
+      ...asset.indexer,
+    },
     from,
     to,
     balance,
   });
-
 }
 
 async function updateOrCreateAsset(blockIndexer, assetId) {
   const api = await getApi();
-  const asset = (await api.query.assets.asset.at(blockIndexer.blockHash, assetId)).toJSON();
-  const metadata = (await api.query.assets.metadata.at(blockIndexer.blockHash, assetId)).toJSON();
+  const asset = (
+    await api.query.assets.asset.at(blockIndexer.blockHash, assetId)
+  ).toJSON();
+  const metadata = (
+    await api.query.assets.metadata.at(blockIndexer.blockHash, assetId)
+  ).toJSON();
   const col = await getAssetCollection();
   const result = await col.updateOne(
-    { assetId },
+    { assetId, destroyedAt: null },
     {
       $setOnInsert: {
-        indexer: blockIndexer
+        indexer: blockIndexer,
       },
       $set: {
         ...asset,
         ...metadata,
         symbol: hexToString(metadata.symbol),
         name: hexToString(metadata.name),
-      }
+      },
     },
     { upsert: true }
   );
 }
 
+async function destroyAsset(blockIndexer, assetId) {
+  const col = await getAssetCollection();
+  const result = await col.updateOne(
+    { assetId },
+    {
+      $set: {
+        destroyedAt: blockIndexer,
+      },
+    }
+  );
+}
+
 async function updateOrCreateAssetHolder(blockHash, assetId, address) {
   const api = await getApi();
-  const account = (await api.query.assets.account.at(blockHash, assetId, address)).toJSON();
+  const account = (
+    await api.query.assets.account.at(blockHash, assetId, address)
+  ).toJSON();
+
+  const assetCol = await getAssetCollection();
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
+  if (!asset) {
+    return;
+  }
+
   const col = await getAssetHolderCollection();
   const result = await col.updateOne(
-    { assetId, address },
+    {
+      assetIndexer: {
+        assetId,
+        ...asset.indexer,
+      },
+      address,
+    },
     {
       $set: {
         ...account,
-      }
+        dead: account.balance === 0 ? true : false,
+      },
     },
     { upsert: true }
   );
@@ -90,7 +143,7 @@ async function handleAssetsEvent(
   eventSort,
   extrinsicIndex,
   extrinsicHash,
-  blockIndexer,
+  blockIndexer
 ) {
   const { section, method, data } = event;
 
@@ -113,11 +166,16 @@ async function handleAssetsEvent(
       AssetsEvents.OwnerChanged,
       AssetsEvents.AssetFrozen,
       AssetsEvents.AssetThawed,
-      AssetsEvents.Destroyed,
+      AssetsEvents.Transferred,
     ].includes(method)
   ) {
     const [assetId] = eventData;
     await updateOrCreateAsset(blockIndexer, assetId);
+  }
+
+  if (method === AssetsEvents.Destroyed) {
+    const [assetId] = eventData;
+    await destroyAsset(blockIndexer, assetId);
   }
 
   // Save transfers
@@ -128,7 +186,10 @@ async function handleAssetsEvent(
       eventSort,
       extrinsicIndex,
       extrinsicHash,
-      assetId, from, to, balance
+      assetId,
+      from,
+      to,
+      balance
     );
   }
 

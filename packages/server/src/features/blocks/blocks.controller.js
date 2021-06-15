@@ -1,5 +1,10 @@
-const { getBlockCollection, getStatusCollection } = require("../../mongo");
-const { HttpError } = require("../../exc");
+const {
+  getBlockCollection,
+  getStatusCollection,
+  getExtrinsicCollection,
+  getEventCollection,
+} = require("../../mongo");
+const { extractPage } = require("../../utils");
 
 async function getLatestBlocks(ctx) {
   const { chain } = ctx.params;
@@ -23,7 +28,96 @@ async function getBlockHeight(ctx) {
   ctx.body = heightInfo?.value || 0;
 }
 
+async function getBlock(ctx) {
+  const { chain, heightOrHash } = ctx.params;
+
+  const $match = {};
+  const col = await getBlockCollection(chain);
+  if (heightOrHash.startsWith("0x")) {
+    $match["hash"] = heightOrHash;
+  } else {
+    $match["header.number"] = parseInt(heightOrHash);
+  }
+
+  ctx.body = await col.findOne($match, {
+    projection: { data: 0, extrinsics: 0 },
+  });
+}
+
+async function getBlockExtrinsics(ctx) {
+  const { chain, heightOrHash } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const $match = {};
+  const col = await getExtrinsicCollection(chain);
+
+  if (heightOrHash.startsWith("0x")) {
+    $match["indexer.blockHash"] = heightOrHash;
+  } else {
+    $match["indexer.blockHeight"] = parseInt(heightOrHash);
+  }
+
+  const items = await col
+    .find($match, { projection: { data: 0 } })
+    .sort({
+      "indexer.index": 1,
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+  const total = await col.count($match);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
+async function getBlockEvents(ctx) {
+  const { chain, heightOrHash } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const $match = {};
+  const col = await getEventCollection(chain);
+
+  if (heightOrHash.startsWith("0x")) {
+    $match["indexer.blockHash"] = heightOrHash;
+  } else {
+    $match["indexer.blockHeight"] = parseInt(heightOrHash);
+  }
+
+  const items = await col
+    .find($match, { projection: { data: 0 } })
+    .sort({
+      sort: 1,
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+  const total = await col.count($match);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
 module.exports = {
   getLatestBlocks,
   getBlockHeight,
+  getBlock,
+  getBlockExtrinsics,
+  getBlockEvents,
 };

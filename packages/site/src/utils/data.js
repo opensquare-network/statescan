@@ -1,17 +1,11 @@
-export const lastestBlocksData = {
+export const blocksLatestData = {
   head: [
     { name: "Height" },
     { name: "Time" },
     { name: "Extrinsics", align: "right" },
     { name: "Events", align: "right" },
   ],
-  body: [
-    [5402027, "12 secs ago", 9, 1],
-    [5402027, "12 secs ago", 9, 1],
-    [5402027, "12 secs ago", 9, 1],
-    [5402027, "12 secs ago", 9, 1],
-    [5402027, "12 secs ago", 9, 1],
-  ],
+  body: [],
 };
 
 export const latestTransfersData = {

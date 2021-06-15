@@ -1,13 +1,19 @@
 import styled from "styled-components";
+import axios from "axios";
+import { useQuery } from "react-query";
+import { useSelector } from "react-redux";
 
 import Overview from "./Overview";
 import Table from "components/Table";
 import MinorText from "components/Table/MinorText";
 import Link from "components/Link";
 import { addressEllipsis } from "utils";
-import Symbol from "components/Symbol";
-
-import { lastestBlocksData, latestTransfersData, assetsData } from "utils/data";
+import { nodeSelector } from "store/reducers/nodeSlice";
+import {
+  blocksLatestHead,
+  transfersLatestHead,
+  assetsLatestHead,
+} from "utils/constants";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -22,37 +28,79 @@ const TableWrapper = styled.div`
 `;
 
 export default function Home() {
-  lastestBlocksData.body = lastestBlocksData.body.map((item) => {
-    item[0] = <Link>{item[0]}</Link>;
-    item[1] = <MinorText>{item[1]}</MinorText>;
-    return item;
-  });
-  latestTransfersData.body = latestTransfersData.body.map((item) => {
-    item[1] = <Link>{addressEllipsis(item[1])}</Link>;
-    item[2] = <Link>{addressEllipsis(item[2])}</Link>;
-    return item;
-  });
-  assetsData.body = assetsData.body.map((item) => {
-    item[1] = <Symbol />;
-    item[2] = <MinorText>{item[2]}</MinorText>;
-    item[3] = <Link>{addressEllipsis(item[3])}</Link>;
-    item[4] = <Link>{addressEllipsis(item[4])}</Link>;
-    return item;
-  });
-  assetsData.foot = (
-    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-      <Link>View all</Link>
-    </div>
+  const node = useSelector(nodeSelector);
+
+  const { data: blocksLatestData } = useQuery(
+    ["blocksLatest", node],
+    async () => {
+      const { data } = await axios.get(`${node}/blocks/latest`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
+
+  const { data: transfersLatestData } = useQuery(
+    ["transfersLatest", node],
+    async () => {
+      const { data } = await axios.get(`${node}/transfers/latest`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
+
+  const { data: assetsLatestData } = useQuery(
+    ["assetsLatest", node],
+    async () => {
+      const { data } = await axios.get(`${node}/assets/latest`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
   );
 
   return (
     <Wrapper>
       <Overview />
       <TableWrapper>
-        <Table title="Latest Blocks" data={lastestBlocksData} />
-        <Table title="Latest Transfers" data={latestTransfersData} />
+        <Table
+          title="Latest Blocks"
+          head={blocksLatestHead}
+          data={(blocksLatestData || []).map((item) => [
+            <Link>{item.header.number}</Link>,
+            <MinorText>{item.blockTime}</MinorText>,
+            item.extrinsicsCount,
+            item.eventsCount,
+          ])}
+        />
+        <Table
+          title="Latest Transfers"
+          head={transfersLatestHead}
+          data={(transfersLatestData || []).map((item) => [
+            `${item.indexer.blockHeight}-${item.extrinsicIndex}`,
+            <Link>{addressEllipsis(item.from)}</Link>,
+            <Link>{addressEllipsis(item.to)}</Link>,
+            item.balance,
+          ])}
+        />
       </TableWrapper>
-      <Table title="Assets" data={assetsData} />
+      <Table
+        title="Assets"
+        head={assetsLatestHead}
+        data={(assetsLatestData || []).map((item) => [
+          `#${item.assetId}`,
+          item.symbol,
+          item.name,
+          <Link>{addressEllipsis(item.owner)}</Link>,
+          <Link>{addressEllipsis(item.issuer)}</Link>,
+          item.accounts,
+          item.supply,
+        ])}
+      />
     </Wrapper>
   );
 }

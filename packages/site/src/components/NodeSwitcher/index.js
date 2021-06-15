@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
+import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router";
 
 import { useOnClickOutside } from "utils/hooks";
 import { nodeSelector, setNode } from "store/reducers/nodeSlice";
@@ -91,6 +93,11 @@ const options = [
     icon: "/imgs/icons/kusama.svg",
     value: "kusama",
   },
+  {
+    name: "Rococo",
+    icon: "/imgs/icons/rococo.png",
+    value: "rococo",
+  },
 ];
 
 export default function NodeSwitcher() {
@@ -99,11 +106,22 @@ export default function NodeSwitcher() {
   const [currentNode, setCurrentNode] = useState();
   const [show, setShow] = useState(false);
   const ref = useRef();
+  const location = useLocation();
+  const history = useHistory();
   useOnClickOutside(ref, () => setShow(false));
 
   useEffect(() => {
     setCurrentNode(() => options.find((item) => item.value === node));
   }, [node]);
+
+  useEffect(() => {
+    if (node) {
+      const newPathname = location.pathname.replace(/^\/\w+/, `/${node}`);
+      if (newPathname !== location.pathname) {
+        history.replace(newPathname);
+      }
+    }
+  }, [node, location, history]);
 
   return (
     <Wrapper ref={ref}>

@@ -43,13 +43,22 @@ async function saveNewAssetTransfer(
   to,
   balance
 ) {
+  const assetCol = await getAssetCollection();
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
+  if (!asset) {
+    return;
+  }
+
   const col = await getAssetTransferCollection();
   const result = await col.insertOne({
     indexer: blockIndexer,
     eventSort,
     extrinsicIndex,
     extrinsicHash,
-    assetId,
+    assetIndexer: {
+      assetId,
+      ...asset.indexer,
+    },
     from,
     to,
     balance,
@@ -99,9 +108,22 @@ async function updateOrCreateAssetHolder(blockHash, assetId, address) {
   const account = (
     await api.query.assets.account.at(blockHash, assetId, address)
   ).toJSON();
+
+  const assetCol = await getAssetCollection();
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
+  if (!asset) {
+    return;
+  }
+
   const col = await getAssetHolderCollection();
   const result = await col.updateOne(
-    { assetId, address },
+    {
+      assetIndexer: {
+        assetId,
+        ...asset.indexer,
+      },
+      address,
+    },
     {
       $set: {
         ...account,

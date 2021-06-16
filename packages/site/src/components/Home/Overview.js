@@ -78,7 +78,16 @@ export default function Overview() {
     }
   );
 
-  console.log({ transfersCountData });
+  const { data: holdersCountData } = useQuery(
+    ["holdersCount", node],
+    async () => {
+      const { data } = await axios.get(`${node}/holders/count`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
 
   return (
     <Wrapper>
@@ -96,7 +105,7 @@ export default function Overview() {
       </div>
       <div>
         <Title>Holders</Title>
-        <Text>3123</Text>
+        <Text>{holdersCountData ?? 0}</Text>
       </div>
       <Divider />
       <div>

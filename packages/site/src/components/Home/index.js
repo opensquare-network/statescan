@@ -7,7 +7,8 @@ import Overview from "./Overview";
 import Table from "components/Table";
 import MinorText from "components/Table/MinorText";
 import Link from "components/Link";
-import { addressEllipsis } from "utils";
+import Symbol from "components/Symbol";
+import { addressEllipsis, timeDuration } from "utils";
 import { nodeSelector } from "store/reducers/nodeSlice";
 import {
   blocksLatestHead,
@@ -63,6 +64,8 @@ export default function Home() {
     }
   );
 
+  console.log({ transfersLatestData });
+
   return (
     <Wrapper>
       <Overview />
@@ -72,7 +75,7 @@ export default function Home() {
           head={blocksLatestHead}
           data={(blocksLatestData || []).map((item) => [
             <Link>{item.header.number}</Link>,
-            <MinorText>{item.blockTime}</MinorText>,
+            <MinorText>{timeDuration(item.blockTime)}</MinorText>,
             item.extrinsicsCount,
             item.eventsCount,
           ])}
@@ -93,12 +96,12 @@ export default function Home() {
         head={assetsLatestHead}
         data={(assetsLatestData || []).map((item) => [
           `#${item.assetId}`,
-          item.symbol,
+          <Symbol>{item.symbol}</Symbol>,
           item.name,
           <Link>{addressEllipsis(item.owner)}</Link>,
           <Link>{addressEllipsis(item.issuer)}</Link>,
           item.accounts,
-          item.supply,
+          `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}
       />
     </Wrapper>

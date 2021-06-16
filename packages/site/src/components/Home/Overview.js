@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 
 const ItemWrapper = styled.div`
   @media screen and (max-width: 900px) {
-    width: 151px;
+    width: 130px;
   }
 `;
 

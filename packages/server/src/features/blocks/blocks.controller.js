@@ -13,7 +13,7 @@ async function getLatestBlocks(ctx) {
   const items = await col
     .find({}, { projection: { extrinsics: 0 } })
     .sort({
-      "indexer.blockHeight": -1,
+      "header.number": -1,
     })
     .limit(5)
     .toArray();

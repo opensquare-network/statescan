@@ -31,6 +31,7 @@ const Title = styled.h1`
   line-height: 32px;
   color: #111111;
   margin: 0;
+  white-space: nowrap;
   @media screen and (max-width: 900px) {
     font-size: 24px;
     line-height: 24px;
@@ -45,7 +46,8 @@ const ExploreWrapper = styled.div`
   }
   @media screen and (max-width: 900px) {
     flex-direction: column;
-    width: 318px;
+    max-width: 318px;
+    width: 100%;
     > * {
       width: 100% !important;
     }

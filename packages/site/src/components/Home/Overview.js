@@ -15,6 +15,19 @@ const Wrapper = styled.div`
   padding: 40px 64px;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  @media screen and (max-width: 900px) {
+    padding: 24px 24px 0;
+    > * {
+      margin-bottom: 24px;
+    }
+  }
+`;
+
+const ItemWrapper = styled.div`
+  @media screen and (max-width: 900px) {
+    width: 151px;
+  }
 `;
 
 const Title = styled.p`
@@ -35,11 +48,19 @@ const Text = styled.p`
 const Divider = styled.div`
   width: 1px;
   background: #f4f4f4;
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    height: 1px;
+  }
 `;
 
 const Chart = styled.div`
   width: 227px;
+  height: 48px;
   background: #f4f4f4;
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
 `;
 
 export default function Overview() {
@@ -91,27 +112,27 @@ export default function Overview() {
 
   return (
     <Wrapper>
-      <div>
+      <ItemWrapper>
         <Title>Block Height</Title>
         <Text>{blocksHeightData ?? 0}</Text>
-      </div>
-      <div>
+      </ItemWrapper>
+      <ItemWrapper>
         <Title>Assets</Title>
         <Text>{assetsCountData ?? 0}</Text>
-      </div>
-      <div>
+      </ItemWrapper>
+      <ItemWrapper>
         <Title>Transfers</Title>
         <Text>{transfersCountData ?? 0}</Text>
-      </div>
-      <div>
+      </ItemWrapper>
+      <ItemWrapper>
         <Title>Holders</Title>
         <Text>{holdersCountData ?? 0}</Text>
-      </div>
+      </ItemWrapper>
       <Divider />
-      <div>
+      <ItemWrapper>
         <Title>DOT Price</Title>
         <Text>$00.00</Text>
-      </div>
+      </ItemWrapper>
       <Chart />
     </Wrapper>
   );

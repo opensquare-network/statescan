@@ -7,7 +7,8 @@ import Overview from "./Overview";
 import Table from "components/Table";
 import MinorText from "components/Table/MinorText";
 import Link from "components/Link";
-import { addressEllipsis } from "utils";
+import Symbol from "components/Symbol";
+import { addressEllipsis, timeDuration } from "utils";
 import { nodeSelector } from "store/reducers/nodeSlice";
 import {
   blocksLatestHead,
@@ -23,8 +24,17 @@ const Wrapper = styled.section`
 
 const TableWrapper = styled.div`
   display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 32px;
+  grid-template-columns: repeat(auto-fill, minmax(588px, 1fr));
+  @media screen and (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const FootWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export default function Home() {
@@ -63,6 +73,8 @@ export default function Home() {
     }
   );
 
+  console.log({ transfersLatestData });
+
   return (
     <Wrapper>
       <Overview />
@@ -72,10 +84,11 @@ export default function Home() {
           head={blocksLatestHead}
           data={(blocksLatestData || []).map((item) => [
             <Link>{item.header.number}</Link>,
-            <MinorText>{item.blockTime}</MinorText>,
+            <MinorText>{timeDuration(item.blockTime)}</MinorText>,
             item.extrinsicsCount,
             item.eventsCount,
           ])}
+          collapse={900}
         />
         <Table
           title="Latest Transfers"
@@ -86,6 +99,7 @@ export default function Home() {
             <Link>{addressEllipsis(item.to)}</Link>,
             item.balance,
           ])}
+          collapse={900}
         />
       </TableWrapper>
       <Table
@@ -93,13 +107,19 @@ export default function Home() {
         head={assetsLatestHead}
         data={(assetsLatestData || []).map((item) => [
           `#${item.assetId}`,
-          item.symbol,
+          <Symbol>{item.symbol}</Symbol>,
           item.name,
           <Link>{addressEllipsis(item.owner)}</Link>,
           <Link>{addressEllipsis(item.issuer)}</Link>,
           item.accounts,
-          item.supply,
+          `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}
+        foot={
+          <FootWrapper>
+            <Link>view all</Link>
+          </FootWrapper>
+        }
+        collapse={900}
       />
     </Wrapper>
   );

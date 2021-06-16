@@ -15,6 +15,19 @@ const Wrapper = styled.div`
   padding: 40px 64px;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  @media screen and (max-width: 900px) {
+    padding: 24px 24px 0;
+    > * {
+      margin-bottom: 24px;
+    }
+  }
+`;
+
+const ItemWrapper = styled.div`
+  @media screen and (max-width: 900px) {
+    width: 130px;
+  }
 `;
 
 const Title = styled.p`
@@ -35,11 +48,19 @@ const Text = styled.p`
 const Divider = styled.div`
   width: 1px;
   background: #f4f4f4;
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    height: 1px;
+  }
 `;
 
 const Chart = styled.div`
   width: 227px;
+  height: 48px;
   background: #f4f4f4;
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
 `;
 
 export default function Overview() {
@@ -78,31 +99,40 @@ export default function Overview() {
     }
   );
 
-  console.log({ transfersCountData });
+  const { data: holdersCountData } = useQuery(
+    ["holdersCount", node],
+    async () => {
+      const { data } = await axios.get(`${node}/holders/count`);
+      return data;
+    },
+    {
+      enabled: !!node,
+    }
+  );
 
   return (
     <Wrapper>
-      <div>
+      <ItemWrapper>
         <Title>Block Height</Title>
         <Text>{blocksHeightData ?? 0}</Text>
-      </div>
-      <div>
+      </ItemWrapper>
+      <ItemWrapper>
         <Title>Assets</Title>
         <Text>{assetsCountData ?? 0}</Text>
-      </div>
-      <div>
+      </ItemWrapper>
+      <ItemWrapper>
         <Title>Transfers</Title>
         <Text>{transfersCountData ?? 0}</Text>
-      </div>
-      <div>
+      </ItemWrapper>
+      <ItemWrapper>
         <Title>Holders</Title>
-        <Text>3123</Text>
-      </div>
+        <Text>{holdersCountData ?? 0}</Text>
+      </ItemWrapper>
       <Divider />
-      <div>
+      <ItemWrapper>
         <Title>DOT Price</Title>
         <Text>$00.00</Text>
-      </div>
+      </ItemWrapper>
       <Chart />
     </Wrapper>
   );

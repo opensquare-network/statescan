@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Container from "components/Contaner";
+import Container from "components/Container";
 import Home from "components/Home";
 
 const Wrapper = styled.main`

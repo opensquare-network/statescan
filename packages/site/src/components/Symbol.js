@@ -12,11 +12,11 @@ const Icon = styled.img`
   margin-right: 8px;
 `;
 
-export default function Symbol() {
+export default function Symbol({ children }) {
   return (
     <Wrapper>
       <Icon src="/imgs/icons/default.svg" />
-      OSN
+      {children}
     </Wrapper>
   );
 }

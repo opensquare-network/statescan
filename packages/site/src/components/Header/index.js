@@ -27,8 +27,8 @@ const Background = styled.div`
     p.isHomePage &&
     css`
       height: 464px;
-      background: url(image.png),
-        linear-gradient(180deg, #eeeeee 0%, #ffffff 100%);
+      /* background: url("/imgs/pattern-dot.svg"),
+        linear-gradient(180deg, #eeeeee 0%, #ffffff 100%); */
     `}
 `;
 

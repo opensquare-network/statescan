@@ -11,6 +11,18 @@ const Wrapper = styled.div`
   > :not(:first-child) {
     margin-top: 32px;
   }
+  @media screen and (max-width: 900px) {
+    padding: 16px 32px 8px;
+  }
+`;
+
+const Logo = styled.img`
+  width: 120px;
+  height: 120px;
+  @media screen and (max-width: 900px) {
+    width: 100px;
+    height: 100px;
+  }
 `;
 
 const Title = styled.h1`
@@ -19,6 +31,10 @@ const Title = styled.h1`
   line-height: 32px;
   color: #111111;
   margin: 0;
+  @media screen and (max-width: 900px) {
+    font-size: 24px;
+    line-height: 24px;
+  }
 `;
 
 const ExploreWrapper = styled.div`
@@ -26,6 +42,16 @@ const ExploreWrapper = styled.div`
   align-items: center;
   > :not(:first-child) {
     margin-left: 32px;
+  }
+  @media screen and (max-width: 900px) {
+    flex-direction: column;
+    width: 318px;
+    > * {
+      width: 100% !important;
+    }
+    > :not(:first-child) {
+      margin: 16px 0 0;
+    }
   }
 `;
 
@@ -51,6 +77,7 @@ const ExploreButton = styled.div`
   font-size: 16px;
   line-height: 20px;
   color: #ffffff;
+  text-align: center;
   cursor: pointer;
   ${(p) =>
     p.node === "kusama" &&
@@ -63,15 +90,13 @@ export default function Subheader() {
   const node = useSelector(nodeSelector);
   return (
     <Wrapper>
-      <img
+      <Logo
         src={
           node === "kusama"
             ? "/imgs/logo-img-kusama.svg"
             : "/imgs/logo-img-polkadot.svg"
         }
         alt="logo"
-        width={120}
-        height={120}
       />
       <Title>Statemint Explorer</Title>
       <ExploreWrapper>

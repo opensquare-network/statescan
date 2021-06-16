@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-import Container from "components/Contaner";
+import Container from "components/Container";
 import Producer from "./Producer";
 import Donation from "./Donation";
 
@@ -9,6 +9,17 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  > * {
+    white-space: nowrap;
+  }
+  @media screen and (max-width: 900px) {
+    height: 116px;
+    flex-direction: column;
+    justify-content: center;
+    > :not(:first-child) {
+      margin-top: 12px;
+    }
+  }
 `;
 
 export default function Footer() {

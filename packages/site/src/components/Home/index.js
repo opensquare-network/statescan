@@ -24,8 +24,17 @@ const Wrapper = styled.section`
 
 const TableWrapper = styled.div`
   display: grid;
-  gap: 24px;
-  grid-template-columns: 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 32px;
+  grid-template-columns: repeat(auto-fill, minmax(588px, 1fr));
+  @media screen and (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const FootWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 export default function Home() {
@@ -79,6 +88,7 @@ export default function Home() {
             item.extrinsicsCount,
             item.eventsCount,
           ])}
+          collapse={900}
         />
         <Table
           title="Latest Transfers"
@@ -89,6 +99,7 @@ export default function Home() {
             <Link>{addressEllipsis(item.to)}</Link>,
             item.balance,
           ])}
+          collapse={900}
         />
       </TableWrapper>
       <Table
@@ -103,6 +114,12 @@ export default function Home() {
           item.accounts,
           `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}
+        foot={
+          <FootWrapper>
+            <Link>view all</Link>
+          </FootWrapper>
+        }
+        collapse={900}
       />
     </Wrapper>
   );

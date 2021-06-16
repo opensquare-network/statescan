@@ -7,6 +7,7 @@ const chainFeatureRouters = [
   require("./features/extrinsics/routes"),
   require("./features/transfers/routes"),
   require("./features/assets/routes"),
+  require("./features/holders/routes"),
 ];
 
 const commonFeatureRouters = [];

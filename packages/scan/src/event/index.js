@@ -3,20 +3,20 @@ const { handleAssetsEvent } = require("./assets");
 
 async function handleEvents(events, blockIndexer, extrinsics) {
   if (events.length <= 0) {
-    return
+    return;
   }
 
-  const eventCol = await getEventCollection()
-  const bulk = eventCol.initializeOrderedBulkOp()
+  const eventCol = await getEventCollection();
+  const bulk = eventCol.initializeOrderedBulkOp();
 
   for (let sort = 0; sort < events.length; sort++) {
-    const { event, phase, topics } = events[sort]
-    const phaseType = phase.type
-    let [phaseValue, extrinsicHash] = [null, null]
+    const { event, phase, topics } = events[sort];
+    const phaseType = phase.type;
+    let [phaseValue, extrinsicHash] = [null, null];
     if (!phase.isNull) {
-      phaseValue = phase.isNull ? null : phase.value.toNumber()
-      const extrinsic = extrinsics[phaseValue]
-      const extrinsicHash = extrinsic.hash.toHex()
+      phaseValue = phase.value.toNumber();
+      const extrinsic = extrinsics[phaseValue];
+      extrinsicHash = extrinsic.hash.toHex();
       const extrinsicIndex = phaseValue;
 
       await handleAssetsEvent(
@@ -24,22 +24,22 @@ async function handleEvents(events, blockIndexer, extrinsics) {
         sort,
         extrinsicIndex,
         extrinsicHash,
-        blockIndexer,
+        blockIndexer
       );
     }
 
-    const index = parseInt(event.index)
-    const meta = event.meta.toJSON()
-    const section = event.section
-    const method = event.method
-    const data = event.data.toJSON()
+    const index = parseInt(event.index);
+    const meta = event.meta.toJSON();
+    const section = event.section;
+    const method = event.method;
+    const data = event.data.toJSON();
 
     bulk.insert({
       indexer: blockIndexer,
       extrinsicHash,
       phase: {
         type: phaseType,
-        value: phaseValue
+        value: phaseValue,
       },
       sort,
       index,
@@ -47,16 +47,16 @@ async function handleEvents(events, blockIndexer, extrinsics) {
       method,
       meta,
       data,
-      topics
-    })
+      topics,
+    });
   }
 
-  const result = await bulk.execute()
+  const result = await bulk.execute();
   if (result.result && !result.result.ok) {
     // TODO: 处理插入不成功的情况
   }
 }
 
 module.exports = {
-  handleEvents
-}
+  handleEvents,
+};

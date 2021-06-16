@@ -118,6 +118,7 @@ async function getAssetHolders(ctx) {
   const $match = {
     "assetIndexer.assetId": parseInt(assetId),
     "assetIndexer.blockHeight": parseInt(blockHeight),
+    balance: { $gt: 0 },
   };
 
   const col = await getAssetHolderCollection(chain);

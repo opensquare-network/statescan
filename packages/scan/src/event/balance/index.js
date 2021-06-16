@@ -1,4 +1,3 @@
-const { hexToString } = require("@polkadot/util");
 const { getAddressCollection } = require("../../mongo");
 const { getApi } = require("../../api");
 

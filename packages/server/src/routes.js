@@ -8,6 +8,7 @@ const chainFeatureRouters = [
   require("./features/transfers/routes"),
   require("./features/assets/routes"),
   require("./features/holders/routes"),
+  require("./features/addresses/routes"),
 ];
 
 const commonFeatureRouters = [];

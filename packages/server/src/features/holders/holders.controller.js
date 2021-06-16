@@ -25,13 +25,36 @@ async function getHoldersCount(ctx) {
   ctx.body = result?.accounts || 0;
 }
 
-async function getHolder(ctx) {
+async function getHolderAssets(ctx) {
   const { chain, address } = ctx.params;
 
-  const holderCol = await getAssetHolderCollection();
-  const holder = await holderCol.findOne({ address });
+  const holderCol = await getAssetHolderCollection(chain);
+  const holders = await holderCol
+    .aggregate([
+      { $match: { address } },
+      { $sort: { assetId: 1 } },
+      {
+        $lookup: {
+          from: "asset",
+          localField: "assetIndexer.assetId",
+          foreignField: "assetId",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          assetSymbol: { $arrayElemAt: ["$asset.symbol", 0] },
+          assetName: { $arrayElemAt: ["$asset.name", 0] },
+          assetDecimals: { $arrayElemAt: ["$asset.decimals", 0] },
+        },
+      },
+      {
+        $project: { asset: 0 },
+      },
+    ])
+    .toArray();
 
-  ctx.body = holder;
+  ctx.body = holders;
 }
 
 async function getHolderExtrinsics(ctx) {
@@ -88,7 +111,7 @@ async function getHolderTransfers(ctx) {
 
 module.exports = {
   getHoldersCount,
-  getHolder,
+  getHolderAssets,
   getHolderExtrinsics,
   getHolderTransfers,
 };

@@ -19,6 +19,7 @@ const extrinsicCollectionName = "extrinsic";
 const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
+const addressCollectionName = "address";
 
 let client = null;
 let db = null;
@@ -31,6 +32,7 @@ let extrinsicCol = null;
 let assetTransferCol = null;
 let assetCol = null;
 let assetHolderCol = null;
+let addressCol = null;
 
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
@@ -45,6 +47,7 @@ async function initDb() {
   assetTransferCol = db.collection(assetTransferCollectionName);
   assetCol = db.collection(assetCollectionName);
   assetHolderCol = db.collection(assetHolderCollectionName);
+  addressCol = db.collection(addressCollectionName);
 
   await _createIndexes();
 }
@@ -99,6 +102,11 @@ async function getAssetHolderCollection() {
   return assetHolderCol;
 }
 
+async function getAddressCollection() {
+  await tryInit(addressCol);
+  return addressCol;
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
@@ -107,4 +115,5 @@ module.exports = {
   getAssetTransferCollection,
   getAssetCollection,
   getAssetHolderCollection,
+  getAddressCollection,
 };

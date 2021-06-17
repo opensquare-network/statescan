@@ -1,20 +1,19 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
 
 import Overview from "./Overview";
 import Table from "components/Table";
 import MinorText from "components/Table/MinorText";
-import Link from "components/Link";
+import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { addressEllipsis, timeDuration } from "utils";
-import { nodeSelector } from "store/reducers/nodeSlice";
 import {
   blocksLatestHead,
   transfersLatestHead,
-  assetsLatestHead,
+  assetsHead,
 } from "utils/constants";
+import { useNode } from "utils/hooks";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -38,7 +37,7 @@ const FootWrapper = styled.div`
 `;
 
 export default function Home() {
-  const node = useSelector(nodeSelector);
+  const node = useNode();
 
   const { data: blocksLatestData } = useQuery(
     ["blocksLatest", node],
@@ -73,8 +72,6 @@ export default function Home() {
     }
   );
 
-  console.log({ transfersLatestData });
-
   return (
     <Wrapper>
       <Overview />
@@ -83,7 +80,9 @@ export default function Home() {
           title="Latest Blocks"
           head={blocksLatestHead}
           data={(blocksLatestData || []).map((item) => [
-            <Link>{item.header.number}</Link>,
+            <InLink to={`/${node}/block/${item.header.number}`}>
+              {item.header.number}
+            </InLink>,
             <MinorText>{timeDuration(item.blockTime)}</MinorText>,
             item.extrinsicsCount,
             item.eventsCount,
@@ -94,29 +93,43 @@ export default function Home() {
           title="Latest Transfers"
           head={transfersLatestHead}
           data={(transfersLatestData || []).map((item) => [
-            `${item.indexer.blockHeight}-${item.extrinsicIndex}`,
-            <Link>{addressEllipsis(item.from)}</Link>,
-            <Link>{addressEllipsis(item.to)}</Link>,
-            item.balance,
+            <InLink
+              to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+            >
+              {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+            </InLink>,
+            <InLink to={`/${node}/address/${item.from}`}>
+              {addressEllipsis(item.from)}
+            </InLink>,
+            <InLink to={`/${node}/address/${item.to}`}>
+              {addressEllipsis(item.to)}
+            </InLink>,
+            `${item.balance / Math.pow(10, item.assetDecimals)} ${
+              item.assetSymbol
+            }`,
           ])}
           collapse={900}
         />
       </TableWrapper>
       <Table
         title="Assets"
-        head={assetsLatestHead}
+        head={assetsHead}
         data={(assetsLatestData || []).map((item) => [
           `#${item.assetId}`,
-          <Symbol>{item.symbol}</Symbol>,
+          <Symbol symbol={item.symbol} />,
           item.name,
-          <Link>{addressEllipsis(item.owner)}</Link>,
-          <Link>{addressEllipsis(item.issuer)}</Link>,
+          <InLink to={`/${node}/address/${item.owner}`}>
+            {addressEllipsis(item.owner)}
+          </InLink>,
+          <InLink to={`/${node}/address/${item.issuer}`}>
+            {addressEllipsis(item.issuer)}
+          </InLink>,
           item.accounts,
           `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}
         foot={
           <FootWrapper>
-            <Link>view all</Link>
+            <InLink to={`${node}/assets`}>view all</InLink>
           </FootWrapper>
         }
         collapse={900}

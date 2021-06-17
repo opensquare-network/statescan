@@ -1,3 +1,21 @@
+export const nodes = [
+  {
+    name: "Polkadot",
+    icon: "/imgs/icons/polkadot.svg",
+    value: "polkadot",
+  },
+  {
+    name: "Kusama",
+    icon: "/imgs/icons/kusama.svg",
+    value: "kusama",
+  },
+  {
+    name: "Rococo",
+    icon: "/imgs/icons/rococo.png",
+    value: "rococo",
+  },
+];
+
 export const blocksLatestHead = [
   { name: "Height" },
   { name: "Time" },
@@ -12,7 +30,7 @@ export const transfersLatestHead = [
   { name: "Quantity", align: "right" },
 ];
 
-export const assetsLatestHead = [
+export const assetsHead = [
   { name: "Asset ID" },
   { name: "Symbol" },
   { name: "Name" },
@@ -20,4 +38,13 @@ export const assetsLatestHead = [
   { name: "Issuer" },
   { name: "Holders" },
   { name: "Tody Supply", align: "right" },
+];
+
+export const addressHead = [
+  "Address",
+  "Balance",
+  "Reserved",
+  "Locked",
+  "Account Index",
+  "Nonce",
 ];

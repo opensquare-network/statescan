@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
-import { useSelector } from "react-redux";
-import { nodeSelector } from "store/reducers/nodeSlice";
+
+import { useNode } from "utils/hooks";
 
 const Wrapper = styled.a`
   color: #f22279;
@@ -12,8 +12,8 @@ const Wrapper = styled.a`
     `}
 `;
 
-export default function Link({ href, children }) {
-  const node = useSelector(nodeSelector);
+export default function ExLink({ href, children }) {
+  const node = useNode();
   return (
     <Wrapper node={node} href={href} target="_blank" rel="noopener noreferrer">
       {children}

@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useSelector } from "react-redux";
 
-import { nodeSelector } from "store/reducers/nodeSlice";
+import { useNode } from "utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -64,7 +63,7 @@ const Chart = styled.div`
 `;
 
 export default function Overview() {
-  const node = useSelector(nodeSelector);
+  const node = useNode();
 
   const { data: blocksHeightData } = useQuery(
     ["blocksHeight", node],

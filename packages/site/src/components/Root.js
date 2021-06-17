@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { nodeSelector } from "store/reducers/nodeSlice";
 
-export default function Redirect() {
+import { useNode } from "utils/hooks";
+
+export default function Root() {
   const history = useHistory();
-  const node = useSelector(nodeSelector);
+  const node = useNode();
   useEffect(() => {
     history.push(`/${node}`);
   }, [node, history]);

@@ -1,11 +1,16 @@
 import { Provider } from "react-redux";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import axios from "axios";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import store from "store";
 import Layout from "./components/Layout";
-import Redirect from "./components/Redirect";
+import Root from "./components/Root";
 
 axios.defaults.baseURL =
   process.env.REACT_APP_REQUEST_URL || "http://localhost:3213/";
@@ -19,11 +24,12 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/">
-              <Redirect />
+              <Root />
             </Route>
-            <Route exact path="/:node">
+            <Route path="/:node">
               <Layout />
             </Route>
+            <Redirect to="/" />
           </Switch>
         </Router>
       </QueryClientProvider>

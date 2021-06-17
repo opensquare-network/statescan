@@ -73,8 +73,6 @@ export default function Home() {
     }
   );
 
-  console.log({ transfersLatestData });
-
   return (
     <Wrapper>
       <Overview />
@@ -97,7 +95,9 @@ export default function Home() {
             `${item.indexer.blockHeight}-${item.extrinsicIndex}`,
             <Link>{addressEllipsis(item.from)}</Link>,
             <Link>{addressEllipsis(item.to)}</Link>,
-            item.balance,
+            `${item.balance / Math.pow(10, item.assetDecimals)} ${
+              item.assetSymbol
+            }`,
           ])}
           collapse={900}
         />

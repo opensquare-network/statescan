@@ -1,4 +1,7 @@
-const { getAddressCollection } = require("../../mongo");
+const {
+  getAddressCollection,
+  getAssetTransferCollection,
+} = require("../../mongo");
 const { getApi } = require("../../api");
 
 const Modules = Object.freeze({

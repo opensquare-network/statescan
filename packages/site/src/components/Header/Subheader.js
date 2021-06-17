@@ -1,7 +1,6 @@
 import styled, { css } from "styled-components";
-import { useSelector } from "react-redux";
 
-import { nodeSelector } from "store/reducers/nodeSlice";
+import { useNode } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -89,7 +88,7 @@ const ExploreButton = styled.div`
 `;
 
 export default function Subheader() {
-  const node = useSelector(nodeSelector);
+  const node = useNode();
   return (
     <Wrapper>
       <Logo

@@ -1,3 +1,21 @@
+export const nodes = [
+  {
+    name: "Polkadot",
+    icon: "/imgs/icons/polkadot.svg",
+    value: "polkadot",
+  },
+  {
+    name: "Kusama",
+    icon: "/imgs/icons/kusama.svg",
+    value: "kusama",
+  },
+  {
+    name: "Rococo",
+    icon: "/imgs/icons/rococo.png",
+    value: "rococo",
+  },
+];
+
 export const blocksLatestHead = [
   { name: "Height" },
   { name: "Time" },

@@ -1,17 +1,16 @@
-import { useSelector } from "react-redux";
 import axios from "axios";
 import { useQuery } from "react-query";
 
-import { nodeSelector } from "store/reducers/nodeSlice";
 import Nav from "components/Nav";
 import Table from "components/Table";
 import ExLink from "components/ExLink";
 import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis } from "utils";
+import { useNode } from "utils/hooks";
 
 export default function Assets() {
-  const node = useSelector(nodeSelector);
+  const node = useNode();
 
   const { data } = useQuery(
     ["assets", node],

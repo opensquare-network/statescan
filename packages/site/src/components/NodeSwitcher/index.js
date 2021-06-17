@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import { useLocation } from "react-router-dom";
 import { useHistory } from "react-router";
 
 import { useOnClickOutside } from "utils/hooks";
-import { nodeSelector, setNode } from "store/reducers/nodeSlice";
+import { setNode } from "store/reducers/nodeSlice";
+import { useNode } from "utils/hooks";
+import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   position: relative;
@@ -82,27 +84,9 @@ const Item = styled.div`
     `}
 `;
 
-const options = [
-  {
-    name: "Polkadot",
-    icon: "/imgs/icons/polkadot.svg",
-    value: "polkadot",
-  },
-  {
-    name: "Kusama",
-    icon: "/imgs/icons/kusama.svg",
-    value: "kusama",
-  },
-  {
-    name: "Rococo",
-    icon: "/imgs/icons/rococo.png",
-    value: "rococo",
-  },
-];
-
 export default function NodeSwitcher() {
   const dispatch = useDispatch();
-  const node = useSelector(nodeSelector);
+  const node = useNode();
   const [currentNode, setCurrentNode] = useState();
   const [show, setShow] = useState(false);
   const ref = useRef();
@@ -111,7 +95,7 @@ export default function NodeSwitcher() {
   useOnClickOutside(ref, () => setShow(false));
 
   useEffect(() => {
-    setCurrentNode(() => options.find((item) => item.value === node));
+    setCurrentNode(() => nodes.find((item) => item.value === node));
   }, [node]);
 
   useEffect(() => {
@@ -136,7 +120,7 @@ export default function NodeSwitcher() {
       </Dropdown>
       {show && (
         <Options>
-          {options.map((item, index) => (
+          {nodes.map((item, index) => (
             <Item
               key={index}
               active={item.value === currentNode?.value}

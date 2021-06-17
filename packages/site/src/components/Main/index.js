@@ -3,6 +3,9 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 
 import Container from "components/Container";
 import Home from "components/Home";
+import Block from "components/Block";
+import Extrinsic from "components/Extrinsic";
+import Address from "components/Address";
 import Assets from "components/Assets";
 
 const Wrapper = styled.main`
@@ -21,13 +24,13 @@ export default function Main() {
             <Home />
           </Route>
           <Route exact path={`${path}/block/:id`}>
-            <div>block</div>
+            <Block />
           </Route>
           <Route exact path={`${path}/extrinsic/:id`}>
-            <div>extrinsic</div>
+            <Extrinsic />
           </Route>
           <Route exact path={`${path}/address/:id`}>
-            <div>address</div>
+            <Address />
           </Route>
           <Route exact path={`${path}/assets`}>
             <Assets />

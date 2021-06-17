@@ -36,16 +36,21 @@ async function getHolderAssets(ctx) {
       {
         $lookup: {
           from: "asset",
-          localField: "assetIndexer.assetId",
-          foreignField: "assetId",
+          localField: "asset",
+          foreignField: "_id",
           as: "asset",
         },
       },
       {
         $addFields: {
-          assetSymbol: { $arrayElemAt: ["$asset.symbol", 0] },
-          assetName: { $arrayElemAt: ["$asset.name", 0] },
-          assetDecimals: { $arrayElemAt: ["$asset.decimals", 0] },
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
         },
       },
       {

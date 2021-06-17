@@ -55,10 +55,7 @@ async function saveNewAssetTransfer(
     eventSort,
     extrinsicIndex,
     extrinsicHash,
-    assetIndexer: {
-      assetId,
-      ...asset.indexer,
-    },
+    asset: asset._id,
     from,
     to,
     balance,
@@ -78,7 +75,7 @@ async function updateOrCreateAsset(blockIndexer, assetId) {
     { assetId, destroyedAt: null },
     {
       $setOnInsert: {
-        indexer: blockIndexer,
+        createdAt: blockIndexer,
       },
       $set: {
         ...asset,
@@ -118,10 +115,7 @@ async function updateOrCreateAssetHolder(blockHash, assetId, address) {
   const col = await getAssetHolderCollection();
   const result = await col.updateOne(
     {
-      assetIndexer: {
-        assetId,
-        ...asset.indexer,
-      },
+      asset: asset._id,
       address,
     },
     {

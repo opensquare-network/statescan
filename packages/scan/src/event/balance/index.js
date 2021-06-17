@@ -9,6 +9,27 @@ const BalancesEvents = Object.freeze({
   Transfer: "Transfer",
 });
 
+async function saveNewTransfer(
+  blockIndexer,
+  eventSort,
+  extrinsicIndex,
+  extrinsicHash,
+  from,
+  to,
+  balance
+) {
+  const col = await getAssetTransferCollection();
+  const result = await col.insertOne({
+    indexer: blockIndexer,
+    eventSort,
+    extrinsicIndex,
+    extrinsicHash,
+    from,
+    to,
+    balance,
+  });
+}
+
 async function updateOrCreateAddress(blockHash, address) {
   const api = await getApi();
 
@@ -50,6 +71,15 @@ async function handleBalancesEvent(
     const [from, to, value] = eventData;
     await updateOrCreateAddress(blockIndexer.blockHash, from);
     await updateOrCreateAddress(blockIndexer.blockHash, to);
+    await saveNewTransfer(
+      blockIndexer,
+      eventSort,
+      extrinsicIndex,
+      extrinsicHash,
+      from,
+      to,
+      value
+    );
   }
 
   return true;

@@ -12,7 +12,7 @@ async function getLatestAssets(ctx) {
   const items = await col
     .find({})
     .sort({
-      "indexer.blockHeight": -1,
+      "createdAt.blockHeight": -1,
     })
     .limit(5)
     .toArray();
@@ -59,17 +59,10 @@ async function getAsset(ctx) {
   const { chain, blockHeight, assetId } = ctx.params;
 
   const col = await getAssetCollection(chain);
-  const item = await col
-    .findOne({
-      assetId: parseInt(assetId),
-      "indexer.blockHeight": parseInt(blockHeight),
-    })
-    .sort({
-      assetId: 1,
-    })
-    .skip(page * pageSize)
-    .limit(pageSize)
-    .toArray();
+  const item = await col.findOne({
+    assetId: parseInt(assetId),
+    "createdAt.blockHeight": parseInt(blockHeight),
+  });
 
   ctx.body = item;
 }
@@ -82,16 +75,19 @@ async function getAssetTransfers(ctx) {
     return;
   }
 
-  const $match = {
-    "assetIndexer.assetId": parseInt(assetId),
-    "assetIndexer.blockHeight": parseInt(blockHeight),
-  };
+  const assetCol = await getAssetCollection(chain);
+  const asset = await assetCol.findOne({
+    assetId: parseInt(assetId),
+    "createdAt.blockHeight": parseInt(blockHeight),
+  });
+
+  const $match = { asset: asset._id };
 
   const col = await getAssetTransferCollection(chain);
   const items = await col
     .find($match)
     .sort({
-      "indexer.blockHeight": -1,
+      "createdAt.blockHeight": -1,
     })
     .skip(page * pageSize)
     .limit(pageSize)
@@ -115,9 +111,14 @@ async function getAssetHolders(ctx) {
     return;
   }
 
+  const assetCol = await getAssetCollection(chain);
+  const asset = await assetCol.findOne({
+    assetId: parseInt(assetId),
+    "createdAt.blockHeight": parseInt(blockHeight),
+  });
+
   const $match = {
-    "assetIndexer.assetId": parseInt(assetId),
-    "assetIndexer.blockHeight": parseInt(blockHeight),
+    asset: asset._id,
     balance: { $gt: 0 },
   };
 

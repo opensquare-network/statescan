@@ -24,6 +24,8 @@ async function getLatestTransfers(ctx) {
       },
       {
         $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",

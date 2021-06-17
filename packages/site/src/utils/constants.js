@@ -39,3 +39,12 @@ export const assetsHead = [
   { name: "Holders" },
   { name: "Tody Supply", align: "right" },
 ];
+
+export const addressHead = [
+  "Address",
+  "Balance",
+  "Reserved",
+  "Locked",
+  "Account Index",
+  "Nonce",
+];

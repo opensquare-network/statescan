@@ -7,6 +7,7 @@ import Block from "components/Block";
 import Extrinsic from "components/Extrinsic";
 import Address from "components/Address";
 import Assets from "components/Assets";
+import Asset from "components/Asset";
 
 const Wrapper = styled.main`
   flex-grow: 1;
@@ -36,7 +37,7 @@ export default function Main() {
             <Assets />
           </Route>
           <Route exact path={`${path}/asset/:id`}>
-            <div>asset</div>
+            <Asset />
           </Route>
           <Redirect to="/" />
         </Switch>

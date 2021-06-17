@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
 import Table from "components/Table";
-import ExLink from "components/ExLink";
+import InLink from "components/ExLink";
 import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis } from "utils";
@@ -25,15 +25,19 @@ export default function Assets() {
 
   return (
     <section>
-      <Nav />
+      <Nav data={[{ name: "Asset Tracker" }]} />
       <Table
         head={assetsHead}
         data={(data?.items || []).map((item) => [
           `#${item.assetId}`,
           <Symbol>{item.symbol}</Symbol>,
           item.name,
-          <ExLink>{addressEllipsis(item.owner)}</ExLink>,
-          <ExLink>{addressEllipsis(item.issuer)}</ExLink>,
+          <InLink to={`/${node}/address/${item.owner}`}>
+            {addressEllipsis(item.owner)}
+          </InLink>,
+          <InLink to={`/${node}/address/${item.issuer}`}>
+            {addressEllipsis(item.issuer)}
+          </InLink>,
           item.accounts,
           `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}

@@ -6,7 +6,7 @@ export default function Extrinsic() {
   const { id } = useParams();
   return (
     <section>
-      <Nav />
+      <Nav data={[{ name: "Extrinsic" }, { name: id }]} />
       <div>Extrinsic {id}</div>
     </section>
   );

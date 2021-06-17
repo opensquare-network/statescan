@@ -6,7 +6,7 @@ export default function Block() {
   const { id } = useParams();
   return (
     <section>
-      <Nav />
+      <Nav data={[{ name: "Block" }, { name: id }]} />
       <div>Block {id}</div>
     </section>
   );

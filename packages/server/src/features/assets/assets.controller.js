@@ -1,3 +1,4 @@
+const { HttpError } = require("../../exc");
 const {
   getAssetCollection,
   getAssetHolderCollection,
@@ -81,6 +82,10 @@ async function getAssetTransfers(ctx) {
     "createdAt.blockHeight": parseInt(blockHeight),
   });
 
+  if (!asset) {
+    throw new HttpError(404, "Asset not found");
+  }
+
   const $match = { asset: asset._id };
 
   const col = await getAssetTransferCollection(chain);
@@ -116,6 +121,10 @@ async function getAssetHolders(ctx) {
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
   });
+
+  if (!asset) {
+    throw new HttpError(404, "Asset not found");
+  }
 
   const $match = {
     asset: asset._id,

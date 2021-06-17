@@ -32,7 +32,6 @@ async function getHolderAssets(ctx) {
   const holders = await holderCol
     .aggregate([
       { $match: { address } },
-      { $sort: { assetId: 1 } },
       {
         $lookup: {
           from: "asset",

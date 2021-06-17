@@ -116,7 +116,7 @@ export default function Home() {
         head={assetsHead}
         data={(assetsLatestData || []).map((item) => [
           `#${item.assetId}`,
-          <Symbol>{item.symbol}</Symbol>,
+          <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>
             {addressEllipsis(item.owner)}

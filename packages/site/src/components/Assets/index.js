@@ -30,7 +30,7 @@ export default function Assets() {
         head={assetsHead}
         data={(data?.items || []).map((item) => [
           `#${item.assetId}`,
-          <Symbol>{item.symbol}</Symbol>,
+          <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>
             {addressEllipsis(item.owner)}

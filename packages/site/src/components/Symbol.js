@@ -1,9 +1,14 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-const Wrapper = styled.div`
+import { useNode } from "utils/hooks";
+
+const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
   font-weight: 500;
+  text-decoration: none;
+  color: #111111;
 `;
 
 const Icon = styled.img`
@@ -12,11 +17,12 @@ const Icon = styled.img`
   margin-right: 8px;
 `;
 
-export default function Symbol({ children }) {
+export default function Symbol({ symbol }) {
+  const node = useNode();
   return (
-    <Wrapper>
+    <StyledLink to={`/${node}/asset/${symbol}`}>
       <Icon src="/imgs/icons/default.svg" />
-      {children}
-    </Wrapper>
+      {symbol}
+    </StyledLink>
   );
 }

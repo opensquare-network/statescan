@@ -3,6 +3,7 @@ import { Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
 
 import Container from "components/Container";
 import Home from "components/Home";
+import Assets from "components/Assets";
 
 const Wrapper = styled.main`
   flex-grow: 1;
@@ -29,7 +30,7 @@ export default function Main() {
             <div>address</div>
           </Route>
           <Route exact path={`${path}/assets`}>
-            <div>assets</div>
+            <Assets />
           </Route>
           <Route exact path={`${path}/asset/:id`}>
             <div>asset</div>

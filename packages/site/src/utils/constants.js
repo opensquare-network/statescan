@@ -12,7 +12,7 @@ export const transfersLatestHead = [
   { name: "Quantity", align: "right" },
 ];
 
-export const assetsLatestHead = [
+export const assetsHead = [
   { name: "Asset ID" },
   { name: "Symbol" },
   { name: "Name" },

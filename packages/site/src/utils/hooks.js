@@ -1,6 +1,9 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { matchPath } from "react-router";
+import { useSelector } from "react-redux";
+
+import { nodeSelector } from "store/reducers/nodeSlice";
 
 export function useToggle(initalState = false) {
   const [state, setState] = useState(initalState);
@@ -61,4 +64,9 @@ export function useWindowSize() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   return windowSize;
+}
+
+export function useNode() {
+  const node = useSelector(nodeSelector);
+  return node;
 }

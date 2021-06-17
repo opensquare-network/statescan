@@ -12,7 +12,7 @@ const Wrapper = styled.a`
     `}
 `;
 
-export default function Link({ href, children }) {
+export default function ExLink({ href, children }) {
   const node = useSelector(nodeSelector);
   return (
     <Wrapper node={node} href={href} target="_blank" rel="noopener noreferrer">

@@ -6,14 +6,15 @@ import { useSelector } from "react-redux";
 import Overview from "./Overview";
 import Table from "components/Table";
 import MinorText from "components/Table/MinorText";
-import Link from "components/Link";
+import ExLink from "components/ExLink";
+import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { addressEllipsis, timeDuration } from "utils";
 import { nodeSelector } from "store/reducers/nodeSlice";
 import {
   blocksLatestHead,
   transfersLatestHead,
-  assetsLatestHead,
+  assetsHead,
 } from "utils/constants";
 
 const Wrapper = styled.section`
@@ -81,7 +82,7 @@ export default function Home() {
           title="Latest Blocks"
           head={blocksLatestHead}
           data={(blocksLatestData || []).map((item) => [
-            <Link>{item.header.number}</Link>,
+            <ExLink>{item.header.number}</ExLink>,
             <MinorText>{timeDuration(item.blockTime)}</MinorText>,
             item.extrinsicsCount,
             item.eventsCount,
@@ -93,8 +94,8 @@ export default function Home() {
           head={transfersLatestHead}
           data={(transfersLatestData || []).map((item) => [
             `${item.indexer.blockHeight}-${item.extrinsicIndex}`,
-            <Link>{addressEllipsis(item.from)}</Link>,
-            <Link>{addressEllipsis(item.to)}</Link>,
+            <ExLink>{addressEllipsis(item.from)}</ExLink>,
+            <ExLink>{addressEllipsis(item.to)}</ExLink>,
             `${item.balance / Math.pow(10, item.assetDecimals)} ${
               item.assetSymbol
             }`,
@@ -104,19 +105,19 @@ export default function Home() {
       </TableWrapper>
       <Table
         title="Assets"
-        head={assetsLatestHead}
+        head={assetsHead}
         data={(assetsLatestData || []).map((item) => [
           `#${item.assetId}`,
           <Symbol>{item.symbol}</Symbol>,
           item.name,
-          <Link>{addressEllipsis(item.owner)}</Link>,
-          <Link>{addressEllipsis(item.issuer)}</Link>,
+          <ExLink>{addressEllipsis(item.owner)}</ExLink>,
+          <ExLink>{addressEllipsis(item.issuer)}</ExLink>,
           item.accounts,
           `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}
         foot={
           <FootWrapper>
-            <Link>view all</Link>
+            <InLink to={`${node}/assets`}>view all</InLink>
           </FootWrapper>
         }
         collapse={900}

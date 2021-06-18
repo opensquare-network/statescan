@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import Overview from "./Overview";
 import Table from "components/Table";
-import MinorText from "components/Table/MinorText";
+import MinorText from "components/MinorText";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { addressEllipsis, timeDuration } from "utils";

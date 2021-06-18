@@ -4,13 +4,17 @@ import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
 import { addressEllipsis } from "utils";
-import { useNode } from "utils/hooks";
+import { useNode, useSymnol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
 import { addressHead } from "utils/constants";
+import MinorText from "components/MinorText";
+import BreakText from "components/BreakText";
+import CopyText from "components/CopyText";
 
 export default function Address() {
   const { id } = useParams();
   const node = useNode();
+  const symbol = useSymnol();
 
   const { data } = useQuery(["address", id], async () => {
     const { data } = await axios.get(`/${node}/addresses/${id}`);
@@ -23,12 +27,16 @@ export default function Address() {
       <DetailTable
         head={addressHead}
         body={[
-          data.address,
-          data.data.free,
-          data.data.reserved,
-          data.data.feeFrozen,
-          0,
-          data.nonce,
+          <CopyText text={data?.address}>
+            <BreakText>
+              <MinorText>{data?.address}</MinorText>
+            </BreakText>
+          </CopyText>,
+          `${data?.data.free} ${symbol}`,
+          `${data?.data.reserved} ${symbol}`,
+          `${data?.data.feeFrozen} ${symbol}`,
+          "-",
+          <MinorText>{data?.nonce}</MinorText>,
         ]}
       />
     </section>

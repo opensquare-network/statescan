@@ -4,6 +4,7 @@ import { matchPath } from "react-router";
 import { useSelector } from "react-redux";
 
 import { nodeSelector } from "store/reducers/nodeSlice";
+import { nodes } from "utils/constants";
 
 export function useToggle(initalState = false) {
   const [state, setState] = useState(initalState);
@@ -69,4 +70,13 @@ export function useWindowSize() {
 export function useNode() {
   const node = useSelector(nodeSelector);
   return node;
+}
+
+export function useSymnol() {
+  const [symbol, setSymbol] = useState();
+  const node = useNode();
+  useEffect(() => {
+    setSymbol(nodes.find((item) => item.value === node)?.symbol);
+  }, [node]);
+  return symbol;
 }

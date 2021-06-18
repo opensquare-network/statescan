@@ -58,7 +58,7 @@ export default function TabTable({ data, collapse }) {
       </TabWrapper>
       <Table
         head={data?.[tabIndex]?.head}
-        data={data?.[tabIndex]?.body}
+        body={data?.[tabIndex]?.body}
         collapse={collapse}
       />
     </div>

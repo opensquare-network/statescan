@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import styled from "styled-components";
 import { useParams } from "react-router";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -14,12 +13,7 @@ import BreakText from "components/BreakText";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import { addressExtrincsHead } from "utils/constants";
-
-const StyledSection = styled.section`
-  > :not(:first-child) {
-    margin-top: 32px;
-  }
-`;
+import Section from "components/Section";
 
 export default function Address() {
   const { id } = useParams();
@@ -29,6 +23,7 @@ export default function Address() {
 
   const { data } = useQuery(["address", id], async () => {
     const { data } = await axios.get(`/${node}/addresses/${id}`);
+    console.log("test", data);
     return data;
   });
 
@@ -48,10 +43,8 @@ export default function Address() {
     ]);
   }, [extrinsicsData]);
 
-  console.log(extrinsicsData);
-
   return (
-    <StyledSection>
+    <Section>
       <div>
         <Nav data={[{ name: "Address" }, { name: addressEllipsis(id) }]} />
         <DetailTable
@@ -62,15 +55,15 @@ export default function Address() {
                 <MinorText>{data?.address}</MinorText>
               </BreakText>
             </CopyText>,
-            `${data?.data.free} ${symbol}`,
-            `${data?.data.reserved} ${symbol}`,
-            `${data?.data.feeFrozen} ${symbol}`,
+            `${data?.data?.free} ${symbol}`,
+            `${data?.data?.reserved} ${symbol}`,
+            `${data?.data?.feeFrozen} ${symbol}`,
             "-",
             <MinorText>{data?.nonce}</MinorText>,
           ]}
         />
       </div>
       <TabTable data={tabTableData} collapse={900} />
-    </StyledSection>
+    </Section>
   );
 }

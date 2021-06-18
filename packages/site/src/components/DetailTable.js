@@ -24,7 +24,7 @@ const Head = styled.div`
   flex-basis: 320px;
 `;
 
-const Body = styled.div`
+const Data = styled.div`
   font-size: 15px;
   line-height: 20px;
   padding: 10px 24px;
@@ -37,7 +37,7 @@ export default function DetailTable({ head, body }) {
       {(head || []).map((item, index) => (
         <Item key={index}>
           <Head>{item}</Head>
-          <Body>{body[index]}</Body>
+          <Data>{body?.[index]}</Data>
         </Item>
       ))}
     </Wrapper>

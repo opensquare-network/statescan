@@ -10,3 +10,12 @@ export function addressEllipsis(address, start = 4, end = 4) {
 export function timeDuration(time) {
   return moment(time).fromNow();
 }
+
+export function timeUTC(time) {
+  return moment.utc(time).format("YYYY-MM-DD HH:mm:ss (+UTC)");
+}
+
+export function capitalize(string) {
+  if (!string || typeof string !== string || string.length === 0) return string;
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

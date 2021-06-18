@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import Overview from "./Overview";
 import Table from "components/Table";
-import MinorText from "components/Table/MinorText";
+import MinorText from "components/MinorText";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { addressEllipsis, timeDuration } from "utils";
@@ -79,7 +79,7 @@ export default function Home() {
         <Table
           title="Latest Blocks"
           head={blocksLatestHead}
-          data={(blocksLatestData || []).map((item) => [
+          body={(blocksLatestData || []).map((item) => [
             <InLink to={`/${node}/block/${item.header.number}`}>
               {item.header.number}
             </InLink>,
@@ -92,10 +92,8 @@ export default function Home() {
         <Table
           title="Latest Transfers"
           head={transfersLatestHead}
-          data={(transfersLatestData || []).map((item) => [
-            <InLink
-              to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-            >
+          body={(transfersLatestData || []).map((item) => [
+            <InLink to={`/${node}/extrinsic/${item.extrinsicHash}`}>
               {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
             </InLink>,
             <InLink to={`/${node}/address/${item.from}`}>
@@ -114,8 +112,10 @@ export default function Home() {
       <Table
         title="Assets"
         head={assetsHead}
-        data={(assetsLatestData || []).map((item) => [
-          `#${item.assetId}`,
+        body={(assetsLatestData || []).map((item) => [
+          <InLink
+            to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+          >{`#${item.assetId}`}</InLink>,
           <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>

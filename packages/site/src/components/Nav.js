@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -9,7 +9,6 @@ const Wrapper = styled.div`
   height: 36px;
   display: flex;
   align-items: center;
-  margin-top: 24px;
   margin-bottom: 16px;
 `;
 
@@ -25,6 +24,13 @@ const NavWrapper = styled.div`
   > :last-child {
     color: #f22279;
   }
+  ${(p) =>
+    p.node === "kusama" &&
+    css`
+      > :last-child {
+        color: #265deb;
+      }
+    `}
 `;
 
 const StyledLink = styled(Link)`
@@ -38,6 +44,13 @@ const StyledLink = styled(Link)`
     margin-left: 8px;
     color: rgba(17, 17, 17, 0.35);
   }
+  ${(p) =>
+    p.node === "kusama" &&
+    css`
+      :hover {
+        color: #265deb;
+      }
+    `}
 `;
 
 const NoLink = styled.div``;
@@ -49,11 +62,13 @@ export default function Nav({ data }) {
 
   return (
     <Wrapper>
-      <NavWrapper>
-        <StyledLink to={`/${node}`}>{nodeName}</StyledLink>
+      <NavWrapper node={node}>
+        <StyledLink node={node} to={`/${node}`}>
+          {nodeName}
+        </StyledLink>
         {(data || []).map((item, index) =>
           item.path ? (
-            <StyledLink to={item.path} key={index}>
+            <StyledLink node={node} to={item.path} key={index}>
               {item.name}
             </StyledLink>
           ) : (

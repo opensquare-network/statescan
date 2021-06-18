@@ -116,7 +116,7 @@ const CollapseFoot = styled.div`
   padding: 16px 24px;
 `;
 
-export default function Table({ title, head, data, foot, collapse }) {
+export default function Table({ title, head, body, foot, collapse }) {
   const [isCollapse, setIsCollapse] = useState(false);
   const size = useWindowSize();
   useEffect(() => {
@@ -134,7 +134,7 @@ export default function Table({ title, head, data, foot, collapse }) {
         <StyledTable>
           <thead>
             <tr>
-              {head.map((item, index) => (
+              {(head || []).map((item, index) => (
                 <th key={index} style={{ textAlign: item.align ?? "left" }}>
                   {item.name}
                 </th>
@@ -142,7 +142,7 @@ export default function Table({ title, head, data, foot, collapse }) {
             </tr>
           </thead>
           <tbody>
-            {(data || []).map((item, index) => (
+            {(body || []).map((item, index) => (
               <tr key={index}>
                 {item.map((item, index) => (
                   <td
@@ -167,7 +167,7 @@ export default function Table({ title, head, data, foot, collapse }) {
       {isCollapse && (
         <CollapseWrapper>
           <div>
-            {(data || []).map((dataItem, index) => (
+            {(body || []).map((dataItem, index) => (
               <CollapseTable key={index}>
                 <tbody>
                   {head.map((headItem, index) => (

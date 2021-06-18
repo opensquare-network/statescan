@@ -24,15 +24,18 @@ export default function Extrinsic() {
   const [extrinsicId, setExtrinsicId] = useState();
   const [tabTableData, setTabTableData] = useState();
 
-  const { data } = useQuery(["extrinsic", id], async () => {
+  const { data } = useQuery(["extrinsic", id, node], async () => {
     const { data } = await axios.get(`${node}/extrinsics/${id}`);
     return data;
   });
 
-  const { data: eventsData } = useQuery(["extrinsicEvents", id], async () => {
-    const { data } = await axios.get(`${node}/extrinsics/${id}/events`);
-    return data;
-  });
+  const { data: eventsData } = useQuery(
+    ["extrinsicEvents", id, node],
+    async () => {
+      const { data } = await axios.get(`${node}/extrinsics/${id}/events`);
+      return data;
+    }
+  );
 
   useEffect(() => {
     setExtrinsicId(`${data?.indexer?.blockHeight}-${data?.indexer?.index}`);

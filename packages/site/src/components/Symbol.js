@@ -1,9 +1,6 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
-import { useNode } from "utils/hooks";
-
-const StyledLink = styled(Link)`
+const Wrapper = styled.div`
   display: flex;
   align-items: center;
   font-weight: 500;
@@ -18,11 +15,10 @@ const Icon = styled.img`
 `;
 
 export default function Symbol({ symbol }) {
-  const node = useNode();
   return (
-    <StyledLink to={`/${node}/asset/${symbol}`}>
+    <Wrapper>
       <Icon src="/imgs/icons/default.svg" />
       {symbol}
-    </StyledLink>
+    </Wrapper>
   );
 }

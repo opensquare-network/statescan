@@ -113,7 +113,9 @@ export default function Home() {
         title="Assets"
         head={assetsHead}
         body={(assetsLatestData || []).map((item) => [
-          `#${item.assetId}`,
+          <InLink
+            to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+          >{`#${item.assetId}`}</InLink>,
           <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>

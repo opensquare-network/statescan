@@ -71,6 +71,22 @@ export const blockEventsHead = [
   { name: "Action" },
 ];
 
+export const assetTransfersHead = [
+  { name: "Event ID" },
+  { name: "Hash" },
+  { name: "Time" },
+  { name: "From" },
+  { name: "To" },
+  { name: "Quantity" },
+];
+
+export const assetHoldersHead = [
+  { name: "#" },
+  { name: "Address" },
+  { name: "Last Tx Time (+UTC)" },
+  { name: "Balance" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",
@@ -105,4 +121,17 @@ export const blockHead = [
   "State Root",
   "Extrinsics Root",
   "Validators",
+];
+
+export const assetHead = [
+  "Symbol",
+  "Name",
+  "Asset ID",
+  "Mint Time",
+  "Owner",
+  "Issuer",
+  "Total Supply",
+  "Decimals",
+  "Holders",
+  "Transfers",
 ];

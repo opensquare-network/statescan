@@ -134,7 +134,7 @@ export default function Table({ title, head, data, foot, collapse }) {
         <StyledTable>
           <thead>
             <tr>
-              {head.map((item, index) => (
+              {(head || []).map((item, index) => (
                 <th key={index} style={{ textAlign: item.align ?? "left" }}>
                   {item.name}
                 </th>

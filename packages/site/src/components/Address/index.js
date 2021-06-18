@@ -41,13 +41,7 @@ export default function Address() {
     setTabTableData([
       {
         name: "Extrinsics",
-        total: extrinsicsData.total,
-        head: addressExtrincsHead,
-        body: [],
-      },
-      {
-        name: "Transfers",
-        total: extrinsicsData.total,
+        total: extrinsicsData?.total,
         head: addressExtrincsHead,
         body: [],
       },
@@ -76,7 +70,7 @@ export default function Address() {
           ]}
         />
       </div>
-      <TabTable data={tabTableData} />
+      <TabTable data={tabTableData} collapse={900} />
     </StyledSection>
   );
 }

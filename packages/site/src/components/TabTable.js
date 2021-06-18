@@ -1,4 +1,7 @@
-import styled from "styled-components";
+import { useState } from "react";
+import styled, { css } from "styled-components";
+
+import Table from "components/Table";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -22,6 +25,12 @@ const TabText = styled.div`
   font-weight: bold;
   font-size: 20px;
   line-height: 20px;
+  color: rgba(17, 17, 17, 0.65);
+  ${(p) =>
+    p.active &&
+    css`
+      color: #111111;
+    `}
 `;
 
 const TabTag = styled.div`
@@ -30,21 +39,28 @@ const TabTag = styled.div`
   border-radius: 16px;
   font-size: 12px;
   line-height: 16px;
-  color: #f22279;
   font-weight: bold;
+  color: #f22279;
 `;
 
-export default function TabTable({ data }) {
+export default function TabTable({ data, collapse }) {
+  const [tabIndex, setTabIndex] = useState(0);
+
   return (
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-          <Tab key={index}>
-            <TabText>{item.name}</TabText>
+          <Tab key={index} onClick={() => setTabIndex(index)}>
+            <TabText active={tabIndex === index}>{item.name}</TabText>
             <TabTag>{item.total}</TabTag>
           </Tab>
         ))}
       </TabWrapper>
+      <Table
+        head={data?.[tabIndex]?.head}
+        data={data?.[tabIndex]?.body}
+        collapse={collapse}
+      />
     </div>
   );
 }

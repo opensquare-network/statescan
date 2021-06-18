@@ -11,7 +11,7 @@ import Asset from "components/Asset";
 
 const Wrapper = styled.main`
   flex-grow: 1;
-  margin-top: 32px;
+  margin-top: 24px;
 `;
 
 export default function Main() {

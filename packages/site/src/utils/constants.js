@@ -3,16 +3,19 @@ export const nodes = [
     name: "Polkadot",
     icon: "/imgs/icons/polkadot.svg",
     value: "polkadot",
+    symbol: "DOT",
   },
   {
     name: "Kusama",
     icon: "/imgs/icons/kusama.svg",
     value: "kusama",
+    symbol: "KSM",
   },
   {
     name: "Rococo",
     icon: "/imgs/icons/rococo.png",
     value: "rococo",
+    symbol: "ROC",
   },
 ];
 

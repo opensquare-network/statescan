@@ -21,16 +21,18 @@ export default function Address() {
   const symbol = useSymnol();
   const [tabTableData, setTabTableData] = useState();
 
-  const { data } = useQuery(["address", id], async () => {
-    const { data } = await axios.get(`/${node}/addresses/${id}`);
-    console.log("test", data);
+  const { data } = useQuery(["address", id, node], async () => {
+    const { data } = await axios.get(`${node}/addresses/${id}`);
     return data;
   });
 
-  const { data: extrinsicsData } = useQuery(["addressExtrinsics"], async () => {
-    const { data } = await axios.get(`/${node}/addresses/${id}/extrinsics`);
-    return data;
-  });
+  const { data: extrinsicsData } = useQuery(
+    ["addressExtrinsics", id, node],
+    async () => {
+      const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`);
+      return data;
+    }
+  );
 
   useEffect(() => {
     setTabTableData([

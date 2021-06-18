@@ -16,5 +16,6 @@ export function timeUTC(time) {
 }
 
 export function capitalize(string) {
+  if (!string || typeof string !== string || string.length === 0) return string;
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

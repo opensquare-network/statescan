@@ -58,6 +58,19 @@ export const extrinsicEventsHead = [
   { name: "Action" },
 ];
 
+export const blockExtrinsicsHead = [
+  { name: "Extrinsic ID" },
+  { name: "Hash" },
+  { name: "Result" },
+  { name: "Action" },
+];
+
+export const blockEventsHead = [
+  { name: "Event ID" },
+  { name: "Hash" },
+  { name: "Action" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",
@@ -82,4 +95,14 @@ export const extrinsicHead = [
   "Result",
   "Parameters",
   "Signature",
+];
+
+export const blockHead = [
+  "Block Time",
+  "Status",
+  "Hash",
+  "Parent Hash",
+  "State Root",
+  "Extrinsics Root",
+  "Validators",
 ];

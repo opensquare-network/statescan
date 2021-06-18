@@ -3,6 +3,7 @@ const {
   getAssetTransferCollection,
   getAssetCollection,
   getAssetHolderCollection,
+  getAddressCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
 
@@ -98,6 +99,24 @@ async function destroyAsset(blockIndexer, assetId) {
       },
     }
   );
+}
+
+async function updateOrCreateAddress(blockHash, address) {
+  const api = await getApi();
+
+  const account = await api.query.system.account.at(blockHash, address);
+  if (account) {
+    const col = await getAddressCollection();
+    await col.updateOne(
+      { address },
+      {
+        $set: {
+          ...account.toJSON(),
+        },
+      },
+      { upsert: true }
+    );
+  }
 }
 
 async function updateOrCreateAssetHolder(blockHash, assetId, address) {
@@ -197,12 +216,15 @@ async function handleAssetsEvent(
     ].includes(method)
   ) {
     const [assetId, accountId] = eventData;
+    await updateOrCreateAddress(blockIndexer.blockHash, accountId);
     await updateOrCreateAssetHolder(blockIndexer.blockHash, assetId, accountId);
   }
 
   if (method === AssetsEvents.Transferred) {
     const [assetId, from, to] = eventData;
+    await updateOrCreateAddress(blockIndexer.blockHash, from);
     await updateOrCreateAssetHolder(blockIndexer.blockHash, assetId, from);
+    await updateOrCreateAddress(blockIndexer.blockHash, to);
     await updateOrCreateAssetHolder(blockIndexer.blockHash, assetId, to);
   }
 

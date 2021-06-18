@@ -43,6 +43,15 @@ export const assetsHead = [
   { name: "Tody Supply", align: "right" },
 ];
 
+export const addressExtrincsHead = [
+  { name: "Extrinsics ID" },
+  { name: "Blocks" },
+  { name: "Extrinsics Hash" },
+  { name: "Time" },
+  { name: "Result" },
+  { name: "Action" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",

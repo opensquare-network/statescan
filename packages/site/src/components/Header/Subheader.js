@@ -7,9 +7,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 24px 32px 16px;
+
   > :not(:first-child) {
     margin-top: 32px;
   }
+
   @media screen and (max-width: 900px) {
     padding: 16px 32px 8px;
   }
@@ -40,9 +42,11 @@ const Title = styled.h1`
 const ExploreWrapper = styled.div`
   display: flex;
   align-items: center;
+
   > :not(:first-child) {
     margin-left: 32px;
   }
+
   @media screen and (max-width: 900px) {
     flex-direction: column;
     max-width: 318px;
@@ -50,6 +54,7 @@ const ExploreWrapper = styled.div`
     > * {
       width: 100% !important;
     }
+
     > :not(:first-child) {
       margin: 16px 0 0;
     }
@@ -65,8 +70,14 @@ const ExploreInput = styled.input`
   line-height: 20px;
   outline: none;
   border: none;
+
   ::placeholder {
     color: rgba(17, 17, 17, 0.35);
+  }
+
+  :active,
+  :focus {
+    background-color: #ffffff;
   }
 `;
 

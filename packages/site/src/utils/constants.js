@@ -52,6 +52,12 @@ export const addressExtrincsHead = [
   { name: "Action" },
 ];
 
+export const extrinsicEventsHead = [
+  { name: "Event ID" },
+  { name: "Hash" },
+  { name: "Action" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",
@@ -59,4 +65,21 @@ export const addressHead = [
   "Locked",
   "Account Index",
   "Nonce",
+];
+
+export const extrinsicHead = [
+  "Timestamp",
+  "Block",
+  "Lift Time",
+  "Extrinsic Hash",
+  "Module",
+  "Call",
+  "From",
+  "To",
+  "Value",
+  "Fee",
+  "Nonce",
+  "Result",
+  "Parameters",
+  "Signature",
 ];

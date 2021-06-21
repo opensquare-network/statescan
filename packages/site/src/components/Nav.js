@@ -58,7 +58,7 @@ const NoLink = styled.div``;
 export default function Nav({ data }) {
   const node = useSelector(nodeSelector);
 
-  const nodeName = nodes.find((item) => item.value === node).name;
+  const nodeName = nodes.find((item) => item.value === node)?.name;
 
   return (
     <Wrapper>

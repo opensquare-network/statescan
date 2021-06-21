@@ -6,7 +6,7 @@ import Table from "components/Table";
 const TabWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 
   > :not(:first-child) {
     margin-left: 40px;
@@ -14,12 +14,10 @@ const TabWrapper = styled.div`
 `;
 
 const Tab = styled.div`
-  max-width: 127px;
   cursor: pointer;
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+
   > :not(:first-child) {
     margin-left: 8px;
   }
@@ -42,6 +40,7 @@ const Tab = styled.div`
 `;
 
 const TabText = styled.div`
+  text-align: center;
   font-weight: bold;
   font-size: 20px;
   line-height: 20px;
@@ -75,17 +74,20 @@ export default function TabTable({ data, collapse }) {
             onClick={() => setTabIndex(index)}
             active={tabIndex === index}
           >
-            <TabText active={tabIndex === index}>{item.name}</TabText>
+            <TabText active={tabIndex === index}>
+              {item.name}
+              <br />
+              <svg
+                width="49"
+                height="3"
+                viewBox="0 0 49 3"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.5" width="48" height="3" fill="#F22279" />
+              </svg>
+            </TabText>
             <TabTag>{item.total}</TabTag>
-            <svg
-              width="49"
-              height="3"
-              viewBox="0 0 49 3"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <rect x="0.5" width="48" height="3" fill="#F22279" />
-            </svg>
           </Tab>
         ))}
       </TabWrapper>

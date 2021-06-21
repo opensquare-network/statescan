@@ -42,12 +42,10 @@ const Title = styled.h1`
 export default function Subheader() {
   const node = useNode();
   const hints = [1, 2, 3, 4, 5];
-  const logo = `/imgs/logo-img-${
-    node === "kusama" ? "kusama.svg" : "polkadot.svg"
-  }`;
+  const logo = node === "kusama" ? "kusama.svg" : "polkadot.svg";
   return (
     <Wrapper>
-      <Logo src={logo} alt="logo" />
+      <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />
       <Title>Statemint Explorer</Title>
       <SearchL hints={hints} node={node} />
     </Wrapper>

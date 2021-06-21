@@ -101,10 +101,13 @@ async function destroyAsset(blockIndexer, assetId) {
   );
 }
 
-async function updateOrCreateAddress(blockHash, address) {
+async function updateOrCreateAddress(blockIndexer, address) {
   const api = await getApi();
 
-  const account = await api.query.system.account.at(blockHash, address);
+  const account = await api.query.system.account.at(
+    blockIndexer.blockHash,
+    address
+  );
   if (account) {
     const col = await getAddressCollection();
     await col.updateOne(
@@ -112,6 +115,7 @@ async function updateOrCreateAddress(blockHash, address) {
       {
         $set: {
           ...account.toJSON(),
+          lastUpdatedAt: blockIndexer,
         },
       },
       { upsert: true }
@@ -119,10 +123,10 @@ async function updateOrCreateAddress(blockHash, address) {
   }
 }
 
-async function updateOrCreateAssetHolder(blockHash, assetId, address) {
+async function updateOrCreateAssetHolder(blockIndexer, assetId, address) {
   const api = await getApi();
   const account = (
-    await api.query.assets.account.at(blockHash, assetId, address)
+    await api.query.assets.account.at(blockIndexer.blockHash, assetId, address)
   ).toJSON();
 
   const assetCol = await getAssetCollection();
@@ -141,6 +145,7 @@ async function updateOrCreateAssetHolder(blockHash, assetId, address) {
       $set: {
         ...account,
         dead: account.balance === 0 ? true : false,
+        lastUpdatedAt: blockIndexer,
       },
     },
     { upsert: true }
@@ -216,16 +221,16 @@ async function handleAssetsEvent(
     ].includes(method)
   ) {
     const [assetId, accountId] = eventData;
-    await updateOrCreateAddress(blockIndexer.blockHash, accountId);
-    await updateOrCreateAssetHolder(blockIndexer.blockHash, assetId, accountId);
+    await updateOrCreateAddress(blockIndexer, accountId);
+    await updateOrCreateAssetHolder(blockIndexer, assetId, accountId);
   }
 
   if (method === AssetsEvents.Transferred) {
     const [assetId, from, to] = eventData;
-    await updateOrCreateAddress(blockIndexer.blockHash, from);
-    await updateOrCreateAssetHolder(blockIndexer.blockHash, assetId, from);
-    await updateOrCreateAddress(blockIndexer.blockHash, to);
-    await updateOrCreateAssetHolder(blockIndexer.blockHash, assetId, to);
+    await updateOrCreateAddress(blockIndexer, from);
+    await updateOrCreateAssetHolder(blockIndexer, assetId, from);
+    await updateOrCreateAddress(blockIndexer, to);
+    await updateOrCreateAssetHolder(blockIndexer, assetId, to);
   }
 
   return true;

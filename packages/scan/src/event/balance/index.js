@@ -10,6 +10,9 @@ const Modules = Object.freeze({
 
 const BalancesEvents = Object.freeze({
   Transfer: "Transfer",
+  Reserved: "Reserved",
+  Unreserved: "Unreserved",
+  ReserveRepatriated: "ReserveRepatriated",
 });
 
 async function saveNewTransfer(
@@ -33,10 +36,13 @@ async function saveNewTransfer(
   });
 }
 
-async function updateOrCreateAddress(blockHash, address) {
+async function updateOrCreateAddress(blockIndexer, address) {
   const api = await getApi();
 
-  const account = await api.query.system.account.at(blockHash, address);
+  const account = await api.query.system.account.at(
+    blockIndexer.blockHash,
+    address
+  );
   if (account) {
     const col = await getAddressCollection();
     await col.updateOne(
@@ -44,6 +50,7 @@ async function updateOrCreateAddress(blockHash, address) {
       {
         $set: {
           ...account.toJSON(),
+          lastUpdatedAt: blockIndexer,
         },
       },
       { upsert: true }
@@ -70,10 +77,10 @@ async function handleBalancesEvent(
 
   const eventData = data.toJSON();
 
-  if (method === BalancesEvents.Transfer) {
+  if ([BalancesEvents.Transfer].includes(method)) {
     const [from, to, value] = eventData;
-    await updateOrCreateAddress(blockIndexer.blockHash, from);
-    await updateOrCreateAddress(blockIndexer.blockHash, to);
+    await updateOrCreateAddress(blockIndexer, from);
+    await updateOrCreateAddress(blockIndexer, to);
     await saveNewTransfer(
       blockIndexer,
       eventSort,
@@ -83,6 +90,17 @@ async function handleBalancesEvent(
       to,
       value
     );
+  }
+
+  if ([BalancesEvents.ReserveRepatriated].includes(method)) {
+    const [from, to, balance] = eventData;
+    await updateOrCreateAddress(blockIndexer, from);
+    await updateOrCreateAddress(blockIndexer, to);
+  }
+
+  if ([BalancesEvents.Reserved, BalancesEvents.Unreserved].includes(method)) {
+    const [address] = eventData;
+    await updateOrCreateAddress(blockIndexer, address);
   }
 
   return true;

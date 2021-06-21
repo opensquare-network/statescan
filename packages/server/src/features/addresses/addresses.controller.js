@@ -36,7 +36,17 @@ async function getAddressExtrinsics(ctx) {
   };
 }
 
+async function getAddressCount(ctx) {
+  const { chain } = ctx.params;
+
+  const col = await getAddressCollection(chain);
+  const count = await col.count({ killed: null });
+
+  ctx.body = count;
+}
+
 module.exports = {
   getAddress,
   getAddressExtrinsics,
+  getAddressCount,
 };

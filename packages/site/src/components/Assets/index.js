@@ -28,7 +28,7 @@ export default function Assets() {
       <Nav data={[{ name: "Asset Tracker" }]} />
       <Table
         head={assetsHead}
-        data={(data?.items || []).map((item) => [
+        body={(data?.items || []).map((item) => [
           `#${item.assetId}`,
           <Symbol symbol={item.symbol} />,
           item.name,

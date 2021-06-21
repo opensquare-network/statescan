@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-
 import { useNode } from "utils/hooks";
 
 const Wrapper = styled.div`
@@ -100,20 +99,30 @@ const ExploreButton = styled.div`
 `;
 
 const ExploreHintsWrapper = styled.div`
+  // todo make a better scroll bar
+  //overflow-y: scroll;
   margin-left: 0 !important;
   top: 53px;
   left: 0;
   width: 480px;
-  border: 1px solid #000;
+  max-height: 308px;
   position: absolute;
 `;
 
 const ExploreHint = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   margin: 0;
   padding: 0 16px 0 16px;
   line-height: 48px;
+  background-color: #ffffff;
+  font-size: 15px;
+
+  svg,
+  img {
+    margin-right: 8px;
+  }
 
   * {
     margin: 0;
@@ -124,11 +133,25 @@ const ExploreHint = styled.div`
   }
 `;
 
-const Token = styled.span``;
+const Token = styled.span`
+  margin-right: 8px;
+  overflow: hidden;
+  width: 48px;
+  font-weight: 500;
+  //font-size: 15px;
+  color: #111111;
+`;
 
-const TokenDesc = styled.span``;
+const TokenDesc = styled.span`
+  width: 299px;
+  margin-right: 8px;
+  overflow: hidden;
+  color: rgba(17, 17, 17, 0.35);
+`;
 
-const Height = styled.span``;
+const Height = styled.span`
+  color: rgba(17, 17, 17, 0.65);
+`;
 
 export default function Subheader() {
   const node = useNode();
@@ -150,44 +173,7 @@ export default function Subheader() {
         <ExploreHintsWrapper>
           {hints.map((hint) => (
             <ExploreHint>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="12" cy="12" r="12" fill="url(#paint0_linear)" />
-                <path
-                  d="M16.1574 12L13.5591 10.5L16.677 8.7L20.9642 11.175V12.825L16.677 15.3L13.5591 13.5L16.1574 12Z"
-                  fill="white"
-                />
-                <path
-                  d="M10.4411 13.5L7.84281 12L10.4411 10.5L7.32315 8.7L3.03595 11.175V12.825L7.32315 15.3L10.4411 13.5Z"
-                  fill="white"
-                />
-                <path
-                  d="M12.0001 15L14.5984 16.5L12.0001 18L9.40179 16.5L12.0001 15Z"
-                  fill="white"
-                />
-                <path
-                  d="M14.5984 7.5L12.0001 6L9.40179 7.5L12.0001 9L14.5984 7.5Z"
-                  fill="white"
-                />
-                <defs>
-                  <linearGradient
-                    id="paint0_linear"
-                    x1="24"
-                    y1="2.14614e-06"
-                    x2="5.00716e-06"
-                    y2="24"
-                    gradientUnits="userSpaceOnUse"
-                  >
-                    <stop stop-color="#04D2C5" />
-                    <stop offset="1" stop-color="#6848FF" />
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img src="/imgs/token-icons/osn.svg" alt="icon" />
               <Token>OSN</Token>
               <TokenDesc>OpenSquare</TokenDesc>
               <Height>#12450</Height>

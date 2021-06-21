@@ -8,6 +8,7 @@ import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis } from "utils";
 import { useNode } from "utils/hooks";
+import LineChart from "../Charts/LineChart";
 
 export default function Assets() {
   const node = useNode();
@@ -26,6 +27,7 @@ export default function Assets() {
   return (
     <section>
       <Nav data={[{ name: "Asset Tracker" }]} />
+      <LineChart />
       <Table
         head={assetsHead}
         data={(data?.items || []).map((item) => [

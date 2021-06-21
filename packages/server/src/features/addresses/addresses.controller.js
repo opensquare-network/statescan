@@ -1,4 +1,4 @@
-const { getAddressCollection } = require("../../../../scan/src/mongo");
+const { getAddressCollection } = require("../../mongo");
 const { getExtrinsicCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 

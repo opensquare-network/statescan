@@ -62,9 +62,9 @@ export default function Home() {
   );
 
   const { data: assetsLatestData } = useQuery(
-    ["assetsLatest", node],
+    ["assetsPopular", node],
     async () => {
-      const { data } = await axios.get(`${node}/assets/latest`);
+      const { data } = await axios.get(`${node}/assets/popular`);
       return data;
     },
     {

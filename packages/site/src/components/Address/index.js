@@ -14,6 +14,10 @@ import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import { addressExtrincsHead } from "utils/constants";
 import Section from "components/Section";
+import InLink from "components/InLink";
+import ThemeText from "components/ThemeText";
+import { timeDuration } from "utils";
+import Result from "components/Result";
 
 export default function Address() {
   const { id } = useParams();
@@ -40,10 +44,19 @@ export default function Address() {
         name: "Extrinsics",
         total: extrinsicsData?.total,
         head: addressExtrincsHead,
-        body: [],
+        body: (extrinsicsData?.items || []).map((item) => [
+          `${item?.indexer?.blockHeight}-${item?.indexer?.index}`,
+          <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
+            {item?.indexer?.blockHeight}
+          </InLink>,
+          <ThemeText>{item?.hash}</ThemeText>,
+          timeDuration(item?.indexer?.blockTime),
+          <Result isSuccess={item?.isSuccess} />,
+          `${item.section}(${item.name})`,
+        ]),
       },
     ]);
-  }, [extrinsicsData]);
+  }, [node, extrinsicsData]);
 
   return (
     <Section>

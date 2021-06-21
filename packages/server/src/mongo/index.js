@@ -3,7 +3,7 @@ const { DB } = require("./db");
 const scanDbs = {
   kusama: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
   rococo: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
-  westen: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
+  westend: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
 };
 
 const db = (chain) => scanDbs[chain];
@@ -40,6 +40,10 @@ function getAssetHolderCollection(chain) {
   return db(chain).getAssetHolderCollection();
 }
 
+function getAddressCollection(chain) {
+  return db(chain).getAddressCollection();
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -49,4 +53,5 @@ module.exports = {
   getAssetTransferCollection,
   getAssetCollection,
   getAssetHolderCollection,
+  getAddressCollection,
 };

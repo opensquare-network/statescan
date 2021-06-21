@@ -29,9 +29,9 @@ async function main() {
 
 async function test() {
   const knownHeights =
-    process.env.CHAIN === CHAINS.ROCOCO
+    process.env.CHAIN === CHAINS.STATEMINT
       ? [202, 241, 247, 254, 294, 306, 317, 488, 1488, 1502, 1658, 1663]
-      : process.env.CHAIN === CHAINS.WESTEN
+      : process.env.CHAIN === CHAINS.WESTMINT
       ? [
           1221, 1225, 6316, 6425, 6427, 6435, 6450, 6507, 6543, 6669, 6671,
           18819, 18847, 18999, 19283, 19403, 19884, 34539, 34543, 36120, 38270,

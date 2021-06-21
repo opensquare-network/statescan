@@ -57,7 +57,7 @@ async function scanBlockByHeight(scanHeight) {
   logger.info(`block ${block.block.header.number.toNumber()} done`);
 }
 
-test()
+main()
   .then(() => console.log("Scan finished"))
   .catch(console.error)
   .finally(cleanUp);

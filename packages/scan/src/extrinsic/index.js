@@ -1,26 +1,7 @@
 const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
-const { getExtrinsicCollection, getAddressCollection } = require("../mongo");
+const { getExtrinsicCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
-const { getApi } = require("../api");
-
-async function updateOrCreateAddress(blockHash, address) {
-  const api = await getApi();
-
-  const account = await api.query.system.account.at(blockHash, address);
-  if (account) {
-    const col = await getAddressCollection();
-    await col.updateOne(
-      { address },
-      {
-        $set: {
-          ...account.toJSON(),
-        },
-      },
-      { upsert: true }
-    );
-  }
-}
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
   let index = 0;
@@ -77,10 +58,6 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   const result = await exCol.insertOne(doc);
   if (result.result && !result.result.ok) {
     // FIXME: 处理交易插入不成功的情况
-  }
-
-  if (signer) {
-    await updateOrCreateAddress(indexer.blockHash, signer);
   }
 }
 

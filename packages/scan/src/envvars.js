@@ -1,14 +1,14 @@
 const CHAINS = {
-  KUSAMA: "kusama",
-  ROCOCO: "rococo",
-  WESTEN: "westen",
+  STATEMINE: "statemine",
+  STATEMINT: "statemint",
+  WESTMINT: "westmint",
 };
 
 function currentChain() {
-  if (["kusama", "rococo", "westen"].includes(process.env.CHAIN)) {
+  if (["statemine", "statemint", "westmint"].includes(process.env.CHAIN)) {
     return process.env.CHAIN;
   } else {
-    return "rococo";
+    return "statemint";
   }
 }
 

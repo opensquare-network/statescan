@@ -1,6 +1,7 @@
 const { getEventCollection } = require("../mongo");
 const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
+const { handleSystemEvent } = require("./system");
 
 async function handleEvents(events, blockIndexer, extrinsics) {
   if (events.length <= 0) {
@@ -28,6 +29,13 @@ async function handleEvents(events, blockIndexer, extrinsics) {
         blockIndexer
       );
       await handleBalancesEvent(
+        event,
+        sort,
+        extrinsicIndex,
+        extrinsicHash,
+        blockIndexer
+      );
+      await handleSystemEvent(
         event,
         sort,
         extrinsicIndex,

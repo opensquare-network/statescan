@@ -21,6 +21,21 @@ async function getLatestAssets(ctx) {
   ctx.body = items;
 }
 
+async function getPopularAssets(ctx) {
+  const { chain } = ctx.params;
+
+  const col = await getAssetCollection(chain);
+  const items = await col
+    .find({})
+    .sort({
+      accounts: -1,
+    })
+    .limit(5)
+    .toArray();
+
+  ctx.body = items;
+}
+
 async function getAssetsCount(ctx) {
   const { chain } = ctx.params;
   const col = await getAssetCollection(chain);
@@ -134,6 +149,7 @@ async function getAssetHolders(ctx) {
   const col = await getAssetHolderCollection(chain);
   const items = await col
     .find($match)
+    .sort({ balance: -1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
@@ -150,6 +166,7 @@ async function getAssetHolders(ctx) {
 
 module.exports = {
   getLatestAssets,
+  getPopularAssets,
   getAssetsCount,
   getAssets,
   getAsset,

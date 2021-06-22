@@ -3,10 +3,13 @@ const { getKsmUsdtMonthlyCollection } = require("../../mongo");
 async function getMonthlyPrices(ctx) {
   const { chain } = ctx.params;
 
-  console.log(chain);
+  let items = [];
 
-  const col = await getKsmUsdtMonthlyCollection();
-  const items = await col.find({}).sort({ openTime: 1 }).toArray();
+  // Kusama data only
+  if (chain === "statemine") {
+    const col = await getKsmUsdtMonthlyCollection();
+    items = await col.find({}).sort({ openTime: 1 }).toArray();
+  }
 
   ctx.body = items.map((item) => ({
     time: item.openTime,

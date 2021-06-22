@@ -52,6 +52,16 @@ export const addressExtrincsHead = [
   { name: "Action" },
 ];
 
+export const addressAssetsHead = [
+  { name: "Asset ID" },
+  { name: "Symbol" },
+  { name: "Name" },
+  { name: "Balance" },
+  { name: "Approved" },
+  { name: "Frozen" },
+  { name: "Transfer Count" },
+];
+
 export const extrinsicEventsHead = [
   { name: "Event ID" },
   { name: "Hash" },

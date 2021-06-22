@@ -97,9 +97,11 @@ export default function Asset() {
         head: assetHoldersHead,
         body: (holdersData?.items || []).map((item) => [
           "-",
-          <InLink to={`/${node}/address/${item?.address}`}>
-            {item?.address}
-          </InLink>,
+          <BreakText>
+            <InLink to={`/${node}/address/${item?.address}`}>
+              {item?.address}
+            </InLink>
+          </BreakText>,
           "-",
           item?.balance,
         ]),
@@ -132,16 +134,20 @@ export default function Asset() {
             <MinorText>{data?.name}</MinorText>,
             <MinorText>{`#${data?.assetId}`}</MinorText>,
             <MinorText>{timeUTC(data?.createdAt?.blockTime)}</MinorText>,
-            <CopyText text={data?.owner}>
-              <InLink to={`/${node}/address/${data?.owner}`}>
-                {data?.owner}
-              </InLink>
-            </CopyText>,
-            <CopyText text={data?.issuer}>
-              <InLink to={`/${node}/address/${data?.issuer}`}>
-                {data?.issuer}
-              </InLink>
-            </CopyText>,
+            <BreakText>
+              <CopyText text={data?.owner}>
+                <InLink to={`/${node}/address/${data?.owner}`}>
+                  {data?.owner}
+                </InLink>
+              </CopyText>
+            </BreakText>,
+            <BreakText>
+              <CopyText text={data?.issuer}>
+                <InLink to={`/${node}/address/${data?.issuer}`}>
+                  {data?.issuer}
+                </InLink>
+              </CopyText>
+            </BreakText>,
             `${data?.supply} ${data?.symbol}`,
             data?.decimals,
             <MinorText>{holdersData?.total}</MinorText>,

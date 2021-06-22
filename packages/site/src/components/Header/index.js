@@ -7,6 +7,9 @@ import Subheader from "./Subheader";
 const Container = styled.header`
   position: relative;
   padding: 0 2rem;
+  @media screen and (max-width: 1200px) {
+    padding: 0 1.5rem;
+  }
 `;
 
 const Wrapper = styled.div`

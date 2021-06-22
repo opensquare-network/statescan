@@ -12,7 +12,7 @@ import MinorText from "components/MinorText";
 import BreakText from "components/BreakText";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
-import { addressExtrincsHead } from "utils/constants";
+import { addressExtrincsHead, addressAssetsHead } from "utils/constants";
 import Section from "components/Section";
 import InLink from "components/InLink";
 import ThemeText from "components/ThemeText";
@@ -26,6 +26,7 @@ export default function Address() {
   const symbol = useSymnol();
   const [tabTableData, setTabTableData] = useState();
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
+  const [assetsPage, setAssetsPage] = useState(0);
 
   const { data } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
@@ -44,6 +45,18 @@ export default function Address() {
     }
   );
 
+  const { data: assetsData } = useQuery(
+    ["addressAssets", id, node, assetsPage],
+    async () => {
+      const { data } = await axios.get(`${node}/addresses/${id}/assets`, {
+        params: {
+          page: assetsPage,
+        },
+      });
+      return data;
+    }
+  );
+
   useEffect(() => {
     setTabTableData([
       {
@@ -55,7 +68,9 @@ export default function Address() {
           <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
             {item?.indexer?.blockHeight}
           </InLink>,
-          <ThemeText>{item?.hash}</ThemeText>,
+          <BreakText>
+            <ThemeText>{item?.hash}</ThemeText>
+          </BreakText>,
           timeDuration(item?.indexer?.blockTime),
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
@@ -70,8 +85,31 @@ export default function Address() {
           />
         ),
       },
+      {
+        name: "Assets",
+        total: assetsData?.total,
+        head: addressAssetsHead,
+        body: (assetsData?.items || []).map((item) => [
+          "-",
+          "-",
+          "-",
+          item.balance,
+          "-",
+          "-",
+          "-",
+        ]),
+        foot: (
+          <Pagination
+            page={assetsData?.page}
+            pageSize={assetsData?.pageSize}
+            total={assetsData?.total}
+            s
+            setPage={setAssetsPage}
+          />
+        ),
+      },
     ]);
-  }, [node, extrinsicsData]);
+  }, [node, extrinsicsData, assetsData]);
 
   return (
     <Section>

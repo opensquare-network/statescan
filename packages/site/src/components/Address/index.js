@@ -18,12 +18,14 @@ import InLink from "components/InLink";
 import ThemeText from "components/ThemeText";
 import { timeDuration } from "utils";
 import Result from "components/Result";
+import Pagination from "components/Pgination";
 
 export default function Address() {
   const { id } = useParams();
   const node = useNode();
   const symbol = useSymnol();
   const [tabTableData, setTabTableData] = useState();
+  const [extrinsicsPage, setExtrinsicsPage] = useState(0);
 
   const { data } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
@@ -31,9 +33,13 @@ export default function Address() {
   });
 
   const { data: extrinsicsData } = useQuery(
-    ["addressExtrinsics", id, node],
+    ["addressExtrinsics", id, node, extrinsicsPage],
     async () => {
-      const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`);
+      const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`, {
+        params: {
+          page: extrinsicsPage,
+        },
+      });
       return data;
     }
   );
@@ -54,6 +60,15 @@ export default function Address() {
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
         ]),
+        foot: (
+          <Pagination
+            page={extrinsicsData?.page}
+            pageSize={extrinsicsData?.pageSize}
+            total={extrinsicsData?.total}
+            s
+            setPage={setExtrinsicsPage}
+          />
+        ),
       },
     ]);
   }, [node, extrinsicsData]);

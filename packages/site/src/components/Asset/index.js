@@ -19,12 +19,15 @@ import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import ThemeText from "components/ThemeText";
 import BreakText from "components/BreakText";
+import Pagination from "components/Pgination";
 
 export default function Asset() {
   const { id } = useParams();
   const node = useNode();
   const [assetSymbol, setAssetSymbol] = useState();
   const [tabTableData, setTabTableData] = useState();
+  const [transfersPage, setTransfersPage] = useState(0);
+  const [holdersPage, setHoldersPage] = useState(0);
 
   const { data } = useQuery(["asset", node, id], async () => {
     const { data } = await axios.get(`${node}/assets/${id}`);
@@ -32,22 +35,28 @@ export default function Asset() {
   });
 
   const { data: transfersData } = useQuery(
-    ["assetTransfers", node, id],
+    ["assetTransfers", node, id, transfersPage],
     async () => {
-      const { data } = await axios.get(`${node}/assets/${id}/transfers`);
+      const { data } = await axios.get(`${node}/assets/${id}/transfers`, {
+        params: {
+          page: transfersPage,
+        },
+      });
       return data;
     }
   );
 
   const { data: holdersData } = useQuery(
-    ["assetHolders", node, id],
+    ["assetHolders", node, id, holdersPage],
     async () => {
-      const { data } = await axios.get(`${node}/assets/${id}/holders`);
+      const { data } = await axios.get(`${node}/assets/${id}/holders`, {
+        params: {
+          page: holdersPage,
+        },
+      });
       return data;
     }
   );
-
-  console.log({ holdersData });
 
   useEffect(() => {
     setAssetSymbol(data?.symbol);
@@ -73,6 +82,14 @@ export default function Asset() {
           </InLink>,
           item?.balance,
         ]),
+        foot: (
+          <Pagination
+            page={transfersData?.page}
+            pageSize={transfersData?.pageSize}
+            total={transfersData?.total}
+            setPage={setTransfersPage}
+          />
+        ),
       },
       {
         name: "Holders",
@@ -86,6 +103,15 @@ export default function Asset() {
           "-",
           item?.balance,
         ]),
+        foot: (
+          <Pagination
+            page={holdersData?.page}
+            pageSize={holdersData?.pageSize}
+            total={holdersData?.total}
+            s
+            setPage={setHoldersPage}
+          />
+        ),
       },
     ]);
   }, [node, transfersData, holdersData]);

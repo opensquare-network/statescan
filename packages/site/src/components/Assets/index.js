@@ -1,3 +1,4 @@
+import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 
@@ -8,14 +9,20 @@ import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis } from "utils";
 import { useNode } from "utils/hooks";
+import Pagination from "components/Pgination";
 
 export default function Assets() {
   const node = useNode();
+  const [page, setPage] = useState(0);
 
   const { data } = useQuery(
     ["assets", node],
     async () => {
-      const { data } = await axios.get(`${node}/assets`);
+      const { data } = await axios.get(`${node}/assets`, {
+        params: {
+          page,
+        },
+      });
       return data;
     },
     {
@@ -41,6 +48,15 @@ export default function Assets() {
           item.accounts,
           `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
         ])}
+        foot={
+          <Pagination
+            page={data?.page}
+            pageSize={data?.pageSize}
+            total={data?.total}
+            s
+            setPage={setPage}
+          />
+        }
       />
     </section>
   );

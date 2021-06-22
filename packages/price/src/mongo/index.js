@@ -2,15 +2,15 @@ const { MongoClient } = require("mongodb");
 
 const dbName = process.env.MONGO_DB_PRICE_NAME || "price";
 
-const ksmUsdtMonthlyCollectionName = "ksmUsdtMonthly";
-const dotUsdtMonthlyCollectionName = "dotUsdtMonthly";
+const ksmUsdtDailyCollectionName = "ksmUsdtDaily";
+const dotUsdtDailyCollectionName = "dotUsdtDaily";
 
 let client = null;
 let db = null;
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost:27017";
-let ksmUsdtMonthlyCol = null;
-let dotUsdtMonthlyCol = null;
+let ksmUsdtDailyCol = null;
+let dotUsdtDailyCol = null;
 
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
@@ -18,8 +18,8 @@ async function initDb() {
   });
 
   db = client.db(dbName);
-  ksmUsdtMonthlyCol = db.collection(ksmUsdtMonthlyCollectionName);
-  dotUsdtMonthlyCol = db.collection(dotUsdtMonthlyCollectionName);
+  ksmUsdtDailyCol = db.collection(ksmUsdtDailyCollectionName);
+  dotUsdtDailyCol = db.collection(dotUsdtDailyCollectionName);
 
   await _createIndexes();
 }
@@ -30,8 +30,8 @@ async function _createIndexes() {
     process.exit(1);
   }
 
-  ksmUsdtMonthlyCol.createIndex({ openTime: 1 });
-  dotUsdtMonthlyCol.createIndex({ openTime: 1 });
+  ksmUsdtDailyCol.createIndex({ openTime: 1 });
+  dotUsdtDailyCol.createIndex({ openTime: 1 });
 }
 
 async function tryInit(col) {
@@ -40,18 +40,18 @@ async function tryInit(col) {
   }
 }
 
-async function getKsmUsdtMonthlyCollection() {
-  await tryInit(ksmUsdtMonthlyCol);
-  return ksmUsdtMonthlyCol;
+async function getKsmUsdtDailyCollection() {
+  await tryInit(ksmUsdtDailyCol);
+  return ksmUsdtDailyCol;
 }
 
-async function getDotUsdtMonthlyCollection() {
-  await tryInit(dotUsdtMonthlyCol);
-  return dotUsdtMonthlyCol;
+async function getDotUsdtDailyCollection() {
+  await tryInit(dotUsdtDailyCol);
+  return dotUsdtDailyCol;
 }
 
 module.exports = {
   initDb,
-  getKsmUsdtMonthlyCollection,
-  getDotUsdtMonthlyCollection,
+  getKsmUsdtDailyCollection,
+  getDotUsdtDailyCollection,
 };

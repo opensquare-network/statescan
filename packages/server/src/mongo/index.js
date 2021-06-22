@@ -1,8 +1,8 @@
 const { DB } = require("./scandb");
 const {
   initDb: initPriceDb,
-  getDotUsdtMonthlyCollection,
-  getKsmUsdtMonthlyCollection,
+  getDotUsdtDailyCollection,
+  getKsmUsdtDailyCollection,
 } = require("./pricedb");
 
 const scanDbs = {
@@ -62,6 +62,6 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
-  getDotUsdtMonthlyCollection,
-  getKsmUsdtMonthlyCollection,
+  getDotUsdtDailyCollection,
+  getKsmUsdtDailyCollection,
 };

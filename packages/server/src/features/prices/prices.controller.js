@@ -1,14 +1,14 @@
-const { getKsmUsdtMonthlyCollection } = require("../../mongo");
+const { getKsmUsdtDailyCollection } = require("../../mongo");
 
-async function getMonthlyPrices(ctx) {
+async function getDailyPrices(ctx) {
   const { chain } = ctx.params;
 
   let items = [];
 
   // Kusama data only
   if (chain === "statemine") {
-    const col = await getKsmUsdtMonthlyCollection();
-    items = await col.find({}).sort({ openTime: 1 }).toArray();
+    const col = await getKsmUsdtDailyCollection();
+    items = await col.find({}).sort({ openTime: -1 }).limit(30).toArray();
   }
 
   ctx.body = items.map((item) => ({
@@ -18,5 +18,5 @@ async function getMonthlyPrices(ctx) {
 }
 
 module.exports = {
-  getMonthlyPrices,
+  getDailyPrices,
 };

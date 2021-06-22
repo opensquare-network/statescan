@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "ksm-monthly-price-tracker",
+      name: "ksm-daily-price-tracker",
       script: "src/index.js",
       args: "--symbol=KSM",
       log_date_format: "YYYY-MM-DD HH:mm Z",
@@ -13,7 +13,7 @@ module.exports = {
       },
     },
     {
-      name: "dot-monthly-price-tracker",
+      name: "dot-daily-price-tracker",
       script: "src/index.js",
       args: "--symbol=DOT",
       log_date_format: "YYYY-MM-DD HH:mm Z",

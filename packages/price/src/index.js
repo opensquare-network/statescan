@@ -5,17 +5,17 @@ const minimist = require("minimist");
 const dayjs = require("dayjs");
 const { getKlines } = require("./binance");
 const {
-  getKsmUsdtMonthlyCollection,
-  getDotUsdtMonthlyCollection,
+  getKsmUsdtDailyCollection,
+  getDotUsdtDailyCollection,
 } = require("./mongo");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function getCollection(symbol) {
   if (symbol === "DOT") {
-    return getDotUsdtMonthlyCollection();
+    return getDotUsdtDailyCollection();
   } else if (symbol === "KSM") {
-    return getKsmUsdtMonthlyCollection();
+    return getKsmUsdtDailyCollection();
   } else {
     throw new Error("Unsupport symbol " + symbol);
   }
@@ -107,9 +107,9 @@ async function main() {
     // Reduce the call rate when the latest open time is very close to the current time,
     if (
       latestOpenTime &&
-      new Date(latestOpenTime).getMonth() === new Date().getMonth()
+      dayjs(latestOpenTime).add(1, "d").toDate().getTime() > Date.now()
     ) {
-      await sleep(24 * 60 * 60 * 1000); // day
+      await sleep(60 * 60 * 1000);
     } else {
       await sleep(2 * 1000);
     }

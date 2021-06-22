@@ -6,8 +6,8 @@
     "node": ">=15.0.0"
   },
   "scripts": {
-    "deploy:ksm": "pm2 start ecosystem.config.js --only ksm-monthly-price-tracker",
-    "deploy:dot": "pm2 start ecosystem.config.js --only dot-monthly-price-tracker"
+    "deploy:ksm": "pm2 start ecosystem.config.js --only ksm-daily-price-tracker",
+    "deploy:dot": "pm2 start ecosystem.config.js --only dot-daily-price-tracker"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",

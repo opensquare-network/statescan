@@ -12,7 +12,7 @@ import MinorText from "components/MinorText";
 import BreakText from "components/BreakText";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
-import { addressExtrincsHead } from "utils/constants";
+import { addressExtrincsHead, addressAssetsHead } from "utils/constants";
 import Section from "components/Section";
 import InLink from "components/InLink";
 import ThemeText from "components/ThemeText";
@@ -26,6 +26,7 @@ export default function Address() {
   const symbol = useSymnol();
   const [tabTableData, setTabTableData] = useState();
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
+  const [assetsPage, setAssetsPage] = useState(0);
 
   const { data } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
@@ -38,6 +39,18 @@ export default function Address() {
       const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`, {
         params: {
           page: extrinsicsPage,
+        },
+      });
+      return data;
+    }
+  );
+
+  const { data: assetsData } = useQuery(
+    ["addressAssets", id, node, assetsPage],
+    async () => {
+      const { data } = await axios.get(`${node}/addresses/${id}/assets`, {
+        params: {
+          page: assetsPage,
         },
       });
       return data;
@@ -70,8 +83,22 @@ export default function Address() {
           />
         ),
       },
+      {
+        name: "Assets",
+        total: assetsData?.total,
+        head: addressAssetsHead,
+        body: (assetsData?.items || []).map((item) => [
+          "-",
+          "-",
+          "-",
+          item.balance,
+          "-",
+          "-",
+          "-",
+        ]),
+      },
     ]);
-  }, [node, extrinsicsData]);
+  }, [node, extrinsicsData, assetsData]);
 
   return (
     <Section>

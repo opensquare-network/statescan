@@ -81,7 +81,7 @@ export default function Block() {
           <MinorText>
             <Result isSuccess={item?.isSuccess} />
           </MinorText>,
-          `${item?.section}(${item?.name})`,
+          <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
         ]),
         foot: (
           <Pagination
@@ -98,8 +98,10 @@ export default function Block() {
         head: blockEventsHead,
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.index}`,
-          <ThemeText>{item?.extrinsicHash}</ThemeText>,
-          `${item?.section}(${item?.method})`,
+          <BreakText>
+            <ThemeText>{item?.extrinsicHash}</ThemeText>
+          </BreakText>,
+          <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         ]),
         foot: (
           <Pagination

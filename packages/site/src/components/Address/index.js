@@ -68,7 +68,9 @@ export default function Address() {
           <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
             {item?.indexer?.blockHeight}
           </InLink>,
-          <ThemeText>{item?.hash}</ThemeText>,
+          <BreakText>
+            <ThemeText>{item?.hash}</ThemeText>
+          </BreakText>,
           timeDuration(item?.indexer?.blockTime),
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
@@ -96,6 +98,15 @@ export default function Address() {
           "-",
           "-",
         ]),
+        foot: (
+          <Pagination
+            page={assetsData?.page}
+            pageSize={assetsData?.pageSize}
+            total={assetsData?.total}
+            s
+            setPage={setAssetsPage}
+          />
+        ),
       },
     ]);
   }, [node, extrinsicsData, assetsData]);

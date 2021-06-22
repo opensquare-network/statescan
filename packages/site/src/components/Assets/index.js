@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
 import Table from "components/Table";
-import InLink from "components/ExLink";
+import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis } from "utils";
@@ -36,7 +36,9 @@ export default function Assets() {
       <Table
         head={assetsHead}
         body={(data?.items || []).map((item) => [
-          `#${item.assetId}`,
+          <InLink
+            to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+          >{`#${item.assetId}`}</InLink>,
           <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>
@@ -57,6 +59,7 @@ export default function Assets() {
             setPage={setPage}
           />
         }
+        collapse={900}
       />
     </section>
   );

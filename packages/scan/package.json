@@ -7,6 +7,7 @@
     "@polkadot/api": "^4.15.1",
     "@polkadot/types": "^4.15.1",
     "@polkadot/util": "^6.9.1",
+    "dotenv": "^10.0.0",
     "log4js": "^6.3.0",
     "mongodb": "^3.6.9"
   },

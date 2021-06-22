@@ -18,6 +18,7 @@ import InLink from "components/InLink";
 import ThemeText from "components/ThemeText";
 import { timeDuration } from "utils";
 import Result from "components/Result";
+import Pagination from "components/Pgination";
 
 export default function Address() {
   const { id } = useParams();
@@ -33,7 +34,12 @@ export default function Address() {
   const { data: extrinsicsData } = useQuery(
     ["addressExtrinsics", id, node],
     async () => {
-      const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`);
+      const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`, {
+        params: {
+          page_size: 2,
+          page: 2,
+        },
+      });
       return data;
     }
   );
@@ -58,6 +64,8 @@ export default function Address() {
     ]);
   }, [node, extrinsicsData]);
 
+  console.log({ extrinsicsData });
+
   return (
     <Section>
       <div>
@@ -79,6 +87,7 @@ export default function Address() {
         />
       </div>
       <TabTable data={tabTableData} collapse={900} />
+      <Pagination page={0} pageSize={2} total={21} />
     </Section>
   );
 }

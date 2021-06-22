@@ -10,6 +10,7 @@ const chainFeatureRouters = [
   require("./features/holders/routes"),
   require("./features/addresses/routes"),
   require("./features/home/routes"),
+  require("./features/prices/routes"),
 ];
 
 const commonFeatureRouters = [];

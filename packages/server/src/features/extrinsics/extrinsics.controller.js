@@ -59,6 +59,8 @@ async function getExtrinsicEvents(ctx) {
   const items = await col
     .find(q, { projection: { data: 0 } })
     .sort({ sort: 1 })
+    .skip(page * pageSize)
+    .limit(pageSize)
     .toArray();
   const total = await col.count(q);
 

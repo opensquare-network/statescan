@@ -1,4 +1,7 @@
-const { getAddressCollection } = require("../../mongo");
+const {
+  getAddressCollection,
+  getAssetHolderCollection,
+} = require("../../mongo");
 const { getExtrinsicCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
@@ -38,6 +41,65 @@ async function getAddressExtrinsics(ctx) {
   };
 }
 
+async function getAddressAssets(ctx) {
+  const { chain, address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = { address };
+
+  const col = await getAssetHolderCollection(chain);
+  const items = await col
+    .aggregate([
+      { $match: q },
+      { $sort: { balance: -1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      {
+        $lookup: {
+          from: "approval",
+          let: { assetId: "$assetId", address: "$address" },
+          as: "approved",
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$address", "$$address"] },
+                  ],
+                },
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                amount: { $sum: "$amount" },
+              },
+            },
+          ],
+        },
+      },
+      {
+        $addFields: {
+          approved: { $arrayElemAt: ["$approved.amount", 0] },
+        },
+      },
+    ])
+    .toArray();
+  const total = await col.count(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
 async function getAddressCount(ctx) {
   const { chain } = ctx.params;
 
@@ -50,5 +112,6 @@ async function getAddressCount(ctx) {
 module.exports = {
   getAddress,
   getAddressExtrinsics,
+  getAddressAssets,
   getAddressCount,
 };

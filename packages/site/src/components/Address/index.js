@@ -25,6 +25,7 @@ export default function Address() {
   const node = useNode();
   const symbol = useSymnol();
   const [tabTableData, setTabTableData] = useState();
+  const [extrinsicsPage, setExtrinsicsPage] = useState(0);
 
   const { data } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
@@ -32,12 +33,11 @@ export default function Address() {
   });
 
   const { data: extrinsicsData } = useQuery(
-    ["addressExtrinsics", id, node],
+    ["addressExtrinsics", id, node, extrinsicsPage],
     async () => {
       const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`, {
         params: {
-          page_size: 2,
-          page: 2,
+          page: extrinsicsPage,
         },
       });
       return data;
@@ -60,11 +60,18 @@ export default function Address() {
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
         ]),
+        foot: (
+          <Pagination
+            page={extrinsicsData?.page}
+            pageSize={extrinsicsData?.pageSize}
+            total={extrinsicsData?.total}
+            s
+            setPage={setExtrinsicsPage}
+          />
+        ),
       },
     ]);
   }, [node, extrinsicsData]);
-
-  console.log({ extrinsicsData });
 
   return (
     <Section>
@@ -87,7 +94,6 @@ export default function Address() {
         />
       </div>
       <TabTable data={tabTableData} collapse={900} />
-      <Pagination page={0} pageSize={2} total={21} />
     </Section>
   );
 }

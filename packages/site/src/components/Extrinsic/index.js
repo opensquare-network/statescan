@@ -16,6 +16,7 @@ import { capitalize, timeUTC } from "utils";
 import TabTable from "components/TabTable";
 import ThemeText from "components/ThemeText";
 import BreakText from "components/BreakText";
+import Pagination from "components/Pgination";
 
 export default function Extrinsic() {
   const { id } = useParams();
@@ -23,6 +24,7 @@ export default function Extrinsic() {
   const symbol = useSymnol();
   const [extrinsicId, setExtrinsicId] = useState();
   const [tabTableData, setTabTableData] = useState();
+  const [eventsPage, setEventsPage] = useState(0);
 
   const { data } = useQuery(["extrinsic", id, node], async () => {
     const { data } = await axios.get(`${node}/extrinsics/${id}`);
@@ -30,9 +32,13 @@ export default function Extrinsic() {
   });
 
   const { data: eventsData } = useQuery(
-    ["extrinsicEvents", id, node],
+    ["extrinsicEvents", id, node, eventsPage],
     async () => {
-      const { data } = await axios.get(`${node}/extrinsics/${id}/events`);
+      const { data } = await axios.get(`${node}/extrinsics/${id}/events`, {
+        params: {
+          page: eventsPage,
+        },
+      });
       return data;
     }
   );
@@ -54,6 +60,15 @@ export default function Extrinsic() {
           </BreakText>,
           `${item?.section}(${item?.method})`,
         ]),
+        foot: (
+          <Pagination
+            page={eventsData?.page}
+            pageSize={eventsData?.pageSize}
+            total={eventsData?.total}
+            s
+            setPage={setEventsPage}
+          />
+        ),
       },
     ]);
   }, [eventsData]);

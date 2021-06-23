@@ -3,6 +3,9 @@ import styled from "styled-components";
 
 import { useWindowSize } from "utils/hooks";
 import NoData from "./NoData";
+import TimeHead from "./TimeHead";
+import TimeBody from "./TimeBody";
+import { timeTypes } from "utils/constants";
 
 const Title = styled.h4`
   font-weight: bold;
@@ -119,6 +122,7 @@ const CollapseFoot = styled.div`
 
 export default function Table({ title, head, body, foot, collapse }) {
   const [isCollapse, setIsCollapse] = useState(false);
+  const [timeType, setTimeType] = useState(timeTypes.age);
   const size = useWindowSize();
   useEffect(() => {
     if (collapse && collapse > size.width) {
@@ -137,7 +141,11 @@ export default function Table({ title, head, body, foot, collapse }) {
             <tr>
               {(head || []).map((item, index) => (
                 <th key={index} style={{ textAlign: item.align ?? "left" }}>
-                  {item.name}
+                  {item.type === "time" ? (
+                    <TimeHead timeType={timeType} setTimeType={setTimeType} />
+                  ) : (
+                    item.name
+                  )}
                 </th>
               ))}
             </tr>
@@ -152,7 +160,11 @@ export default function Table({ title, head, body, foot, collapse }) {
                         key={index}
                         style={{ textAlign: head[index].align ?? "left" }}
                       >
-                        {item}
+                        {head[index].type === "time" ? (
+                          <TimeBody timeType={timeType} ts={item} />
+                        ) : (
+                          item
+                        )}
                       </td>
                     ))}
                   </tr>

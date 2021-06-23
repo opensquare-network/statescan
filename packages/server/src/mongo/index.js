@@ -1,4 +1,9 @@
-const { DB } = require("./db");
+const { DB } = require("./scandb");
+const {
+  initDb: initPriceDb,
+  getDotUsdtDailyCollection,
+  getKsmUsdtDailyCollection,
+} = require("./pricedb");
 
 const scanDbs = {
   kusama: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
@@ -9,7 +14,10 @@ const scanDbs = {
 const db = (chain) => scanDbs[chain];
 
 function initDb() {
-  return Promise.all(Object.values(scanDbs).map((db) => db.initDb()));
+  return Promise.all([
+    ...Object.values(scanDbs).map((db) => db.initDb()),
+    initPriceDb(),
+  ]);
 }
 
 function getStatusCollection(chain) {
@@ -54,4 +62,6 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getDotUsdtDailyCollection,
+  getKsmUsdtDailyCollection,
 };

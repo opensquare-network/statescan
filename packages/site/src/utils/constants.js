@@ -1,17 +1,5 @@
 export const nodes = [
   {
-    name: "Kusama",
-    icon: "/imgs/icons/kusama.svg",
-    value: "kusama",
-    symbol: "KSM",
-  },
-  {
-    name: "Rococo",
-    icon: "/imgs/icons/rococo.png",
-    value: "rococo",
-    symbol: "ROC",
-  },
-  {
     name: "Westend",
     icon: "/imgs/icons/rococo.png",
     value: "westend",

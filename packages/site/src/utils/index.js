@@ -15,6 +15,10 @@ export function timeUTC(time) {
   return moment.utc(time).format("YYYY-MM-DD HH:mm:ss (+UTC)");
 }
 
+export function time(time) {
+  return moment(time).format("YYYY-MM-DD HH:mm:ss");
+}
+
 export function capitalize(string) {
   if (!string || typeof string !== string || string.length === 0) return string;
   return string.charAt(0).toUpperCase() + string.slice(1);

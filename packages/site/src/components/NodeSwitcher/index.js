@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import { useLocation } from "react-router-dom";
@@ -99,14 +99,18 @@ export default function NodeSwitcher() {
     setCurrentNode(() => nodes.find((item) => item.value === node));
   }, [node]);
 
-  useEffect(() => {
-    if (node) {
-      const newPathname = location.pathname.replace(/^\/\w+/, `/${node}`);
-      if (newPathname !== location.pathname) {
-        history.replace(newPathname);
-      }
+  const replacePathname = useCallback(() => {
+    const newPathname = location.pathname.replace(/^\/\w+/, `/${node}`);
+    if (newPathname !== location.pathname) {
+      history.replace(newPathname);
     }
-  }, [node, location, history]);
+  }, [history, location, node]);
+
+  useEffect(() => {
+    if (location.pathname !== "/404" && node) {
+      replacePathname();
+    }
+  }, [node, location, replacePathname]);
 
   return (
     <Wrapper ref={ref}>
@@ -126,9 +130,8 @@ export default function NodeSwitcher() {
               key={index}
               active={item.value === currentNode?.value}
               onClick={() => {
-                if (item.value !== currentNode?.value) {
-                  dispatch(setNode(item.value));
-                }
+                dispatch(setNode(item.value));
+                replacePathname();
                 setShow(false);
               }}
             >

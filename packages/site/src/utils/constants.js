@@ -133,3 +133,8 @@ export const assetHead = [
   "Holders",
   "Transfers",
 ];
+
+export const timeTypes = {
+  age: 0,
+  date: 1,
+};

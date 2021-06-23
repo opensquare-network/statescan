@@ -29,7 +29,7 @@ function App() {
             <Route path="/:node">
               <Layout />
             </Route>
-            <Redirect to="/" />
+            <Redirect to="/404" />
           </Switch>
         </Router>
       </QueryClientProvider>

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 import { useNode } from "utils/hooks";
+import LineChart from "../Charts/LineChart";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -53,7 +54,7 @@ const Divider = styled.div`
   }
 `;
 
-const Chart = styled.div`
+const ChartWrapper = styled.div`
   width: 227px;
   height: 48px;
   background: #f4f4f4;
@@ -109,6 +110,18 @@ export default function Overview() {
     }
   );
 
+  const chartData = [
+    { time: 1, price: 1 },
+    { time: 2, price: 1 },
+    { time: 3, price: 3 },
+    { time: 4, price: 2 },
+    {
+      time: 5,
+      price: 1,
+    },
+    { time: 6, price: 6 },
+  ];
+
   return (
     <Wrapper>
       <ItemWrapper>
@@ -132,7 +145,9 @@ export default function Overview() {
         <Title>DOT Price</Title>
         <Text>$00.00</Text>
       </ItemWrapper>
-      <Chart />
+      <ChartWrapper>
+        <LineChart data={chartData} color={"#F22279"} />
+      </ChartWrapper>
     </Wrapper>
   );
 }

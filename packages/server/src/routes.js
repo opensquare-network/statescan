@@ -22,7 +22,7 @@ module.exports = (app) => {
 
   for (const r of chainFeatureRouters) {
     router.use(
-      "/:chain(kusama|rococo|westend)",
+      "/:chain(statemine|statemint|westmint)",
       r.routes(),
       r.allowedMethods({ throw: true })
     );

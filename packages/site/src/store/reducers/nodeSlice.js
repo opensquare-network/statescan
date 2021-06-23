@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const DEFAULT_NODE = "polkadot";
+const DEFAULT_NODE = "westmint";
 
 const nodeSlice = createSlice({
   name: "node",

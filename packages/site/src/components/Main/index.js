@@ -15,7 +15,7 @@ const Wrapper = styled.main`
 `;
 
 export default function Main() {
-  let { path } = useRouteMatch();
+  const { path } = useRouteMatch();
 
   return (
     <Wrapper>
@@ -39,7 +39,7 @@ export default function Main() {
           <Route exact path={`${path}/asset/:id`}>
             <Asset />
           </Route>
-          <Redirect to="/" />
+          <Redirect to="/404" />
         </Switch>
       </Container>
     </Wrapper>

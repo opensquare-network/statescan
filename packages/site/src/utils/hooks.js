@@ -45,7 +45,7 @@ export function useHomePage() {
     exact: true,
     strict: false,
   });
-  return !!match;
+  return !!match && location.pathname !== "/404";
 }
 
 export function useWindowSize() {

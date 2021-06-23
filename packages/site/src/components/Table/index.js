@@ -167,11 +167,13 @@ export default function Table({ title, head, body, foot, collapse }) {
               )}
             </>
           ) : (
-            <tr>
-              <td colSpan="100%">
-                <NoData isCollapse={isCollapse} />
-              </td>
-            </tr>
+            <tbody>
+              <tr>
+                <td colSpan="100%">
+                  <NoData isCollapse={isCollapse} />
+                </td>
+              </tr>
+            </tbody>
           )}
         </StyledTable>
       )}

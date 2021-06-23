@@ -6,7 +6,7 @@ async function getDailyPrices(ctx) {
   let items = [];
 
   // Kusama data only
-  if (chain === "statemine") {
+  if (chain === "kusama") {
     const col = await getKsmUsdtDailyCollection();
     items = await col.find({}).sort({ openTime: -1 }).limit(30).toArray();
   }

@@ -11,6 +11,7 @@ import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   position: relative;
+  z-index: 9;
 `;
 
 const Dropdown = styled.div`

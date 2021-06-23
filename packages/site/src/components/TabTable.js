@@ -94,6 +94,7 @@ export default function TabTable({ data, collapse }) {
       <Table
         head={data?.[tabIndex]?.head}
         body={data?.[tabIndex]?.body}
+        foot={data?.[tabIndex]?.foot}
         collapse={collapse}
       />
     </div>

@@ -4,6 +4,7 @@ const assetsController = require("./assets.controller");
 const router = new Router();
 
 router.get("/assets/latest", assetsController.getLatestAssets);
+router.get("/assets/popular", assetsController.getPopularAssets);
 router.get("/assets/count", assetsController.getAssetsCount);
 router.get("/assets", assetsController.getAssets);
 router.get(

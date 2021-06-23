@@ -18,6 +18,7 @@ import TabTable from "components/TabTable";
 import BreakText from "components/BreakText";
 import InLink from "components/InLink";
 import Result from "components/Result";
+import Pagination from "components/Pgination";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -35,6 +36,8 @@ export default function Block() {
   const { id } = useParams();
   const node = useNode();
   const [tabTableData, setTabTableData] = useState();
+  const [extrinsicsPage, setExtrinsicsPage] = useState(0);
+  const [eventsPage, setEventsPage] = useState(0);
 
   const { data } = useQuery(["block", id, node], async () => {
     const { data } = await axios.get(`${node}/blocks/${id}`);
@@ -42,19 +45,25 @@ export default function Block() {
   });
 
   const { data: extrinsicsData } = useQuery(
-    ["blockExtrinsics", id, node],
+    ["blockExtrinsics", id, node, extrinsicsPage],
     async () => {
-      const { data } = await axios.get(`${node}/blocks/${id}/extrinsics`);
+      const { data } = await axios.get(`${node}/blocks/${id}/extrinsics`, {
+        params: {
+          page: extrinsicsPage,
+        },
+      });
       return data;
     }
   );
 
   const { data: eventsData } = useQuery(["blockEvents", id, node], async () => {
-    const { data } = await axios.get(`${node}/blocks/${id}/events`);
+    const { data } = await axios.get(`${node}/blocks/${id}/events`, {
+      params: {
+        page: eventsPage,
+      },
+    });
     return data;
   });
-
-  console.log({ eventsData });
 
   useEffect(() => {
     setTabTableData([
@@ -72,8 +81,16 @@ export default function Block() {
           <MinorText>
             <Result isSuccess={item?.isSuccess} />
           </MinorText>,
-          `${item?.section}(${item?.name})`,
+          <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
         ]),
+        foot: (
+          <Pagination
+            page={extrinsicsData?.page}
+            pageSize={extrinsicsData?.pageSize}
+            total={extrinsicsData?.total}
+            setPage={setExtrinsicsPage}
+          />
+        ),
       },
       {
         name: "Events",
@@ -81,9 +98,19 @@ export default function Block() {
         head: blockEventsHead,
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.index}`,
-          <ThemeText>{item?.extrinsicHash}</ThemeText>,
-          `${item?.section}(${item?.method})`,
+          <BreakText>
+            <ThemeText>{item?.extrinsicHash}</ThemeText>
+          </BreakText>,
+          <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         ]),
+        foot: (
+          <Pagination
+            page={eventsData?.page}
+            pageSize={eventsData?.pageSize}
+            total={eventsData?.total}
+            setPage={setEventsPage}
+          />
+        ),
       },
     ]);
   }, [node, extrinsicsData, eventsData]);

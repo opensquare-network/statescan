@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const logger = require("koa-logger");
@@ -5,8 +7,6 @@ const helmet = require("koa-helmet");
 const http = require("http");
 const cors = require("@koa/cors");
 const { initDb } = require("./mongo");
-
-require("dotenv").config();
 
 const app = new Koa();
 

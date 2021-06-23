@@ -13,9 +13,9 @@ async function getApi() {
     const chain = currentChain();
 
     let wsEndpoint = process.env.WS_ROC_ENDPOINT || defaultRocEndPoint;
-    if (chain === CHAINS.KUSAMA) {
+    if (chain === CHAINS.STATEMINE) {
       wsEndpoint = process.env.WS_KSM_ENDPOINT || defaultKsmEndPoint;
-    } else if (chain === CHAINS.WESTEN) {
+    } else if (chain === CHAINS.WESTMINT) {
       wsEndpoint = process.env.WS_WND_ENDPOINT || defaultWndEndPoint;
     }
 

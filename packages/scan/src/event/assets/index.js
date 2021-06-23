@@ -4,6 +4,7 @@ const {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getAssetApprovalCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
 
@@ -28,6 +29,9 @@ const AssetsEvents = Object.freeze({
   Transferred: "Transferred",
   Frozen: "Frozen",
   Thawed: "Thawed",
+  ApprovedTransfer: "ApprovedTransfer",
+  ApprovalCancelled: "ApprovalCancelled",
+  TransferredApproved: "TransferredApproved",
 
   // Asset & Account
   Issued: "Issued",
@@ -152,6 +156,40 @@ async function updateOrCreateAssetHolder(blockIndexer, assetId, address) {
   );
 }
 
+async function updateOrCreateApproval(blockIndexer, assetId, owner, delegate) {
+  const api = await getApi();
+  const approval = (
+    await api.query.assets.approvals.at(
+      blockIndexer.blockHash,
+      assetId,
+      owner,
+      delegate
+    )
+  ).toJSON();
+
+  const assetCol = await getAssetCollection();
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
+  if (!asset) {
+    return;
+  }
+
+  const col = await getAssetApprovalCollection();
+  const result = await col.updateOne(
+    {
+      asset: asset._id,
+      owner,
+      delegate,
+    },
+    {
+      $set: {
+        ...approval,
+        lastUpdatedAt: blockIndexer,
+      },
+    },
+    { upsert: true }
+  );
+}
+
 function isAssetsEvent(section) {
   return section === Modules.Assets;
 }
@@ -231,6 +269,17 @@ async function handleAssetsEvent(
     await updateOrCreateAssetHolder(blockIndexer, assetId, from);
     await updateOrCreateAddress(blockIndexer, to);
     await updateOrCreateAssetHolder(blockIndexer, assetId, to);
+  }
+
+  if (
+    [
+      AssetsEvents.ApprovedTransfer,
+      AssetsEvents.ApprovalCancelled,
+      AssetsEvents.TransferredApproved,
+    ].includes(method)
+  ) {
+    const [assetId, owner, delegate] = eventData;
+    await updateOrCreateApproval(blockIndexer, assetId, owner, delegate);
   }
 
   return true;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { useWindowSize } from "utils/hooks";
+import NoData from "./NoData";
 
 const Title = styled.h4`
   font-weight: bold;
@@ -141,46 +142,62 @@ export default function Table({ title, head, body, foot, collapse }) {
               ))}
             </tr>
           </thead>
-          <tbody>
-            {(body || []).map((item, index) => (
-              <tr key={index}>
-                {item.map((item, index) => (
-                  <td
-                    key={index}
-                    style={{ textAlign: head[index].align ?? "left" }}
-                  >
-                    {item}
-                  </td>
+          {body && body.length > 0 ? (
+            <>
+              <tbody>
+                {(body || []).map((item, index) => (
+                  <tr key={index}>
+                    {item.map((item, index) => (
+                      <td
+                        key={index}
+                        style={{ textAlign: head[index].align ?? "left" }}
+                      >
+                        {item}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-          {foot && (
-            <tfoot>
-              <tr>
-                <td colSpan="100%">{foot}</td>
-              </tr>
-            </tfoot>
+              </tbody>
+              {foot && (
+                <tfoot>
+                  <tr>
+                    <td colSpan="100%">{foot}</td>
+                  </tr>
+                </tfoot>
+              )}
+            </>
+          ) : (
+            <tr>
+              <td colSpan="100%">
+                <NoData isCollapse={isCollapse} />
+              </td>
+            </tr>
           )}
         </StyledTable>
       )}
       {isCollapse && (
         <CollapseWrapper>
-          <div>
-            {(body || []).map((dataItem, index) => (
-              <CollapseTable key={index}>
-                <tbody>
-                  {head.map((headItem, index) => (
-                    <tr key={index}>
-                      <CollapseHead>{headItem.name}</CollapseHead>
-                      <CollapseBody>{dataItem[index]}</CollapseBody>
-                    </tr>
-                  ))}
-                </tbody>
-              </CollapseTable>
-            ))}
-          </div>
-          {foot && <CollapseFoot>{foot}</CollapseFoot>}
+          {body && body.length > 0 ? (
+            <>
+              <div>
+                {(body || []).map((dataItem, index) => (
+                  <CollapseTable key={index}>
+                    <tbody>
+                      {head.map((headItem, index) => (
+                        <tr key={index}>
+                          <CollapseHead>{headItem.name}</CollapseHead>
+                          <CollapseBody>{dataItem[index]}</CollapseBody>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </CollapseTable>
+                ))}
+              </div>
+              {foot && <CollapseFoot>{foot}</CollapseFoot>}
+            </>
+          ) : (
+            <NoData isCollapse={isCollapse} />
+          )}
         </CollapseWrapper>
       )}
     </div>

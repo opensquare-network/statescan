@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useNode } from "utils/hooks";
 import { nodes } from "utils/constants";
 import SearchL from "../Search/search-l";

@@ -75,7 +75,7 @@ export default function Extrinsic() {
         total: eventsData?.total,
         head: extrinsicEventsHead,
         body: (eventsData?.items || []).map((item) => [
-          `${item?.indexer?.blockHeight}-${item?.index}`,
+          `${item?.indexer?.blockHeight}-${item?.sort}`,
           `${item?.section}(${item?.method})`,
         ]),
         foot: (

@@ -89,7 +89,9 @@ export default function Address() {
         total: extrinsicsData?.total,
         head: addressExtrincsHead,
         body: (extrinsicsData?.items || []).map((item) => [
-          `${item?.indexer?.blockHeight}-${item?.indexer?.index}`,
+          <InLink to={`/${node}/extrinsic/${item?.hash}`}>
+            {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
+          </InLink>,
           <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
             {item?.indexer?.blockHeight}
           </InLink>,

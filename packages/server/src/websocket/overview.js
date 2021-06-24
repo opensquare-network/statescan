@@ -84,9 +84,9 @@ async function calcOverview(chain) {
     .toArray();
 
   // Calculate counts
-  const assetsCount = await assetCol.count();
-  const holdersCount = await addressCol.count({ killed: null });
-  const transfersCount = await trasnferCol.count();
+  const assetsCount = await assetCol.countDocuments();
+  const holdersCount = await addressCol.countDocuments({ killed: null });
+  const transfersCount = await trasnferCol.countDocuments();
 
   return {
     latestBlocks,

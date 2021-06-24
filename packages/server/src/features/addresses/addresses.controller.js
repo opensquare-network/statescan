@@ -31,7 +31,7 @@ async function getAddressExtrinsics(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.count(q);
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,
@@ -90,7 +90,7 @@ async function getAddressAssets(ctx) {
       },
     ])
     .toArray();
-  const total = await col.count(q);
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,
@@ -104,7 +104,7 @@ async function getAddressCount(ctx) {
   const { chain } = ctx.params;
 
   const col = await getAddressCollection(chain);
-  const count = await col.count({ killed: null });
+  const count = await col.countDocuments({ killed: null });
 
   ctx.body = count;
 }

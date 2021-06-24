@@ -43,7 +43,7 @@ async function getLatestTransfers(ctx) {
 async function getTransfersCount(ctx) {
   const { chain } = ctx.params;
   const col = await getAssetTransferCollection(chain);
-  const count = await col.count();
+  const count = await col.countDocuments();
   ctx.body = count;
 }
 

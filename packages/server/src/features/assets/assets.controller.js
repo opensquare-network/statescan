@@ -39,7 +39,7 @@ async function getPopularAssets(ctx) {
 async function getAssetsCount(ctx) {
   const { chain } = ctx.params;
   const col = await getAssetCollection(chain);
-  const count = await col.count();
+  const count = await col.countDocuments();
   ctx.body = count;
 }
 
@@ -113,7 +113,7 @@ async function getAssetTransfers(ctx) {
     .limit(pageSize)
     .toArray();
 
-  const total = await col.count($match);
+  const total = await col.countDocuments($match);
 
   ctx.body = {
     items,
@@ -154,7 +154,7 @@ async function getAssetHolders(ctx) {
     .limit(pageSize)
     .toArray();
 
-  const total = await col.count($match);
+  const total = await col.countDocuments($match);
 
   ctx.body = {
     items,

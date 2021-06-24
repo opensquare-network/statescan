@@ -1,6 +1,8 @@
+import { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 
 import { useNode } from "utils/hooks";
+import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   display: flex;
@@ -89,6 +91,11 @@ const ExploreButton = styled.div`
 
 export default function Subheader() {
   const node = useNode();
+  const [name, setName] = useState();
+
+  useEffect(() => {
+    setName(nodes.find((item) => item.value === node)?.name);
+  }, [node]);
 
   return (
     <Wrapper>
@@ -100,7 +107,7 @@ export default function Subheader() {
         }
         alt="logo"
       />
-      <Title>Statemint Explorer</Title>
+      <Title>{name} Explorer</Title>
       <ExploreWrapper>
         <ExploreInput placeholder="Address / Transaction / Asset..." />
         <ExploreButton node={node}>Explore</ExploreButton>

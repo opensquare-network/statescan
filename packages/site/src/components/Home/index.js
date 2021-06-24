@@ -15,7 +15,7 @@ import {
 import { useNode, useSymbol } from "utils/hooks";
 import PageNotFound from "components/PageNotFound";
 import { useSelector } from "react-redux";
-import { overviewSelector } from "store/reducers/chainSlice";
+import { overviewSelector, loadingSelector } from "store/reducers/chainSlice";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -42,6 +42,7 @@ export default function Home() {
   const node = useNode();
   const location = useLocation();
   const overview = useSelector(overviewSelector);
+  const loading = useSelector(loadingSelector);
   const symbol = useSymbol();
 
   return (
@@ -64,6 +65,8 @@ export default function Home() {
                 item.eventsCount,
               ])}
               collapse={900}
+              loading={loading}
+              placeholder={5}
             />
             <Table
               title="Latest Transfers"
@@ -85,6 +88,8 @@ export default function Home() {
                   : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
               ])}
               collapse={900}
+              loading={loading}
+              placeholder={5}
             />
           </TableWrapper>
           <Table
@@ -111,6 +116,8 @@ export default function Home() {
               </FootWrapper>
             }
             collapse={900}
+            loading={loading}
+            placeholder={5}
           />
         </Wrapper>
       )}

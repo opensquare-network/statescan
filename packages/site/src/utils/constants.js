@@ -103,7 +103,6 @@ export const extrinsicHead = [
   "Call",
   "From",
   "Result",
-  "Parameters",
 ];
 
 export const extrinsicTransferHead = [
@@ -116,7 +115,6 @@ export const extrinsicTransferHead = [
   "To",
   "Value",
   "Result",
-  "Parameters",
 ];
 
 export const blockHead = [

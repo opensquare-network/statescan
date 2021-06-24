@@ -149,7 +149,6 @@ export default function Extrinsic() {
             <MinorText>
               <Result isSuccess={data?.isSuccess} />
             </MinorText>,
-            <MinorText>XXX</MinorText>,
           ]}
         />
       </div>

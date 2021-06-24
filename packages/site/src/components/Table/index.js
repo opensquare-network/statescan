@@ -51,7 +51,7 @@ const StyledTable = styled.table`
     }
     td {
       padding: 14px 24px;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 20px;
       color: #111111;
     }
@@ -69,7 +69,7 @@ const StyledTable = styled.table`
     }
     td {
       padding: 14px 24px;
-      font-size: 15px;
+      font-size: 14px;
       line-height: 20px;
       color: #111111;
     }
@@ -102,14 +102,14 @@ const CollapseTable = styled.table`
 
 const CollapseHead = styled.td`
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   padding: 6px 24px;
   width: 136px;
 `;
 
 const CollapseBody = styled.td`
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   padding: 6px 24px;
   width: 136px;

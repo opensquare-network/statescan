@@ -14,22 +14,27 @@ const Wrapper = styled.div`
   z-index: 9;
 `;
 
+const FlexWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Dropdown = styled.div`
   height: 36px;
   width: 156px;
-  background: #ffffff;
+  background: #f4f4f4;
   border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 8px;
   cursor: pointer;
   :hover {
-    background: #fafafa;
+    background: #ffffff;
   }
   ${(p) =>
     p.active &&
     css`
-      background: #fafafa;
+      background: #ffffff;
     `}
 `;
 
@@ -44,6 +49,12 @@ const Text = styled.p`
   font-size: 16px;
   line-height: 20px;
   color: #111111;
+`;
+
+const Sub = styled.p`
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(17, 17, 17, 0.35);
 `;
 
 const ArrowDown = styled.img`
@@ -63,16 +74,17 @@ const Options = styled.div`
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-radius: 8px;
   padding: 8px 0;
-  width: 100%;
+  width: 222px;
   position: absolute;
   top: 44px;
-  left: 0;
+  right: 0;
 `;
 
 const Item = styled.div`
   height: 36px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 8px;
   cursor: pointer;
   :hover {
@@ -135,8 +147,11 @@ export default function NodeSwitcher() {
                 setShow(false);
               }}
             >
-              <Icon src={item.icon} alt={item.value} />
-              <Text>{item.name}</Text>
+              <FlexWrapper>
+                <Icon src={item.icon} alt={item.value} />
+                <Text>{item.name}</Text>
+              </FlexWrapper>
+              <Sub>{item.sub}</Sub>
             </Item>
           ))}
         </Options>

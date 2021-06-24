@@ -18,14 +18,14 @@ const Item = styled.div`
 
 const Head = styled.div`
   font-weight: 500;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   padding: 10px 24px;
   flex-basis: 320px;
 `;
 
 const Data = styled.div`
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   padding: 10px 24px;
   flex-grow: 1;

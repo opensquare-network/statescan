@@ -1,4 +1,7 @@
 import styled, { css } from "styled-components";
+import { useState } from "react";
+import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -77,6 +80,7 @@ const ExploreHint = styled.div`
   justify-content: flex-start;
   margin: 0;
   padding: 0 16px 0 16px;
+  cursor: pointer;
   line-height: 48px;
   background-color: #ffffff;
   font-size: 15px;
@@ -114,18 +118,43 @@ const Height = styled.span`
   color: rgba(17, 17, 17, 0.65);
 `;
 
-export default function SearchL({ hints = [], node }) {
+export default function SearchL({ node }) {
+  const [redirect, setRedirect] = useState(null);
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [assets, setHintAssets] = useState([]);
+  if (redirect) {
+    return <Redirect to={redirect} />;
+  }
+  const onInput = (e) => {
+    const value = e.target.value;
+    setSearchKeyword(value);
+    //todo debounce this
+    axios.get(`/westmint/search/autocomplete?prefix=${value}`).then((res) => {
+      setHintAssets(res.data.assets);
+    });
+  };
   return (
     <ExploreWrapper>
-      <ExploreInput placeholder="Address / Transaction / Asset..." />
+      <ExploreInput
+        value={searchKeyword}
+        onChange={onInput}
+        placeholder="Address / Transaction / Asset..."
+      />
       <ExploreButton node={node}>Explore</ExploreButton>
       <ExploreHintsWrapper>
-        {hints.map((hint) => (
-          <ExploreHint>
-            <img src="/imgs/token-icons/osn.svg" alt="icon" />
-            <Token>OSN</Token>
-            <TokenDesc>OpenSquare</TokenDesc>
-            <Height>#12450</Height>
+        {assets.map((hint) => (
+          <ExploreHint
+            onClick={() => {
+              setRedirect(`/westmint/asset/${hint.assetId}`);
+            }}
+          >
+            <img
+              src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
+              alt=""
+            />
+            <Token>{hint.symbol}</Token>
+            <TokenDesc>{hint.name}</TokenDesc>
+            <Height>#{hint.createdAt.blockHeight}</Height>
           </ExploreHint>
         ))}
       </ExploreHintsWrapper>

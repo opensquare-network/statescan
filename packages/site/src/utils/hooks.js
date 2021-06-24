@@ -72,7 +72,7 @@ export function useNode() {
   return node;
 }
 
-export function useSymnol() {
+export function useSymbol() {
   const [symbol, setSymbol] = useState();
   const node = useNode();
   useEffect(() => {

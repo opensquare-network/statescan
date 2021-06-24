@@ -10,6 +10,7 @@ const chainFeatureRouters = [
   require("./features/holders/routes"),
   require("./features/addresses/routes"),
   require("./features/home/routes"),
+  require("./features/prices/routes"),
 ];
 
 const commonFeatureRouters = [];
@@ -21,7 +22,7 @@ module.exports = (app) => {
 
   for (const r of chainFeatureRouters) {
     router.use(
-      "/:chain(kusama|rococo|westend)",
+      "/:chain(westmint)",
       r.routes(),
       r.allowedMethods({ throw: true })
     );

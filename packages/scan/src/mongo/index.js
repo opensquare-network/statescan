@@ -4,7 +4,7 @@ const { currentChain, CHAINS } = require("../envvars");
 function getDbName() {
   const chain = currentChain();
   if (CHAINS.STATEMINE === chain) {
-    return process.env.MONGO_DB_DOT_NAME || "statescan-ksm";
+    return process.env.MONGO_DB_KSM_NAME || "statescan-ksm";
   } else if (CHAINS.WESTMINT === chain) {
     return process.env.MONGO_DB_WND_NAME || "statescan-wnd";
   } else {
@@ -20,6 +20,7 @@ const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
+const approvalCollectionName = "approval";
 
 let client = null;
 let db = null;
@@ -33,6 +34,7 @@ let assetTransferCol = null;
 let assetCol = null;
 let assetHolderCol = null;
 let addressCol = null;
+let approvalCol = null;
 
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
@@ -48,6 +50,7 @@ async function initDb() {
   assetCol = db.collection(assetCollectionName);
   assetHolderCol = db.collection(assetHolderCollectionName);
   addressCol = db.collection(addressCollectionName);
+  approvalCol = db.collection(approvalCollectionName);
 
   await _createIndexes();
 }
@@ -107,6 +110,11 @@ async function getAddressCollection() {
   return addressCol;
 }
 
+async function getAssetApprovalCollection() {
+  await tryInit(approvalCol);
+  return approvalCol;
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
@@ -116,4 +124,5 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getAssetApprovalCollection,
 };

@@ -9,5 +9,6 @@ router.get(
   "/addresses/:address/extrinsics",
   addressesController.getAddressExtrinsics
 );
+router.get("/addresses/:address/assets", addressesController.getAddressAssets);
 
 module.exports = router;

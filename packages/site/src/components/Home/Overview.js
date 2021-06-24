@@ -1,8 +1,12 @@
 import styled from "styled-components";
+import LineChart from "../Charts/LineChart";
+import { useSelector } from "react-redux";
+import {
+  overviewSelector,
+  scanHeightSelector,
+} from "store/reducers/chainSlice";
+import { useState } from "react";
 import axios from "axios";
-import { useQuery } from "react-query";
-
-import { useNode } from "utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -35,6 +39,10 @@ const Title = styled.p`
   color: rgba(17, 17, 17, 0.35);
   margin: 0 0 8px;
 `;
+const SubTitle = styled.span`
+  font-size: 12px;
+  color: rgba(17, 17, 17, 0.2);
+`;
 
 const Text = styled.p`
   font-weight: bold;
@@ -53,61 +61,30 @@ const Divider = styled.div`
   }
 `;
 
-const Chart = styled.div`
+const ChartWrapper = styled.div`
   width: 227px;
   height: 48px;
-  background: #f4f4f4;
   @media screen and (max-width: 900px) {
     width: 100%;
   }
 `;
 
 export default function Overview() {
-  const node = useNode();
-
-  const { data: blocksHeightData } = useQuery(
-    ["blocksHeight", node],
-    async () => {
-      const { data } = await axios.get(`${node}/blocks/height`);
-      return data;
-    },
-    {
-      enabled: !!node,
+  const blocksHeightData = useSelector(scanHeightSelector);
+  const overviewData = useSelector(overviewSelector);
+  const [chartData, setChartData] = useState([
+    { time: 1, price: 0 },
+    { time: 2, price: 0 },
+    { time: 3, price: 0 },
+    { time: 4, price: 0 },
+    { time: 5, price: 0 },
+    { time: 6, price: 0 },
+  ]);
+  axios.get(`/statemine/prices/daily`).then((data) => {
+    if (data.length > 0) {
+      setChartData(data?.reverse() ?? []);
     }
-  );
-
-  const { data: assetsCountData } = useQuery(
-    ["assetsCount", node],
-    async () => {
-      const { data } = await axios.get(`${node}/assets/count`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
-
-  const { data: transfersCountData } = useQuery(
-    ["transfersCount", node],
-    async () => {
-      const { data } = await axios.get(`${node}/transfers/count`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
-
-  const { data: holdersCountData } = useQuery(
-    ["holdersCount", node],
-    async () => {
-      const { data } = await axios.get(`${node}/holders/count`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
+  });
 
   return (
     <Wrapper>
@@ -117,22 +94,26 @@ export default function Overview() {
       </ItemWrapper>
       <ItemWrapper>
         <Title>Assets</Title>
-        <Text>{assetsCountData ?? 0}</Text>
+        <Text>{overviewData?.assetsCount ?? 0}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Transfers</Title>
-        <Text>{transfersCountData ?? 0}</Text>
+        <Text>{overviewData?.transfersCount ?? 0}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Holders</Title>
-        <Text>{holdersCountData ?? 0}</Text>
+        <Text>{overviewData?.holdersCount ?? 0}</Text>
       </ItemWrapper>
       <Divider />
       <ItemWrapper>
-        <Title>DOT Price</Title>
+        <Title>
+          DOT Price <SubTitle>(Last 30d)</SubTitle>
+        </Title>
         <Text>$00.00</Text>
       </ItemWrapper>
-      <Chart />
+      <ChartWrapper>
+        <LineChart data={chartData} color={"#F22279"} />
+      </ChartWrapper>
     </Wrapper>
   );
 }

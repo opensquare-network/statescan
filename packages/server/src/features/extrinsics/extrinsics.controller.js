@@ -19,7 +19,7 @@ async function getLatestExtrinsics(ctx) {
 async function getExtrinsicsCount(ctx) {
   const { chain } = ctx.params;
   const col = await getExtrinsicCollection(chain);
-  const total = await col.count({});
+  const total = await col.countDocuments({});
   ctx.body = total;
 }
 
@@ -59,8 +59,10 @@ async function getExtrinsicEvents(ctx) {
   const items = await col
     .find(q, { projection: { data: 0 } })
     .sort({ sort: 1 })
+    .skip(page * pageSize)
+    .limit(pageSize)
     .toArray();
-  const total = await col.count(q);
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,

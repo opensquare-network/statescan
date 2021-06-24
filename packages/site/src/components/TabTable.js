@@ -6,7 +6,8 @@ import Table from "components/Table";
 const TabWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
+
   > :not(:first-child) {
     margin-left: 40px;
   }
@@ -15,13 +16,31 @@ const TabWrapper = styled.div`
 const Tab = styled.div`
   cursor: pointer;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+
   > :not(:first-child) {
     margin-left: 8px;
+  }
+
+  svg {
+    margin-top: 11px;
+
+    * {
+      fill: none;
+    }
+
+    ${(p) =>
+      p.active &&
+      css`
+        * {
+          fill: #f22279;
+        }
+      `}
   }
 `;
 
 const TabText = styled.div`
+  text-align: center;
   font-weight: bold;
   font-size: 20px;
   line-height: 20px;
@@ -50,8 +69,24 @@ export default function TabTable({ data, collapse }) {
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-          <Tab key={index} onClick={() => setTabIndex(index)}>
-            <TabText active={tabIndex === index}>{item.name}</TabText>
+          <Tab
+            key={index}
+            onClick={() => setTabIndex(index)}
+            active={tabIndex === index}
+          >
+            <TabText active={tabIndex === index}>
+              {item.name}
+              <br />
+              <svg
+                width="49"
+                height="3"
+                viewBox="0 0 49 3"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.5" width="48" height="3" fill="#F22279" />
+              </svg>
+            </TabText>
             <TabTag>{item.total}</TabTag>
           </Tab>
         ))}
@@ -59,6 +94,7 @@ export default function TabTable({ data, collapse }) {
       <Table
         head={data?.[tabIndex]?.head}
         body={data?.[tabIndex]?.body}
+        foot={data?.[tabIndex]?.foot}
         collapse={collapse}
       />
     </div>

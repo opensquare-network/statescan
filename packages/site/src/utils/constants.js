@@ -1,20 +1,9 @@
 export const nodes = [
   {
-    name: "Kusama",
-    icon: "/imgs/icons/kusama.svg",
-    value: "kusama",
-    symbol: "KSM",
-  },
-  {
-    name: "Rococo",
+    name: "Westmint",
+    sub: "Westend",
     icon: "/imgs/icons/rococo.png",
-    value: "rococo",
-    symbol: "ROC",
-  },
-  {
-    name: "Westend",
-    icon: "/imgs/icons/rococo.png",
-    value: "westend",
+    value: "westmint",
     symbol: "WND",
   },
 ];
@@ -50,6 +39,16 @@ export const addressExtrincsHead = [
   { name: "Time" },
   { name: "Result" },
   { name: "Action" },
+];
+
+export const addressAssetsHead = [
+  { name: "Asset ID" },
+  { name: "Symbol" },
+  { name: "Name" },
+  { name: "Balance" },
+  { name: "Approved" },
+  { name: "Frozen" },
+  { name: "Transfer Count" },
 ];
 
 export const extrinsicEventsHead = [
@@ -92,25 +91,29 @@ export const addressHead = [
   "Balance",
   "Reserved",
   "Locked",
-  "Account Index",
   "Nonce",
 ];
 
 export const extrinsicHead = [
   "Timestamp",
   "Block",
-  "Lift Time",
+  "Extrinsic Hash",
+  "Module",
+  "Call",
+  "From",
+  "Result",
+];
+
+export const extrinsicTransferHead = [
+  "Timestamp",
+  "Block",
   "Extrinsic Hash",
   "Module",
   "Call",
   "From",
   "To",
   "Value",
-  "Fee",
-  "Nonce",
   "Result",
-  "Parameters",
-  "Signature",
 ];
 
 export const blockHead = [
@@ -135,3 +138,8 @@ export const assetHead = [
   "Holders",
   "Transfers",
 ];
+
+export const timeTypes = {
+  age: 0,
+  date: 1,
+};

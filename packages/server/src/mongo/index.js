@@ -1,15 +1,21 @@
-const { DB } = require("./db");
+const { DB } = require("./scandb");
+const {
+  initDb: initPriceDb,
+  getDotUsdtDailyCollection,
+  getKsmUsdtDailyCollection,
+} = require("./pricedb");
 
 const scanDbs = {
-  kusama: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
-  rococo: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
-  westend: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
+  westmint: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
 };
 
 const db = (chain) => scanDbs[chain];
 
 function initDb() {
-  return Promise.all(Object.values(scanDbs).map((db) => db.initDb()));
+  return Promise.all([
+    ...Object.values(scanDbs).map((db) => db.initDb()),
+    initPriceDb(),
+  ]);
 }
 
 function getStatusCollection(chain) {
@@ -54,4 +60,6 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getDotUsdtDailyCollection,
+  getKsmUsdtDailyCollection,
 };

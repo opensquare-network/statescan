@@ -13,6 +13,7 @@ const BalancesEvents = Object.freeze({
   Reserved: "Reserved",
   Unreserved: "Unreserved",
   ReserveRepatriated: "ReserveRepatriated",
+  BalanceSet: "BalanceSet",
 });
 
 async function saveNewTransfer(
@@ -98,7 +99,13 @@ async function handleBalancesEvent(
     await updateOrCreateAddress(blockIndexer, to);
   }
 
-  if ([BalancesEvents.Reserved, BalancesEvents.Unreserved].includes(method)) {
+  if (
+    [
+      BalancesEvents.Reserved,
+      BalancesEvents.Unreserved,
+      BalancesEvents.BalanceSet,
+    ].includes(method)
+  ) {
     const [address] = eventData;
     await updateOrCreateAddress(blockIndexer, address);
   }

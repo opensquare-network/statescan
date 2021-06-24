@@ -7,8 +7,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 32px 16px;
-
+  padding: 24px 32px 32px;
   > :not(:first-child) {
     margin-top: 32px;
   }
@@ -42,7 +41,6 @@ const Title = styled.h1`
 
 export default function Subheader() {
   const node = useNode();
-  const logo = node === "kusama" ? "kusama.svg" : "polkadot.svg";
   return (
     <Wrapper>
       <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />

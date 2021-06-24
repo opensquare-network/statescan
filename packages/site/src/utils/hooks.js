@@ -45,7 +45,7 @@ export function useHomePage() {
     exact: true,
     strict: false,
   });
-  return !!match;
+  return !!match && location.pathname !== "/404";
 }
 
 export function useWindowSize() {
@@ -72,7 +72,7 @@ export function useNode() {
   return node;
 }
 
-export function useSymnol() {
+export function useSymbol() {
   const [symbol, setSymbol] = useState();
   const node = useNode();
   useEffect(() => {

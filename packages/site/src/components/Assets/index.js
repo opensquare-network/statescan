@@ -1,21 +1,29 @@
+import { useState } from "react";
 import axios from "axios";
 import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
 import Table from "components/Table";
-import InLink from "components/ExLink";
+import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis } from "utils";
 import { useNode } from "utils/hooks";
+import LineChart from "../Charts/LineChart";
+import Pagination from "components/Pgination";
 
 export default function Assets() {
   const node = useNode();
+  const [page, setPage] = useState(0);
 
   const { data } = useQuery(
     ["assets", node],
     async () => {
-      const { data } = await axios.get(`${node}/assets`);
+      const { data } = await axios.get(`${node}/assets`, {
+        params: {
+          page,
+        },
+      });
       return data;
     },
     {
@@ -26,10 +34,13 @@ export default function Assets() {
   return (
     <section>
       <Nav data={[{ name: "Asset Tracker" }]} />
+      <LineChart />
       <Table
         head={assetsHead}
-        data={(data?.items || []).map((item) => [
-          `#${item.assetId}`,
+        body={(data?.items || []).map((item) => [
+          <InLink
+            to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+          >{`#${item.assetId}`}</InLink>,
           <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>
@@ -39,8 +50,18 @@ export default function Assets() {
             {addressEllipsis(item.issuer)}
           </InLink>,
           item.accounts,
-          `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
+          `${item.supply / Math.pow(10, item.decimals)}`,
         ])}
+        foot={
+          <Pagination
+            page={data?.page}
+            pageSize={data?.pageSize}
+            total={data?.total}
+            s
+            setPage={setPage}
+          />
+        }
+        collapse={900}
       />
     </section>
   );

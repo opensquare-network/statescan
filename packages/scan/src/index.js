@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const { getApi, disconnect } = require("./api");
 const { updateHeight, getLatestHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
@@ -57,7 +59,7 @@ async function scanBlockByHeight(scanHeight) {
   logger.info(`block ${block.block.header.number.toNumber()} done`);
 }
 
-test()
+main()
   .then(() => console.log("Scan finished"))
   .catch(console.error)
   .finally(cleanUp);

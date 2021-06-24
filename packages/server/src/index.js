@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
 const logger = require("koa-logger");
@@ -5,8 +7,7 @@ const helmet = require("koa-helmet");
 const http = require("http");
 const cors = require("@koa/cors");
 const { initDb } = require("./mongo");
-
-require("dotenv").config();
+const { listenAndEmitInfo } = require("./websocket");
 
 const app = new Koa();
 
@@ -28,7 +29,14 @@ app.use(async (ctx, next) => {
 });
 
 require("./routes")(app);
+
 const server = http.createServer(app.callback());
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"],
+  },
+});
 
 initDb()
   .then(async () => {
@@ -37,6 +45,8 @@ initDb()
     server.listen(port, () =>
       console.log(`✅  The server is running at http://localhost:${port}/`)
     );
+
+    listenAndEmitInfo(io);
   })
   .catch((err) => {
     console.error("Failed to init db for scan server");

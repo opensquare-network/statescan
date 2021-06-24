@@ -38,6 +38,25 @@ export default function Extrinsic() {
   const isTransfer =
     data?.section === "balances" &&
     (data?.name === "transfer" || data?.name === "transferKeepAlive");
+  const isAssetTransfer =
+    data?.section === "assets" &&
+    (data?.name === "transfer" || data?.name === "transferKeepAlive");
+
+  const extrinsicHash = data?.hash;
+  const { data: assetTransfer } = useQuery(
+    ["assetTransfer", isAssetTransfer, extrinsicHash],
+    async () => {
+      if (!isAssetTransfer || !extrinsicHash) {
+        return null;
+      }
+      const { data } = await axios.get(`${node}/transfers/${extrinsicHash}`, {
+        params: {
+          page: eventsPage,
+        },
+      });
+      return data;
+    }
+  );
 
   const { data: eventsData } = useQuery(
     ["extrinsicEvents", id, node, eventsPage],
@@ -86,7 +105,11 @@ export default function Extrinsic() {
       <div>
         <Nav data={[{ name: "Extrinsic" }, { name: extrinsicId }]} />
         <DetailTable
-          head={isTransfer ? extrinsicTransferHead : extrinsicHead}
+          head={
+            isTransfer || isAssetTransfer
+              ? extrinsicTransferHead
+              : extrinsicHead
+          }
           body={[
             <MinorText>{timeUTC(data?.indexer?.blockTime)}</MinorText>,
             <InLink to={`/${node}/block/${data?.indexer?.blockHeight}`}>
@@ -98,14 +121,33 @@ export default function Extrinsic() {
             <MinorText>{capitalize(data?.section)}</MinorText>,
             <MinorText>{capitalize(data?.name)}</MinorText>,
             <CopyText text={data?.signer}>
-              <InLink>{data?.signer}</InLink>
+              <InLink to={`/${node}/addresses/${data?.signer}`}>
+                {data?.signer}
+              </InLink>
             </CopyText>,
             ...(isTransfer
               ? [
                   <CopyText text={data?.args?.dest?.id}>
-                    <InLink>{data?.args?.dest?.id}</InLink>
+                    <InLink to={`/${node}/addresses/${data?.args?.dest?.id}`}>
+                      {data?.args?.dest?.id}
+                    </InLink>
                   </CopyText>,
                   `${fromSymbolUnit(data?.args?.value ?? 0, symbol)} ${symbol}`,
+                ]
+              : []),
+            ...(isAssetTransfer
+              ? [
+                  <CopyText text={data?.args?.target?.id}>
+                    <InLink to={`/${node}/addresses/${data?.args?.target?.id}`}>
+                      {data?.args?.target?.id}
+                    </InLink>
+                  </CopyText>,
+                  `${
+                    assetTransfer
+                      ? (assetTransfer.balance ?? 0) /
+                        Math.pow(10, assetTransfer.assetDecimals)
+                      : 0
+                  } ${assetTransfer?.assetSymbol || ""}`,
                 ]
               : []),
             <MinorText>

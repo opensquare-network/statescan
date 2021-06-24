@@ -7,7 +7,11 @@ import Section from "components/Section";
 import Nav from "components/Nav";
 import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
-import { extrinsicHead, extrinsicEventsHead } from "utils/constants";
+import {
+  extrinsicHead,
+  extrinsicTransferHead,
+  extrinsicEventsHead,
+} from "utils/constants";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import Result from "components/Result";
@@ -30,6 +34,10 @@ export default function Extrinsic() {
     const { data } = await axios.get(`${node}/extrinsics/${id}`);
     return data;
   });
+
+  const isTransfer =
+    data?.section === "balances" &&
+    (data?.name === "transfer" || data?.name === "transferKeepAlive");
 
   const { data: eventsData } = useQuery(
     ["extrinsicEvents", id, node, eventsPage],
@@ -78,13 +86,12 @@ export default function Extrinsic() {
       <div>
         <Nav data={[{ name: "Extrinsic" }, { name: extrinsicId }]} />
         <DetailTable
-          head={extrinsicHead}
+          head={isTransfer ? extrinsicTransferHead : extrinsicHead}
           body={[
             <MinorText>{timeUTC(data?.indexer?.blockTime)}</MinorText>,
             <InLink to={`/${node}/block/${data?.indexer?.blockHeight}`}>
               {data?.indexer?.blockHeight}
             </InLink>,
-            "-",
             <CopyText text={data?.hash}>
               <MinorText>{data?.hash}</MinorText>
             </CopyText>,
@@ -93,16 +100,17 @@ export default function Extrinsic() {
             <CopyText text={data?.signer}>
               <InLink>{data?.signer}</InLink>
             </CopyText>,
-            <CopyText text={data?.args?.dest?.id}>
-              <InLink>{data?.args?.dest?.id}</InLink>
-            </CopyText>,
-            `${fromSymbolUnit(data?.args?.value ?? 0, symbol)} ${symbol}`,
-            "-",
-            "-",
+            ...(isTransfer
+              ? [
+                  <CopyText text={data?.args?.dest?.id}>
+                    <InLink>{data?.args?.dest?.id}</InLink>
+                  </CopyText>,
+                  `${fromSymbolUnit(data?.args?.value ?? 0, symbol)} ${symbol}`,
+                ]
+              : []),
             <MinorText>
               <Result isSuccess={data?.isSuccess} />
             </MinorText>,
-            <MinorText>XXX</MinorText>,
             <MinorText>XXX</MinorText>,
           ]}
         />

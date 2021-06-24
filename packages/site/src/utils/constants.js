@@ -97,18 +97,25 @@ export const addressHead = [
 export const extrinsicHead = [
   "Timestamp",
   "Block",
-  "Lift Time",
+  "Extrinsic Hash",
+  "Module",
+  "Call",
+  "From",
+  "Result",
+  "Parameters",
+];
+
+export const extrinsicTransferHead = [
+  "Timestamp",
+  "Block",
   "Extrinsic Hash",
   "Module",
   "Call",
   "From",
   "To",
   "Value",
-  "Fee",
-  "Nonce",
   "Result",
   "Parameters",
-  "Signature",
 ];
 
 export const blockHead = [

@@ -41,6 +41,7 @@ const Title = styled.h1`
 
 export default function Subheader() {
   const node = useNode();
+  const logo = node === "kusama" ? "kusama.svg" : "polkadot.svg";
   return (
     <Wrapper>
       <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />

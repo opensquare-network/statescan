@@ -91,7 +91,6 @@ export const addressHead = [
   "Balance",
   "Reserved",
   "Locked",
-  "Account Index",
   "Nonce",
 ];
 

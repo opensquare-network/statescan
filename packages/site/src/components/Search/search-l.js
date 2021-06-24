@@ -115,9 +115,6 @@ const Height = styled.span`
 `;
 
 export default function SearchL({ hints = [], node }) {
-  if (hints.length === 0) {
-    return null;
-  }
   return (
     <ExploreWrapper>
       <ExploreInput placeholder="Address / Transaction / Asset..." />

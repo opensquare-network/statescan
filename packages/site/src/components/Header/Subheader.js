@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import { useNode } from "utils/hooks";
 import SearchL from "../Search/search-l";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,7 +42,7 @@ const Title = styled.h1`
 
 export default function Subheader() {
   const node = useNode();
-  const hints = [1, 2, 3, 4, 5];
+  const [hints, setHints] = useState([]);
   const logo = node === "kusama" ? "kusama.svg" : "polkadot.svg";
   return (
     <Wrapper>

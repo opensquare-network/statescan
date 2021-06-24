@@ -213,6 +213,33 @@ async function getAddressTransfers(ctx) {
       {
         $project: { extrinsic: 0 },
       },
+      {
+        $lookup: {
+          from: "asset",
+          localField: "asset",
+          foreignField: "_id",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
+        },
+      },
+      {
+        $project: {
+          asset: 0,
+        },
+      },
     ])
     .toArray();
 

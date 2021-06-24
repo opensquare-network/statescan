@@ -109,12 +109,20 @@ export default function Address() {
           `${item.indexer.blockHeight}-${item.eventSort}`,
           item.method,
           <MinorText>{timeDuration(item.indexer.blockTime)}</MinorText>,
-          <InLink to={`/${node}/address/${item.from}`}>
-            {addressEllipsis(item.from)}
-          </InLink>,
-          <InLink to={`/${node}/address/${item.to}`}>
-            {addressEllipsis(item.to)}
-          </InLink>,
+          item.from !== id ? (
+            <InLink to={`/${node}/address/${item.from}`}>
+              {addressEllipsis(item.from)}
+            </InLink>
+          ) : (
+            addressEllipsis(item.from)
+          ),
+          item.to !== id ? (
+            <InLink to={`/${node}/address/${item.to}`}>
+              {addressEllipsis(item.to)}
+            </InLink>
+          ) : (
+            addressEllipsis(item.to)
+          ),
           item.assetSymbol
             ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
                 item.assetSymbol
@@ -169,6 +177,7 @@ export default function Address() {
     assetsLoading,
     transfersLoading,
     symbol,
+    id,
   ]);
 
   return (

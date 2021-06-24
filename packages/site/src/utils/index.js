@@ -39,12 +39,10 @@ export function getPrecision(symbol) {
 
 export function fromSymbolUnit(value, symbol) {
   const precision = getPrecision(symbol);
-  return new BigNumber(value).dividedBy(Math.pow(10, precision)).toPrecision();
+  return new BigNumber(value).dividedBy(Math.pow(10, precision)).toString();
 }
 
 export function toSymbolUnit(value, symbol) {
   const precision = getPrecision(symbol);
-  return new BigNumber(value)
-    .multipliedBy(Math.pow(10, precision))
-    .toPrecision();
+  return new BigNumber(value).multipliedBy(Math.pow(10, precision)).toString();
 }

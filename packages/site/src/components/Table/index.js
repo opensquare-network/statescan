@@ -36,7 +36,7 @@ const StyledTable = styled.table`
     text-align: left;
   }
   tbody {
-    margin-top: 8px;
+    margin: 8px 0;
     tr {
       position: relative;
     }
@@ -120,7 +120,22 @@ const CollapseFoot = styled.div`
   padding: 16px 24px;
 `;
 
-export default function Table({ title, head, body, foot, collapse }) {
+const LoadingItem = styled.div`
+  width: 100%;
+  background: #fafafa;
+  border-radius: 4px;
+  height: 20px;
+`;
+
+export default function Table({
+  title,
+  head,
+  body,
+  foot,
+  collapse,
+  loading,
+  placeholder = 3,
+}) {
   const [isCollapse, setIsCollapse] = useState(false);
   const [timeType, setTimeType] = useState(timeTypes.age);
   const size = useWindowSize();
@@ -150,7 +165,7 @@ export default function Table({ title, head, body, foot, collapse }) {
               ))}
             </tr>
           </thead>
-          {body && body.length > 0 ? (
+          {!loading && body && body.length > 0 ? (
             <>
               <tbody>
                 {(body || []).map((item, index) => (
@@ -178,10 +193,20 @@ export default function Table({ title, head, body, foot, collapse }) {
                 </tfoot>
               )}
             </>
+          ) : loading ? (
+            <tbody>
+              {Array.from(Array(placeholder)).map((_, index) => (
+                <tr key={index}>
+                  <td colSpan="100%">
+                    <LoadingItem />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           ) : (
             <tbody>
               <tr>
-                <td colSpan="100%">
+                <td colSpan="100%" style={{ padding: 0 }}>
                   <NoData isCollapse={isCollapse} />
                 </td>
               </tr>

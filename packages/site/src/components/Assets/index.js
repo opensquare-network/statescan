@@ -16,7 +16,7 @@ export default function Assets() {
   const node = useNode();
   const [page, setPage] = useState(0);
 
-  const { data } = useQuery(
+  const { data, loading } = useQuery(
     ["assets", node],
     async () => {
       const { data } = await axios.get(`${node}/assets`, {
@@ -61,6 +61,7 @@ export default function Assets() {
             setPage={setPage}
           />
         }
+        loading={loading}
         collapse={900}
       />
     </section>

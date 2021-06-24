@@ -28,12 +28,12 @@ export default function Address() {
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [assetsPage, setAssetsPage] = useState(0);
 
-  const { data } = useQuery(["address", id, node], async () => {
+  const { data, loading } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
     return data;
   });
 
-  const { data: extrinsicsData } = useQuery(
+  const { data: extrinsicsData, loading: extrinsicsLoading } = useQuery(
     ["addressExtrinsics", id, node, extrinsicsPage],
     async () => {
       const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`, {
@@ -45,7 +45,7 @@ export default function Address() {
     }
   );
 
-  const { data: assetsData } = useQuery(
+  const { data: assetsData, loading: assetsLoading } = useQuery(
     ["addressAssets", id, node, assetsPage],
     async () => {
       const { data } = await axios.get(`${node}/addresses/${id}/assets`, {
@@ -109,15 +109,17 @@ export default function Address() {
             setPage={setExtrinsicsPage}
           />
         ),
+        loading: extrinsicsLoading,
       },
     ]);
-  }, [node, extrinsicsData, assetsData]);
+  }, [node, extrinsicsData, assetsData, extrinsicsLoading, assetsLoading]);
 
   return (
     <Section>
       <div>
         <Nav data={[{ name: "Address" }, { name: addressEllipsis(id) }]} />
         <DetailTable
+          loading={loading}
           head={addressHead}
           body={[
             <CopyText text={data?.address}>

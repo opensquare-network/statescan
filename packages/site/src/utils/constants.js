@@ -2,9 +2,10 @@ export const nodes = [
   {
     name: "Westmint",
     sub: "Westend",
-    icon: "/imgs/icons/rococo.png",
     value: "westmint",
     symbol: "WND",
+    icon: "/imgs/icons/rococo.png",
+    logo: "/imgs/logo.svg",
   },
 ];
 
@@ -51,11 +52,7 @@ export const addressAssetsHead = [
   { name: "Transfer Count" },
 ];
 
-export const extrinsicEventsHead = [
-  { name: "Event ID" },
-  { name: "Hash" },
-  { name: "Action" },
-];
+export const extrinsicEventsHead = [{ name: "Event ID" }, { name: "Action" }];
 
 export const blockExtrinsicsHead = [
   { name: "Extrinsic ID" },

@@ -31,13 +31,21 @@ const Data = styled.div`
   flex-grow: 1;
 `;
 
-export default function DetailTable({ head, body }) {
+const LoadingItem = styled.div`
+  background: #fafafa;
+  border-radius: 4px;
+  height: 20px;
+  flex-grow: 1;
+  margin: 10px 24px;
+`;
+
+export default function DetailTable({ head, body, loading }) {
   return (
     <Wrapper>
       {(head || []).map((item, index) => (
         <Item key={index}>
           <Head>{item}</Head>
-          <Data>{body?.[index]}</Data>
+          {loading ? <LoadingItem /> : <Data>{body?.[index]}</Data>}
         </Item>
       ))}
     </Wrapper>

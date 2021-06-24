@@ -29,12 +29,12 @@ export default function Asset() {
   const [transfersPage, setTransfersPage] = useState(0);
   const [holdersPage, setHoldersPage] = useState(0);
 
-  const { data } = useQuery(["asset", node, id], async () => {
+  const { data, loading } = useQuery(["asset", node, id], async () => {
     const { data } = await axios.get(`${node}/assets/${id}`);
     return data;
   });
 
-  const { data: transfersData } = useQuery(
+  const { data: transfersData, loading: transfersLoading } = useQuery(
     ["assetTransfers", node, id, transfersPage],
     async () => {
       const { data } = await axios.get(`${node}/assets/${id}/transfers`, {
@@ -46,7 +46,7 @@ export default function Asset() {
     }
   );
 
-  const { data: holdersData } = useQuery(
+  const { data: holdersData, loading: holdersLoading } = useQuery(
     ["assetHolders", node, id, holdersPage],
     async () => {
       const { data } = await axios.get(`${node}/assets/${id}/holders`, {
@@ -90,6 +90,7 @@ export default function Asset() {
             setPage={setTransfersPage}
           />
         ),
+        loading: transfersLoading,
       },
       {
         name: "Holders",
@@ -114,9 +115,10 @@ export default function Asset() {
             setPage={setHoldersPage}
           />
         ),
+        loading: holdersLoading,
       },
     ]);
-  }, [node, transfersData, holdersData]);
+  }, [node, transfersData, holdersData, transfersLoading, holdersLoading]);
 
   return (
     <Section>
@@ -128,6 +130,7 @@ export default function Asset() {
           ]}
         />
         <DetailTable
+          loading={loading}
           head={assetHead}
           body={[
             <MinorText>{data?.symbol}</MinorText>,

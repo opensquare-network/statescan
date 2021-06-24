@@ -1,7 +1,7 @@
+import { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { useNode } from "utils/hooks";
-import SearchL from "../Search/search-l";
-import { useState } from "react";
+import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,11 +42,20 @@ const Title = styled.h1`
 export default function Subheader() {
   const node = useNode();
   const logo = node === "kusama" ? "kusama.svg" : "polkadot.svg";
+  const [name, setName] = useState();
+
+  useEffect(() => {
+    setName(nodes.find((item) => item.value === node)?.name);
+  }, [node]);
+
   return (
     <Wrapper>
       <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />
-      <Title>Statemint Explorer</Title>
-      <SearchL node={node} />
+      <Title>{name} Explorer</Title>
+      <ExploreWrapper>
+        <ExploreInput placeholder="Address / Transaction / Asset..." />
+        <ExploreButton node={node}>Explore</ExploreButton>
+      </ExploreWrapper>
     </Wrapper>
   );
 }

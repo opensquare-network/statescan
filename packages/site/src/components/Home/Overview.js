@@ -64,7 +64,6 @@ const Divider = styled.div`
 const ChartWrapper = styled.div`
   width: 227px;
   height: 48px;
-  background: #f4f4f4;
   @media screen and (max-width: 900px) {
     width: 100%;
   }

@@ -30,6 +30,7 @@ async function calcOverview(chain) {
   const blockCol = await getBlockCollection(chain);
   const trasnferCol = await getAssetTransferCollection(chain);
   const addressCol = await getAddressCollection(chain);
+  const assetCol = await getAssetCollection(chain);
 
   // Load latest 5 blocks
   const latestBlocks = await blockCol
@@ -74,7 +75,6 @@ async function calcOverview(chain) {
     .toArray();
 
   // Load 5 most popular assets
-  const assetCol = await getAssetCollection(chain);
   const popularAssets = await assetCol
     .find({})
     .sort({

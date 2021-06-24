@@ -60,6 +60,68 @@ async function getAddressAssets(ctx) {
       { $limit: pageSize },
       {
         $lookup: {
+          from: "asset",
+          localField: "asset",
+          foreignField: "_id",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
+        },
+      },
+      {
+        $project: {
+          asset: 0,
+        },
+      },
+      {
+        $lookup: {
+          from: "assetTransfer",
+          let: { asset: "$asset", address: "$address" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$asset", "$$asset"] },
+                    {
+                      $or: [
+                        { $eq: ["$from", "$$address"] },
+                        { $eq: ["$to", "$$address"] },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          as: "transfers",
+        },
+      },
+      {
+        $addFields: {
+          transfers: { $arrayElemAt: ["$transfers.count", 0] },
+        },
+      },
+      {
+        $lookup: {
           from: "approval",
           let: { assetId: "$assetId", address: "$address" },
           as: "approved",

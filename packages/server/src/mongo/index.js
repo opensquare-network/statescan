@@ -6,9 +6,9 @@ const {
 } = require("./pricedb");
 
 const scanDbs = {
-  kusama: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
-  rococo: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
-  westend: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
+  statemine: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
+  statemint: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
+  westmint: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
 };
 
 const db = (chain) => scanDbs[chain];

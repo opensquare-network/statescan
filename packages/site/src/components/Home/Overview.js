@@ -4,6 +4,8 @@ import { useQuery } from "react-query";
 
 import { useNode } from "utils/hooks";
 import LineChart from "../Charts/LineChart";
+import { useSelector } from "react-redux";
+import { scanHeightSelector } from "store/reducers/chainSlice";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -65,17 +67,7 @@ const ChartWrapper = styled.div`
 
 export default function Overview() {
   const node = useNode();
-
-  const { data: blocksHeightData } = useQuery(
-    ["blocksHeight", node],
-    async () => {
-      const { data } = await axios.get(`${node}/blocks/height`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
+  const blocksHeightData = useSelector(scanHeightSelector);
 
   const { data: assetsCountData } = useQuery(
     ["assetsCount", node],

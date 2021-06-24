@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import { useNode } from "utils/hooks";
 import { nodes } from "utils/constants";
+import SearchL from "../Search/search-l";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 24px 32px 32px;
+
   > :not(:first-child) {
     margin-top: 32px;
   }
@@ -52,10 +54,7 @@ export default function Subheader() {
     <Wrapper>
       <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />
       <Title>{name} Explorer</Title>
-      <ExploreWrapper>
-        <ExploreInput placeholder="Address / Transaction / Asset..." />
-        <ExploreButton node={node}>Explore</ExploreButton>
-      </ExploreWrapper>
+      <SearchL node={node} />
     </Wrapper>
   );
 }

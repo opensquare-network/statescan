@@ -6,8 +6,6 @@ const {
 } = require("./pricedb");
 
 const scanDbs = {
-  statemine: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
-  statemint: DB(process.env.SCAN_DB_ROC_NAME || "statescan-roc"),
   westmint: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
 };
 

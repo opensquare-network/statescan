@@ -5,6 +5,7 @@ import {
   overviewSelector,
   scanHeightSelector,
 } from "store/reducers/chainSlice";
+import { useState } from "react";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -67,18 +68,14 @@ const ChartWrapper = styled.div`
 export default function Overview() {
   const blocksHeightData = useSelector(scanHeightSelector);
   const overviewData = useSelector(overviewSelector);
-
-  const chartData = [
-    { time: 1, price: 1 },
-    { time: 2, price: 1 },
-    { time: 3, price: 3 },
-    { time: 4, price: 2 },
-    {
-      time: 5,
-      price: 1,
-    },
-    { time: 6, price: 6 },
-  ];
+  const [chartData, setChartData] = useState([
+    { time: 1, price: 0 },
+    { time: 2, price: 0 },
+    { time: 3, price: 0 },
+    { time: 4, price: 0 },
+    { time: 5, price: 0 },
+    { time: 6, price: 0 },
+  ]);
 
   return (
     <Wrapper>

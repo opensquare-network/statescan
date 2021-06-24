@@ -78,9 +78,6 @@ export default function Extrinsic() {
         head: extrinsicEventsHead,
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.index}`,
-          <BreakText>
-            <ThemeText>{item?.extrinsicHash}</ThemeText>
-          </BreakText>,
           `${item?.section}(${item?.method})`,
         ]),
         foot: (

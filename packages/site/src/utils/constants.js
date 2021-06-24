@@ -52,6 +52,15 @@ export const addressAssetsHead = [
   { name: "Transfer Count" },
 ];
 
+export const addressTransfersHead = [
+  { name: "Event ID" },
+  { name: "Method" },
+  { name: "Age" },
+  { name: "From" },
+  { name: "To" },
+  { name: "Quantity" },
+];
+
 export const extrinsicEventsHead = [{ name: "Event ID" }, { name: "Action" }];
 
 export const blockExtrinsicsHead = [

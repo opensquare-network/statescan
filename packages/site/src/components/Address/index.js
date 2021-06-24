@@ -12,7 +12,11 @@ import MinorText from "components/MinorText";
 import BreakText from "components/BreakText";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
-import { addressExtrincsHead, addressAssetsHead } from "utils/constants";
+import {
+  addressExtrincsHead,
+  addressAssetsHead,
+  addressTransfersHead,
+} from "utils/constants";
 import Section from "components/Section";
 import InLink from "components/InLink";
 import ThemeText from "components/ThemeText";
@@ -27,6 +31,7 @@ export default function Address() {
   const [tabTableData, setTabTableData] = useState();
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [assetsPage, setAssetsPage] = useState(0);
+  const [transfersPage, setTransfersPage] = useState(0);
 
   const { data, loading } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
@@ -57,6 +62,18 @@ export default function Address() {
     }
   );
 
+  const { data: transfersData, loading: transfersLoading } = useQuery(
+    ["addressTransfers", id, node, transfersPage],
+    async () => {
+      const { data } = await axios.get(`${node}/addresses/${id}/transfers`, {
+        params: {
+          page: transfersPage,
+        },
+      });
+      return data;
+    }
+  );
+
   useEffect(() => {
     setTabTableData([
       {
@@ -79,10 +96,40 @@ export default function Address() {
             page={assetsData?.page}
             pageSize={assetsData?.pageSize}
             total={assetsData?.total}
-            s
             setPage={setAssetsPage}
           />
         ),
+        loading: transfersLoading,
+      },
+      {
+        name: "Transfer",
+        total: transfersData?.total,
+        head: addressTransfersHead,
+        body: (transfersData?.items || []).map((item) => [
+          `${item.indexer.blockHeight}-${item.eventSort}`,
+          item.method,
+          <MinorText>{timeDuration(item.indexer.blockTime)}</MinorText>,
+          <InLink to={`/${node}/address/${item.from}`}>
+            {addressEllipsis(item.from)}
+          </InLink>,
+          <InLink to={`/${node}/address/${item.to}`}>
+            {addressEllipsis(item.to)}
+          </InLink>,
+          item.assetSymbol
+            ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+                item.assetSymbol
+              }`
+            : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+        ]),
+        foot: (
+          <Pagination
+            page={transfersData?.page}
+            pageSize={transfersData?.pageSize}
+            total={transfersData?.total}
+            setPage={setTransfersPage}
+          />
+        ),
+        loading: assetsLoading,
       },
       {
         name: "Extrinsics",
@@ -107,14 +154,22 @@ export default function Address() {
             page={extrinsicsData?.page}
             pageSize={extrinsicsData?.pageSize}
             total={extrinsicsData?.total}
-            s
             setPage={setExtrinsicsPage}
           />
         ),
         loading: extrinsicsLoading,
       },
     ]);
-  }, [node, extrinsicsData, assetsData, extrinsicsLoading, assetsLoading]);
+  }, [
+    node,
+    extrinsicsData,
+    assetsData,
+    transfersData,
+    extrinsicsLoading,
+    assetsLoading,
+    transfersLoading,
+    symbol,
+  ]);
 
   return (
     <Section>

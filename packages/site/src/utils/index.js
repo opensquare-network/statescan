@@ -1,5 +1,6 @@
 import moment from "moment";
 import BigNumber from "bignumber.js";
+BigNumber.config({ EXPONENTIAL_AT: 12 });
 
 export function addressEllipsis(address, start = 4, end = 4) {
   if (!address) return;
@@ -38,10 +39,12 @@ export function getPrecision(symbol) {
 
 export function fromSymbolUnit(value, symbol) {
   const precision = getPrecision(symbol);
-  return new BigNumber(value).dividedBy(Math.pow(10, precision)).toString();
+  return new BigNumber(value).dividedBy(Math.pow(10, precision)).toPrecision();
 }
 
 export function toSymbolUnit(value, symbol) {
   const precision = getPrecision(symbol);
-  return new BigNumber(value).multipliedBy(Math.pow(10, precision)).toString();
+  return new BigNumber(value)
+    .multipliedBy(Math.pow(10, precision))
+    .toPrecision();
 }

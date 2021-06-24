@@ -39,12 +39,12 @@ export default function Block() {
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [eventsPage, setEventsPage] = useState(0);
 
-  const { data } = useQuery(["block", id, node], async () => {
+  const { data, loading } = useQuery(["block", id, node], async () => {
     const { data } = await axios.get(`${node}/blocks/${id}`);
     return data;
   });
 
-  const { data: extrinsicsData } = useQuery(
+  const { data: extrinsicsData, loading: extrinsicsLoading } = useQuery(
     ["blockExtrinsics", id, node, extrinsicsPage],
     async () => {
       const { data } = await axios.get(`${node}/blocks/${id}/extrinsics`, {
@@ -56,14 +56,17 @@ export default function Block() {
     }
   );
 
-  const { data: eventsData } = useQuery(["blockEvents", id, node], async () => {
-    const { data } = await axios.get(`${node}/blocks/${id}/events`, {
-      params: {
-        page: eventsPage,
-      },
-    });
-    return data;
-  });
+  const { data: eventsData, eventsLoading } = useQuery(
+    ["blockEvents", id, node],
+    async () => {
+      const { data } = await axios.get(`${node}/blocks/${id}/events`, {
+        params: {
+          page: eventsPage,
+        },
+      });
+      return data;
+    }
+  );
 
   useEffect(() => {
     setTabTableData([
@@ -91,6 +94,7 @@ export default function Block() {
             setPage={setExtrinsicsPage}
           />
         ),
+        loading: extrinsicsLoading,
       },
       {
         name: "Events",
@@ -111,9 +115,10 @@ export default function Block() {
             setPage={setEventsPage}
           />
         ),
+        loading: eventsLoading,
       },
     ]);
-  }, [node, extrinsicsData, eventsData]);
+  }, [node, extrinsicsData, eventsData, extrinsicsLoading, eventsLoading]);
 
   return (
     <Section>
@@ -143,6 +148,7 @@ export default function Block() {
             </BreakText>,
             "-",
           ]}
+          loading={loading}
         />
       </div>
       <TabTable data={tabTableData} collapse={900} />

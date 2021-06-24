@@ -102,7 +102,7 @@ export default function Address() {
         loading: transfersLoading,
       },
       {
-        name: "Transfer",
+        name: "Transfers",
         total: transfersData?.total,
         head: addressTransfersHead,
         body: (transfersData?.items || []).map((item) => [

@@ -80,7 +80,7 @@ async function getHolderExtrinsics(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.count(q);
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,
@@ -109,7 +109,7 @@ async function getHolderTransfers(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.count(q);
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,

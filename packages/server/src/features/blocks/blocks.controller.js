@@ -69,7 +69,7 @@ async function getBlockExtrinsics(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.count($match);
+  const total = await col.countDocuments($match);
 
   ctx.body = {
     items,
@@ -104,7 +104,7 @@ async function getBlockEvents(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.count($match);
+  const total = await col.countDocuments($match);
 
   ctx.body = {
     items,

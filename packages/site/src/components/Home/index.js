@@ -103,7 +103,7 @@ export default function Home() {
                 {addressEllipsis(item.issuer)}
               </InLink>,
               item.accounts,
-              `${item.supply / Math.pow(10, item.decimals)} ${item.symbol}`,
+              `${item.supply / Math.pow(10, item.decimals)}`,
             ])}
             foot={
               <FootWrapper>

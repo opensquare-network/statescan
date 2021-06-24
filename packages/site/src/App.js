@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import Layout from "./components/Layout";
 import Root from "./components/Root";
+import Toast from "./components/Toast/index";
 import { nodeSelector } from "store/reducers/nodeSlice";
 import { connect } from "services/websocket";
 
@@ -35,6 +36,7 @@ function App() {
           <Redirect to="/404" />
         </Switch>
       </Router>
+      <Toast />
     </QueryClientProvider>
   );
 }

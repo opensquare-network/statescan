@@ -50,7 +50,7 @@ const Item = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.65);
   :hover {
@@ -67,7 +67,7 @@ const Item = styled.div`
 `;
 
 const Ellipsis = styled.div`
-  font-size: 15px;
+  font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.65);
   & + & {

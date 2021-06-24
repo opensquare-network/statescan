@@ -89,6 +89,7 @@ const ExploreButton = styled.div`
 
 export default function Subheader() {
   const node = useNode();
+
   return (
     <Wrapper>
       <Logo

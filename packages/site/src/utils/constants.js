@@ -52,11 +52,7 @@ export const addressAssetsHead = [
   { name: "Transfer Count" },
 ];
 
-export const extrinsicEventsHead = [
-  { name: "Event ID" },
-  { name: "Hash" },
-  { name: "Action" },
-];
+export const extrinsicEventsHead = [{ name: "Event ID" }, { name: "Action" }];
 
 export const blockExtrinsicsHead = [
   { name: "Extrinsic ID" },
@@ -92,7 +88,6 @@ export const addressHead = [
   "Balance",
   "Reserved",
   "Locked",
-  "Account Index",
   "Nonce",
 ];
 

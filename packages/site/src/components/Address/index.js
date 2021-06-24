@@ -4,7 +4,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
-import { addressEllipsis } from "utils";
+import { addressEllipsis, fromSymbolUnit } from "utils";
 import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
 import { addressHead } from "utils/constants";
@@ -60,6 +60,31 @@ export default function Address() {
   useEffect(() => {
     setTabTableData([
       {
+        name: "Assets",
+        total: assetsData?.total,
+        head: addressAssetsHead,
+        body: (assetsData?.items || []).map((item) => [
+          <InLink
+            to={`/${node}/asset/${item.assetId}_${item.assetCreatedAt.blockHeight}`}
+          >{`#${item.assetId}`}</InLink>,
+          item.assetSymbol,
+          item.assetName,
+          item.balance / Math.pow(10, item.assetDecimals),
+          item.approved || 0,
+          item.isFrozen.toString(),
+          item.transfers,
+        ]),
+        foot: (
+          <Pagination
+            page={assetsData?.page}
+            pageSize={assetsData?.pageSize}
+            total={assetsData?.total}
+            s
+            setPage={setAssetsPage}
+          />
+        ),
+      },
+      {
         name: "Extrinsics",
         total: extrinsicsData?.total,
         head: addressExtrincsHead,
@@ -86,30 +111,6 @@ export default function Address() {
         ),
         loading: extrinsicsLoading,
       },
-      {
-        name: "Assets",
-        total: assetsData?.total,
-        head: addressAssetsHead,
-        body: (assetsData?.items || []).map((item) => [
-          "-",
-          "-",
-          "-",
-          item.balance,
-          "-",
-          "-",
-          "-",
-        ]),
-        foot: (
-          <Pagination
-            page={assetsData?.page}
-            pageSize={assetsData?.pageSize}
-            total={assetsData?.total}
-            s
-            setPage={setAssetsPage}
-          />
-        ),
-        loading: assetsLoading,
-      },
     ]);
   }, [node, extrinsicsData, assetsData, extrinsicsLoading, assetsLoading]);
 
@@ -126,10 +127,9 @@ export default function Address() {
                 <MinorText>{data?.address}</MinorText>
               </BreakText>
             </CopyText>,
-            `${data?.data?.free} ${symbol}`,
-            `${data?.data?.reserved} ${symbol}`,
-            `${data?.data?.feeFrozen} ${symbol}`,
-            "-",
+            `${fromSymbolUnit(data?.data?.free || 0, symbol)} ${symbol}`,
+            `${fromSymbolUnit(data?.data?.reserved || 0, symbol)} ${symbol}`,
+            `${fromSymbolUnit(data?.data?.miscFrozen || 0, symbol)} ${symbol}`,
             <MinorText>{data?.nonce}</MinorText>,
           ]}
         />

@@ -78,9 +78,6 @@ export default function Extrinsic() {
         head: extrinsicEventsHead,
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.index}`,
-          <BreakText>
-            <ThemeText>{item?.extrinsicHash}</ThemeText>
-          </BreakText>,
           `${item?.section}(${item?.method})`,
         ]),
         foot: (
@@ -119,14 +116,14 @@ export default function Extrinsic() {
             <MinorText>{capitalize(data?.section)}</MinorText>,
             <MinorText>{capitalize(data?.name)}</MinorText>,
             <CopyText text={data?.signer}>
-              <InLink to={`/${node}/addresses/${data?.signer}`}>
+              <InLink to={`/${node}/address/${data?.signer}`}>
                 {data?.signer}
               </InLink>
             </CopyText>,
             ...(isTransfer
               ? [
                   <CopyText text={data?.args?.dest?.id}>
-                    <InLink to={`/${node}/addresses/${data?.args?.dest?.id}`}>
+                    <InLink to={`/${node}/address/${data?.args?.dest?.id}`}>
                       {data?.args?.dest?.id}
                     </InLink>
                   </CopyText>,

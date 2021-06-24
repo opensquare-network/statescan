@@ -49,11 +49,7 @@ export default function Extrinsic() {
       if (!isAssetTransfer || !extrinsicHash) {
         return null;
       }
-      const { data } = await axios.get(`${node}/transfers/${extrinsicHash}`, {
-        params: {
-          page: eventsPage,
-        },
-      });
+      const { data } = await axios.get(`${node}/transfers/${extrinsicHash}`);
       return data;
     }
   );

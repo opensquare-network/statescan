@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import axios from "axios";
-import { useQuery } from "react-query";
-
-import { useNode } from "utils/hooks";
 import LineChart from "../Charts/LineChart";
 import { useSelector } from "react-redux";
-import { scanHeightSelector } from "store/reducers/chainSlice";
+import {
+  overviewSelector,
+  scanHeightSelector,
+} from "store/reducers/chainSlice";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -66,41 +65,8 @@ const ChartWrapper = styled.div`
 `;
 
 export default function Overview() {
-  const node = useNode();
   const blocksHeightData = useSelector(scanHeightSelector);
-
-  const { data: assetsCountData } = useQuery(
-    ["assetsCount", node],
-    async () => {
-      const { data } = await axios.get(`${node}/assets/count`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
-
-  const { data: transfersCountData } = useQuery(
-    ["transfersCount", node],
-    async () => {
-      const { data } = await axios.get(`${node}/transfers/count`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
-
-  const { data: holdersCountData } = useQuery(
-    ["holdersCount", node],
-    async () => {
-      const { data } = await axios.get(`${node}/holders/count`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
+  const overviewData = useSelector(overviewSelector);
 
   const chartData = [
     { time: 1, price: 1 },
@@ -122,15 +88,15 @@ export default function Overview() {
       </ItemWrapper>
       <ItemWrapper>
         <Title>Assets</Title>
-        <Text>{assetsCountData ?? 0}</Text>
+        <Text>{overviewData?.assetsCount ?? 0}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Transfers</Title>
-        <Text>{transfersCountData ?? 0}</Text>
+        <Text>{overviewData?.transfersCount ?? 0}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Holders</Title>
-        <Text>{holdersCountData ?? 0}</Text>
+        <Text>{overviewData?.holdersCount ?? 0}</Text>
       </ItemWrapper>
       <Divider />
       <ItemWrapper>

@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import axios from "axios";
-import { useQuery } from "react-query";
 import { useLocation } from "react-router";
 
 import Overview from "./Overview";
@@ -16,6 +14,8 @@ import {
 } from "utils/constants";
 import { useNode } from "utils/hooks";
 import PageNotFound from "components/PageNotFound";
+import { useSelector } from "react-redux";
+import { overviewSelector } from "store/reducers/chainSlice";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -41,39 +41,7 @@ const FootWrapper = styled.div`
 export default function Home() {
   const node = useNode();
   const location = useLocation();
-
-  const { data: blocksLatestData } = useQuery(
-    ["blocksLatest", node],
-    async () => {
-      const { data } = await axios.get(`${node}/blocks/latest`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
-
-  const { data: transfersLatestData } = useQuery(
-    ["transfersLatest", node],
-    async () => {
-      const { data } = await axios.get(`${node}/transfers/latest`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
-
-  const { data: assetsLatestData } = useQuery(
-    ["assetsPopular", node],
-    async () => {
-      const { data } = await axios.get(`${node}/assets/popular`);
-      return data;
-    },
-    {
-      enabled: !!node,
-    }
-  );
+  const overview = useSelector(overviewSelector);
 
   return (
     <>
@@ -86,7 +54,7 @@ export default function Home() {
             <Table
               title="Latest Blocks"
               head={blocksLatestHead}
-              body={(blocksLatestData || []).map((item) => [
+              body={(overview?.latestBlocks || []).map((item) => [
                 <InLink to={`/${node}/block/${item.header.number}`}>
                   {item.header.number}
                 </InLink>,
@@ -99,7 +67,7 @@ export default function Home() {
             <Table
               title="Latest Transfers"
               head={transfersLatestHead}
-              body={(transfersLatestData || []).map((item) => [
+              body={(overview?.latestTransfers || []).map((item) => [
                 <InLink to={`/${node}/extrinsic/${item.extrinsicHash}`}>
                   {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
                 </InLink>,
@@ -119,7 +87,7 @@ export default function Home() {
           <Table
             title="Assets"
             head={assetsHead}
-            body={(assetsLatestData || []).map((item) => [
+            body={(overview?.popularAssets || []).map((item) => [
               <InLink
                 to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
               >{`#${item.assetId}`}</InLink>,

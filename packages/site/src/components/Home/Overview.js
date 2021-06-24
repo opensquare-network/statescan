@@ -83,7 +83,7 @@ export default function Overview() {
   ]);
   axios.get(`/statemine/prices/daily`).then((data) => {
     if (data.length > 0) {
-      setChartData(data);
+      setChartData(data?.reverse() ?? []);
     }
   });
 

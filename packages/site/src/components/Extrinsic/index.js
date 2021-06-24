@@ -18,8 +18,6 @@ import Result from "components/Result";
 import MinorText from "components/MinorText";
 import { capitalize, fromSymbolUnit, timeUTC } from "utils";
 import TabTable from "components/TabTable";
-import ThemeText from "components/ThemeText";
-import BreakText from "components/BreakText";
 import Pagination from "components/Pgination";
 
 export default function Extrinsic() {
@@ -77,7 +75,7 @@ export default function Extrinsic() {
         total: eventsData?.total,
         head: extrinsicEventsHead,
         body: (eventsData?.items || []).map((item) => [
-          `${item?.indexer?.blockHeight}-${item?.index}`,
+          `${item?.indexer?.blockHeight}-${item?.sort}`,
           `${item?.section}(${item?.method})`,
         ]),
         foot: (

@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
 import { addressEllipsis } from "utils";
-import { useNode, useSymnol } from "utils/hooks";
+import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
 import { addressHead } from "utils/constants";
 import MinorText from "components/MinorText";
@@ -23,7 +23,7 @@ import Pagination from "components/Pgination";
 export default function Address() {
   const { id } = useParams();
   const node = useNode();
-  const symbol = useSymnol();
+  const symbol = useSymbol();
   const [tabTableData, setTabTableData] = useState();
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [assetsPage, setAssetsPage] = useState(0);

@@ -6,13 +6,13 @@ import Table from "components/Table";
 import MinorText from "components/MinorText";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
-import { addressEllipsis, timeDuration } from "utils";
+import { addressEllipsis, fromSymbolUnit, timeDuration } from "utils";
 import {
   blocksLatestHead,
   transfersLatestHead,
   assetsHead,
 } from "utils/constants";
-import { useNode } from "utils/hooks";
+import { useNode, useSymbol } from "utils/hooks";
 import PageNotFound from "components/PageNotFound";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
@@ -42,6 +42,7 @@ export default function Home() {
   const node = useNode();
   const location = useLocation();
   const overview = useSelector(overviewSelector);
+  const symbol = useSymbol();
 
   return (
     <>
@@ -77,9 +78,11 @@ export default function Home() {
                 <InLink to={`/${node}/address/${item.to}`}>
                   {addressEllipsis(item.to)}
                 </InLink>,
-                `${item.balance / Math.pow(10, item.assetDecimals)} ${
-                  item.assetSymbol
-                }`,
+                item?.assetSymbol
+                  ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+                      item.assetSymbol
+                    }`
+                  : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
               ])}
               collapse={900}
             />

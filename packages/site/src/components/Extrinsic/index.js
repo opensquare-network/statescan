@@ -5,14 +5,14 @@ import { useQuery } from "react-query";
 
 import Section from "components/Section";
 import Nav from "components/Nav";
-import { useNode, useSymnol } from "utils/hooks";
+import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
 import { extrinsicHead, extrinsicEventsHead } from "utils/constants";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import Result from "components/Result";
 import MinorText from "components/MinorText";
-import { capitalize, timeUTC } from "utils";
+import { capitalize, fromSymbolUnit, timeUTC } from "utils";
 import TabTable from "components/TabTable";
 import ThemeText from "components/ThemeText";
 import BreakText from "components/BreakText";
@@ -21,7 +21,7 @@ import Pagination from "components/Pgination";
 export default function Extrinsic() {
   const { id } = useParams();
   const node = useNode();
-  const symbol = useSymnol();
+  const symbol = useSymbol();
   const [extrinsicId, setExtrinsicId] = useState();
   const [tabTableData, setTabTableData] = useState();
   const [eventsPage, setEventsPage] = useState(0);
@@ -93,10 +93,10 @@ export default function Extrinsic() {
             <CopyText text={data?.signer}>
               <InLink>{data?.signer}</InLink>
             </CopyText>,
-            <CopyText text={data?.args?.target?.id}>
-              <InLink>{data?.args?.target?.id}</InLink>
+            <CopyText text={data?.args?.dest?.id}>
+              <InLink>{data?.args?.dest?.id}</InLink>
             </CopyText>,
-            `${data?.args?.amount ?? 0} ${symbol}`,
+            `${fromSymbolUnit(data?.args?.value ?? 0, symbol)} ${symbol}`,
             "-",
             "-",
             <MinorText>

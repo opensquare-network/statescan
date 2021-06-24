@@ -1,6 +1,7 @@
 const { chainStatusRoom, overviewRoom } = require("./constants");
 const { getScanHeight, getOverview } = require("./store");
 const { feedScanStatus } = require("./status");
+const { feedOverview } = require("./overview");
 
 async function listenAndEmitInfo(io) {
   io.on("connection", (socket) => {
@@ -24,6 +25,7 @@ async function listenAndEmitInfo(io) {
   });
 
   await feedScanStatus("westmint", io);
+  await feedOverview("westmint", io);
 }
 
 module.exports = {

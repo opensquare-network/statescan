@@ -5,5 +5,5 @@ module.exports = {
   chainStatusRoom,
   FEED_INTERVAL: 6000,
   overviewRoom,
-  OVERVIEW_FEED_INTERVAL: 30 * 1000, // 30 seconds
+  OVERVIEW_FEED_INTERVAL: 6000, // 30 seconds
 };

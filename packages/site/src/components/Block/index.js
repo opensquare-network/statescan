@@ -102,9 +102,9 @@ export default function Block() {
         head: blockEventsHead,
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.index}`,
-          <BreakText>
-            <ThemeText>{item?.extrinsicHash}</ThemeText>
-          </BreakText>,
+          <InLink
+            to={`/${node}/extrinsic/${item?.extrinsicHash}`}
+          >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>,
           <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         ]),
         foot: (

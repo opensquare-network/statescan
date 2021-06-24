@@ -2,9 +2,10 @@ export const nodes = [
   {
     name: "Westmint",
     sub: "Westend",
-    icon: "/imgs/icons/rococo.png",
     value: "westmint",
     symbol: "WND",
+    icon: "/imgs/icons/rococo.png",
+    logo: "/imgs/logo.svg",
   },
 ];
 

@@ -5,6 +5,8 @@ import {
   overviewSelector,
   scanHeightSelector,
 } from "store/reducers/chainSlice";
+import { useState } from "react";
+import axios from "axios";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -37,6 +39,10 @@ const Title = styled.p`
   color: rgba(17, 17, 17, 0.35);
   margin: 0 0 8px;
 `;
+const SubTitle = styled.span`
+  font-size: 12px;
+  color: rgba(17, 17, 17, 0.2);
+`;
 
 const Text = styled.p`
   font-weight: bold;
@@ -67,18 +73,19 @@ const ChartWrapper = styled.div`
 export default function Overview() {
   const blocksHeightData = useSelector(scanHeightSelector);
   const overviewData = useSelector(overviewSelector);
-
-  const chartData = [
-    { time: 1, price: 1 },
-    { time: 2, price: 1 },
-    { time: 3, price: 3 },
-    { time: 4, price: 2 },
-    {
-      time: 5,
-      price: 1,
-    },
-    { time: 6, price: 6 },
-  ];
+  const [chartData, setChartData] = useState([
+    { time: 1, price: 0 },
+    { time: 2, price: 0 },
+    { time: 3, price: 0 },
+    { time: 4, price: 0 },
+    { time: 5, price: 0 },
+    { time: 6, price: 0 },
+  ]);
+  axios.get(`/statemine/prices/daily`).then((data) => {
+    if (data.length > 0) {
+      setChartData(data?.reverse() ?? []);
+    }
+  });
 
   return (
     <Wrapper>
@@ -100,7 +107,9 @@ export default function Overview() {
       </ItemWrapper>
       <Divider />
       <ItemWrapper>
-        <Title>DOT Price</Title>
+        <Title>
+          DOT Price <SubTitle>(Last 30d)</SubTitle>
+        </Title>
         <Text>$00.00</Text>
       </ItemWrapper>
       <ChartWrapper>

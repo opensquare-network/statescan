@@ -13,7 +13,7 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeDuration, addressEllipsis, fromSymbolUnit } from "utils";
+import { addressEllipsis, fromSymbolUnit } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
@@ -75,7 +75,7 @@ export default function Asset() {
             to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
           >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
           <Tooltip label={item.method} bg />,
-          <MinorText>{timeDuration(item.indexer.blockTime)}</MinorText>,
+          item.indexer.blockTime,
           <InLink to={`/${node}/address/${item?.from}`}>
             {addressEllipsis(item?.from)}
           </InLink>,

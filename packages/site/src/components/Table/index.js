@@ -5,8 +5,9 @@ import { useWindowSize } from "utils/hooks";
 import NoData from "./NoData";
 import TimeHead from "./TimeHead";
 import TimeBody from "./TimeBody";
-import { timeTypes } from "utils/constants";
 import LoadingBar from "components/LoadingBar";
+import { useDispatch, useSelector } from "react-redux";
+import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 
 const Title = styled.h4`
   font-weight: bold;
@@ -130,8 +131,12 @@ export default function Table({
   isLoading,
   placeholder = 3,
 }) {
+  const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState(false);
-  const [timeType, setTimeType] = useState(timeTypes.age);
+  const timeType = useSelector(timeTypeSelector);
+  const doSetTimeType = (timeType) => {
+    dispatch(setTimeType(timeType));
+  };
   const size = useWindowSize();
   useEffect(() => {
     if (collapse && collapse > size.width) {
@@ -151,7 +156,7 @@ export default function Table({
               {(head || []).map((item, index) => (
                 <th key={index} style={{ textAlign: item.align ?? "left" }}>
                   {item.type === "time" ? (
-                    <TimeHead timeType={timeType} setTimeType={setTimeType} />
+                    <TimeHead timeType={timeType} setTimeType={doSetTimeType} />
                   ) : (
                     item.name
                   )}

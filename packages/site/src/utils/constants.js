@@ -146,6 +146,6 @@ export const assetHead = [
 ];
 
 export const timeTypes = {
-  age: 0,
-  date: 1,
+  age: "age",
+  date: "date",
 };

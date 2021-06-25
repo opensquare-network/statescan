@@ -7,6 +7,7 @@ import {
 } from "store/reducers/chainSlice";
 import { useState } from "react";
 import axios from "axios";
+import { useNode } from "../../utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -80,7 +81,9 @@ export default function Overview() {
     { time: 5, price: 0 },
     { time: 6, price: 0 },
   ]);
-  axios.get(`/westmint/prices/daily`).then((data) => {
+  const node = useNode();
+
+  axios.get(`/${node}/prices/daily`).then((data) => {
     if (data.length > 0) {
       setChartData(data?.reverse() ?? []);
     }

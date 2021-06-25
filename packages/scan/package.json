@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "deploy:wndScan": "pm2 start ecosystem.config.js --only statescan-scan-wnd --env production",
+    "deploy:wndScanStaging": "pm2 start ecosystem.config.js --only statescan-scan-wnd-staging --env production"
+  },
   "dependencies": {
     "@polkadot/api": "^4.15.1",
     "@polkadot/types": "^4.15.1",

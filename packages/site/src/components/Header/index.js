@@ -4,6 +4,7 @@ import NodeSwitcher from "components/NodeSwitcher";
 import { useHomePage } from "utils/hooks";
 import Subheader from "./Subheader";
 import { Link } from "react-router-dom";
+import SearchS from "../Search/search-s";
 
 const Container = styled.header`
   position: relative;
@@ -32,8 +33,13 @@ const Background = styled.div`
     css`
       height: 464px;
       /* background: url("/imgs/pattern-dot.svg"),
-              linear-gradient(180deg, #eeeeee 0%, #ffffff 100%); */
+                    linear-gradient(180deg, #eeeeee 0%, #ffffff 100%); */
     `}
+`;
+
+const RightWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default function Header() {
@@ -47,7 +53,10 @@ export default function Header() {
           <Link to="/">
             <img src="/imgs/logo.svg" alt="logo" />
           </Link>
-          <NodeSwitcher />
+          <RightWrapper>
+            <SearchS />
+            <NodeSwitcher />
+          </RightWrapper>
         </Wrapper>
       </Container>
       {isHomePage && <Subheader />}

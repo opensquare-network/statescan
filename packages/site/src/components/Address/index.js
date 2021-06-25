@@ -20,7 +20,6 @@ import {
 import Section from "components/Section";
 import InLink from "components/InLink";
 import ThemeText from "components/ThemeText";
-import { timeDuration } from "utils";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
@@ -112,7 +111,7 @@ export default function Address() {
             to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
           >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
           <Tooltip label={item.method} bg />,
-          <MinorText>{timeDuration(item.indexer.blockTime)}</MinorText>,
+          item.indexer.blockTime,
           item.from !== id ? (
             <InLink to={`/${node}/address/${item.from}`}>
               {addressEllipsis(item.from)}

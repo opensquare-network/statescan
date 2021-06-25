@@ -15,7 +15,8 @@ async function search(ctx) {
   const { q } = ctx.query;
 
   if (!q) {
-    throw new HttpError(400, "Parameter Q is missing");
+    ctx.body = [];
+    return;
   }
 
   const assetCol = await getAssetCollection(chain);
@@ -50,7 +51,8 @@ async function searchAutoComplete(ctx) {
   const { prefix } = ctx.query;
 
   if (!prefix) {
-    throw new HttpError(400, "Prefix is missing");
+    ctx.body = [];
+    return;
   }
 
   const prefixPattern = new RegExp(`^${escapeRegex(prefix)}`);

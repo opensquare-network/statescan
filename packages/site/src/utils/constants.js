@@ -79,8 +79,8 @@ export const blockEventsHead = [
 export const assetTransfersHead = [
   { name: "Event ID" },
   { name: "Extrinsic ID" },
-  { name: "Hash" },
-  { name: "Time", type: "time" },
+  { name: "Method" },
+  { name: "Age", type: "time" },
   { name: "From" },
   { name: "To" },
   { name: "Quantity" },
@@ -146,6 +146,6 @@ export const assetHead = [
 ];
 
 export const timeTypes = {
-  age: 0,
-  date: 1,
+  age: "age",
+  date: "date",
 };

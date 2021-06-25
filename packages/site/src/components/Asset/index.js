@@ -4,7 +4,7 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
-import { useNode } from "utils/hooks";
+import { useNode, useSymbol } from "utils/hooks";
 import {
   assetHead,
   assetTransfersHead,
@@ -13,13 +13,13 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { addressEllipsis } from "utils";
+import { addressEllipsis, fromSymbolUnit } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
-import ThemeText from "components/ThemeText";
 import BreakText from "components/BreakText";
 import Pagination from "components/Pgination";
+import Tooltip from "components/Tooltip";
 
 export default function Asset() {
   const { id } = useParams();
@@ -28,6 +28,7 @@ export default function Asset() {
   const [tabTableData, setTabTableData] = useState();
   const [transfersPage, setTransfersPage] = useState(0);
   const [holdersPage, setHoldersPage] = useState(0);
+  const symbol = useSymbol();
 
   const { data, isLoading } = useQuery(["asset", node, id], async () => {
     const { data } = await axios.get(`${node}/assets/${id}`);
@@ -69,21 +70,23 @@ export default function Asset() {
         total: transfersData?.total,
         head: assetTransfersHead,
         body: (transfersData?.items || []).map((item) => [
-          <ThemeText>{`${item?.indexer?.blockHeight}-${item?.extrinsicIndex}`}</ThemeText>,
+          `${item.indexer.blockHeight}-${item.eventSort}`,
           <InLink
             to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
           >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
-          <BreakText>
-            <ThemeText>{item?.extrinsicHash}</ThemeText>
-          </BreakText>,
-          item?.indexer?.blockTime,
+          <Tooltip label={item.method} bg />,
+          item.indexer.blockTime,
           <InLink to={`/${node}/address/${item?.from}`}>
             {addressEllipsis(item?.from)}
           </InLink>,
           <InLink to={`/${node}/address/${item?.to}`}>
             {addressEllipsis(item?.to)}
           </InLink>,
-          item?.balance,
+          item.assetSymbol
+            ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+                item.assetSymbol
+              }`
+            : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
         ]),
         foot: (
           <Pagination
@@ -121,7 +124,15 @@ export default function Asset() {
         isLoading: isHoldersLoading,
       },
     ]);
-  }, [node, transfersData, holdersData, isTransfersLoading, isHoldersLoading]);
+  }, [
+    node,
+    transfersData,
+    holdersData,
+    isTransfersLoading,
+    isHoldersLoading,
+    id,
+    symbol,
+  ]);
 
   return (
     <Section>

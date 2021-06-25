@@ -1,10 +1,8 @@
-import { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 
 import NodeSwitcher from "components/NodeSwitcher";
-import { useHomePage, useNode } from "utils/hooks";
+import { useHomePage } from "utils/hooks";
 import Subheader from "./Subheader";
-import { nodes } from "utils/constants";
 
 const Container = styled.header`
   position: relative;
@@ -39,18 +37,13 @@ const Background = styled.div`
 
 export default function Header() {
   const isHomePage = useHomePage();
-  const node = useNode();
-  const [logo, setLogo] = useState();
-  useEffect(() => {
-    setLogo(nodes.find((item) => item.value === node)?.logo);
-  }, [node]);
 
   return (
     <>
       <Container>
         <Background isHomePage={isHomePage} />
         <Wrapper>
-          <img src={logo} alt="logo" />
+          <img src="/imgs/logo.svg" alt="logo" />
           <NodeSwitcher />
         </Wrapper>
       </Container>

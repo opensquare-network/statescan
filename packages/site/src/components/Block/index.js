@@ -76,7 +76,7 @@ export default function Block() {
         head: blockExtrinsicsHead,
         body: (extrinsicsData?.items || []).map((item) => [
           <InLink
-            to={`/${node}/extrinsic/${item?.hash}`}
+            to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
           <BreakText>
             <ThemeText>{item?.hash}</ThemeText>

@@ -70,9 +70,16 @@ const ChartWrapper = styled.div`
   }
 `;
 
-export default function Overview() {
+export default function Overview({ node }) {
   const blocksHeightData = useSelector(scanHeightSelector);
   const overviewData = useSelector(overviewSelector);
+  const tokenMap = new Map([
+    ["westmint", "WND"],
+    ["kusama", "KSM"],
+    ["polkadot", "DOT"],
+  ]);
+  const token = tokenMap.get(node) ?? "";
+
   const [chartData, setChartData] = useState([
     { time: 1, price: 0 },
     { time: 2, price: 0 },
@@ -110,7 +117,7 @@ export default function Overview() {
       <Divider />
       <ItemWrapper>
         <Title>
-          DOT Price <SubTitle>(Last 30d)</SubTitle>
+          {token} Price <SubTitle>(Last 30d)</SubTitle>
         </Title>
         <Text>$00.00</Text>
       </ItemWrapper>

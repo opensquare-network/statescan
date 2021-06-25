@@ -13,12 +13,11 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeUTC, timeDuration, addressEllipsis, fromSymbolUnit } from "utils";
+import { timeDuration, addressEllipsis, fromSymbolUnit } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import BreakText from "components/BreakText";
-import ThemeText from "components/ThemeText";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
 

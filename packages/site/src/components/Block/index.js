@@ -10,7 +10,7 @@ import { blockHead } from "utils/constants";
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeDuration, timeUTC } from "utils";
+import { timeDuration, time } from "utils";
 import ThemeText from "components/ThemeText";
 import CopyText from "components/CopyText";
 import { blockExtrinsicsHead, blockEventsHead } from "utils/constants";
@@ -76,7 +76,7 @@ export default function Block() {
         head: blockExtrinsicsHead,
         body: (extrinsicsData?.items || []).map((item) => [
           <InLink
-            to={`/${node}/extrinsic/${item?.hash}`}
+            to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
           <BreakText>
             <ThemeText>{item?.hash}</ThemeText>
@@ -103,7 +103,7 @@ export default function Block() {
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.sort}`,
           <InLink
-            to={`/${node}/extrinsic/${item?.extrinsicHash}`}
+            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
           >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>,
           <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         ]),
@@ -128,8 +128,8 @@ export default function Block() {
           head={blockHead}
           body={[
             <FlexWrapper>
-              <MinorText>{timeDuration(data?.blockTime)}</MinorText>
-              <AccessoryText>{timeUTC(data?.blockTime)}</AccessoryText>
+              <MinorText>{time(data?.blockTime)}</MinorText>
+              <AccessoryText>{timeDuration(data?.blockTime)}</AccessoryText>
             </FlexWrapper>,
             "-",
             <CopyText text={data?.hash}>

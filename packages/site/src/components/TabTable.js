@@ -7,7 +7,7 @@ const TabWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 18px;
-
+  overflow: scroll;
   > :not(:first-child) {
     margin-left: 40px;
   }

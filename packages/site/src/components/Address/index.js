@@ -23,6 +23,7 @@ import ThemeText from "components/ThemeText";
 import { timeDuration } from "utils";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
+import Tooltip from "components/Tooltip";
 
 export default function Address() {
   const { id } = useParams();
@@ -107,7 +108,10 @@ export default function Address() {
         head: addressTransfersHead,
         body: (transfersData?.items || []).map((item) => [
           `${item.indexer.blockHeight}-${item.eventSort}`,
-          item.method,
+          <InLink
+            to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
+          <Tooltip label={item.method} bg />,
           <MinorText>{timeDuration(item.indexer.blockTime)}</MinorText>,
           item.from !== id ? (
             <InLink to={`/${node}/address/${item.from}`}>
@@ -144,7 +148,9 @@ export default function Address() {
         total: extrinsicsData?.total,
         head: addressExtrincsHead,
         body: (extrinsicsData?.items || []).map((item) => [
-          <InLink to={`/${node}/extrinsic/${item?.hash}`}>
+          <InLink
+            to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
+          >
             {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           </InLink>,
           <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
@@ -153,7 +159,7 @@ export default function Address() {
           <BreakText>
             <ThemeText>{item?.hash}</ThemeText>
           </BreakText>,
-          timeDuration(item?.indexer?.blockTime),
+          item?.indexer?.blockTime,
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
         ]),

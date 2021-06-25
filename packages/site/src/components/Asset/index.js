@@ -18,7 +18,9 @@ import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import BreakText from "components/BreakText";
+import ThemeText from "components/ThemeText";
 import Pagination from "components/Pgination";
+import Tooltip from "components/Tooltip";
 
 export default function Asset() {
   const { id } = useParams();
@@ -72,25 +74,15 @@ export default function Asset() {
           `${item.indexer.blockHeight}-${item.eventSort}`,
           <InLink
             to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-          >
-            {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-          </InLink>,
-          item.method,
+          >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
+          <Tooltip label={item.method} bg />,
           <MinorText>{timeDuration(item.indexer.blockTime)}</MinorText>,
-          item.from !== id ? (
-            <InLink to={`/${node}/address/${item.from}`}>
-              {addressEllipsis(item.from)}
-            </InLink>
-          ) : (
-            addressEllipsis(item.from)
-          ),
-          item.to !== id ? (
-            <InLink to={`/${node}/address/${item.to}`}>
-              {addressEllipsis(item.to)}
-            </InLink>
-          ) : (
-            addressEllipsis(item.to)
-          ),
+          <InLink to={`/${node}/address/${item?.from}`}>
+            {addressEllipsis(item?.from)}
+          </InLink>,
+          <InLink to={`/${node}/address/${item?.to}`}>
+            {addressEllipsis(item?.to)}
+          </InLink>,
           item.assetSymbol
             ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
                 item.assetSymbol
@@ -159,7 +151,6 @@ export default function Asset() {
             <MinorText>{data?.symbol}</MinorText>,
             <MinorText>{data?.name}</MinorText>,
             <MinorText>{`#${data?.assetId}`}</MinorText>,
-            <MinorText>{timeUTC(data?.createdAt?.blockTime)}</MinorText>,
             <BreakText>
               <CopyText text={data?.owner}>
                 <InLink to={`/${node}/address/${data?.owner}`}>

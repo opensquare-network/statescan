@@ -10,6 +10,24 @@ export function addressEllipsis(address, start = 4, end = 4) {
 }
 
 export function timeDuration(time) {
+  moment.updateLocale("en", {
+    relativeTime: {
+      future: "in %s",
+      past: "%s ",
+      s: (number) => number + " secs ago ",
+      ss: "%d secs ago",
+      m: "1 min ago",
+      mm: "%d mins ago",
+      h: "1 hour ago ",
+      hh: "%d hours ago",
+      d: "1 day ago",
+      dd: "%dd ago",
+      M: "1 month ago ",
+      MM: "%d months ago ",
+      y: "1 year ago",
+      yy: "%d years ago",
+    },
+  });
   return moment(time).fromNow();
 }
 

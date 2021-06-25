@@ -36,7 +36,7 @@ export const addressExtrincsHead = [
   { name: "Extrinsics ID" },
   { name: "Blocks" },
   { name: "Extrinsics Hash" },
-  { name: "Time" },
+  { name: "Time", type: "time" },
   { name: "Result" },
   { name: "Action" },
 ];
@@ -53,8 +53,9 @@ export const addressAssetsHead = [
 
 export const addressTransfersHead = [
   { name: "Event ID" },
+  { name: "Extrinsic ID" },
   { name: "Method" },
-  { name: "Age" },
+  { name: "Age", type: "time" },
   { name: "From" },
   { name: "To" },
   { name: "Quantity" },
@@ -71,7 +72,7 @@ export const blockExtrinsicsHead = [
 
 export const blockEventsHead = [
   { name: "Event ID" },
-  { name: "Hash" },
+  { name: "Extrinsic ID" },
   { name: "Action" },
 ];
 
@@ -79,7 +80,7 @@ export const assetTransfersHead = [
   { name: "Event ID" },
   { name: "Extrinsic ID" },
   { name: "Method" },
-  { name: "Age" },
+  { name: "Age", type: "time" },
   { name: "From" },
   { name: "To" },
   { name: "Quantity" },
@@ -136,7 +137,6 @@ export const assetHead = [
   "Symbol",
   "Name",
   "Asset ID",
-  "Mint Time",
   "Owner",
   "Issuer",
   "Total Supply",

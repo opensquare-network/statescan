@@ -28,7 +28,7 @@ const ToastItem = ({ type, message, id }) => {
   useEffect(() => {
     setTimeout(() => {
       dispatch(removeToast(id));
-    }, 5000);
+    }, 2000);
   });
 
   if (!message) return null;

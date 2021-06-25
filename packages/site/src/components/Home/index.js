@@ -15,7 +15,7 @@ import {
 import { useNode, useSymbol } from "utils/hooks";
 import PageNotFound from "components/PageNotFound";
 import { useSelector } from "react-redux";
-import { overviewSelector, loadingSelector } from "store/reducers/chainSlice";
+import { overviewSelector, isLoadingSelector } from "store/reducers/chainSlice";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -42,7 +42,7 @@ export default function Home() {
   const node = useNode();
   const location = useLocation();
   const overview = useSelector(overviewSelector);
-  const loading = useSelector(loadingSelector);
+  const isLoading = useSelector(isLoadingSelector);
   const symbol = useSymbol();
 
   return (
@@ -65,7 +65,7 @@ export default function Home() {
                 item.eventsCount,
               ])}
               collapse={900}
-              loading={loading}
+              isLoading={isLoading}
               placeholder={5}
             />
             <Table
@@ -88,7 +88,7 @@ export default function Home() {
                   : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
               ])}
               collapse={900}
-              loading={loading}
+              isLoading={isLoading}
               placeholder={5}
             />
           </TableWrapper>
@@ -116,7 +116,7 @@ export default function Home() {
               </FootWrapper>
             }
             collapse={900}
-            loading={loading}
+            isLoading={isLoading}
             placeholder={5}
           />
         </Wrapper>

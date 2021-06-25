@@ -33,12 +33,12 @@ export default function Address() {
   const [assetsPage, setAssetsPage] = useState(0);
   const [transfersPage, setTransfersPage] = useState(0);
 
-  const { data, loading } = useQuery(["address", id, node], async () => {
+  const { data, isLoading } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
     return data;
   });
 
-  const { data: extrinsicsData, loading: extrinsicsLoading } = useQuery(
+  const { data: extrinsicsData, isLoading: isExtrinsicsLoading } = useQuery(
     ["addressExtrinsics", id, node, extrinsicsPage],
     async () => {
       const { data } = await axios.get(`${node}/addresses/${id}/extrinsics`, {
@@ -50,7 +50,7 @@ export default function Address() {
     }
   );
 
-  const { data: assetsData, loading: assetsLoading } = useQuery(
+  const { data: assetsData, isLoading: isAssetsLoading } = useQuery(
     ["addressAssets", id, node, assetsPage],
     async () => {
       const { data } = await axios.get(`${node}/addresses/${id}/assets`, {
@@ -62,7 +62,7 @@ export default function Address() {
     }
   );
 
-  const { data: transfersData, loading: transfersLoading } = useQuery(
+  const { data: transfersData, isLoading: isTransfersLoading } = useQuery(
     ["addressTransfers", id, node, transfersPage],
     async () => {
       const { data } = await axios.get(`${node}/addresses/${id}/transfers`, {
@@ -99,7 +99,7 @@ export default function Address() {
             setPage={setAssetsPage}
           />
         ),
-        loading: transfersLoading,
+        isLoading: isAssetsLoading,
       },
       {
         name: "Transfers",
@@ -137,7 +137,7 @@ export default function Address() {
             setPage={setTransfersPage}
           />
         ),
-        loading: assetsLoading,
+        isLoading: isTransfersLoading,
       },
       {
         name: "Extrinsics",
@@ -165,7 +165,7 @@ export default function Address() {
             setPage={setExtrinsicsPage}
           />
         ),
-        loading: extrinsicsLoading,
+        isLoading: isExtrinsicsLoading,
       },
     ]);
   }, [
@@ -173,9 +173,9 @@ export default function Address() {
     extrinsicsData,
     assetsData,
     transfersData,
-    extrinsicsLoading,
-    assetsLoading,
-    transfersLoading,
+    isExtrinsicsLoading,
+    isAssetsLoading,
+    isTransfersLoading,
     symbol,
     id,
   ]);
@@ -185,7 +185,7 @@ export default function Address() {
       <div>
         <Nav data={[{ name: "Address" }, { name: addressEllipsis(id) }]} />
         <DetailTable
-          loading={loading}
+          isLoading={isLoading}
           head={addressHead}
           body={[
             <CopyText text={data?.address}>

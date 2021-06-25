@@ -103,7 +103,7 @@ export default function Block() {
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.sort}`,
           <InLink
-            to={`/${node}/extrinsic/${item?.extrinsicHash}`}
+            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
           >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>,
           <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         ]),

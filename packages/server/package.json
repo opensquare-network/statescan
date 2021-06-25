@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "deploy:server": "pm2 start ecosystem.config.js --only statescan-server --env production",
+    "deploy:serverStaging": "pm2 start ecosystem.config.js --only statescan-server-staging --env production"
+  },
   "dependencies": {
     "@koa/cors": "^3.1.0",
     "bignumber.js": "^9.0.1",

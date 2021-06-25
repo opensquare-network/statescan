@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Layout from "./components/Layout";
 import Root from "./components/Root";
 import Toast from "./components/Toast/index";
-import { nodeSelector } from "store/reducers/nodeSlice";
+import { nodeSelector, setStoredOrDefaultNode } from "store/reducers/nodeSlice";
 import { connect } from "services/websocket";
 
 axios.defaults.baseURL =
@@ -22,6 +22,9 @@ const queryClient = new QueryClient();
 function App() {
   const node = useSelector(nodeSelector);
   connect(node);
+
+  const dispatch = useDispatch();
+  dispatch(setStoredOrDefaultNode());
 
   return (
     <QueryClientProvider client={queryClient}>

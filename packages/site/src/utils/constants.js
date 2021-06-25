@@ -71,7 +71,7 @@ export const blockExtrinsicsHead = [
 
 export const blockEventsHead = [
   { name: "Event ID" },
-  { name: "Hash" },
+  { name: "Extrinsic ID" },
   { name: "Action" },
 ];
 

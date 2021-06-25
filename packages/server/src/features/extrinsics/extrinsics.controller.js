@@ -46,14 +46,25 @@ async function getExtrinsic(ctx) {
 }
 
 async function getExtrinsicEvents(ctx) {
-  const { chain, extrinsicHash } = ctx.params;
+  const { chain, indexOrHash } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
     return;
   }
 
-  const q = { extrinsicHash };
+  let q;
+
+  const match = indexOrHash.match(/(\d+)-(\d+)/);
+  if (match) {
+    const [, blockHeight, extrinsicIndex] = match;
+    q = {
+      "indexer.blockHeight": parseInt(blockHeight),
+      "phase.value": parseInt(extrinsicIndex),
+    };
+  } else {
+    q = { hash: indexOrHash };
+  }
 
   const col = await getEventCollection(chain);
   const items = await col

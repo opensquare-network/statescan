@@ -5,7 +5,7 @@ const chainSlice = createSlice({
   initialState: {
     scanHeight: 0,
     overview: null,
-    loading: true,
+    isLoading: true,
   },
   reducers: {
     setScanHeight(state, { payload }) {
@@ -13,7 +13,7 @@ const chainSlice = createSlice({
     },
     setOverview(state, { payload }) {
       state.overview = payload;
-      state.loading = false;
+      state.isLoading = false;
     },
   },
 });
@@ -22,6 +22,6 @@ export const { setScanHeight, setOverview } = chainSlice.actions;
 
 export const scanHeightSelector = (state) => state.chain.scanHeight;
 export const overviewSelector = (state) => state.chain.overview;
-export const loadingSelector = (state) => state.chain.loading;
+export const isLoadingSelector = (state) => state.chain.isLoading;
 
 export default chainSlice.reducer;

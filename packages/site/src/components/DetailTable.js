@@ -1,5 +1,7 @@
 import styled from "styled-components";
 
+import LoadingBar from "./LoadingBar";
+
 const Wrapper = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
@@ -31,21 +33,26 @@ const Data = styled.div`
   flex-grow: 1;
 `;
 
-const LoadingItem = styled.div`
-  background: #fafafa;
-  border-radius: 4px;
-  height: 20px;
-  flex-grow: 1;
-  margin: 10px 24px;
-`;
-
 export default function DetailTable({ head, body, isLoading }) {
   return (
     <Wrapper>
       {(head || []).map((item, index) => (
         <Item key={index}>
-          <Head>{item}</Head>
-          {isLoading ? <LoadingItem /> : <Data>{body?.[index]}</Data>}
+          {isLoading ? (
+            <>
+              <Head>
+                <LoadingBar random />
+              </Head>
+              <Data>
+                <LoadingBar random />
+              </Data>
+            </>
+          ) : (
+            <>
+              <Head>{item}</Head>
+              <Data>{body?.[index]}</Data>
+            </>
+          )}
         </Item>
       ))}
     </Wrapper>

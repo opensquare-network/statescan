@@ -6,6 +6,7 @@ import NoData from "./NoData";
 import TimeHead from "./TimeHead";
 import TimeBody from "./TimeBody";
 import { timeTypes } from "utils/constants";
+import LoadingBar from "components/LoadingBar";
 
 const Title = styled.h4`
   font-weight: bold;
@@ -120,13 +121,6 @@ const CollapseFoot = styled.div`
   padding: 16px 24px;
 `;
 
-const LoadingItem = styled.div`
-  width: 100%;
-  background: #fafafa;
-  border-radius: 4px;
-  height: 20px;
-`;
-
 export default function Table({
   title,
   head,
@@ -198,7 +192,7 @@ export default function Table({
               {Array.from(Array(placeholder)).map((_, index) => (
                 <tr key={index}>
                   <td colSpan="100%">
-                    <LoadingItem />
+                    <LoadingBar />
                   </td>
                 </tr>
               ))}
@@ -216,7 +210,7 @@ export default function Table({
       )}
       {isCollapse && (
         <CollapseWrapper>
-          {body && body.length > 0 ? (
+          {!isLoading && body && body.length > 0 ? (
             <>
               <div>
                 {(body || []).map((dataItem, index) => (
@@ -234,6 +228,21 @@ export default function Table({
               </div>
               {foot && <CollapseFoot>{foot}</CollapseFoot>}
             </>
+          ) : isLoading ? (
+            <CollapseTable>
+              <tbody>
+                {Array.from(Array(3)).map((_, index) => (
+                  <tr key={index}>
+                    <CollapseHead>
+                      <LoadingBar random />
+                    </CollapseHead>
+                    <CollapseBody>
+                      <LoadingBar random />
+                    </CollapseBody>
+                  </tr>
+                ))}
+              </tbody>
+            </CollapseTable>
           ) : (
             <NoData isCollapse={isCollapse} />
           )}

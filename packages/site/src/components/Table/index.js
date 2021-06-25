@@ -133,7 +133,7 @@ export default function Table({
   body,
   foot,
   collapse,
-  loading,
+  isLoading,
   placeholder = 3,
 }) {
   const [isCollapse, setIsCollapse] = useState(false);
@@ -165,7 +165,7 @@ export default function Table({
               ))}
             </tr>
           </thead>
-          {!loading && body && body.length > 0 ? (
+          {!isLoading && body && body.length > 0 ? (
             <>
               <tbody>
                 {(body || []).map((item, index) => (
@@ -193,7 +193,7 @@ export default function Table({
                 </tfoot>
               )}
             </>
-          ) : loading ? (
+          ) : isLoading ? (
             <tbody>
               {Array.from(Array(placeholder)).map((_, index) => (
                 <tr key={index}>

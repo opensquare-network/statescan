@@ -29,12 +29,12 @@ export default function Asset() {
   const [transfersPage, setTransfersPage] = useState(0);
   const [holdersPage, setHoldersPage] = useState(0);
 
-  const { data, loading } = useQuery(["asset", node, id], async () => {
+  const { data, isLoading } = useQuery(["asset", node, id], async () => {
     const { data } = await axios.get(`${node}/assets/${id}`);
     return data;
   });
 
-  const { data: transfersData, loading: transfersLoading } = useQuery(
+  const { data: transfersData, isLoading: isTransfersLoading } = useQuery(
     ["assetTransfers", node, id, transfersPage],
     async () => {
       const { data } = await axios.get(`${node}/assets/${id}/transfers`, {
@@ -46,7 +46,7 @@ export default function Asset() {
     }
   );
 
-  const { data: holdersData, loading: holdersLoading } = useQuery(
+  const { data: holdersData, isLoading: isHoldersLoading } = useQuery(
     ["assetHolders", node, id, holdersPage],
     async () => {
       const { data } = await axios.get(`${node}/assets/${id}/holders`, {
@@ -90,7 +90,7 @@ export default function Asset() {
             setPage={setTransfersPage}
           />
         ),
-        loading: transfersLoading,
+        isLoading: isTransfersLoading,
       },
       {
         name: "Holders",
@@ -115,10 +115,10 @@ export default function Asset() {
             setPage={setHoldersPage}
           />
         ),
-        loading: holdersLoading,
+        isLoading: isHoldersLoading,
       },
     ]);
-  }, [node, transfersData, holdersData, transfersLoading, holdersLoading]);
+  }, [node, transfersData, holdersData, isTransfersLoading, isHoldersLoading]);
 
   return (
     <Section>
@@ -130,7 +130,7 @@ export default function Asset() {
           ]}
         />
         <DetailTable
-          loading={loading}
+          isLoading={isLoading}
           head={assetHead}
           body={[
             <MinorText>{data?.symbol}</MinorText>,

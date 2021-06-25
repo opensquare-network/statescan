@@ -39,13 +39,13 @@ const LoadingItem = styled.div`
   margin: 10px 24px;
 `;
 
-export default function DetailTable({ head, body, loading }) {
+export default function DetailTable({ head, body, isLoading }) {
   return (
     <Wrapper>
       {(head || []).map((item, index) => (
         <Item key={index}>
           <Head>{item}</Head>
-          {loading ? <LoadingItem /> : <Data>{body?.[index]}</Data>}
+          {isLoading ? <LoadingItem /> : <Data>{body?.[index]}</Data>}
         </Item>
       ))}
     </Wrapper>

@@ -76,7 +76,7 @@ export default function Block() {
         head: blockExtrinsicsHead,
         body: (extrinsicsData?.items || []).map((item) => [
           <InLink
-            to={`/${node}/extrinsic/${item?.hash}`}
+            to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
           <BreakText>
             <ThemeText>{item?.hash}</ThemeText>
@@ -103,7 +103,7 @@ export default function Block() {
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.sort}`,
           <InLink
-            to={`/${node}/extrinsic/${item?.extrinsicHash}`}
+            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
           >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>,
           <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         ]),

@@ -7,6 +7,7 @@ import {
 } from "store/reducers/chainSlice";
 import { useState } from "react";
 import axios from "axios";
+import { useNode } from "../../utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -72,6 +73,14 @@ const ChartWrapper = styled.div`
 export default function Overview() {
   const blocksHeightData = useSelector(scanHeightSelector);
   const overviewData = useSelector(overviewSelector);
+  const node = useNode();
+  const tokenMap = new Map([
+    ["westmint", "WND"],
+    ["kusama", "KSM"],
+    ["polkadot", "DOT"],
+  ]);
+  const token = tokenMap.get(node) ?? "";
+
   const [chartData, setChartData] = useState([
     { time: 1, price: 0 },
     { time: 2, price: 0 },
@@ -80,7 +89,8 @@ export default function Overview() {
     { time: 5, price: 0 },
     { time: 6, price: 0 },
   ]);
-  axios.get(`/westmint/prices/daily`).then((data) => {
+
+  axios.get(`/${node}/prices/daily`).then((data) => {
     if (data.length > 0) {
       setChartData(data?.reverse() ?? []);
     }
@@ -105,14 +115,8 @@ export default function Overview() {
         <Text>{overviewData?.holdersCount ?? 0}</Text>
       </ItemWrapper>
       <Divider />
-      <ItemWrapper>
-        <Title>
-          DOT Price <SubTitle>(Last 30d)</SubTitle>
-        </Title>
-        <Text>$00.00</Text>
-      </ItemWrapper>
       <ChartWrapper>
-        <LineChart data={chartData} color={"#F22279"} />
+        <LineChart token={token} data={chartData} color={"#F22279"} />
       </ChartWrapper>
     </Wrapper>
   );

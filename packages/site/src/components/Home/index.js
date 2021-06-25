@@ -51,7 +51,7 @@ export default function Home() {
         <PageNotFound />
       ) : (
         <Wrapper>
-          <Overview node={node} />
+          <Overview />
           <TableWrapper>
             <Table
               title="Latest Blocks"

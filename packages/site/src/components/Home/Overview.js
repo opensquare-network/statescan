@@ -70,9 +70,10 @@ const ChartWrapper = styled.div`
   }
 `;
 
-export default function Overview({ node }) {
+export default function Overview() {
   const blocksHeightData = useSelector(scanHeightSelector);
   const overviewData = useSelector(overviewSelector);
+  const node = useNode();
   const tokenMap = new Map([
     ["westmint", "WND"],
     ["kusama", "KSM"],
@@ -88,7 +89,6 @@ export default function Overview({ node }) {
     { time: 5, price: 0 },
     { time: 6, price: 0 },
   ]);
-  const node = useNode();
 
   axios.get(`/${node}/prices/daily`).then((data) => {
     if (data.length > 0) {

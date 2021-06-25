@@ -131,7 +131,7 @@ export default function Extrinsic() {
             ...(isAssetTransfer
               ? [
                   <CopyText text={data?.args?.target?.id}>
-                    <InLink to={`/${node}/addresses/${data?.args?.target?.id}`}>
+                    <InLink to={`/${node}/address/${data?.args?.target?.id}`}>
                       {data?.args?.target?.id}
                     </InLink>
                   </CopyText>,

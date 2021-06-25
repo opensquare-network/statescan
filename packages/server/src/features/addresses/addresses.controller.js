@@ -1,6 +1,7 @@
 const {
   getAddressCollection,
   getAssetHolderCollection,
+  getAssetTransferCollection,
 } = require("../../mongo");
 const { getExtrinsicCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
@@ -171,9 +172,91 @@ async function getAddressCount(ctx) {
   ctx.body = count;
 }
 
+async function getAddressTransfers(ctx) {
+  const { chain, address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = {
+    $or: [{ from: address }, { to: address }],
+  };
+
+  const transferCol = await getAssetTransferCollection(chain);
+  const items = await transferCol
+    .aggregate([
+      { $match: q },
+      { $sort: { "indexer.blockHeight": -1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      {
+        $lookup: {
+          from: "extrinsic",
+          localField: "extrinsicHash",
+          foreignField: "hash",
+          as: "extrinsic",
+        },
+      },
+      {
+        $addFields: {
+          extrinsic: { $arrayElemAt: ["$extrinsic", 0] },
+        },
+      },
+      {
+        $addFields: {
+          module: "$extrinsic.section",
+          method: "$extrinsic.name",
+        },
+      },
+      {
+        $project: { extrinsic: 0 },
+      },
+      {
+        $lookup: {
+          from: "asset",
+          localField: "asset",
+          foreignField: "_id",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
+        },
+      },
+      {
+        $project: {
+          asset: 0,
+        },
+      },
+    ])
+    .toArray();
+
+  const total = await transferCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
 module.exports = {
   getAddress,
   getAddressExtrinsics,
   getAddressAssets,
   getAddressCount,
+  getAddressTransfers,
 };

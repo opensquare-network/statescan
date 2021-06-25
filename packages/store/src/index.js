@@ -1,2 +1,0 @@
-const { MongoClient } = require("mongodb");
-

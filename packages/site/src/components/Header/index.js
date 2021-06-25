@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import NodeSwitcher from "components/NodeSwitcher";
 import { useHomePage } from "utils/hooks";
 import Subheader from "./Subheader";
+import { Link } from "react-router-dom";
 
 const Container = styled.header`
   position: relative;
@@ -31,7 +32,7 @@ const Background = styled.div`
     css`
       height: 464px;
       /* background: url("/imgs/pattern-dot.svg"),
-        linear-gradient(180deg, #eeeeee 0%, #ffffff 100%); */
+              linear-gradient(180deg, #eeeeee 0%, #ffffff 100%); */
     `}
 `;
 
@@ -43,7 +44,9 @@ export default function Header() {
       <Container>
         <Background isHomePage={isHomePage} />
         <Wrapper>
-          <img src="/imgs/logo.svg" alt="logo" />
+          <Link to="/">
+            <img src="/imgs/logo.svg" alt="logo" />
+          </Link>
           <NodeSwitcher />
         </Wrapper>
       </Container>

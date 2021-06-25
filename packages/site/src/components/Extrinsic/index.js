@@ -65,7 +65,11 @@ export default function Extrinsic() {
   );
 
   useEffect(() => {
-    setExtrinsicId(`${data?.indexer?.blockHeight}-${data?.indexer?.index}`);
+    setExtrinsicId(
+      data?.indexer
+        ? `${data?.indexer?.blockHeight}-${data?.indexer?.index}`
+        : ""
+    );
   }, [data]);
 
   useEffect(() => {

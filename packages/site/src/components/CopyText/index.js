@@ -1,8 +1,10 @@
+import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import copy from "copy-to-clipboard";
 
 import { ReactComponent as Icon } from "./copy.svg";
 import { useNode } from "utils/hooks";
+import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`
   * {
@@ -25,11 +27,11 @@ const StyledIcon = styled(Icon)`
 `;
 
 export default function CopyText({ children, text }) {
+  const dispatch = useDispatch();
   const node = useNode();
   const onCopy = () => {
     if (text && copy(text)) {
-      // TODO toast "Copied"
-      console.log("Copied");
+      dispatch(addToast({ type: "success", message: "Copied" }));
     }
   };
 

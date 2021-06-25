@@ -28,7 +28,7 @@ export default function Extrinsic() {
   const [tabTableData, setTabTableData] = useState();
   const [eventsPage, setEventsPage] = useState(0);
 
-  const { data, loading } = useQuery(["extrinsic", id, node], async () => {
+  const { data, isLoading } = useQuery(["extrinsic", id, node], async () => {
     const { data } = await axios.get(`${node}/extrinsics/${id}`);
     return data;
   });
@@ -52,7 +52,7 @@ export default function Extrinsic() {
     }
   );
 
-  const { data: eventsData, loading: eventsLoading } = useQuery(
+  const { data: eventsData, isLoading: isEventsLoading } = useQuery(
     ["extrinsicEvents", id, node, eventsPage],
     async () => {
       const { data } = await axios.get(`${node}/extrinsics/${id}/events`, {
@@ -87,17 +87,17 @@ export default function Extrinsic() {
             setPage={setEventsPage}
           />
         ),
-        loading: eventsLoading,
+        isLoading: isEventsLoading,
       },
     ]);
-  }, [eventsData, eventsLoading]);
+  }, [eventsData, isEventsLoading]);
 
   return (
     <Section>
       <div>
         <Nav data={[{ name: "Extrinsic" }, { name: extrinsicId }]} />
         <DetailTable
-          loading={loading}
+          isLoading={isLoading}
           head={
             isTransfer || isAssetTransfer
               ? extrinsicTransferHead

@@ -39,7 +39,7 @@ async function _createIndexes() {
     process.exit(1);
   }
 
-  await blockCol.createIndex({ height: -1 });
+  await blockCol.createIndex({ height: -1 }, { unique: true });
   // TODO: create indexes for better query performance
 }
 

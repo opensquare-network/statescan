@@ -115,14 +115,8 @@ export default function Overview() {
         <Text>{overviewData?.holdersCount ?? 0}</Text>
       </ItemWrapper>
       <Divider />
-      <ItemWrapper>
-        <Title>
-          {token} Price <SubTitle>(Last 30d)</SubTitle>
-        </Title>
-        <Text>$00.00</Text>
-      </ItemWrapper>
       <ChartWrapper>
-        <LineChart data={chartData} color={"#F22279"} />
+        <LineChart token={token} data={chartData} color={"#F22279"} />
       </ChartWrapper>
     </Wrapper>
   );

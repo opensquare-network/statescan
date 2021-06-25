@@ -6,7 +6,7 @@ export default function LineChart({ data = [], color = "#F22279" }) {
       <Axis name="time" visible={false} />
       <Axis name="price" visible={false} />
       <LineAdvance shape="smooth" area position="time*price" color={color} />
-      <Tooltip custom={true} containerTpl={``} />
+      <Tooltip custom={true} containerTpl={`<i></i>`} />
     </Chart>
   );
 }

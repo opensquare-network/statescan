@@ -14,7 +14,7 @@ export function timeDuration(time) {
     relativeTime: {
       future: "in %s",
       past: "%s ",
-      s: (number) => number + " second ago ",
+      s: (number) => number + " seconds ago ",
       ss: "%d seconds ago",
       m: "1 minute ago",
       mm: "%d minutes ago",

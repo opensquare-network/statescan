@@ -72,7 +72,9 @@ export default function Home() {
               title="Latest Transfers"
               head={transfersLatestHead}
               body={(overview?.latestTransfers || []).map((item) => [
-                <InLink to={`/${node}/extrinsic/${item.extrinsicHash}`}>
+                <InLink
+                  to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+                >
                   {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
                 </InLink>,
                 <InLink to={`/${node}/address/${item.from}`}>

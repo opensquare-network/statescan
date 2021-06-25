@@ -17,7 +17,5 @@ const Wrapper = styled.div`
 `;
 
 export default function NoData({ isCollapse }) {
-  return (
-    <Wrapper isCollapse={isCollapse}>Opps, there is no data here.</Wrapper>
-  );
+  return <Wrapper isCollapse={isCollapse}>No data here.</Wrapper>;
 }

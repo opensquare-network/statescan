@@ -8,6 +8,10 @@ const TabWrapper = styled.div`
   align-items: center;
   margin-bottom: 18px;
   overflow: scroll;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
   > :not(:first-child) {
     margin-left: 40px;
   }
@@ -87,7 +91,7 @@ export default function TabTable({ data, collapse }) {
                 <rect x="0.5" width="48" height="3" fill="#F22279" />
               </svg>
             </TabText>
-            <TabTag>{item.total}</TabTag>
+            <TabTag>{item.total ?? 0}</TabTag>
           </Tab>
         ))}
       </TabWrapper>

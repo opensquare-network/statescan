@@ -13,7 +13,7 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeUTC, timeDuration, addressEllipsis } from "utils";
+import { addressEllipsis } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
@@ -70,10 +70,13 @@ export default function Asset() {
         head: assetTransfersHead,
         body: (transfersData?.items || []).map((item) => [
           <ThemeText>{`${item?.indexer?.blockHeight}-${item?.extrinsicIndex}`}</ThemeText>,
+          <InLink
+            to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
           <BreakText>
             <ThemeText>{item?.extrinsicHash}</ThemeText>
           </BreakText>,
-          <MinorText>{timeDuration(item?.indexer?.blockTime)}</MinorText>,
+          item?.indexer?.blockTime,
           <InLink to={`/${node}/address/${item?.from}`}>
             {addressEllipsis(item?.from)}
           </InLink>,
@@ -136,7 +139,6 @@ export default function Asset() {
             <MinorText>{data?.symbol}</MinorText>,
             <MinorText>{data?.name}</MinorText>,
             <MinorText>{`#${data?.assetId}`}</MinorText>,
-            <MinorText>{timeUTC(data?.createdAt?.blockTime)}</MinorText>,
             <BreakText>
               <CopyText text={data?.owner}>
                 <InLink to={`/${node}/address/${data?.owner}`}>

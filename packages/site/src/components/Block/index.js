@@ -10,7 +10,7 @@ import { blockHead } from "utils/constants";
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeDuration, timeUTC } from "utils";
+import { timeDuration, time } from "utils";
 import ThemeText from "components/ThemeText";
 import CopyText from "components/CopyText";
 import { blockExtrinsicsHead, blockEventsHead } from "utils/constants";
@@ -128,8 +128,8 @@ export default function Block() {
           head={blockHead}
           body={[
             <FlexWrapper>
-              <MinorText>{timeDuration(data?.blockTime)}</MinorText>
-              <AccessoryText>{timeUTC(data?.blockTime)}</AccessoryText>
+              <MinorText>{time(data?.blockTime)}</MinorText>
+              <AccessoryText>{timeDuration(data?.blockTime)}</AccessoryText>
             </FlexWrapper>,
             "-",
             <CopyText text={data?.hash}>

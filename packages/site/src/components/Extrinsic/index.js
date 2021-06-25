@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styled from "styled-components";
 import { useParams } from "react-router";
 import axios from "axios";
 import { useQuery } from "react-query";
@@ -16,10 +17,22 @@ import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import Result from "components/Result";
 import MinorText from "components/MinorText";
-import { capitalize, fromSymbolUnit, timeUTC } from "utils";
+import { capitalize, fromSymbolUnit, time, timeDuration } from "utils";
 import TabTable from "components/TabTable";
 import Pagination from "components/Pgination";
 import BreakText from "components/BreakText";
+
+const FlexWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  > :not(:first-child) {
+    margin-left: 16px;
+  }
+`;
+
+const AccessoryText = styled.div`
+  color: rgba(17, 17, 17, 0.35);
+`;
 
 export default function Extrinsic() {
   const { id } = useParams();
@@ -107,7 +120,10 @@ export default function Extrinsic() {
               : extrinsicHead
           }
           body={[
-            <MinorText>{timeUTC(data?.indexer?.blockTime)}</MinorText>,
+            <FlexWrapper>
+              <MinorText>{time(data?.blockTime)}</MinorText>
+              <AccessoryText>{timeDuration(data?.blockTime)}</AccessoryText>
+            </FlexWrapper>,
             <InLink to={`/${node}/block/${data?.indexer?.blockHeight}`}>
               {data?.indexer?.blockHeight}
             </InLink>,

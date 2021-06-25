@@ -19,6 +19,7 @@ import MinorText from "components/MinorText";
 import { capitalize, fromSymbolUnit, timeUTC } from "utils";
 import TabTable from "components/TabTable";
 import Pagination from "components/Pgination";
+import BreakText from "components/BreakText";
 
 export default function Extrinsic() {
   const { id } = useParams();
@@ -110,16 +111,20 @@ export default function Extrinsic() {
             <InLink to={`/${node}/block/${data?.indexer?.blockHeight}`}>
               {data?.indexer?.blockHeight}
             </InLink>,
-            <CopyText text={data?.hash}>
-              <MinorText>{data?.hash}</MinorText>
-            </CopyText>,
+            <BreakText>
+              <CopyText text={data?.hash}>
+                <MinorText>{data?.hash}</MinorText>
+              </CopyText>
+            </BreakText>,
             <MinorText>{capitalize(data?.section)}</MinorText>,
             <MinorText>{capitalize(data?.name)}</MinorText>,
-            <CopyText text={data?.signer}>
-              <InLink to={`/${node}/address/${data?.signer}`}>
-                {data?.signer}
-              </InLink>
-            </CopyText>,
+            <BreakText>
+              <CopyText text={data?.signer}>
+                <InLink to={`/${node}/address/${data?.signer}`}>
+                  {data?.signer}
+                </InLink>
+              </CopyText>
+            </BreakText>,
             ...(isTransfer
               ? [
                   <CopyText text={data?.args?.dest?.id}>

@@ -4,8 +4,7 @@ export const nodes = [
     sub: "Westend",
     value: "westmint",
     symbol: "WND",
-    icon: "/imgs/icons/rococo.png",
-    logo: "/imgs/logo.svg",
+    icon: "/imgs/icons/westend.svg",
   },
 ];
 

@@ -101,19 +101,69 @@ async function getAssetTransfers(ctx) {
     throw new HttpError(404, "Asset not found");
   }
 
-  const $match = { asset: asset._id };
+  const q = { asset: asset._id };
 
-  const col = await getAssetTransferCollection(chain);
-  const items = await col
-    .find($match)
-    .sort({
-      "createdAt.blockHeight": -1,
-    })
-    .skip(page * pageSize)
-    .limit(pageSize)
+  const transferCol = await getAssetTransferCollection(chain);
+  const items = await transferCol
+    .aggregate([
+      { $match: q },
+      { $sort: { "indexer.blockHeight": -1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      {
+        $lookup: {
+          from: "extrinsic",
+          localField: "extrinsicHash",
+          foreignField: "hash",
+          as: "extrinsic",
+        },
+      },
+      {
+        $addFields: {
+          extrinsic: { $arrayElemAt: ["$extrinsic", 0] },
+        },
+      },
+      {
+        $addFields: {
+          module: "$extrinsic.section",
+          method: "$extrinsic.name",
+          extrinsicIndex: "$extrinsic.indexer.index",
+        },
+      },
+      {
+        $project: { extrinsic: 0 },
+      },
+      {
+        $lookup: {
+          from: "asset",
+          localField: "asset",
+          foreignField: "_id",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
+        },
+      },
+      {
+        $project: {
+          asset: 0,
+        },
+      },
+    ])
     .toArray();
 
-  const total = await col.countDocuments($match);
+  const total = await transferCol.countDocuments(q);
 
   ctx.body = {
     items,

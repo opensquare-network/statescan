@@ -80,7 +80,7 @@ export default function Overview() {
     { time: 5, price: 0 },
     { time: 6, price: 0 },
   ]);
-  axios.get(`/statemine/prices/daily`).then((data) => {
+  axios.get(`/westmint/prices/daily`).then((data) => {
     if (data.length > 0) {
       setChartData(data?.reverse() ?? []);
     }

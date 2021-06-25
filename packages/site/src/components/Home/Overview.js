@@ -40,10 +40,6 @@ const Title = styled.p`
   color: rgba(17, 17, 17, 0.35);
   margin: 0 0 8px;
 `;
-const SubTitle = styled.span`
-  font-size: 12px;
-  color: rgba(17, 17, 17, 0.2);
-`;
 
 const Text = styled.p`
   font-weight: bold;

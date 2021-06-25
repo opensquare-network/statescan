@@ -24,7 +24,7 @@ export default function Extrinsic() {
   const { id } = useParams();
   const node = useNode();
   const symbol = useSymbol();
-  const [extrinsicId, setExtrinsicId] = useState();
+  const [extrinsicId, setExtrinsicId] = useState("");
   const [tabTableData, setTabTableData] = useState();
   const [eventsPage, setEventsPage] = useState(0);
 
@@ -65,7 +65,9 @@ export default function Extrinsic() {
   );
 
   useEffect(() => {
-    setExtrinsicId(`${data?.indexer?.blockHeight}-${data?.indexer?.index}`);
+    if (data?.indexer) {
+      setExtrinsicId(`${data?.indexer?.blockHeight}-${data?.indexer?.index}`);
+    }
   }, [data]);
 
   useEffect(() => {

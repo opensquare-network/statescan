@@ -121,8 +121,10 @@ export default function Extrinsic() {
           }
           body={[
             <FlexWrapper>
-              <MinorText>{time(data?.blockTime)}</MinorText>
-              <AccessoryText>{timeDuration(data?.blockTime)}</AccessoryText>
+              <MinorText>{time(data?.indexer?.blockTime)}</MinorText>
+              <AccessoryText>
+                {timeDuration(data.indexer?.blockTime)}
+              </AccessoryText>
             </FlexWrapper>,
             <InLink to={`/${node}/block/${data?.indexer?.blockHeight}`}>
               {data?.indexer?.blockHeight}

@@ -63,7 +63,7 @@ async function getExtrinsicEvents(ctx) {
       "phase.value": parseInt(extrinsicIndex),
     };
   } else {
-    q = { hash: indexOrHash };
+    q = { extrinsicHash: indexOrHash };
   }
 
   const col = await getEventCollection(chain);

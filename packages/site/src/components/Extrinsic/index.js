@@ -123,7 +123,7 @@ export default function Extrinsic() {
             <FlexWrapper>
               <MinorText>{time(data?.indexer?.blockTime)}</MinorText>
               <AccessoryText>
-                {timeDuration(data.indexer?.blockTime)}
+                {timeDuration(data?.indexer?.blockTime)}
               </AccessoryText>
             </FlexWrapper>,
             <InLink to={`/${node}/block/${data?.indexer?.blockHeight}`}>

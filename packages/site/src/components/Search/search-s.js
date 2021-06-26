@@ -110,7 +110,7 @@ export default function SearchS() {
     setSearchKeyword(value);
     //todo debounce this
     axios.get(`/westmint/search/autocomplete?prefix=${value}`).then((res) => {
-      setHintAssets(res.data.assets);
+      setHintAssets(res.data.assets || []);
     });
   };
   return (
@@ -124,7 +124,9 @@ export default function SearchS() {
         {assets.map((hint) => (
           <ExploreHint
             onClick={() => {
-              setRedirect(`/westmint/asset/${hint.assetId}`);
+              setRedirect(
+                `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+              );
             }}
           >
             <img

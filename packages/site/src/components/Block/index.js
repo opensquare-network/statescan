@@ -10,7 +10,7 @@ import { blockHead } from "utils/constants";
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeDuration, time } from "utils";
+import { timeDuration, time, hashEllipsis } from "utils";
 import ThemeText from "components/ThemeText";
 import CopyText from "components/CopyText";
 import { blockExtrinsicsHead, blockEventsHead } from "utils/constants";
@@ -78,9 +78,9 @@ export default function Block() {
           <InLink
             to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
-          <BreakText>
-            <ThemeText>{item?.hash}</ThemeText>
-          </BreakText>,
+          <InLink to={`/${node}/extrinsic/${item?.hash}`}>
+            {hashEllipsis(item?.hash)}
+          </InLink>,
           <MinorText>
             <Result isSuccess={item?.isSuccess} />
           </MinorText>,

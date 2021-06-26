@@ -63,7 +63,7 @@ export const addressTransfersHead = [
 export const extrinsicEventsHead = [{ name: "Event ID" }, { name: "Action" }];
 
 export const blockExtrinsicsHead = [
-  { name: "Extrinsic ID" },
+  { name: "ID" },
   { name: "Hash" },
   { name: "Result" },
   { name: "Action" },

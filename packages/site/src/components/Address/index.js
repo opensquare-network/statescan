@@ -1,25 +1,24 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import axios from "axios";
 import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
-import { addressEllipsis, fromSymbolUnit } from "utils";
+import { addressEllipsis, fromSymbolUnit, hashEllipsis } from "utils";
 import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
-import { addressHead } from "utils/constants";
+import {
+  addressAssetsHead,
+  addressExtrincsHead,
+  addressHead,
+  addressTransfersHead,
+} from "utils/constants";
 import MinorText from "components/MinorText";
 import BreakText from "components/BreakText";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
-import {
-  addressExtrincsHead,
-  addressAssetsHead,
-  addressTransfersHead,
-} from "utils/constants";
 import Section from "components/Section";
 import InLink from "components/InLink";
-import ThemeText from "components/ThemeText";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
@@ -152,12 +151,9 @@ export default function Address() {
           >
             {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           </InLink>,
-          <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
-            {item?.indexer?.blockHeight}
+          <InLink to={`/${node}/extrinsic/${item?.hash}`}>
+            {hashEllipsis(item?.hash)}
           </InLink>,
-          <BreakText>
-            <ThemeText>{item?.hash}</ThemeText>
-          </BreakText>,
           item?.indexer?.blockTime,
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,

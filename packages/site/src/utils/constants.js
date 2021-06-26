@@ -33,9 +33,8 @@ export const assetsHead = [
 ];
 
 export const addressExtrincsHead = [
-  { name: "Extrinsics ID" },
-  { name: "Blocks" },
-  { name: "Extrinsics Hash" },
+  { name: "ID" },
+  { name: "Hash" },
   { name: "Time", type: "time" },
   { name: "Result" },
   { name: "Action" },

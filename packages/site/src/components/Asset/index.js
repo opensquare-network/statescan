@@ -13,7 +13,12 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { addressEllipsis, fromAssetUnit, fromSymbolUnit } from "utils";
+import {
+  addressEllipsis,
+  bigNumber2Locale,
+  fromAssetUnit,
+  fromSymbolUnit,
+} from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
@@ -89,10 +94,12 @@ export default function Asset() {
             {addressEllipsis(item?.to)}
           </InLink>,
           item.assetSymbol
-            ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-                item.assetSymbol
-              }`
-            : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+            ? `${bigNumber2Locale(
+                fromAssetUnit(item.balance, item.assetDecimals)
+              )} ${item.assetSymbol}`
+            : `${bigNumber2Locale(
+                fromSymbolUnit(item.balance, symbol)
+              )} ${symbol}`,
         ]),
         foot: (
           <Pagination
@@ -115,7 +122,7 @@ export default function Asset() {
               {item?.address}
             </InLink>
           </BreakText>,
-          fromAssetUnit(item?.balance, item?.assetDecimals),
+          bigNumber2Locale(fromAssetUnit(item?.balance, item?.assetDecimals)),
         ]),
         foot: (
           <Pagination
@@ -169,7 +176,9 @@ export default function Asset() {
                 </InLink>
               </CopyText>
             </BreakText>,
-            `${fromAssetUnit(data?.supply, data?.decimals)} ${data?.symbol}`,
+            `${bigNumber2Locale(fromAssetUnit(data?.supply, data?.decimals))} ${
+              data?.symbol
+            }`,
             data?.decimals,
             <MinorText>{holdersData?.total}</MinorText>,
             <MinorText>{transfersData?.total}</MinorText>,

@@ -21,6 +21,8 @@ import InLink from "components/InLink";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
 
+import { TEST_DATA } from "utils/constants";
+
 const FlexWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -91,6 +93,7 @@ export default function Block({ location }) {
             <Result isSuccess={item?.isSuccess} />
           </MinorText>,
           <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
+          TEST_DATA,
         ]),
         foot: (
           <Pagination

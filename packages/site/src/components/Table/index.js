@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useEffect, useState, Fragment } from "react";
+import styled, { css } from "styled-components";
 
 import { useWindowSize } from "utils/hooks";
 import NoData from "./NoData";
@@ -39,18 +39,6 @@ const StyledTable = styled.table`
   }
   tbody {
     margin: 8px 0;
-    tr {
-      position: relative;
-    }
-    tr:not(:last-child)::after {
-      content: "";
-      position: absolute;
-      height: 1px;
-      background: #f4f4f4;
-      left: 24px;
-      right: 24px;
-      bottom: 0;
-    }
     td {
       padding: 14px 24px;
       font-size: 14px;
@@ -78,6 +66,45 @@ const StyledTable = styled.table`
   }
 `;
 
+const StyledTr = styled.tr`
+  position: relative;
+  ${(p) =>
+    !p.isShow &&
+    css`
+      :not(:last-child)::after {
+        content: "";
+        position: absolute;
+        height: 1px;
+        background: #f4f4f4;
+        left: 24px;
+        right: 24px;
+        bottom: 0;
+      }
+    `}
+`;
+
+const TableDataWrapper = styled.td`
+  padding: 8px 24px !important;
+`;
+
+const CollapseTableDataWrapper = styled.div`
+  padding: 8px 24px !important;
+`;
+
+const TableDataItem = styled.pre`
+  background: #fafafa;
+  border-radius: 4px;
+  padding: 16px 24px;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  max-height: 320px;
+  overflow: scroll;
+`;
+
 const CollapseWrapper = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
@@ -87,7 +114,7 @@ const CollapseWrapper = styled.div`
   border-radius: 8px;
 `;
 
-const CollapseTable = styled.table`
+const CollapseTableWrapper = styled.div`
   padding: 16px 0px;
   width: 100%;
   position: relative;
@@ -101,6 +128,8 @@ const CollapseTable = styled.table`
     bottom: 0;
   }
 `;
+
+const CollapseTable = styled.table``;
 
 const CollapseHead = styled.td`
   font-weight: 500;
@@ -122,6 +151,10 @@ const CollapseFoot = styled.div`
   padding: 16px 24px;
 `;
 
+const DataImg = styled.img`
+  cursor: pointer;
+`;
+
 export default function Table({
   title,
   head,
@@ -133,6 +166,7 @@ export default function Table({
 }) {
   const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState(false);
+  const [showData, setShowData] = useState([]);
   const timeType = useSelector(timeTypeSelector);
   const doSetTimeType = (timeType) => {
     dispatch(setTimeType(timeType));
@@ -145,6 +179,9 @@ export default function Table({
       setIsCollapse(false);
     }
   }, [size, collapse]);
+  useEffect(() => {
+    setShowData((body || []).map(() => false));
+  }, [body]);
 
   return (
     <div>
@@ -155,11 +192,11 @@ export default function Table({
             <tr>
               {(head || []).map((item, index) => (
                 <th key={index} style={{ textAlign: item.align ?? "left" }}>
-                  {item.type === "time" ? (
+                  {item.type === "time" && (
                     <TimeHead timeType={timeType} setTimeType={doSetTimeType} />
-                  ) : (
-                    item.name
                   )}
+                  {item.type === "data" && <div />}
+                  {!item.type && item.name}
                 </th>
               ))}
             </tr>
@@ -167,21 +204,48 @@ export default function Table({
           {!isLoading && body && body.length > 0 ? (
             <>
               <tbody>
-                {(body || []).map((item, index) => (
-                  <tr key={index}>
-                    {item.map((item, index) => (
-                      <td
-                        key={index}
-                        style={{ textAlign: head[index].align ?? "left" }}
-                      >
-                        {head[index].type === "time" ? (
-                          <TimeBody timeType={timeType} ts={item} />
-                        ) : (
-                          item
-                        )}
-                      </td>
-                    ))}
-                  </tr>
+                {(body || []).map((item, bodyIndex) => (
+                  <Fragment key={bodyIndex}>
+                    <StyledTr isShow={showData[bodyIndex]}>
+                      {item.map((item, index) => (
+                        <td
+                          key={index}
+                          style={{ textAlign: head[index].align ?? "left" }}
+                        >
+                          {head[index].type === "time" && (
+                            <TimeBody timeType={timeType} ts={item} />
+                          )}
+                          {head[index].type === "data" && (
+                            <DataImg
+                              src={`/imgs/icons/data-show${
+                                showData[bodyIndex] ? "-active" : ""
+                              }.svg`}
+                              alt="action"
+                              onClick={() => {
+                                const data = [...showData];
+                                data[bodyIndex] = !showData[bodyIndex];
+                                setShowData(data);
+                              }}
+                            />
+                          )}
+                          {!head[index].type && item}
+                        </td>
+                      ))}
+                    </StyledTr>
+                    {showData[bodyIndex] && (
+                      <StyledTr>
+                        <TableDataWrapper colSpan="100%">
+                          <TableDataItem>
+                            {JSON.stringify(
+                              body?.[bodyIndex]?.[body[bodyIndex].length - 1],
+                              null,
+                              2
+                            )}
+                          </TableDataItem>
+                        </TableDataWrapper>
+                      </StyledTr>
+                    )}
+                  </Fragment>
                 ))}
               </tbody>
               {foot && (
@@ -218,17 +282,52 @@ export default function Table({
           {!isLoading && body && body.length > 0 ? (
             <>
               <div>
-                {(body || []).map((dataItem, index) => (
-                  <CollapseTable key={index}>
-                    <tbody>
-                      {head.map((headItem, index) => (
-                        <tr key={index}>
-                          <CollapseHead>{headItem.name}</CollapseHead>
-                          <CollapseBody>{dataItem[index]}</CollapseBody>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </CollapseTable>
+                {(body || []).map((bodyItem, bodyIndex) => (
+                  <CollapseTableWrapper key={bodyIndex}>
+                    <CollapseTable>
+                      <tbody>
+                        {head.map((headItem, index) => (
+                          <tr key={index}>
+                            {head[index].type === "data" && (
+                              <>
+                                <CollapseHead></CollapseHead>
+                                <CollapseBody>
+                                  <DataImg
+                                    src={`/imgs/icons/data-show${
+                                      showData[bodyIndex] ? "-active" : ""
+                                    }.svg`}
+                                    alt="action"
+                                    onClick={() => {
+                                      const data = [...showData];
+                                      data[bodyIndex] = !showData[bodyIndex];
+                                      setShowData(data);
+                                    }}
+                                  />
+                                </CollapseBody>
+                              </>
+                            )}
+                            {!head[index].type && (
+                              <>
+                                <CollapseHead>{headItem.name}</CollapseHead>
+                                <CollapseBody>{bodyItem[index]}</CollapseBody>
+                              </>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </CollapseTable>
+                    {showData[bodyIndex] && (
+                      <CollapseTableDataWrapper>
+                        <TableDataItem>
+                          {JSON.stringify(
+                            body?.[bodyIndex]?.[body[bodyIndex].length - 1],
+                            null,
+                            2
+                          )}
+                        </TableDataItem>
+                      </CollapseTableDataWrapper>
+                    )}
+                  </CollapseTableWrapper>
                 ))}
               </div>
               {foot && <CollapseFoot>{foot}</CollapseFoot>}

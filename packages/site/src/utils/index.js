@@ -1,5 +1,6 @@
 import moment from "moment";
 import BigNumber from "bignumber.js";
+
 BigNumber.config({ EXPONENTIAL_AT: 12 });
 
 export function addressEllipsis(address, start = 4, end = 4) {
@@ -86,4 +87,14 @@ export function toSymbolUnit(value, symbol) {
 
 export function fromAssetUnit(value, decimals) {
   return new BigNumber(value).dividedBy(Math.pow(10, decimals)).toString();
+}
+
+export function bigNumber2Locale(x) {
+  let result = "";
+  const [Int, Decimals] = x.split(".");
+  result += Int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  if (Decimals) {
+    result += `.${Decimals}`;
+  }
+  return result;
 }

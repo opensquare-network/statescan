@@ -6,6 +6,7 @@ import { useQuery } from "react-query";
 import Nav from "components/Nav";
 import {
   addressEllipsis,
+  bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
   hashEllipsis,
@@ -28,6 +29,8 @@ import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
 import { useHistory } from "react-router-dom";
+
+import { TEST_DATA } from "utils/constants";
 
 export default function Address() {
   const { id } = useParams();
@@ -96,7 +99,7 @@ export default function Address() {
           >{`#${item.assetId}`}</InLink>,
           item.assetSymbol,
           item.assetName,
-          fromAssetUnit(item.balance, item.assetDecimals),
+          bigNumber2Locale(fromAssetUnit(item.balance, item.assetDecimals)),
           item.approved || 0,
           item.isFrozen.toString(),
           item.transfers,
@@ -137,10 +140,12 @@ export default function Address() {
             addressEllipsis(item.to)
           ),
           item.assetSymbol
-            ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-                item.assetSymbol
-              }`
-            : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+            ? `${bigNumber2Locale(
+                fromAssetUnit(item.balance, item.assetDecimals)
+              )} ${item.assetSymbol}`
+            : `${bigNumber2Locale(
+                fromSymbolUnit(item.balance, symbol)
+              )} ${symbol}`,
         ]),
         foot: (
           <Pagination
@@ -168,6 +173,7 @@ export default function Address() {
           item?.indexer?.blockTime,
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
+          TEST_DATA,
         ]),
         foot: (
           <Pagination

@@ -15,7 +15,12 @@ async function search(ctx) {
   const { q } = ctx.query;
 
   if (!q) {
-    ctx.body = [];
+    ctx.body = {
+      asset: null,
+      address: null,
+      block: null,
+      extrinsic: null,
+    };
     return;
   }
 
@@ -51,7 +56,10 @@ async function searchAutoComplete(ctx) {
   const { prefix } = ctx.query;
 
   if (!prefix) {
-    ctx.body = [];
+    ctx.body = {
+      assets: [],
+      addresses: [],
+    };
     return;
   }
 

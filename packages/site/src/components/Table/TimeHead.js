@@ -24,21 +24,24 @@ const Divider = styled.div`
 `;
 
 export default function TimeHead({ timeType, setTimeType }) {
-  return (
-    <Wrapper>
+  if (timeType === timeTypes.age) {
+    return (
       <Item
         active={timeType === timeTypes.age}
-        onClick={() => setTimeType(timeTypes.age)}
+        onClick={() => setTimeType(timeTypes.date)}
       >
         Age
       </Item>
-      <Divider>·</Divider>
+    );
+  }
+  if (timeType === timeTypes.date) {
+    return (
       <Item
         active={timeType === timeTypes.date}
-        onClick={() => setTimeType(timeTypes.date)}
+        onClick={() => setTimeType(timeTypes.age)}
       >
         Date Time
       </Item>
-    </Wrapper>
-  );
+    );
+  }
 }

@@ -158,21 +158,25 @@ export default function Extrinsic() {
             </BreakText>,
             ...(isTransfer
               ? [
-                  <CopyText text={data?.args?.dest?.id}>
-                    <InLink to={`/${node}/address/${data?.args?.dest?.id}`}>
-                      {data?.args?.dest?.id}
-                    </InLink>
-                  </CopyText>,
+                  <BreakText>
+                    <CopyText text={data?.args?.dest?.id}>
+                      <InLink to={`/${node}/address/${data?.args?.dest?.id}`}>
+                        {data?.args?.dest?.id}
+                      </InLink>
+                    </CopyText>
+                  </BreakText>,
                   `${fromSymbolUnit(data?.args?.value ?? 0, symbol)} ${symbol}`,
                 ]
               : []),
             ...(isAssetTransfer
               ? [
-                  <CopyText text={data?.args?.target?.id}>
-                    <InLink to={`/${node}/address/${data?.args?.target?.id}`}>
-                      {data?.args?.target?.id}
-                    </InLink>
-                  </CopyText>,
+                  <BreakText>
+                    <CopyText text={data?.args?.target?.id}>
+                      <InLink to={`/${node}/address/${data?.args?.target?.id}`}>
+                        {data?.args?.target?.id}
+                      </InLink>
+                    </CopyText>
+                  </BreakText>,
                   `${
                     assetTransfer
                       ? fromAssetUnit(

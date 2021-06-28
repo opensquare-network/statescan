@@ -9,7 +9,6 @@ import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
 import { addressEllipsis, bigNumber2Locale, fromAssetUnit } from "utils";
 import { useNode } from "utils/hooks";
-import LineChart from "../Charts/LineChart";
 import Pagination from "components/Pgination";
 
 export default function Assets() {

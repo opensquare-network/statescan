@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { useState } from "react";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -64,14 +64,16 @@ const ExploreButton = styled.div`
 `;
 
 const ExploreHintsWrapper = styled.div`
-  // todo make a better scroll bar
-  //overflow-y: scroll;
   margin-left: 0 !important;
   top: 53px;
   left: 0;
   width: 480px;
   max-height: 308px;
   position: absolute;
+
+  .selected {
+    background-color: #fafafa;
+  }
 `;
 
 const ExploreHint = styled.div`
@@ -118,25 +120,48 @@ const Height = styled.span`
 `;
 
 export default function SearchL({ node }) {
-  const [redirect, setRedirect] = useState(null);
+  const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
   const [focus, setFocus] = useState(false);
+  const [selected, select] = useState(0);
 
-  if (redirect) {
-    return <Redirect to={redirect} />;
-  }
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    //todo debounce this
     axios.get(`/westmint/search/autocomplete?prefix=${value}`).then((res) => {
       setHintAssets(res.data.assets || []);
     });
   };
+
+  const onKeyDown = (e) => {
+    if (!focus) {
+      return;
+    }
+
+    if (e.code === "Enter") {
+      if (selected > assets.length - 1) {
+        return null;
+      }
+      const hint = assets[selected];
+      return history.push(
+        `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+      );
+    }
+
+    if (e.code === "ArrowDown" && selected < assets.length) {
+      select(selected + 1);
+    }
+
+    if (e.code === "ArrowUp" && selected > 0) {
+      select(selected - 1);
+    }
+  };
+
   return (
     <ExploreWrapper>
       <ExploreInput
+        onKeyDown={onKeyDown}
         value={searchKeyword}
         onChange={onInput}
         placeholder="Address / Transaction / Asset..."
@@ -148,9 +173,10 @@ export default function SearchL({ node }) {
         <ExploreHintsWrapper>
           {assets.map((hint, index) => (
             <ExploreHint
+              className={selected === index && "selected"}
               key={index}
               onClick={() => {
-                setRedirect(
+                history.push(
                   `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
                 );
               }}

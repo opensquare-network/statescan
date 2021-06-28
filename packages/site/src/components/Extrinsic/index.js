@@ -105,6 +105,7 @@ export default function Extrinsic() {
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.sort}`,
           `${item?.section}(${item?.method})`,
+          item.meta,
         ]),
         foot: (
           <Pagination

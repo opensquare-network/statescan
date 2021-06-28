@@ -17,7 +17,13 @@ import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import Result from "components/Result";
 import MinorText from "components/MinorText";
-import { capitalize, fromSymbolUnit, time, timeDuration } from "utils";
+import {
+  capitalize,
+  fromAssetUnit,
+  fromSymbolUnit,
+  time,
+  timeDuration,
+} from "utils";
 import TabTable from "components/TabTable";
 import Pagination from "components/Pgination";
 import BreakText from "components/BreakText";
@@ -162,8 +168,10 @@ export default function Extrinsic() {
                   </CopyText>,
                   `${
                     assetTransfer
-                      ? (assetTransfer.balance ?? 0) /
-                        Math.pow(10, assetTransfer.assetDecimals)
+                      ? fromAssetUnit(
+                          assetTransfer.balance ?? 0,
+                          assetTransfer.assetDecimals
+                        )
                       : 0
                   } ${assetTransfer?.assetSymbol || ""}`,
                 ]

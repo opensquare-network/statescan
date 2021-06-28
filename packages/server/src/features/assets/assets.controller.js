@@ -191,20 +191,49 @@ async function getAssetHolders(ctx) {
     throw new HttpError(404, "Asset not found");
   }
 
-  const $match = {
+  const q = {
     asset: asset._id,
     balance: { $gt: 0 },
   };
 
   const col = await getAssetHolderCollection(chain);
   const items = await col
-    .find($match)
-    .sort({ balance: -1 })
-    .skip(page * pageSize)
-    .limit(pageSize)
+    .aggregate([
+      { $match: q },
+      { $sort: { balance: -1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      {
+        $lookup: {
+          from: "asset",
+          localField: "asset",
+          foreignField: "_id",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
+        },
+      },
+      {
+        $project: {
+          asset: 0,
+        },
+      },
+    ])
     .toArray();
 
-  const total = await col.countDocuments($match);
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,

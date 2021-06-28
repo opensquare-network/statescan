@@ -83,3 +83,7 @@ export function toSymbolUnit(value, symbol) {
   const precision = getPrecision(symbol);
   return new BigNumber(value).multipliedBy(Math.pow(10, precision)).toString();
 }
+
+export function fromAssetUnit(value, decimals) {
+  return new BigNumber(value).dividedBy(Math.pow(10, decimals)).toString();
+}

@@ -47,7 +47,6 @@ function DB(dbName) {
       process.exit(1);
     }
 
-    // TODO: create indexes for better query performance
     blockCol.createIndex({ hash: 1 });
     blockCol.createIndex({ "header.number": -1 });
 

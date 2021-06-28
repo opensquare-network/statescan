@@ -13,7 +13,7 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { addressEllipsis, fromSymbolUnit } from "utils";
+import { addressEllipsis, fromAssetUnit, fromSymbolUnit } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
@@ -83,7 +83,7 @@ export default function Asset() {
             {addressEllipsis(item?.to)}
           </InLink>,
           item.assetSymbol
-            ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+            ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
                 item.assetSymbol
               }`
             : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
@@ -102,15 +102,14 @@ export default function Asset() {
         name: "Holders",
         total: holdersData?.total,
         head: assetHoldersHead,
-        body: (holdersData?.items || []).map((item) => [
-          "-",
+        body: (holdersData?.items || []).map((item, index) => [
+          index + 1,
           <BreakText>
             <InLink to={`/${node}/address/${item?.address}`}>
               {item?.address}
             </InLink>
           </BreakText>,
-          "-",
-          item?.balance,
+          fromAssetUnit(item?.balance, item?.assetDecimals),
         ]),
         foot: (
           <Pagination

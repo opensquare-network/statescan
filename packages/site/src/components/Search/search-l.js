@@ -146,7 +146,7 @@ export default function SearchL({ node }) {
       <ExploreButton node={node}>Explore</ExploreButton>
       {focus && (
         <ExploreHintsWrapper>
-          {assets.map((hint) => (
+          {assets.map((hint, index) => (
             <ExploreHint
               key={index}
               onClick={() => {

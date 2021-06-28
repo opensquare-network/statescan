@@ -128,7 +128,6 @@ export default function SearchS() {
           {assets.map((hint, index) => (
             <ExploreHint
               key={index}
-              index={index}
               onClick={() => {
                 setSearchKeyword("");
                 setHintAssets([]);

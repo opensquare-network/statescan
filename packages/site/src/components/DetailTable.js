@@ -34,6 +34,16 @@ const Data = styled.div`
 `;
 
 export default function DetailTable({ head, body, isLoading }) {
+  const numberWithCommas = (x) => {
+    try {
+      const [amount, token] = x.split(" ");
+      return `${parseInt(amount).toLocaleString()} ${token}`;
+    } catch (e) {
+      console.error(e);
+      return ``;
+    }
+  };
+
   return (
     <Wrapper>
       {(head || []).map((item, index) => (
@@ -49,8 +59,12 @@ export default function DetailTable({ head, body, isLoading }) {
             </>
           ) : (
             <>
-              <Head>{item}</Head>
-              <Data>{body?.[index]}</Data>
+              <Head title={item}>{item}</Head>
+              <Data>
+                {item === "Total Supply"
+                  ? numberWithCommas(body?.[index])
+                  : body?.[index]}
+              </Data>
             </>
           )}
         </Item>

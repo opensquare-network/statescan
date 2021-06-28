@@ -8,6 +8,7 @@ import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import {
   addressEllipsis,
+  bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
   timeDuration,
@@ -115,7 +116,7 @@ export default function Home() {
                 {addressEllipsis(item.issuer)}
               </InLink>,
               item.accounts,
-              `${fromAssetUnit(item.supply, item.decimals)}`,
+              bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),
             ])}
             foot={
               <FootWrapper>

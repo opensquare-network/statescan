@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { Redirect } from "react-router-dom";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -99,12 +99,10 @@ const Height = styled.span`
 `;
 
 export default function SearchS() {
-  const [redirect, setRedirect] = useState(null);
+  const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
-  if (redirect) {
-    return <Redirect to={redirect} />;
-  }
+
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
@@ -121,10 +119,13 @@ export default function SearchS() {
         placeholder="Address / Transaction / Asset..."
       />
       <ExploreHintsWrapper>
-        {assets.map((hint) => (
+        {assets.map((hint, index) => (
           <ExploreHint
+            index={index}
             onClick={() => {
-              setRedirect(
+              setSearchKeyword("");
+              setHintAssets([]);
+              history.push(
                 `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
               );
             }}

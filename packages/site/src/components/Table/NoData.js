@@ -22,7 +22,7 @@ export default function NoData({ isCollapse }) {
   return (
     <Wrapper isCollapse={isCollapse}>
       <div>
-        <img src="/imgs/icons/nodata.svg" />
+        <img src="/imgs/icons/nodata.svg" alt="" />
       </div>
       <p>No data</p>
     </Wrapper>

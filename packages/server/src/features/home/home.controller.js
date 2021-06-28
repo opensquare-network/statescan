@@ -55,7 +55,7 @@ async function searchAutoComplete(ctx) {
     return;
   }
 
-  const prefixPattern = new RegExp(`^${escapeRegex(prefix)}`);
+  const prefixPattern = new RegExp(`^${escapeRegex(prefix)}`, "i");
   const assetCol = await getAssetCollection(chain);
   const addressCol = await getAddressCollection(chain);
 

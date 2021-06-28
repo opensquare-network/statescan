@@ -27,6 +27,7 @@ import {
 import TabTable from "components/TabTable";
 import Pagination from "components/Pgination";
 import BreakText from "components/BreakText";
+import { useHistory } from "react-router-dom";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -47,11 +48,16 @@ export default function Extrinsic() {
   const [extrinsicId, setExtrinsicId] = useState("");
   const [tabTableData, setTabTableData] = useState();
   const [eventsPage, setEventsPage] = useState(0);
+  const history = useHistory();
 
   const { data, isLoading } = useQuery(["extrinsic", id, node], async () => {
     const { data } = await axios.get(`${node}/extrinsics/${id}`);
     return data;
   });
+
+  if (!isLoading && !data) {
+    history.push("/404");
+  }
 
   const isTransfer =
     data?.section === "balances" &&

@@ -27,6 +27,7 @@ import InLink from "components/InLink";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
+import { useHistory } from "react-router-dom";
 
 export default function Address() {
   const { id } = useParams();
@@ -36,11 +37,16 @@ export default function Address() {
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [assetsPage, setAssetsPage] = useState(0);
   const [transfersPage, setTransfersPage] = useState(0);
+  const history = useHistory();
 
   const { data, isLoading } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
     return data;
   });
+
+  if (!isLoading && !data) {
+    history.push("/404");
+  }
 
   const { data: extrinsicsData, isLoading: isExtrinsicsLoading } = useQuery(
     ["addressExtrinsics", id, node, extrinsicsPage],

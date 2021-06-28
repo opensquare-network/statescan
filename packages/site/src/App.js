@@ -13,6 +13,7 @@ import Root from "./components/Root";
 import Toast from "./components/Toast/index";
 import { nodeSelector, setStoredOrDefaultNode } from "store/reducers/nodeSlice";
 import { connect } from "services/websocket";
+import "code-prettify/loader/run_prettify";
 
 axios.defaults.baseURL =
   process.env.REACT_APP_REQUEST_URL || "http://localhost:3213/";

@@ -7,7 +7,7 @@ import Table from "components/Table";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
 import { assetsHead } from "utils/constants";
-import { addressEllipsis, fromAssetUnit } from "utils";
+import { addressEllipsis, bigNumber2Locale, fromAssetUnit } from "utils";
 import { useNode } from "utils/hooks";
 import LineChart from "../Charts/LineChart";
 import Pagination from "components/Pgination";
@@ -50,7 +50,7 @@ export default function Assets() {
             {addressEllipsis(item.issuer)}
           </InLink>,
           item.accounts,
-          `${fromAssetUnit(item.supply, item.decimals)}`,
+          `${bigNumber2Locale(fromAssetUnit(item.supply, item.decimals))}`,
         ])}
         foot={
           <Pagination

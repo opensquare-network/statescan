@@ -123,6 +123,7 @@ export default function SearchS() {
       <ExploreHintsWrapper>
         {assets.map((hint, index) => (
           <ExploreHint
+            key={index}
             index={index}
             onClick={() => {
               setSearchKeyword("");

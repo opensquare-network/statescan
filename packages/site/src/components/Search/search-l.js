@@ -141,8 +141,9 @@ export default function SearchL({ node }) {
       />
       <ExploreButton node={node}>Explore</ExploreButton>
       <ExploreHintsWrapper>
-        {assets.map((hint) => (
+        {assets.map((hint, index) => (
           <ExploreHint
+            key={index}
             onClick={() => {
               setRedirect(
                 `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`

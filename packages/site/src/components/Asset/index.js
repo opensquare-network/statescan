@@ -20,6 +20,7 @@ import TabTable from "components/TabTable";
 import BreakText from "components/BreakText";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
+import { useHistory } from "react-router-dom";
 
 export default function Asset() {
   const { id } = useParams();
@@ -29,11 +30,16 @@ export default function Asset() {
   const [transfersPage, setTransfersPage] = useState(0);
   const [holdersPage, setHoldersPage] = useState(0);
   const symbol = useSymbol();
+  const history = useHistory();
 
   const { data, isLoading } = useQuery(["asset", node, id], async () => {
     const { data } = await axios.get(`${node}/assets/${id}`);
     return data;
   });
+
+  if (!isLoading && !data) {
+    history.push("/404");
+  }
 
   const { data: transfersData, isLoading: isTransfersLoading } = useQuery(
     ["assetTransfers", node, id, transfersPage],

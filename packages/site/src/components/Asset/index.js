@@ -164,7 +164,7 @@ export default function Asset() {
                 </InLink>
               </CopyText>
             </BreakText>,
-            `${data?.supply} ${data?.symbol}`,
+            `${fromAssetUnit(data?.supply, data?.decimals)} ${data?.symbol}`,
             data?.decimals,
             <MinorText>{holdersData?.total}</MinorText>,
             <MinorText>{transfersData?.total}</MinorText>,

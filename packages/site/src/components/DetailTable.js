@@ -35,8 +35,13 @@ const Data = styled.div`
 
 export default function DetailTable({ head, body, isLoading }) {
   const numberWithCommas = (x) => {
-    const [amount, token] = x.split(" ");
-    return `${parseInt(amount).toLocaleString()} ${token}`;
+    try {
+      const [amount, token] = x.split(" ");
+      return `${parseInt(amount).toLocaleString()} ${token}`;
+    } catch (e) {
+      console.error(e);
+      return ``;
+    }
   };
 
   return (

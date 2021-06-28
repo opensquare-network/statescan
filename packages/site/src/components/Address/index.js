@@ -30,8 +30,6 @@ import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
 import { useHistory } from "react-router-dom";
 
-import { TEST_DATA } from "utils/constants";
-
 export default function Address() {
   const { id } = useParams();
   const node = useNode();
@@ -173,7 +171,7 @@ export default function Address() {
           item?.indexer?.blockTime,
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
-          TEST_DATA,
+          item.args,
         ]),
         foot: (
           <Pagination

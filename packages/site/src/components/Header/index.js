@@ -5,6 +5,7 @@ import { useHomePage } from "utils/hooks";
 import Subheader from "./Subheader";
 import { Link } from "react-router-dom";
 import SearchS from "../Search/search-s";
+import { useNode } from "utils/hooks";
 
 const Container = styled.header`
   position: relative;
@@ -32,9 +33,21 @@ const Background = styled.div`
     p.isHomePage &&
     css`
       height: 464px;
-      /* background: url("/imgs/pattern-dot.svg"),
-                    linear-gradient(180deg, #eeeeee 0%, #ffffff 100%); */
-    `}
+    `};
+`;
+
+const Masked = styled.div`
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    39.66% 101.89% at 50.29% 24.73%,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(221, 221, 221, 0.32) 100%
+  );
+  -webkit-mask-image: url("/imgs/pattern-dot.svg");
+  mask-image: url("/imgs/pattern-dot.svg");
+  -webkit-mask-repeat: repeat;
+  mask-repeat: repeat;
 `;
 
 const RightWrapper = styled.div`
@@ -43,14 +56,17 @@ const RightWrapper = styled.div`
 `;
 
 export default function Header() {
+  const node = useNode();
   const isHomePage = useHomePage();
 
   return (
     <>
       <Container>
-        <Background isHomePage={isHomePage} />
+        <Background isHomePage={isHomePage}>
+          <Masked />
+        </Background>
         <Wrapper>
-          <Link to="/">
+          <Link to={`/${node}`}>
             <img src="/imgs/logo.svg" alt="logo" />
           </Link>
           <RightWrapper>

@@ -101,7 +101,6 @@ const Height = styled.span`
 
 export default function SearchS() {
   const isHomePage = useHomePage();
-  const [redirect, setRedirect] = useState(null);
   const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useParams } from "react-router";
 import axios from "axios";
 import { useQuery } from "react-query";
+import { useHistory } from "react-router-dom";
 
 import Nav from "components/Nav";
 import { useNode } from "utils/hooks";
@@ -34,17 +35,22 @@ const AccessoryText = styled.div`
   color: rgba(17, 17, 17, 0.35);
 `;
 
-export default function Block() {
+export default function Block({ location }) {
   const { id } = useParams();
   const node = useNode();
   const [tabTableData, setTabTableData] = useState();
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [eventsPage, setEventsPage] = useState(0);
+  const history = useHistory();
 
   const { data, isLoading } = useQuery(["block", id, node], async () => {
     const { data } = await axios.get(`${node}/blocks/${id}`);
     return data;
   });
+
+  if (!isLoading && !data) {
+    history.push("/404");
+  }
 
   const { data: extrinsicsData, isLoading: isExtrinsicsLoading } = useQuery(
     ["blockExtrinsics", id, node, extrinsicsPage],

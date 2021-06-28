@@ -1,11 +1,13 @@
 import styled, { css } from "styled-components";
 
 const Wrapper = styled.div`
-  text-align: center;
-  height: 113px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  min-height: 113px;
+  padding: 42px 0 42px 0;
   font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.35);
@@ -17,5 +19,12 @@ const Wrapper = styled.div`
 `;
 
 export default function NoData({ isCollapse }) {
-  return <Wrapper isCollapse={isCollapse}>No data here.</Wrapper>;
+  return (
+    <Wrapper isCollapse={isCollapse}>
+      <div>
+        <img src="/imgs/icons/nodata.svg" alt="No data" />
+      </div>
+      <p>No data</p>
+    </Wrapper>
+  );
 }

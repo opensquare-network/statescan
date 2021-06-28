@@ -13,13 +13,14 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { addressEllipsis, fromSymbolUnit } from "utils";
+import { addressEllipsis, fromAssetUnit, fromSymbolUnit } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import BreakText from "components/BreakText";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
+import { useHistory } from "react-router-dom";
 
 export default function Asset() {
   const { id } = useParams();
@@ -29,11 +30,16 @@ export default function Asset() {
   const [transfersPage, setTransfersPage] = useState(0);
   const [holdersPage, setHoldersPage] = useState(0);
   const symbol = useSymbol();
+  const history = useHistory();
 
   const { data, isLoading } = useQuery(["asset", node, id], async () => {
     const { data } = await axios.get(`${node}/assets/${id}`);
     return data;
   });
+
+  if (!isLoading && !data) {
+    history.push("/404");
+  }
 
   const { data: transfersData, isLoading: isTransfersLoading } = useQuery(
     ["assetTransfers", node, id, transfersPage],
@@ -83,7 +89,7 @@ export default function Asset() {
             {addressEllipsis(item?.to)}
           </InLink>,
           item.assetSymbol
-            ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+            ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
                 item.assetSymbol
               }`
             : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
@@ -102,15 +108,14 @@ export default function Asset() {
         name: "Holders",
         total: holdersData?.total,
         head: assetHoldersHead,
-        body: (holdersData?.items || []).map((item) => [
-          "-",
+        body: (holdersData?.items || []).map((item, index) => [
+          index + 1,
           <BreakText>
             <InLink to={`/${node}/address/${item?.address}`}>
               {item?.address}
             </InLink>
           </BreakText>,
-          "-",
-          item?.balance,
+          fromAssetUnit(item?.balance, item?.assetDecimals),
         ]),
         foot: (
           <Pagination
@@ -164,7 +169,7 @@ export default function Asset() {
                 </InLink>
               </CopyText>
             </BreakText>,
-            `${data?.supply} ${data?.symbol}`,
+            `${fromAssetUnit(data?.supply, data?.decimals)} ${data?.symbol}`,
             data?.decimals,
             <MinorText>{holdersData?.total}</MinorText>,
             <MinorText>{transfersData?.total}</MinorText>,

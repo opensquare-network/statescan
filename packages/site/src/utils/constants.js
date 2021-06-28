@@ -88,10 +88,9 @@ export const assetTransfersHead = [
 ];
 
 export const assetHoldersHead = [
-  { name: "#" },
+  { name: "Rank" },
   { name: "Address" },
-  { name: "Last Tx Time (+UTC)" },
-  { name: "Balance" },
+  { name: "Quantity" },
 ];
 
 export const addressHead = [

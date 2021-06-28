@@ -4,7 +4,12 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
-import { addressEllipsis, fromSymbolUnit, hashEllipsis } from "utils";
+import {
+  addressEllipsis,
+  fromAssetUnit,
+  fromSymbolUnit,
+  hashEllipsis,
+} from "utils";
 import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
 import {
@@ -22,6 +27,7 @@ import InLink from "components/InLink";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
+import { useHistory } from "react-router-dom";
 
 import { TEST_DATA } from "utils/constants";
 
@@ -33,11 +39,16 @@ export default function Address() {
   const [extrinsicsPage, setExtrinsicsPage] = useState(0);
   const [assetsPage, setAssetsPage] = useState(0);
   const [transfersPage, setTransfersPage] = useState(0);
+  const history = useHistory();
 
   const { data, isLoading } = useQuery(["address", id, node], async () => {
     const { data } = await axios.get(`${node}/addresses/${id}`);
     return data;
   });
+
+  if (!isLoading && !data) {
+    history.push("/404");
+  }
 
   const { data: extrinsicsData, isLoading: isExtrinsicsLoading } = useQuery(
     ["addressExtrinsics", id, node, extrinsicsPage],
@@ -87,7 +98,7 @@ export default function Address() {
           >{`#${item.assetId}`}</InLink>,
           item.assetSymbol,
           item.assetName,
-          item.balance / Math.pow(10, item.assetDecimals),
+          fromAssetUnit(item.balance, item.assetDecimals),
           item.approved || 0,
           item.isFrozen.toString(),
           item.transfers,
@@ -128,7 +139,7 @@ export default function Address() {
             addressEllipsis(item.to)
           ),
           item.assetSymbol
-            ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+            ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
                 item.assetSymbol
               }`
             : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,

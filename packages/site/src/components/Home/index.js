@@ -6,7 +6,12 @@ import Table from "components/Table";
 import MinorText from "components/MinorText";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
-import { addressEllipsis, fromSymbolUnit, timeDuration } from "utils";
+import {
+  addressEllipsis,
+  fromAssetUnit,
+  fromSymbolUnit,
+  timeDuration,
+} from "utils";
 import {
   blocksLatestHead,
   transfersLatestHead,
@@ -84,7 +89,7 @@ export default function Home() {
                   {addressEllipsis(item.to)}
                 </InLink>,
                 item?.assetSymbol
-                  ? `${item.balance / Math.pow(10, item.assetDecimals)} ${
+                  ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
                       item.assetSymbol
                     }`
                   : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
@@ -110,7 +115,7 @@ export default function Home() {
                 {addressEllipsis(item.issuer)}
               </InLink>,
               item.accounts,
-              `${item.supply / Math.pow(10, item.decimals)}`,
+              `${fromAssetUnit(item.supply, item.decimals)}`,
             ])}
             foot={
               <FootWrapper>

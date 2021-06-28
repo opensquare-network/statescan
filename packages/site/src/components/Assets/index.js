@@ -34,7 +34,6 @@ export default function Assets() {
   return (
     <section>
       <Nav data={[{ name: "Asset Tracker" }]} />
-      <LineChart />
       <Table
         head={assetsHead}
         body={(data?.items || []).map((item) => [

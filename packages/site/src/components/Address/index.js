@@ -23,6 +23,8 @@ import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
 
+import { TEST_DATA } from "utils/constants";
+
 export default function Address() {
   const { id } = useParams();
   const node = useNode();
@@ -157,6 +159,7 @@ export default function Address() {
           item?.indexer?.blockTime,
           <Result isSuccess={item?.isSuccess} />,
           `${item.section}(${item.name})`,
+          TEST_DATA,
         ]),
         foot: (
           <Pagination

@@ -48,6 +48,38 @@ function DB(dbName) {
     }
 
     // TODO: create indexes for better query performance
+    blockCol.createIndex({ hash: 1 });
+    blockCol.createIndex({ "header.number": -1 });
+
+    extrinsicCol.createIndex({ hash: 1 });
+    extrinsicCol.createIndex({ "indexer.blockHash": 1, "indexer.index": 1 });
+    extrinsicCol.createIndex({ "indexer.blockHeight": 1, "indexer.index": 1 });
+    extrinsicCol.createIndex({
+      signer: 1,
+      "indexer.blockHeight": -1,
+      "indexer.index": 1,
+    });
+
+    eventCol.createIndex({ "indexer.blockHash": 1, sort: 1 });
+    eventCol.createIndex({ "indexer.blockHeight": 1, sort: 1 });
+    eventCol.createIndex({ extrinsicHash: 1, sort: 1 });
+    eventCol.createIndex({
+      "indexer.blockHeight": 1,
+      "phase.value": 1,
+      sort: 1,
+    });
+
+    addressCol.createIndex({ address: 1 });
+
+    assetCol.createIndex({ symbol: 1 });
+    assetCol.createIndex({ name: 1 });
+
+    assetHolderCol.createIndex({ address: 1, balance: -1 });
+
+    assetTransferCol.createIndex({ from: 1, "indexer.blockHeight": -1 });
+    assetTransferCol.createIndex({ to: 1, "indexer.blockHeight": -1 });
+    assetTransferCol.createIndex({ asset: 1, from: 1 });
+    assetTransferCol.createIndex({ asset: 1, to: 1 });
   }
 
   async function tryInit(col) {

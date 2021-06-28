@@ -9,7 +9,7 @@ const ExploreWrapper = styled.div`
   align-items: center;
 
   > :not(:first-child) {
-    margin-left: 32px;
+    margin-left: 16px;
   }
 
   @media screen and (max-width: 900px) {

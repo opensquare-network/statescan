@@ -6,6 +6,8 @@ import { useQuery } from "react-query";
 import Nav from "components/Nav";
 import {
   addressEllipsis,
+  bigNumber2Locale,
+  bigNumberToLocaleString,
   fromAssetUnit,
   fromSymbolUnit,
   hashEllipsis,
@@ -96,7 +98,7 @@ export default function Address() {
           >{`#${item.assetId}`}</InLink>,
           item.assetSymbol,
           item.assetName,
-          fromAssetUnit(item.balance, item.assetDecimals),
+          bigNumber2Locale(fromAssetUnit(item.balance, item.assetDecimals)),
           item.approved || 0,
           item.isFrozen.toString(),
           item.transfers,
@@ -137,10 +139,12 @@ export default function Address() {
             addressEllipsis(item.to)
           ),
           item.assetSymbol
-            ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-                item.assetSymbol
-              }`
-            : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+            ? `${bigNumber2Locale(
+                fromAssetUnit(item.balance, item.assetDecimals)
+              )} ${item.assetSymbol}`
+            : `${bigNumber2Locale(
+                fromSymbolUnit(item.balance, symbol)
+              )} ${symbol}`,
         ]),
         foot: (
           <Pagination

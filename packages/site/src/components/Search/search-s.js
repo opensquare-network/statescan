@@ -14,16 +14,7 @@ const ExploreWrapper = styled.div`
   }
 
   @media screen and (max-width: 900px) {
-    flex-direction: column;
-    max-width: 318px;
-    width: 100%;
-    > * {
-      width: 100% !important;
-    }
-
-    > :not(:first-child) {
-      margin: 16px 0 0;
-    }
+    display: none;
   }
 `;
 

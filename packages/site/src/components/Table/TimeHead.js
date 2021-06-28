@@ -19,10 +19,6 @@ const Item = styled.div`
     `}
 `;
 
-const Divider = styled.div`
-  margin: 0 8px;
-`;
-
 export default function TimeHead({ timeType, setTimeType }) {
   return (
     <Wrapper>

@@ -121,6 +121,8 @@ export default function SearchL({ node }) {
   const [redirect, setRedirect] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
+  const [focus, setFocus] = useState(false);
+
   if (redirect) {
     return <Redirect to={redirect} />;
   }
@@ -138,28 +140,32 @@ export default function SearchL({ node }) {
         value={searchKeyword}
         onChange={onInput}
         placeholder="Address / Transaction / Asset..."
+        onFocus={() => setFocus(true)}
+        onBlur={() => setTimeout(() => setFocus(false), 100)}
       />
       <ExploreButton node={node}>Explore</ExploreButton>
-      <ExploreHintsWrapper>
-        {assets.map((hint, index) => (
-          <ExploreHint
-            key={index}
-            onClick={() => {
-              setRedirect(
-                `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-              );
-            }}
-          >
-            <img
-              src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
-              alt=""
-            />
-            <Token>{hint.symbol}</Token>
-            <TokenDesc>{hint.name}</TokenDesc>
-            <Height>#{hint.createdAt.blockHeight}</Height>
-          </ExploreHint>
-        ))}
-      </ExploreHintsWrapper>
+      {focus && (
+        <ExploreHintsWrapper>
+          {assets.map((hint) => (
+            <ExploreHint
+              key={index}
+              onClick={() => {
+                setRedirect(
+                  `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+                );
+              }}
+            >
+              <img
+                src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
+                alt=""
+              />
+              <Token>{hint.symbol}</Token>
+              <TokenDesc>{hint.name}</TokenDesc>
+              <Height>#{hint.createdAt.blockHeight}</Height>
+            </ExploreHint>
+          ))}
+        </ExploreHintsWrapper>
+      )}
     </ExploreWrapper>
   );
 }

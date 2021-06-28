@@ -96,6 +96,7 @@ export default function SearchS() {
   const isHomePage = useHomePage();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
+  const [focus, setFocus] = useState(false);
 
   useEffect(() => {
     setSearchKeyword("");
@@ -119,30 +120,34 @@ export default function SearchS() {
         value={searchKeyword}
         onChange={onInput}
         placeholder="Address / Transaction / Asset..."
+        onFocus={() => setFocus(true)}
+        onBlur={() => setTimeout(() => setFocus(false), 100)}
       />
-      <ExploreHintsWrapper>
-        {assets.map((hint, index) => (
-          <ExploreHint
-            key={index}
-            index={index}
-            onClick={() => {
-              setSearchKeyword("");
-              setHintAssets([]);
-              history.push(
-                `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-              );
-            }}
-          >
-            <img
-              src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
-              alt=""
-            />
-            <Token>{hint.symbol}</Token>
-            <TokenDesc>{hint.name}</TokenDesc>
-            <Height>#{hint.createdAt.blockHeight}</Height>
-          </ExploreHint>
-        ))}
-      </ExploreHintsWrapper>
+      {focus && (
+        <ExploreHintsWrapper>
+          {assets.map((hint, index) => (
+            <ExploreHint
+              key={index}
+              index={index}
+              onClick={() => {
+                setSearchKeyword("");
+                setHintAssets([]);
+                history.push(
+                  `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+                );
+              }}
+            >
+              <img
+                src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
+                alt=""
+              />
+              <Token>{hint.symbol}</Token>
+              <TokenDesc>{hint.name}</TokenDesc>
+              <Height>#{hint.createdAt.blockHeight}</Height>
+            </ExploreHint>
+          ))}
+        </ExploreHintsWrapper>
+      )}
     </ExploreWrapper>
   );
 }

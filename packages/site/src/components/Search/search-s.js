@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useState } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
+import { useHomePage } from "utils/hooks";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -99,6 +100,7 @@ const Height = styled.span`
 `;
 
 export default function SearchS() {
+  const isHomePage = useHomePage();
   const [redirect, setRedirect] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
@@ -113,6 +115,9 @@ export default function SearchS() {
       setHintAssets(res.data.assets || []);
     });
   };
+
+  if (isHomePage) return null;
+
   return (
     <ExploreWrapper>
       <Input

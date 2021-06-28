@@ -4,10 +4,10 @@ import styled from "styled-components";
 import { useWindowSize } from "utils/hooks";
 import NoData from "./NoData";
 import TimeHead from "./TimeHead";
-import TimeBody from "./TimeBody";
 import LoadingBar from "components/LoadingBar";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
+import { formattingTableCell } from "../../utils/formatting";
 
 const Title = styled.h4`
   font-weight: bold;
@@ -174,11 +174,7 @@ export default function Table({
                         key={index}
                         style={{ textAlign: head[index].align ?? "left" }}
                       >
-                        {head[index].type === "time" ? (
-                          <TimeBody timeType={timeType} ts={item} />
-                        ) : (
-                          item
-                        )}
+                        {formattingTableCell(item, head[index].type)}
                       </td>
                     ))}
                   </tr>

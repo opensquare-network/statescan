@@ -26,19 +26,21 @@ const Divider = styled.div`
 export default function TimeHead({ timeType, setTimeType }) {
   return (
     <Wrapper>
-      <Item
-        active={timeType === timeTypes.age}
-        onClick={() => setTimeType(timeTypes.age)}
-      >
-        Age
-      </Item>
-      <Divider>·</Divider>
-      <Item
-        active={timeType === timeTypes.date}
-        onClick={() => setTimeType(timeTypes.date)}
-      >
-        Date Time
-      </Item>
+      {timeType === timeTypes.age ? (
+        <Item
+          active={timeType === timeTypes.age}
+          onClick={() => setTimeType(timeTypes.date)}
+        >
+          Age
+        </Item>
+      ) : (
+        <Item
+          active={timeType === timeTypes.date}
+          onClick={() => setTimeType(timeTypes.age)}
+        >
+          Date Time
+        </Item>
+      )}
     </Wrapper>
   );
 }

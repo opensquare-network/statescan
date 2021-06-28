@@ -149,7 +149,7 @@ export default function SearchL({ node }) {
       );
     }
 
-    if (e.code === "ArrowDown" && selected < assets.length) {
+    if (e.code === "ArrowDown" && selected < assets.length - 1) {
       select(selected + 1);
     }
 

@@ -101,8 +101,7 @@ const ExploreHint = styled.div`
 
 const Token = styled.span`
   margin-right: 8px;
-  overflow: hidden;
-  width: 48px;
+  white-space: nowrap;
   font-weight: 500;
   color: #111111;
 `;

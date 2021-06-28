@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { useHomePage } from "utils/hooks";
 
 const ExploreWrapper = styled.div`
@@ -14,16 +14,7 @@ const ExploreWrapper = styled.div`
   }
 
   @media screen and (max-width: 900px) {
-    flex-direction: column;
-    max-width: 318px;
-    width: 100%;
-    > * {
-      width: 100% !important;
-    }
-
-    > :not(:first-child) {
-      margin: 16px 0 0;
-    }
+    display: none;
   }
 `;
 
@@ -100,10 +91,16 @@ const Height = styled.span`
 `;
 
 export default function SearchS() {
-  const isHomePage = useHomePage();
+  const location = useLocation();
   const history = useHistory();
+  const isHomePage = useHomePage();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
+
+  useEffect(() => {
+    setSearchKeyword("");
+    setHintAssets([]);
+  }, [location]);
 
   const onInput = (e) => {
     const value = e.target.value;

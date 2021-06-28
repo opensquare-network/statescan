@@ -7,7 +7,6 @@ import Nav from "components/Nav";
 import {
   addressEllipsis,
   bigNumber2Locale,
-  bigNumberToLocaleString,
   fromAssetUnit,
   fromSymbolUnit,
   hashEllipsis,

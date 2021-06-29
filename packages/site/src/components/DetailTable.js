@@ -28,8 +28,8 @@ const Head = styled.div`
 
 const Data = styled.div`
   font-size: 14px;
-  line-height: 20px;
-  padding: 10px 24px;
+  line-height: 40px;
+  padding: 0 24px;
   flex-grow: 1;
 `;
 

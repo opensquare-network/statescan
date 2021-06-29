@@ -43,7 +43,7 @@ export default function Asset() {
   });
 
   if (!isLoading && !data) {
-    history.push("/404");
+    history.replace("/404");
   }
 
   const { data: transfersData, isLoading: isTransfersLoading } = useQuery(

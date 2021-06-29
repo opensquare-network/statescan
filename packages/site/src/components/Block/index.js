@@ -47,7 +47,7 @@ export default function Block({ location }) {
   });
 
   if (!isLoading && !data) {
-    history.push("/404");
+    history.replace("/404");
   }
 
   const { data: extrinsicsData, isLoading: isExtrinsicsLoading } = useQuery(

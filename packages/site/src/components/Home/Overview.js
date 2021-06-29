@@ -77,14 +77,7 @@ export default function Overview() {
   ]);
   const token = tokenMap.get(node) ?? "";
 
-  const [chartData, setChartData] = useState([
-    { time: 1, price: 0 },
-    { time: 2, price: 0 },
-    { time: 3, price: 0 },
-    { time: 4, price: 0 },
-    { time: 5, price: 0 },
-    { time: 6, price: 0 },
-  ]);
+  const [chartData, setChartData] = useState([]);
 
   axios.get(`/${node}/prices/daily`).then((data) => {
     if (data.length > 0) {

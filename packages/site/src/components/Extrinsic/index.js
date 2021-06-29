@@ -56,7 +56,7 @@ export default function Extrinsic() {
   });
 
   if (!isLoading && !data) {
-    history.push("/404");
+    history.replace("/404");
   }
 
   const isTransfer =

@@ -223,10 +223,10 @@ export default function Table({
           {!isLoading && body && body.length > 0 ? (
             <>
               <tbody>
-                {(body || []).map((item, bodyIndex) => (
+                {(body || []).map((row, bodyIndex) => (
                   <Fragment key={bodyIndex}>
                     <StyledTr isShow={showData[bodyIndex]}>
-                      {item.map((item, index) => (
+                      {row.map((item, index) => (
                         <td
                           key={index}
                           style={{ textAlign: head[index].align ?? "left" }}
@@ -248,6 +248,13 @@ export default function Table({
                             />
                           )}
                           {!head[index].type && item}
+                          {bodyIndex === body.length - 1 &&
+                            index === row.length - 1 && (
+                              <>
+                                <div className="leftcover"></div>
+                                <div className="rightcover"></div>
+                              </>
+                            )}
                         </td>
                       ))}
                     </StyledTr>
@@ -274,8 +281,6 @@ export default function Table({
                   </tr>
                 </tfoot>
               )}
-              <div class="leftcover"></div>
-              <div class="rightcover"></div>
             </>
           ) : isLoading ? (
             <tbody>

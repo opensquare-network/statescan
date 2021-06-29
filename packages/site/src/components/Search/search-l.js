@@ -30,11 +30,11 @@ const ExploreInput = styled.input`
   width: 480px;
   padding: 12px 16px;
   background: #f4f4f4;
+  border: 1px solid #f4f4f4;
   border-radius: 8px;
   font-size: 16px;
-  line-height: 20px;
+  line-height: 18px;
   outline: none;
-  border: none;
 
   ::placeholder {
     color: rgba(17, 17, 17, 0.35);
@@ -43,6 +43,7 @@ const ExploreInput = styled.input`
   :active,
   :focus {
     background-color: #ffffff;
+    border: 1px solid #bbbbbb;
   }
 `;
 
@@ -125,6 +126,7 @@ export default function SearchL({ node }) {
   const [assets, setHintAssets] = useState([]);
   const [focus, setFocus] = useState(false);
   const [selected, select] = useState(0);
+  const iconMap = new Map([["osn", "osn"]]);
 
   const onInput = (e) => {
     const value = e.target.value;
@@ -171,25 +173,25 @@ export default function SearchL({ node }) {
       <ExploreButton node={node}>Explore</ExploreButton>
       {focus && (
         <ExploreHintsWrapper>
-          {assets.map((hint, index) => (
-            <ExploreHint
-              className={selected === index && "selected"}
-              key={index}
-              onClick={() => {
-                history.push(
-                  `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-                );
-              }}
-            >
-              <img
-                src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
-                alt=""
-              />
-              <Token>{hint.symbol}</Token>
-              <TokenDesc>{hint.name}</TokenDesc>
-              <Height>#{hint.createdAt.blockHeight}</Height>
-            </ExploreHint>
-          ))}
+          {assets.map((hint, index) => {
+            const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
+            return (
+              <ExploreHint
+                className={selected === index && "selected"}
+                key={index}
+                onClick={() => {
+                  history.push(
+                    `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+                  );
+                }}
+              >
+                <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
+                <Token>{hint.symbol}</Token>
+                <TokenDesc>{hint.name}</TokenDesc>
+                <Height>#{hint.createdAt.blockHeight}</Height>
+              </ExploreHint>
+            );
+          })}
         </ExploreHintsWrapper>
       )}
     </ExploreWrapper>

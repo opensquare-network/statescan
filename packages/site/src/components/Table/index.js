@@ -187,8 +187,6 @@ export default function Table({
     setShowData((body || []).map(() => false));
   }, [body]);
 
-  body = [];
-
   return (
     <div>
       {title && <Title>{title}</Title>}

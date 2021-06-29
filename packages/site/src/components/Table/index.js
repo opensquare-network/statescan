@@ -78,7 +78,7 @@ const StyledTable = styled.table`
       height: 8px;
     }
     td {
-      padding: 14px 24px;
+      padding: 0px 24px;
       font-size: 14px;
       line-height: 20px;
       color: #111111;
@@ -179,6 +179,7 @@ export default function Table({
   head,
   body,
   foot,
+  rowHeight = 48,
   collapse,
   isLoading,
   placeholder = 3,
@@ -229,7 +230,10 @@ export default function Table({
                       {row.map((item, index) => (
                         <td
                           key={index}
-                          style={{ textAlign: head[index].align ?? "left" }}
+                          style={{
+                            textAlign: head[index].align ?? "left",
+                            height: `${rowHeight}px`,
+                          }}
                         >
                           {head[index].type === "time" && (
                             <TimeBody timeType={timeType} ts={item} />

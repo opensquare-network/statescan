@@ -5,7 +5,7 @@ import { Popup } from "semantic-ui-react";
 import "semantic-ui-css/components/popup.min.css";
 
 const Wrapper = styled.div`
-  width: 140px;
+  min-width: 150px;
 `;
 
 export default function TimeBody({ timeType, ts }) {

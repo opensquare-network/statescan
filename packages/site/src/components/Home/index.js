@@ -6,8 +6,8 @@ import Table from "components/Table";
 import MinorText from "components/MinorText";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
+import AddressEllipsis from "components/AddressEllipsis";
 import {
-  addressEllipsis,
   bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
@@ -84,10 +84,10 @@ export default function Home() {
                   {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
                 </InLink>,
                 <InLink to={`/${node}/address/${item.from}`}>
-                  {addressEllipsis(item.from)}
+                  <AddressEllipsis address={item.from} />
                 </InLink>,
                 <InLink to={`/${node}/address/${item.to}`}>
-                  {addressEllipsis(item.to)}
+                  <AddressEllipsis address={item.to} />
                 </InLink>,
                 item?.assetSymbol
                   ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
@@ -110,10 +110,10 @@ export default function Home() {
               <Symbol symbol={item.symbol} />,
               item.name,
               <InLink to={`/${node}/address/${item.owner}`}>
-                {addressEllipsis(item.owner)}
+                <AddressEllipsis address={item.owner} />
               </InLink>,
               <InLink to={`/${node}/address/${item.issuer}`}>
-                {addressEllipsis(item.issuer)}
+                <AddressEllipsis address={item.issuer} />
               </InLink>,
               item.accounts,
               bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),

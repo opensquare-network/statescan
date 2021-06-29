@@ -11,7 +11,7 @@ import { blockHead } from "utils/constants";
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import { timeDuration, time, hashEllipsis } from "utils";
+import { timeDuration, time } from "utils";
 import ThemeText from "components/ThemeText";
 import CopyText from "components/CopyText";
 import { blockExtrinsicsHead, blockEventsHead } from "utils/constants";
@@ -20,6 +20,7 @@ import BreakText from "components/BreakText";
 import InLink from "components/InLink";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
+import HashEllipsis from "components/HashEllipsis";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -85,7 +86,7 @@ export default function Block({ location }) {
             to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
           <InLink to={`/${node}/extrinsic/${item?.hash}`}>
-            {hashEllipsis(item?.hash)}
+            <HashEllipsis hash={item?.hash} />
           </InLink>,
           <MinorText>
             <Result isSuccess={item?.isSuccess} />

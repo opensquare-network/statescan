@@ -6,8 +6,9 @@ import Nav from "components/Nav";
 import Table from "components/Table";
 import InLink from "components/InLink";
 import Symbol from "components/Symbol";
+import AddressEllipsis from "components/AddressEllipsis";
 import { assetsHead } from "utils/constants";
-import { addressEllipsis, bigNumber2Locale, fromAssetUnit } from "utils";
+import { bigNumber2Locale, fromAssetUnit } from "utils";
 import { useNode } from "utils/hooks";
 import Pagination from "components/Pgination";
 
@@ -42,10 +43,10 @@ export default function Assets() {
           <Symbol symbol={item.symbol} />,
           item.name,
           <InLink to={`/${node}/address/${item.owner}`}>
-            {addressEllipsis(item.owner)}
+            <AddressEllipsis address={item.owner} />
           </InLink>,
           <InLink to={`/${node}/address/${item.issuer}`}>
-            {addressEllipsis(item.issuer)}
+            <AddressEllipsis address={item.issuer} />
           </InLink>,
           item.accounts,
           `${bigNumber2Locale(fromAssetUnit(item.supply, item.decimals))}`,

@@ -113,7 +113,7 @@ export default function Block({ location }) {
             to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
           >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>,
           <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
-          item.meta,
+          item.data,
         ]),
         foot: (
           <Pagination

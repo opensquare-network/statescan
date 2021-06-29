@@ -97,7 +97,7 @@ async function getBlockEvents(ctx) {
   }
 
   const items = await col
-    .find($match, { projection: { data: 0 } })
+    .find($match)
     .sort({
       sort: 1,
     })

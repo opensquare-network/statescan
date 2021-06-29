@@ -29,6 +29,8 @@ const Wrapper = styled.div`
 `;
 
 const ItemWrapper = styled.div`
+  min-width: 130px;
+  text-align: center;
   @media screen and (max-width: 900px) {
     width: 130px;
   }
@@ -104,6 +106,7 @@ export default function Overview() {
         <Text>{overviewData?.holdersCount ?? 0}</Text>
       </ItemWrapper>
       <Divider />
+      <div />
       <ChartWrapper>
         <LineChart token={token} data={chartData} color={"#F22279"} />
       </ChartWrapper>

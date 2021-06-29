@@ -26,6 +26,7 @@ const StyledTable = styled.table`
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-spacing: 0px;
   border-radius: 8px;
+  overflow: hidden;
   thead {
     background: #fafafa;
   }

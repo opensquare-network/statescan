@@ -96,7 +96,7 @@ export default function Overview() {
     <Wrapper>
       <ItemWrapper>
         <Title>Block Height</Title>
-        <Text>{blocksHeightData ?? 0}</Text>
+        <Text>{blocksHeightData?.toLocaleString() ?? 0}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Assets</Title>

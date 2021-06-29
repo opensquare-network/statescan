@@ -68,7 +68,7 @@ async function getExtrinsicEvents(ctx) {
 
   const col = await getEventCollection(chain);
   const items = await col
-    .find(q, { projection: { data: 0 } })
+    .find(q)
     .sort({ sort: 1 })
     .skip(page * pageSize)
     .limit(pageSize)

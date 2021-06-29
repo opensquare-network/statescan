@@ -18,6 +18,38 @@ const Title = styled.h4`
 `;
 
 const StyledTable = styled.table`
+  position: relative;
+  .leftcover {
+    position: absolute;
+    top: 45px;
+    ${(p) =>
+      p.hasFoot
+        ? css`
+            bottom: 58px;
+          `
+        : css`
+            bottom: 0;
+          `}
+    left: 0;
+    width: 24px;
+    background-color: #ffffff;
+  }
+  .rightcover {
+    position: absolute;
+    top: 45px;
+    ${(p) =>
+      p.hasFoot
+        ? css`
+            bottom: 58px;
+          `
+        : css`
+            bottom: 0;
+          `}
+    right: 0;
+    width: 24px;
+    background-color: #ffffff;
+  }
+
   width: 100%;
   background: #ffffff;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
@@ -47,17 +79,8 @@ const StyledTable = styled.table`
     }
   }
   tfoot {
-    position: relative;
-    ::after {
-      content: "";
-      width: 100%;
-      height: 1px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: #f4f4f4;
-    }
     td {
+      border-top: 1px solid #f4f4f4;
       padding: 14px 24px;
       font-size: 14px;
       line-height: 20px;
@@ -71,14 +94,10 @@ const StyledTr = styled.tr`
   ${(p) =>
     !p.isShow &&
     css`
-      :not(:last-child)::after {
-        content: "";
-        position: absolute;
-        height: 1px;
-        background: #f4f4f4;
-        left: 24px;
-        right: 24px;
-        bottom: 0;
+      :not(:last-child) {
+        td {
+          border-bottom: 1px solid #f4f4f4;
+        }
       }
     `}
 `;
@@ -118,14 +137,10 @@ const CollapseTableWrapper = styled.div`
   padding: 16px 0px;
   width: 100%;
   position: relative;
-  :not(:last-child)::after {
-    content: "";
-    position: absolute;
-    height: 1px;
-    background: #f4f4f4;
-    left: 24px;
-    right: 24px;
-    bottom: 0;
+  :not(:last-child) {
+    td {
+      border-bottom: 1px solid #f4f4f4;
+    }
   }
 `;
 
@@ -187,7 +202,7 @@ export default function Table({
     <div>
       {title && <Title>{title}</Title>}
       {!isCollapse && (
-        <StyledTable>
+        <StyledTable hasFoot={!!foot}>
           <thead>
             <tr>
               {(head || []).map((item, index) => (
@@ -255,6 +270,8 @@ export default function Table({
                   </tr>
                 </tfoot>
               )}
+              <div class="leftcover"></div>
+              <div class="rightcover"></div>
             </>
           ) : isLoading ? (
             <tbody>

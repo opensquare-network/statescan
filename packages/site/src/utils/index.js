@@ -48,7 +48,37 @@ export function timeDuration(time) {
       yy: "%d years ago",
     },
   });
-  return moment(time).fromNow();
+  const now = moment();
+  if (!now.isAfter(time)) {
+    //todo 讨论当客户端时间不准时应当如何处理
+    return moment(time).fromNow();
+  }
+  let ss = now.diff(time, "seconds");
+  let mm = now.diff(time, "minutes");
+  let hh = now.diff(time, "hours");
+  let dd = now.diff(time, "days");
+  if (dd) {
+    hh %= 24;
+    if (hh) {
+      return `${dd} day${dd > 1 ? "s" : ""} ${hh} hr${hh > 1 ? "s" : ""} ago`;
+    }
+    return `${dd} day${dd > 1 ? "s" : ""} ago`;
+  }
+  if (hh) {
+    mm %= 60;
+    if (mm) {
+      return `${hh} hr${hh > 1 ? "s" : ""} ${mm} min${mm > 1 ? "s" : ""} ago`;
+    }
+    return `${hh} hr${hh > 1 ? "s" : ""} ago`;
+  }
+  if (mm) {
+    ss %= 60;
+    if (ss) {
+      return `${mm} min${mm > 1 ? "s" : ""} ${ss} sec${ss > 1 ? "s" : ""} ago`;
+    }
+    return `${mm} min${mm > 1 ? "s" : ""} ago`;
+  }
+  return `${ss} sec${ss > 1 ? "s" : ""} ago`;
 }
 
 export function timeUTC(time) {

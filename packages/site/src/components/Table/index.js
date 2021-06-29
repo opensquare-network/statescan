@@ -226,7 +226,7 @@ export default function Table({
               <tbody>
                 {(body || []).map((row, bodyIndex) => (
                   <Fragment key={bodyIndex}>
-                    <StyledTr isShow={showData[bodyIndex]} height={rowHeight}>
+                    <StyledTr isShow={showData[bodyIndex]}>
                       {row.map((item, index) => (
                         <td
                           key={index}

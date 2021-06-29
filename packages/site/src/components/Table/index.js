@@ -75,7 +75,7 @@ const StyledTable = styled.table`
     ::after {
       content: "";
       display: block;
-      height: 8px;
+      height: 4px;
     }
     td {
       padding: 0px 24px;
@@ -86,7 +86,7 @@ const StyledTable = styled.table`
   }
   tfoot {
     td {
-      border-top: 1px solid #f4f4f4;
+      border-top: 1px solid #f8f8f8;
       padding: 14px 24px;
       font-size: 14px;
       line-height: 20px;
@@ -102,7 +102,7 @@ const StyledTr = styled.tr`
     css`
       :not(:last-child) {
         td {
-          border-bottom: 1px solid #f4f4f4;
+          border-bottom: 1px solid #f8f8f8;
         }
       }
     `}
@@ -119,7 +119,7 @@ const CollapseTableDataWrapper = styled.div`
 const TableDataItem = styled.pre`
   background: #fafafa;
   border-radius: 4px;
-  padding: 16px 24px;
+  padding: 0 16px 24px;
   font-size: 14px;
   line-height: 20px;
   margin: 0;
@@ -143,7 +143,7 @@ const CollapseTableWrapper = styled.div`
   position: relative;
   :not(:last-child) {
     td {
-      border-bottom: 1px solid #f4f4f4;
+      border-bottom: 1px solid #f8f8f8;
     }
   }
 `;
@@ -166,7 +166,7 @@ const CollapseBody = styled.td`
 `;
 
 const CollapseFoot = styled.div`
-  border-top: 1px solid #f4f4f4;
+  border-top: 1px solid #f8f8f8;
   padding: 16px 24px;
 `;
 

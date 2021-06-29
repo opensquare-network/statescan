@@ -290,7 +290,7 @@ export default function Table({
             <tbody>
               {Array.from(Array(placeholder)).map((_, index) => (
                 <tr key={index}>
-                  <td colSpan="100%">
+                  <td colSpan="100%" style={{ padding: "14px 24px" }}>
                     <LoadingBar />
                   </td>
                 </tr>

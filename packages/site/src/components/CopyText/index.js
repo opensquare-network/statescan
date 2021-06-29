@@ -7,6 +7,8 @@ import { useNode } from "utils/hooks";
 import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
   * {
     display: inline;
     vertical-align: top;

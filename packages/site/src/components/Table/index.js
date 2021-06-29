@@ -179,7 +179,7 @@ export default function Table({
   head,
   body,
   foot,
-  rowHeight = "48px",
+  rowHeight = 48,
   collapse,
   isLoading,
   placeholder = 3,
@@ -232,7 +232,7 @@ export default function Table({
                           key={index}
                           style={{
                             textAlign: head[index].align ?? "left",
-                            height: rowHeight,
+                            height: `${rowHeight}px`,
                           }}
                         >
                           {head[index].type === "time" && (

@@ -29,7 +29,7 @@ const Dropdown = styled.div`
   padding: 8px;
   cursor: pointer;
   :hover {
-    background: #ffffff;
+    background: #fafafa;
   }
   ${(p) =>
     p.active &&

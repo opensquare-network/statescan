@@ -30,6 +30,9 @@ export function hashEllipsis(hash = "", start = 6, end = 6) {
 }
 
 export function timeDuration(time) {
+  if (!time) {
+    return "Unknown";
+  }
   moment.updateLocale("en", {
     relativeTime: {
       future: "in %s",
@@ -56,6 +59,9 @@ export function timeUTC(time) {
 }
 
 export function time(time) {
+  if (!time) {
+    return "Unknown";
+  }
   return moment(time).format("YYYY-MM-DD HH:mm:ss");
 }
 

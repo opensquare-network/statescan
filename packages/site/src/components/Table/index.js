@@ -26,6 +26,7 @@ const StyledTable = styled.table`
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-spacing: 0px;
   border-radius: 8px;
+  overflow: hidden;
   thead {
     background: #fafafa;
   }
@@ -38,7 +39,12 @@ const StyledTable = styled.table`
     text-align: left;
   }
   tbody {
-    margin: 8px 0;
+    ::before,
+    ::after {
+      content: "";
+      display: block;
+      height: 8px;
+    }
     td {
       padding: 14px 24px;
       font-size: 14px;

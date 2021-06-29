@@ -43,6 +43,9 @@ const Background = styled.div`
 const Masked = styled.div`
   width: 100%;
   height: 100%;
+  opacity: 0.8;
+  position: relative;
+  top: -8px;
   background: radial-gradient(
     39.66% 101.89% at 50.29% 24.73%,
     rgba(255, 255, 255, 0) 0%,

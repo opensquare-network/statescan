@@ -4,12 +4,12 @@ import axios from "axios";
 import { useQuery } from "react-query";
 
 import Nav from "components/Nav";
+import AddressEllipsis from "components/AddressEllipsis";
 import {
   addressEllipsis,
   bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
-  hashEllipsis,
 } from "utils";
 import { useNode, useSymbol } from "utils/hooks";
 import DetailTable from "components/DetailTable";
@@ -29,6 +29,7 @@ import Result from "components/Result";
 import Pagination from "components/Pgination";
 import Tooltip from "components/Tooltip";
 import { useHistory } from "react-router-dom";
+import HashEllipsis from "components/HashEllipsis";
 
 export default function Address() {
   const { id } = useParams();
@@ -125,17 +126,17 @@ export default function Address() {
           item.indexer.blockTime,
           item.from !== id ? (
             <InLink to={`/${node}/address/${item.from}`}>
-              {addressEllipsis(item.from)}
+              <AddressEllipsis address={item.from} />
             </InLink>
           ) : (
-            addressEllipsis(item.from)
+            <AddressEllipsis address={item.from} />
           ),
           item.to !== id ? (
             <InLink to={`/${node}/address/${item.to}`}>
-              {addressEllipsis(item.to)}
+              <AddressEllipsis address={item.to} />
             </InLink>
           ) : (
-            addressEllipsis(item.to)
+            <AddressEllipsis address={item.to} />
           ),
           item.assetSymbol
             ? `${bigNumber2Locale(
@@ -166,7 +167,7 @@ export default function Address() {
             {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
           </InLink>,
           <InLink to={`/${node}/extrinsic/${item?.hash}`}>
-            {hashEllipsis(item?.hash)}
+            <HashEllipsis hash={item?.hash} />
           </InLink>,
           item?.indexer?.blockTime,
           <Result isSuccess={item?.isSuccess} />,

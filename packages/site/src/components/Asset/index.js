@@ -13,12 +13,8 @@ import {
 import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
-import {
-  addressEllipsis,
-  bigNumber2Locale,
-  fromAssetUnit,
-  fromSymbolUnit,
-} from "utils";
+import AddressEllipsis from "components/AddressEllipsis";
+import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
 import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
@@ -88,10 +84,10 @@ export default function Asset() {
           <Tooltip label={item.method} bg />,
           item.indexer.blockTime,
           <InLink to={`/${node}/address/${item?.from}`}>
-            {addressEllipsis(item?.from)}
+            <AddressEllipsis address={item?.from} />
           </InLink>,
           <InLink to={`/${node}/address/${item?.to}`}>
-            {addressEllipsis(item?.to)}
+            <AddressEllipsis address={item?.to} />
           </InLink>,
           item.assetSymbol
             ? `${bigNumber2Locale(

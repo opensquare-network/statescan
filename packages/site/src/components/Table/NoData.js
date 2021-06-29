@@ -6,15 +6,14 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: 113px;
-  padding: 42px 0 42px 0;
+  min-height: 184px;
   font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.35);
   ${(p) =>
     p.isCollapse &&
     css`
-      height: 192px !important;
+      height: 216px !important;
     `}
 `;
 

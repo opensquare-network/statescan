@@ -39,7 +39,12 @@ const StyledTable = styled.table`
     text-align: left;
   }
   tbody {
-    margin: 8px 0;
+    ::before,
+    ::after {
+      content: "";
+      display: block;
+      height: 8px;
+    }
     td {
       padding: 14px 24px;
       font-size: 14px;
@@ -181,6 +186,8 @@ export default function Table({
   useEffect(() => {
     setShowData((body || []).map(() => false));
   }, [body]);
+
+  body = [];
 
   return (
     <div>

@@ -64,7 +64,7 @@ export default function Home() {
               head={blocksLatestHead}
               body={(overview?.latestBlocks || []).map((item) => [
                 <InLink to={`/${node}/block/${item.header.number}`}>
-                  {item.header.number}
+                  {item.header.number.toLocaleString()}
                 </InLink>,
                 <MinorText>{timeDuration(item.blockTime)}</MinorText>,
                 item.extrinsicsCount,

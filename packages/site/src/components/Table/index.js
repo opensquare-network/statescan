@@ -211,7 +211,13 @@ export default function Table({
           <thead>
             <tr>
               {(head || []).map((item, index) => (
-                <th key={index} style={{ textAlign: item.align ?? "left" }}>
+                <th
+                  key={index}
+                  style={{
+                    textAlign: item.align ?? "left",
+                    width: item.width,
+                  }}
+                >
                   {item.type === "time" && (
                     <TimeHead timeType={timeType} setTimeType={doSetTimeType} />
                   )}

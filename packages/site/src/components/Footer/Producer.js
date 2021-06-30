@@ -10,7 +10,7 @@ const Wrapper = styled.div`
 `;
 
 const Text = styled.p`
-  font-size: 16px;
+  font-size: 15px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.35);
 `;

@@ -29,7 +29,7 @@ const ExploreHintsWrapper = styled.div`
 const Input = styled.input`
   padding-left: 44px;
   width: 320px;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 36px;
   border: none;
   color: #111111;

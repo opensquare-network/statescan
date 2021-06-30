@@ -120,7 +120,7 @@ export default function Home() {
             ])}
             foot={
               <FootWrapper>
-                <InLink to={`${node}/assets`}>view all</InLink>
+                <InLink to={`${node}/assets`}>View all</InLink>
               </FootWrapper>
             }
             collapse={900}

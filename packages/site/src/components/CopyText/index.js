@@ -9,6 +9,9 @@ import { addToast } from "store/reducers/toastSlice";
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
+  @media screen and (max-width: 580px) {
+    display: block;
+  }
   * {
     display: inline;
     vertical-align: top;

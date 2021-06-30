@@ -34,7 +34,7 @@ const Dropdown = styled.div`
   ${(p) =>
     p.active &&
     css`
-      background: #ffffff;
+      background: #fafafa;
     `}
 `;
 

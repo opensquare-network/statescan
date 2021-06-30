@@ -232,7 +232,13 @@ export default function Table({
                           key={index}
                           style={{
                             textAlign: head[index].align ?? "left",
-                            height: `${rowHeight}px`,
+                            height: `${
+                              rowHeight +
+                              (bodyIndex < body.length - 1 &&
+                              showData[bodyIndex]
+                                ? -1
+                                : 0)
+                            }px`,
                           }}
                         >
                           {head[index].type === "time" && (

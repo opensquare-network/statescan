@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useParams } from "react-router";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import Nav from "components/Nav";
 import { useNode } from "utils/hooks";
@@ -12,7 +12,7 @@ import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
 import { timeDuration, time } from "utils";
-import ThemeText from "components/ThemeText";
+// import ThemeText from "components/ThemeText";
 import CopyText from "components/CopyText";
 import { blockExtrinsicsHead, blockEventsHead } from "utils/constants";
 import TabTable from "components/TabTable";
@@ -25,6 +25,7 @@ import HashEllipsis from "components/HashEllipsis";
 const FlexWrapper = styled.div`
   display: flex;
   align-items: center;
+
   > :not(:first-child) {
     margin-left: 16px;
   }
@@ -143,11 +144,15 @@ export default function Block({ location }) {
             "-",
             <CopyText text={data?.hash}>
               <BreakText>
-                <ThemeText>{data?.hash}</ThemeText>
+                <MinorText>{data?.hash}</MinorText>
               </BreakText>
             </CopyText>,
             <BreakText>
-              <ThemeText>{data?.header?.parentHash}</ThemeText>
+              <MinorText>
+                <Link to={(Number.parseInt(id) - 1).toString()}>
+                  {data?.header?.parentHash}
+                </Link>
+              </MinorText>
             </BreakText>,
             <BreakText>
               <MinorText>{data?.header?.stateRoot}</MinorText>

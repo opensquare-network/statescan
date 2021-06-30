@@ -32,7 +32,7 @@ const ExploreInput = styled.input`
   background: #f4f4f4;
   border: 1px solid #f4f4f4;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 18px;
   outline: none;
 
@@ -65,13 +65,19 @@ const ExploreButton = styled.div`
 `;
 
 const ExploreHintsWrapper = styled.div`
+  background-color: #ffffff;
+  padding-top: 8px;
+  padding-bottom: 8px;
   margin-left: 0 !important;
   top: 53px;
   left: 0;
   width: 480px;
   max-height: 308px;
   position: absolute;
-
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
+    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
+    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
+    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   .selected {
     background-color: #fafafa;
   }

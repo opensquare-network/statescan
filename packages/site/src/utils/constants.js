@@ -44,7 +44,7 @@ export const addressExtrincsHead = [
 export const addressAssetsHead = [
   { name: "Asset ID", width: 136 },
   { name: "Symbol", width: 152 },
-  { name: "Name", width: 152 },
+  { name: "Name", width: 200 },
   { name: "Balance" },
   { name: "Approved" },
   { name: "Frozen" },

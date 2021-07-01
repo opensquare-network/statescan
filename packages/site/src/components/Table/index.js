@@ -60,13 +60,22 @@ const StyledTable = styled.table`
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-spacing: 0px;
   border-radius: 8px;
-  overflow: hidden;
-
   thead {
     background: #fafafa;
+    overflow: hidden;
   }
 
   th {
+    :first-child {
+      border-top-left-radius: 8px;
+      -moz-border-top-left-radius: 8px;
+      -webkit-border-top-left-radius: 8px;
+    }
+    :last-child {
+      border-top-right-radius: 8px;
+      -moz-border-top-right-radius: 8px;
+      -webkit-border-top-right-radius: 8px;
+    }
     padding: 14px 24px;
     font-weight: normal;
     font-size: 14px;

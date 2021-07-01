@@ -1,13 +1,10 @@
 import { hashEllipsis } from "utils";
-import { Popup } from "semantic-ui-react";
-import "semantic-ui-css/components/popup.min.css";
+import Tooltip from "components/Tooltip";
 
 export default function HashEllipsis({ hash }) {
   return (
-    <Popup
-      content={<div>{hash}</div>}
-      size="mini"
-      trigger={<div>{hashEllipsis(hash)}</div>}
-    />
+    <Tooltip content={hash}>
+      <div>{hashEllipsis(hash)}</div>
+    </Tooltip>
   );
 }

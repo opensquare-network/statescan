@@ -31,6 +31,8 @@ const Data = styled.div`
   height: 40px;
   padding: 0 24px;
   flex-grow: 1;
+  display: flex;
+  align-items: center;
 `;
 
 export default function DetailTable({ head, body, isLoading }) {

@@ -52,6 +52,7 @@ const Popup = styled.div`
   font-size: 14px;
   line-height: 16px;
   color: #ffffff;
+  word-wrap: break-word;
 `;
 
 const Triangle = styled.div`
@@ -66,19 +67,45 @@ const Triangle = styled.div`
   transform: translateX(-50%);
 `;
 
-export default function Tooltip({ label, bg, content }) {
+const ChildrenWrapper = styled.div`
+  position: relative;
+  display: inline-block;
+  :hover {
+    > * {
+      display: block;
+    }
+  }
+`;
+
+export default function Tooltip({ label, bg, content, children }) {
   return (
-    <Wrapper bg={bg}>
-      {label && label}
-      {!label && <Icon />}
-      {content && (
-        <PopupWrapper>
-          <Popup>
-            {content}
-            <Triangle />
-          </Popup>
-        </PopupWrapper>
+    <>
+      {children ? (
+        <ChildrenWrapper>
+          {children}
+          {content && (
+            <PopupWrapper>
+              <Popup>
+                {content}
+                <Triangle />
+              </Popup>
+            </PopupWrapper>
+          )}
+        </ChildrenWrapper>
+      ) : (
+        <Wrapper bg={bg}>
+          {label && label}
+          {!label && <Icon />}
+          {content && (
+            <PopupWrapper>
+              <Popup>
+                {content}
+                <Triangle />
+              </Popup>
+            </PopupWrapper>
+          )}
+        </Wrapper>
       )}
-    </Wrapper>
+    </>
   );
 }

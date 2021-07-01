@@ -25,7 +25,7 @@ export const transfersLatestHead = [
 export const assetsHead = [
   { name: "Asset ID", width: 136 },
   { name: "Symbol", width: 152 },
-  { name: "Name", width: 152 },
+  { name: "Name", width: 200 },
   { name: "Owner", width: 152 },
   { name: "Issuer", width: 152 },
   { name: "Holders", width: 152 },
@@ -58,7 +58,7 @@ export const addressTransfersHead = [
   { name: "Age", type: "time", width: 200 },
   { name: "From", width: 160 },
   { name: "To", width: 160 },
-  { name: "Quantity" },
+  { name: "Quantity", align: "right" },
 ];
 
 export const extrinsicEventsHead = [

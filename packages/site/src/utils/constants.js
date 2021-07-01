@@ -58,7 +58,7 @@ export const addressTransfersHead = [
   { name: "Age", type: "time", width: 200 },
   { name: "From", width: 160 },
   { name: "To", width: 160 },
-  { name: "Quantity" },
+  { name: "Quantity", align: "right" },
 ];
 
 export const extrinsicEventsHead = [

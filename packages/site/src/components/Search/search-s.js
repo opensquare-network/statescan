@@ -112,6 +112,33 @@ export default function SearchS() {
     });
   };
 
+  const onKeyDown = (e) => {
+    if (e.code === "Enter") {
+      return onSearch();
+    }
+  };
+
+  const onSearch = () => {
+    axios.get(`/westmint/search?q=${searchKeyword}`).then((res) => {
+      const { asset, extrinsic, block, address } = res.data;
+      if (asset) {
+        const { blockHeight } = asset.createdAt;
+        return history.push(`/westmint/asset/${asset.assetId}_${blockHeight}`);
+      }
+      if (extrinsic) {
+        const { blockHeight, index } = extrinsic.indexer;
+        return history.push(`/westmint/extrinsic/${blockHeight}-${index}`);
+      }
+      if (block) {
+        const height = res.data.block?.header?.number;
+        return height && history.push(`/westmint/block/${height}`);
+      }
+      if (address) {
+        return history.push(`/westmint/address/${address.address}`);
+      }
+    });
+  };
+
   if (isHomePage) return null;
 
   return (
@@ -122,6 +149,7 @@ export default function SearchS() {
         placeholder="Address / Transaction / Asset..."
         onFocus={() => setFocus(true)}
         onBlur={() => setTimeout(() => setFocus(false), 100)}
+        onKeyDown={onKeyDown}
       />
       {focus && (
         <ExploreHintsWrapper>

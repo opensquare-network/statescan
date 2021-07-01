@@ -2,6 +2,8 @@ import styled, { css } from "styled-components";
 import { useState } from "react";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
+import { addToast } from "../../store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -129,6 +131,7 @@ const Height = styled.span`
 `;
 
 export default function SearchL({ node }) {
+  const dispatch = useDispatch();
   const history = useHistory();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
@@ -162,6 +165,7 @@ export default function SearchL({ node }) {
       if (address) {
         return history.push(`/westmint/address/${address.address}`);
       }
+      dispatch(addToast({ type: "error", message: "No result found" }));
     });
   };
 

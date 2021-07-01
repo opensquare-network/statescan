@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useHistory, useLocation } from "react-router-dom";
 import { useHomePage } from "utils/hooks";
+import { addToast } from "../../store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -91,6 +93,7 @@ const Height = styled.span`
 `;
 
 export default function SearchS() {
+  const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
   const isHomePage = useHomePage();
@@ -136,6 +139,7 @@ export default function SearchS() {
       if (address) {
         return history.push(`/westmint/address/${address.address}`);
       }
+      dispatch(addToast({ type: "error", message: "No result found" }));
     });
   };
 

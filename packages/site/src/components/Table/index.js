@@ -19,6 +19,7 @@ const Title = styled.h4`
 
 const StyledTable = styled.table`
   position: relative;
+
   .leftcover {
     position: absolute;
     top: 45px;
@@ -34,6 +35,7 @@ const StyledTable = styled.table`
     width: 24px;
     background-color: #ffffff;
   }
+
   .rightcover {
     position: absolute;
     top: 45px;
@@ -62,6 +64,7 @@ const StyledTable = styled.table`
     background: #fafafa;
     overflow: hidden;
   }
+
   th {
     :first-child {
       border-top-left-radius: 8px;
@@ -80,6 +83,7 @@ const StyledTable = styled.table`
     color: rgba(17, 17, 17, 0.35);
     text-align: left;
   }
+
   tbody {
     ::before,
     ::after {
@@ -87,13 +91,21 @@ const StyledTable = styled.table`
       display: block;
       height: 4px;
     }
+
     td {
       padding: 0px 24px;
-      font-size: 14px;
-      line-height: 20px;
+      font-size: 0; //for vertical-align
+      line-height: 0; //for vertical-align
+      vertical-align: middle;
       color: #111111;
+
+      * {
+        font-size: 14px;
+        line-height: 20px;
+      }
     }
   }
+
   tfoot {
     td {
       border-top: 1px solid #f8f8f8;
@@ -151,6 +163,7 @@ const CollapseTableWrapper = styled.div`
   padding: 16px 0px;
   width: 100%;
   position: relative;
+
   :not(:last-child) {
     td {
       border-bottom: 1px solid #f8f8f8;

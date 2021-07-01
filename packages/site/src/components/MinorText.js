@@ -6,7 +6,7 @@ const Wrapper = styled.div`
 
   a {
     text-decoration: none;
-    color: inherit;
+    color: #f22279;
 
     &:hover {
       color: #f22279;

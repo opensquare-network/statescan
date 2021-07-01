@@ -146,7 +146,11 @@ export default function SearchL({ node }) {
 
   const onSearch = () => {
     axios.get(`/westmint/search?q=${searchKeyword}`).then((res) => {
-      const { extrinsic, block, address } = res.data;
+      const { asset, extrinsic, block, address } = res.data;
+      if (asset) {
+        const { blockHeight } = asset.createdAt;
+        return history.push(`/westmint/asset/${asset.assetId}_${blockHeight}`);
+      }
       if (extrinsic) {
         const { blockHeight, index } = extrinsic.indexer;
         return history.push(`/westmint/extrinsic/${blockHeight}-${index}`);

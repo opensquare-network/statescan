@@ -74,10 +74,12 @@ const ExploreHintsWrapper = styled.div`
   width: 480px;
   max-height: 308px;
   position: absolute;
+  border-radius: 8px;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
+
   .selected {
     background-color: #fafafa;
   }
@@ -177,7 +179,7 @@ export default function SearchL({ node }) {
         onBlur={() => setTimeout(() => setFocus(false), 100)}
       />
       <ExploreButton node={node}>Explore</ExploreButton>
-      {focus && (
+      {focus && assets?.length > 0 && (
         <ExploreHintsWrapper>
           {assets.map((hint, index) => {
             const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";

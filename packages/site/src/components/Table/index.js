@@ -60,6 +60,7 @@ const StyledTable = styled.table`
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-spacing: 0px;
   border-radius: 8px;
+
   thead {
     background: #fafafa;
     overflow: hidden;
@@ -71,11 +72,13 @@ const StyledTable = styled.table`
       -moz-border-top-left-radius: 8px;
       -webkit-border-top-left-radius: 8px;
     }
+
     :last-child {
       border-top-right-radius: 8px;
       -moz-border-top-right-radius: 8px;
       -webkit-border-top-right-radius: 8px;
     }
+
     padding: 14px 24px;
     font-weight: normal;
     font-size: 14px;
@@ -94,15 +97,9 @@ const StyledTable = styled.table`
 
     td {
       padding: 0px 24px;
-      font-size: 0; //for vertical-align
-      line-height: 0; //for vertical-align
-      vertical-align: middle;
+      font-size: 14px;
+      line-height: 20px;
       color: #111111;
-
-      * {
-        font-size: 14px;
-        line-height: 20px;
-      }
     }
   }
 
@@ -193,6 +190,11 @@ const CollapseFoot = styled.div`
   padding: 16px 24px;
 `;
 
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const DataImg = styled.img`
   cursor: pointer;
 `;
@@ -274,17 +276,19 @@ export default function Table({
                             <TimeBody timeType={timeType} ts={item} />
                           )}
                           {head[index].type === "data" && (
-                            <DataImg
-                              src={`/imgs/icons/data-show${
-                                showData[bodyIndex] ? "-active" : ""
-                              }.svg`}
-                              alt="action"
-                              onClick={() => {
-                                const data = [...showData];
-                                data[bodyIndex] = !showData[bodyIndex];
-                                setShowData(data);
-                              }}
-                            />
+                            <Wrapper>
+                              <DataImg
+                                src={`/imgs/icons/data-show${
+                                  showData[bodyIndex] ? "-active" : ""
+                                }.svg`}
+                                alt="action"
+                                onClick={() => {
+                                  const data = [...showData];
+                                  data[bodyIndex] = !showData[bodyIndex];
+                                  setShowData(data);
+                                }}
+                              />
+                            </Wrapper>
                           )}
                           {!head[index].type && item}
                           {bodyIndex === body.length - 1 &&
@@ -357,17 +361,19 @@ export default function Table({
                               <>
                                 <CollapseHead></CollapseHead>
                                 <CollapseBody>
-                                  <DataImg
-                                    src={`/imgs/icons/data-show${
-                                      showData[bodyIndex] ? "-active" : ""
-                                    }.svg`}
-                                    alt="action"
-                                    onClick={() => {
-                                      const data = [...showData];
-                                      data[bodyIndex] = !showData[bodyIndex];
-                                      setShowData(data);
-                                    }}
-                                  />
+                                  <Wrapper>
+                                    <DataImg
+                                      src={`/imgs/icons/data-show${
+                                        showData[bodyIndex] ? "-active" : ""
+                                      }.svg`}
+                                      alt="action"
+                                      onClick={() => {
+                                        const data = [...showData];
+                                        data[bodyIndex] = !showData[bodyIndex];
+                                        setShowData(data);
+                                      }}
+                                    />
+                                  </Wrapper>
                                 </CollapseBody>
                               </>
                             )}

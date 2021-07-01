@@ -1,13 +1,10 @@
 import { addressEllipsis } from "utils";
-import { Popup } from "semantic-ui-react";
-import "semantic-ui-css/components/popup.min.css";
+import Tooltip from "components/Tooltip";
 
 export default function AddressEllipsis({ address }) {
   return (
-    <Popup
-      content={<div>{address}</div>}
-      size="mini"
-      trigger={<div>{addressEllipsis(address)}</div>}
-    />
+    <Tooltip content={address}>
+      <div>{addressEllipsis(address)}</div>
+    </Tooltip>
   );
 }

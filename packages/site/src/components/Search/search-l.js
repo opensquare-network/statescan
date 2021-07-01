@@ -144,6 +144,27 @@ export default function SearchL({ node }) {
     });
   };
 
+  const onSearch = () => {
+    axios.get(`/westmint/search?q=${searchKeyword}`).then((res) => {
+      const { asset, extrinsic, block, address } = res.data;
+      if (asset) {
+        const { blockHeight } = asset.createdAt;
+        return history.push(`/westmint/asset/${asset.assetId}_${blockHeight}`);
+      }
+      if (extrinsic) {
+        const { blockHeight, index } = extrinsic.indexer;
+        return history.push(`/westmint/extrinsic/${blockHeight}-${index}`);
+      }
+      if (block) {
+        const height = res.data.block?.header?.number;
+        return height && history.push(`/westmint/block/${height}`);
+      }
+      if (address) {
+        return history.push(`/westmint/address/${address.address}`);
+      }
+    });
+  };
+
   const onKeyDown = (e) => {
     if (!focus) {
       return;
@@ -151,7 +172,7 @@ export default function SearchL({ node }) {
 
     if (e.code === "Enter") {
       if (selected > assets.length - 1) {
-        return null;
+        return onSearch();
       }
       const hint = assets[selected];
       return history.push(
@@ -178,7 +199,9 @@ export default function SearchL({ node }) {
         onFocus={() => setFocus(true)}
         onBlur={() => setTimeout(() => setFocus(false), 100)}
       />
-      <ExploreButton node={node}>Explore</ExploreButton>
+      <ExploreButton node={node} onClick={onSearch}>
+        Explore
+      </ExploreButton>
       {focus && assets?.length > 0 && (
         <ExploreHintsWrapper>
           {assets.map((hint, index) => {

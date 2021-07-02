@@ -18,40 +18,6 @@ const Title = styled.h4`
 `;
 
 const StyledTable = styled.table`
-  position: relative;
-
-  .leftcover {
-    position: absolute;
-    top: 45px;
-    ${(p) =>
-      p.hasFoot
-        ? css`
-            bottom: 58px;
-          `
-        : css`
-            bottom: 0;
-          `}
-    left: 0;
-    width: 24px;
-    background-color: #ffffff;
-  }
-
-  .rightcover {
-    position: absolute;
-    top: 45px;
-    ${(p) =>
-      p.hasFoot
-        ? css`
-            bottom: 58px;
-          `
-        : css`
-            bottom: 0;
-          `}
-    right: 0;
-    width: 24px;
-    background-color: #ffffff;
-  }
-
   width: 100%;
   background: #ffffff;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
@@ -291,13 +257,6 @@ export default function Table({
                             </Wrapper>
                           )}
                           {!head[index].type && item}
-                          {bodyIndex === body.length - 1 &&
-                            index === row.length - 1 && (
-                              <>
-                                <div className="leftcover"></div>
-                                <div className="rightcover"></div>
-                              </>
-                            )}
                         </td>
                       ))}
                     </StyledTr>

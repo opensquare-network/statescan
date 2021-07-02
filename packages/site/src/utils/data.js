@@ -32,7 +32,7 @@ export const assetsData = {
     { name: "Owner" },
     { name: "Issuer" },
     { name: "Holders" },
-    { name: "Tody Supply", align: "right" },
+    { name: "Total Supply", align: "right" },
   ],
   body: [
     [

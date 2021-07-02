@@ -29,7 +29,7 @@ export const assetsHead = [
   { name: "Owner", width: 152 },
   { name: "Issuer", width: 152 },
   { name: "Holders", width: 152 },
-  { name: "Tody Supply", align: "right" },
+  { name: "Total Supply", align: "right" },
 ];
 
 export const addressExtrincsHead = [

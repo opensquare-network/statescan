@@ -29,18 +29,20 @@ async function search(ctx) {
   const blockCol = await getBlockCollection(chain);
   const extrinsicCol = await getExtrinsicCollection(chain);
 
+  const icaseQ = new RegExp(`^${escapeRegex(q)}$`, "i");
+
   const [asset, address, block, extrinsic] = await Promise.all([
     assetCol.findOne({
-      $or: [{ name: q }, { symbol: q }],
+      $or: [{ name: icaseQ }, { symbol: icaseQ }],
     }),
-    addressCol.findOne({ address: q }),
+    addressCol.findOne({ address: icaseQ }),
     blockCol.findOne(
       {
-        $or: [{ hash: q }, { "header.number": Number(q) }],
+        $or: [{ hash: icaseQ }, { "header.number": Number(q) }],
       },
       { projection: { extrinsics: 0 } }
     ),
-    extrinsicCol.findOne({ hash: q }, { projection: { data: 0 } }),
+    extrinsicCol.findOne({ hash: icaseQ }, { projection: { data: 0 } }),
   ]);
 
   ctx.body = {

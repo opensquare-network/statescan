@@ -21,12 +21,21 @@ const ExploreWrapper = styled.div`
 `;
 
 const ExploreHintsWrapper = styled.div`
+  background-color: #ffffff;
   margin-left: 0 !important;
+  padding-top: 8px;
+  padding-bottom: 8px;
   top: 53px;
   left: 0;
-  width: 480px;
+  width: 320px;
   max-height: 308px;
   position: absolute;
+  border-radius: 8px;
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
+    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
+    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
+    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
+  border: 1px solid #ffffff;
 `;
 const Input = styled.input`
   padding-left: 44px;
@@ -100,6 +109,7 @@ export default function SearchS() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
   const [focus, setFocus] = useState(false);
+  const iconMap = new Map([["osn", "osn"]]);
 
   useEffect(() => {
     setSearchKeyword("");
@@ -155,28 +165,28 @@ export default function SearchS() {
         onBlur={() => setTimeout(() => setFocus(false), 100)}
         onKeyDown={onKeyDown}
       />
-      {focus && (
+      {focus && assets.length > 0 && (
         <ExploreHintsWrapper>
-          {assets.map((hint, index) => (
-            <ExploreHint
-              key={index}
-              onClick={() => {
-                setSearchKeyword("");
-                setHintAssets([]);
-                history.push(
-                  `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-                );
-              }}
-            >
-              <img
-                src={`/imgs/token-icons/${hint.symbol.toLowerCase()}.svg`}
-                alt=""
-              />
-              <Token>{hint.symbol}</Token>
-              <TokenDesc>{hint.name}</TokenDesc>
-              <Height>#{hint.createdAt.blockHeight}</Height>
-            </ExploreHint>
-          ))}
+          {assets.map((hint, index) => {
+            const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
+            return (
+              <ExploreHint
+                key={index}
+                onClick={() => {
+                  setSearchKeyword("");
+                  setHintAssets([]);
+                  history.push(
+                    `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+                  );
+                }}
+              >
+                <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
+                <Token>{hint.symbol}</Token>
+                <TokenDesc>{hint.name}</TokenDesc>
+                <Height>#{hint.createdAt.blockHeight}</Height>
+              </ExploreHint>
+            );
+          })}
         </ExploreHintsWrapper>
       )}
     </ExploreWrapper>

@@ -81,13 +81,30 @@ const StyledTable = styled.table`
 `;
 
 const StyledTr = styled.tr`
-  position: relative;
   ${(p) =>
     !p.isShow &&
     css`
       :not(:last-child) {
         td {
-          border-bottom: 1px solid #f8f8f8;
+          position: relative;
+          .border-bottom {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 1px;
+            background-color: #f8f8f8;
+          }
+          :first-child {
+            .border-bottom {
+              left: 24px;
+            }
+          }
+          :last-child {
+            .border-bottom {
+              right: 24px;
+            }
+          }
         }
       }
     `}
@@ -125,11 +142,26 @@ const CollapseWrapper = styled.div`
 const CollapseTableWrapper = styled.div`
   padding: 16px 0px;
   width: 100%;
-  position: relative;
 
-  :not(:last-child) {
-    td {
-      border-bottom: 1px solid #f8f8f8;
+  td {
+    position: relative;
+    .border-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      background-color: #f8f8f8;
+    }
+    :first-child {
+      .border-bottom {
+        left: 24px;
+      }
+    }
+    :last-child {
+      .border-bottom {
+        right: 24px;
+      }
     }
   }
 `;
@@ -257,6 +289,7 @@ export default function Table({
                             </Wrapper>
                           )}
                           {!head[index].type && item}
+                          <div className="border-bottom"></div>
                         </td>
                       ))}
                     </StyledTr>
@@ -338,8 +371,14 @@ export default function Table({
                             )}
                             {!head[index].type && (
                               <>
-                                <CollapseHead>{headItem.name}</CollapseHead>
-                                <CollapseBody>{bodyItem[index]}</CollapseBody>
+                                <CollapseHead>
+                                  {headItem.name}
+                                  <div className="border-bottom"></div>
+                                </CollapseHead>
+                                <CollapseBody>
+                                  {bodyItem[index]}
+                                  <div className="border-bottom"></div>
+                                </CollapseBody>
                               </>
                             )}
                           </tr>

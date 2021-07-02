@@ -81,7 +81,8 @@ export default function Overview() {
 
   const [chartData, setChartData] = useState([]);
 
-  axios.get(`/${node}/prices/daily`).then((data) => {
+  axios.get(`/${node}/prices/daily`).then((res) => {
+    const data = res.data;
     if (data.length > 0) {
       setChartData(data?.reverse() ?? []);
     }

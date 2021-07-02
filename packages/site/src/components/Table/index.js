@@ -198,7 +198,7 @@ export default function Table({
     <div>
       {title && <Title>{title}</Title>}
       {!isCollapse && (
-        <StyledTable hasFoot={!!foot}>
+        <StyledTable>
           <thead>
             <tr>
               {(head || []).map((item, index) => (

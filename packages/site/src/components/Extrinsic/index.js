@@ -112,7 +112,6 @@ export default function Extrinsic() {
             page={eventsData?.page}
             pageSize={eventsData?.pageSize}
             total={eventsData?.total}
-            s
             setPage={setEventsPage}
           />
         ),

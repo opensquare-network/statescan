@@ -251,13 +251,7 @@ export default function Table({
                           key={index}
                           style={{
                             textAlign: head[index].align ?? "left",
-                            height: `${
-                              rowHeight +
-                              (bodyIndex < body.length - 1 &&
-                              showData[bodyIndex]
-                                ? -1
-                                : 0)
-                            }px`,
+                            height: `${rowHeight}px`,
                           }}
                         >
                           {head[index].type === "time" && (

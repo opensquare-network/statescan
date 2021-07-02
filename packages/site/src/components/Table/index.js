@@ -143,25 +143,15 @@ const CollapseTableWrapper = styled.div`
   padding: 16px 0px;
   width: 100%;
 
-  td {
+  :not(:last-child) {
     position: relative;
     .border-bottom {
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 24px;
+      right: 24px;
       bottom: 0;
       height: 1px;
       background-color: #f8f8f8;
-    }
-    :first-child {
-      .border-bottom {
-        left: 24px;
-      }
-    }
-    :last-child {
-      .border-bottom {
-        right: 24px;
-      }
     }
   }
 `;
@@ -371,14 +361,8 @@ export default function Table({
                             )}
                             {!head[index].type && (
                               <>
-                                <CollapseHead>
-                                  {headItem.name}
-                                  <div className="border-bottom"></div>
-                                </CollapseHead>
-                                <CollapseBody>
-                                  {bodyItem[index]}
-                                  <div className="border-bottom"></div>
-                                </CollapseBody>
+                                <CollapseHead>{headItem.name}</CollapseHead>
+                                <CollapseBody>{bodyItem[index]}</CollapseBody>
                               </>
                             )}
                           </tr>
@@ -396,6 +380,7 @@ export default function Table({
                         </TableDataItem>
                       </CollapseTableDataWrapper>
                     )}
+                    <div className="border-bottom"></div>
                   </CollapseTableWrapper>
                 ))}
               </div>

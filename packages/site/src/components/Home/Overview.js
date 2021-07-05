@@ -1,13 +1,10 @@
 import styled from "styled-components";
 import LineChart from "../Charts/LineChart";
 import { useSelector } from "react-redux";
-import {
-  overviewSelector,
-  scanHeightSelector,
-} from "store/reducers/chainSlice";
-import { useState } from "react";
+import { overviewSelector } from "store/reducers/chainSlice";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { useNode } from "../../utils/hooks";
+import { useIsMounted, useNode } from "../../utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -68,9 +65,13 @@ const ChartWrapper = styled.div`
   }
 `;
 
+const easeOutQuart = (t, b, c, d) => {
+  return -c * ((t = t / d - 1) * t * t * t - 1) + b;
+};
+
 export default function Overview() {
-  const blocksHeightData = useSelector(scanHeightSelector);
   const overviewData = useSelector(overviewSelector);
+  const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
   const node = useNode();
   const tokenMap = new Map([
     ["westmint", "WND"],
@@ -80,6 +81,62 @@ export default function Overview() {
   const token = tokenMap.get(node) ?? "";
 
   const [chartData, setChartData] = useState([]);
+
+  const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
+  const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);
+  const [transfersCountDynamic, setTransfersCountDynamic] = useState(0);
+  const [holdersCountDynamic, setHolderCountDynamic] = useState(0);
+
+  const requestRef = useRef();
+  const previousTimeRef = useRef();
+  const animationDuration = 500;
+
+  useEffect(() => {
+    if (overviewData && blocksHeightData) {
+      if (
+        blocksHeightData === blocksHeightDynamic &&
+        overviewData.assetsCount === assetsCountDynamic &&
+        overviewData.transfersCount === transfersCountDynamic &&
+        overviewData.holdersCount === holdersCountDynamic
+      ) {
+        return;
+      }
+
+      const diffBlocksHeight = blocksHeightData - blocksHeightDynamic;
+      const diffAssetsCount = overviewData.assetsCount - assetsCountDynamic;
+      const diffTransfersCount =
+        overviewData.transfersCount - transfersCountDynamic;
+      const diffHoldersCount = overviewData.holdersCount - holdersCountDynamic;
+
+      const tick = (now) => {
+        const elapsed = now - previousTimeRef.current;
+        if (elapsed >= 0) {
+          const progress = easeOutQuart(elapsed, 0, 1, animationDuration);
+
+          setBlocksHeightDynamic(
+            blocksHeightDynamic + Math.round(progress * diffBlocksHeight)
+          );
+          setAssetsCountDynamic(
+            assetsCountDynamic + Math.round(progress * diffAssetsCount)
+          );
+          setTransfersCountDynamic(
+            transfersCountDynamic + Math.round(progress * diffTransfersCount)
+          );
+          setHolderCountDynamic(
+            holdersCountDynamic + Math.round(progress * diffHoldersCount)
+          );
+        }
+
+        if (elapsed < animationDuration) {
+          requestRef.current = requestAnimationFrame(tick);
+        }
+      };
+
+      previousTimeRef.current = performance.now();
+      requestRef.current = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(requestRef.current);
+    }
+  }, [blocksHeightData, overviewData]);
 
   axios.get(`/${node}/prices/daily`).then((res) => {
     const data = res.data;
@@ -92,19 +149,19 @@ export default function Overview() {
     <Wrapper>
       <ItemWrapper>
         <Title>Block Height</Title>
-        <Text>{blocksHeightData?.toLocaleString() ?? 0}</Text>
+        <Text>{blocksHeightDynamic?.toLocaleString()}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Assets</Title>
-        <Text>{overviewData?.assetsCount ?? 0}</Text>
+        <Text>{assetsCountDynamic}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Transfers</Title>
-        <Text>{overviewData?.transfersCount ?? 0}</Text>
+        <Text>{transfersCountDynamic}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Holders</Title>
-        <Text>{overviewData?.holdersCount ?? 0}</Text>
+        <Text>{holdersCountDynamic}</Text>
       </ItemWrapper>
       <Divider />
       <div />

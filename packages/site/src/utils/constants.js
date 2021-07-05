@@ -95,7 +95,7 @@ export const assetTransfersHead = [
 export const assetHoldersHead = [
   { name: "Rank", width: 96 },
   { name: "Address" },
-  { name: "Quantity" },
+  { name: "Quantity", align: "right" },
 ];
 
 export const addressHead = [

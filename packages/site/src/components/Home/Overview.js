@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { useIsMounted, useNode } from "../../utils/hooks";
+import { useNode } from "../../utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;

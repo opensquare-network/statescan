@@ -160,7 +160,11 @@ export default function Block({ location }) {
               <MinorText>{data?.header?.extrinsicsRoot}</MinorText>
             </BreakText>,
             <BreakText>
-              <MinorText>{data?.author}</MinorText>
+              <CopyText text={data?.author}>
+                <InLink to={`/${node}/address/${data?.author}`}>
+                  {data?.author}
+                </InLink>
+              </CopyText>
             </BreakText>,
           ]}
           isLoading={isLoading}

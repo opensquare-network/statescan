@@ -135,7 +135,7 @@ export const blockHead = [
   "Parent Hash",
   "State Root",
   "Extrinsics Root",
-  "Validators",
+  "Validator",
 ];
 
 export const assetHead = [

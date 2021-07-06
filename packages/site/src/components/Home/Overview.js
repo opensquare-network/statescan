@@ -129,6 +129,11 @@ export default function Overview() {
 
         if (elapsed < animationDuration) {
           requestRef.current = requestAnimationFrame(tick);
+        } else {
+          setBlocksHeightDynamic(blocksHeightData);
+          setAssetsCountDynamic(overviewData.assetsCount);
+          setTransfersCountDynamic(overviewData.transfersCount);
+          setHolderCountDynamic(overviewData.holdersCount);
         }
       };
 

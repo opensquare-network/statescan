@@ -159,13 +159,17 @@ export default function Block({ location }) {
             <BreakText>
               <MinorText>{data?.header?.extrinsicsRoot}</MinorText>
             </BreakText>,
-            <BreakText>
-              <CopyText text={data?.author}>
-                <InLink to={`/${node}/address/${data?.author}`}>
-                  {data?.author}
-                </InLink>
-              </CopyText>
-            </BreakText>,
+            data?.author ? (
+              <BreakText>
+                <CopyText text={data?.author}>
+                  <InLink to={`/${node}/address/${data?.author}`}>
+                    {data?.author}
+                  </InLink>
+                </CopyText>
+              </BreakText>
+            ) : (
+              "-"
+            ),
           ]}
           isLoading={isLoading}
         />

@@ -7,7 +7,6 @@ const { sleep } = require("./utils/sleep");
 const { getBlocks } = require("./mongo/meta");
 const { hexToU8a } = require("@polkadot/util");
 const { GenericBlock } = require("@polkadot/types");
-const { extractAuthor } = require("@polkadot/api-derive/type/util");
 const { handleBlock } = require("./block");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { handleExtrinsics } = require("./extrinsic");
@@ -59,12 +58,9 @@ async function scanBlock(blockInDb) {
     blockInDb.events,
     true
   );
-  const validators = registry.registry.createType(
-    "Vec<AccountId>",
-    blockInDb.validators,
-    true
-  );
-  const author = extractAuthor(block.header.digest, validators);
+  const author =
+    blockInDb.author &&
+    registry.registry.createType("AccountId", blockInDb.author, true);
 
   await handleBlock(block, blockEvents, author);
   const blockIndexer = getBlockIndexer(block);

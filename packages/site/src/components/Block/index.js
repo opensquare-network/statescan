@@ -12,7 +12,6 @@ import DetailTable from "components/DetailTable";
 import Section from "components/Section";
 import MinorText from "components/MinorText";
 import { timeDuration, time } from "utils";
-// import ThemeText from "components/ThemeText";
 import CopyText from "components/CopyText";
 import { blockExtrinsicsHead, blockEventsHead } from "utils/constants";
 import TabTable from "components/TabTable";
@@ -160,7 +159,17 @@ export default function Block({ location }) {
             <BreakText>
               <MinorText>{data?.header?.extrinsicsRoot}</MinorText>
             </BreakText>,
-            "-",
+            data?.author ? (
+              <BreakText>
+                <CopyText text={data?.author}>
+                  <InLink to={`/${node}/address/${data?.author}`}>
+                    {data?.author}
+                  </InLink>
+                </CopyText>
+              </BreakText>
+            ) : (
+              "-"
+            ),
           ]}
           isLoading={isLoading}
         />

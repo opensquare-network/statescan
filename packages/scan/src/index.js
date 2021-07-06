@@ -58,8 +58,11 @@ async function scanBlock(blockInDb) {
     blockInDb.events,
     true
   );
+  const author =
+    blockInDb.author &&
+    registry.registry.createType("AccountId", blockInDb.author, true);
 
-  await handleBlock(block, blockEvents);
+  await handleBlock(block, blockEvents, author);
   const blockIndexer = getBlockIndexer(block);
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);

@@ -10,5 +10,9 @@ router.get(
   "/extrinsics/:indexOrHash/events",
   extrinsicsController.getExtrinsicEvents
 );
+router.get(
+  "/extrinsics/:indexOrHash/transfers",
+  extrinsicsController.getExtrinsicTransfers
+);
 
 module.exports = router;

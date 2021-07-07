@@ -14,11 +14,12 @@ const Wrapper = styled.div`
 
 const Item = styled.div`
   display: flex;
-  align-items: center;
+  align-items: start;
   flex-wrap: wrap;
 `;
 
 const Head = styled.div`
+  display: flex;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -26,16 +27,27 @@ const Head = styled.div`
   flex-basis: 320px;
 `;
 
+const Badge = styled.div`
+  margin-left: 8px;
+  padding: 1px 8px;
+  background: #fee4ef;
+  border-radius: 16px;
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: bold;
+  color: #f22279;
+`;
+
 const Data = styled.div`
   font-size: 14px;
-  height: 40px;
+  min-height: 40px;
   padding: 0 24px;
   flex-grow: 1;
   display: flex;
   align-items: center;
 `;
 
-export default function DetailTable({ head, body, isLoading }) {
+export default function DetailTable({ head, badge, body, isLoading }) {
   return (
     <Wrapper>
       {(head || []).map((item, index) => (
@@ -51,7 +63,12 @@ export default function DetailTable({ head, body, isLoading }) {
             </>
           ) : (
             <>
-              <Head title={item}>{item}</Head>
+              <Head title={item}>
+                {item}
+                {badge?.[index] !== null && badge?.[index] !== undefined && (
+                  <Badge>{badge?.[index]}</Badge>
+                )}
+              </Head>
               <Data>{body?.[index]}</Data>
             </>
           )}

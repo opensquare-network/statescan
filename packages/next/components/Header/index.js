@@ -105,37 +105,39 @@ const MenuWrapper = styled.div`
   }
 `;
 
-// const MenuItem = styled(Link)`
-//   font-weight: 500;
-//   font-size: 15px;
-//   line-height: 20px;
-//   cursor: pointer;
-//   text-decoration: none;
-//   color: #111111;
-//   :hover {
-//     color: #f22279;
-//   }
-//   :not(:first-child) {
-//     margin-left: 40px;
-//   }
-//   @media screen and (max-width: 900px) {
-//     padding: 6px 12px;
-//     :hover {
-//       color: inherit;
-//       background: #fafafa;
-//     }
-//     :not(:first-child) {
-//       margin-left: 0;
-//     }
-//     ${(p) =>
-//       p.selected &&
-//       css`
-//         background: #fafafa;
-//       `}
-//   }
-// `;
+const MenuItem = styled.div`
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #111111;
+  :hover {
+    color: #f22279;
+  }
+  :not(:first-child) {
+    margin-left: 40px;
+  }
+  @media screen and (max-width: 900px) {
+    padding: 6px 12px;
+    :hover {
+      color: inherit;
+      background: #fafafa;
+    }
+    :not(:first-child) {
+      margin-left: 0;
+    }
+    ${(p) =>
+      p.selected &&
+      css`
+        background: #fafafa;
+      `}
+  }
+`;
 
 export default function Header() {
+  const [isActive, setIsActive] = useState(false);
+
   return (
     <div>
       <Container>
@@ -144,8 +146,9 @@ export default function Header() {
         </Background>
         <Wrapper>
           <FlexWrapper>
-            <IconWrapper>{/* <IconActive /> */}</IconWrapper>
-            <img src="/imgs/logo.svg" alt="logo" />
+            <div>
+              <img src="/imgs/logo.svg" alt="logo" />
+            </div>
           </FlexWrapper>
           <FlexWrapper>
             {/* <SearchS /> */}

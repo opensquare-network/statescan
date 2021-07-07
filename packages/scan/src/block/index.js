@@ -1,19 +1,21 @@
-const extractBlockTime = require('./extractBlockTime')
+const extractBlockTime = require("./extractBlockTime");
 const { getBlockCollection } = require("../mongo");
 
-async function handleBlock(block, blockEvents) {
-  const hash = block.hash.toHex()
-  const blockJson = block.toJSON()
-  const blockTime = extractBlockTime(block.extrinsics)
+async function handleBlock(block, blockEvents, author) {
+  const hash = block.hash.toHex();
+  const blockJson = block.toJSON();
+  const authorJson = author?.toJSON();
+  const blockTime = extractBlockTime(block.extrinsics);
 
-  const blockCol = await getBlockCollection()
+  const blockCol = await getBlockCollection();
   const result = await blockCol.insertOne({
     hash,
     blockTime,
+    author: authorJson,
     eventsCount: (blockEvents || []).length,
     extrinsicsCount: (block.extrinsics || []).length,
-    ...blockJson
-  })
+    ...blockJson,
+  });
 
   if (result.result && !result.result.ok) {
     // TODO: Handle insertion failed
@@ -21,5 +23,5 @@ async function handleBlock(block, blockEvents) {
 }
 
 module.exports = {
-  handleBlock
-}
+  handleBlock,
+};

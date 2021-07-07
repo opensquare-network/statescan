@@ -68,6 +68,7 @@ async function getBlocks(startHeight, endHeight) {
         { height: { $lte: endHeight } },
       ],
     })
+    .sort({ height: 1 })
     .toArray();
 }
 

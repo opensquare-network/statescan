@@ -1,4 +1,8 @@
-const { getExtrinsicCollection, getEventCollection } = require("../../mongo");
+const {
+  getExtrinsicCollection,
+  getEventCollection,
+  getAssetTransferCollection,
+} = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getLatestExtrinsics(ctx) {
@@ -83,9 +87,64 @@ async function getExtrinsicEvents(ctx) {
   };
 }
 
+async function getExtrinsicTransfers(ctx) {
+  const { chain, indexOrHash } = ctx.params;
+
+  let q;
+
+  const match = indexOrHash.match(/(\d+)-(\d+)/);
+  if (match) {
+    const [, blockHeight, extrinsicIndex] = match;
+    q = {
+      "indexer.blockHeight": parseInt(blockHeight),
+      extrinsicIndex: parseInt(extrinsicIndex),
+    };
+  } else {
+    q = { extrinsicHash: indexOrHash };
+  }
+
+  const col = await getAssetTransferCollection(chain);
+  const items = await col
+    .aggregate([
+      { $match: q },
+      { $sort: { eventSort: 1 } },
+      {
+        $lookup: {
+          from: "asset",
+          localField: "asset",
+          foreignField: "_id",
+          as: "asset",
+        },
+      },
+      {
+        $addFields: {
+          asset: { $arrayElemAt: ["$asset", 0] },
+        },
+      },
+      {
+        $addFields: {
+          assetId: "$asset.assetId",
+          assetCreatedAt: "$asset.createdAt",
+          assetSymbol: "$asset.symbol",
+          assetName: "$asset.name",
+          assetDecimals: "$asset.decimals",
+        },
+      },
+      {
+        $project: {
+          asset: 0,
+        },
+      },
+    ])
+    .toArray();
+
+  ctx.body = items;
+}
+
 module.exports = {
   getLatestExtrinsics,
   getExtrinsicsCount,
   getExtrinsic,
   getExtrinsicEvents,
+  getExtrinsicTransfers,
 };

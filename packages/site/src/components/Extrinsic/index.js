@@ -6,7 +6,7 @@ import { useQuery } from "react-query";
 
 import Section from "components/Section";
 import Nav from "components/Nav";
-import { useNode, useSymbol } from "utils/hooks";
+import { useNode } from "utils/hooks";
 import DetailTable from "components/DetailTable";
 import {
   extrinsicHead,
@@ -17,17 +17,12 @@ import InLink from "components/InLink";
 import CopyText from "components/CopyText";
 import Result from "components/Result";
 import MinorText from "components/MinorText";
-import {
-  capitalize,
-  fromAssetUnit,
-  fromSymbolUnit,
-  time,
-  timeDuration,
-} from "utils";
+import { capitalize, time, timeDuration } from "utils";
 import TabTable from "components/TabTable";
 import Pagination from "components/Pgination";
 import BreakText from "components/BreakText";
 import { useHistory } from "react-router-dom";
+import TransfersList from "./TransfersList";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -44,7 +39,6 @@ const AccessoryText = styled.div`
 export default function Extrinsic() {
   const { id } = useParams();
   const node = useNode();
-  const symbol = useSymbol();
   const [extrinsicId, setExtrinsicId] = useState("");
   const [tabTableData, setTabTableData] = useState();
   const [eventsPage, setEventsPage] = useState(0);
@@ -59,24 +53,19 @@ export default function Extrinsic() {
     history.replace("/404");
   }
 
-  const isTransfer =
-    data?.section === "balances" &&
-    (data?.name === "transfer" || data?.name === "transferKeepAlive");
-  const isAssetTransfer =
-    data?.section === "assets" &&
-    (data?.name === "transfer" || data?.name === "transferKeepAlive");
-
   const extrinsicHash = data?.hash;
-  const { data: assetTransfer } = useQuery(
-    ["assetTransfer", isAssetTransfer, extrinsicHash],
+
+  const { data: assetTransfers } = useQuery(
+    ["assetTransfers", extrinsicHash],
     async () => {
-      if (!isAssetTransfer || !extrinsicHash) {
-        return null;
-      }
-      const { data } = await axios.get(`${node}/transfers/${extrinsicHash}`);
+      const { data } = await axios.get(
+        `${node}/extrinsics/${extrinsicHash}/transfers`
+      );
       return data;
     }
   );
+
+  const hasTransfers = assetTransfers?.length > 0;
 
   const { data: eventsData, isLoading: isEventsLoading } = useQuery(
     ["extrinsicEvents", id, node, eventsPage],
@@ -127,10 +116,11 @@ export default function Extrinsic() {
         <Nav data={[{ name: "Extrinsic" }, { name: extrinsicId }]} />
         <DetailTable
           isLoading={isLoading}
-          head={
-            isTransfer || isAssetTransfer
-              ? extrinsicTransferHead
-              : extrinsicHead
+          head={hasTransfers ? extrinsicTransferHead : extrinsicHead}
+          badge={
+            hasTransfers
+              ? [null, null, null, null, null, assetTransfers?.length, null]
+              : null
           }
           body={[
             <FlexWrapper>
@@ -149,43 +139,8 @@ export default function Extrinsic() {
             </BreakText>,
             <MinorText>{capitalize(data?.section)}</MinorText>,
             <MinorText>{capitalize(data?.name)}</MinorText>,
-            <BreakText>
-              <CopyText text={data?.signer}>
-                <InLink to={`/${node}/address/${data?.signer}`}>
-                  {data?.signer}
-                </InLink>
-              </CopyText>
-            </BreakText>,
-            ...(isTransfer
-              ? [
-                  <BreakText>
-                    <CopyText text={data?.args?.dest?.id}>
-                      <InLink to={`/${node}/address/${data?.args?.dest?.id}`}>
-                        {data?.args?.dest?.id}
-                      </InLink>
-                    </CopyText>
-                  </BreakText>,
-                  `${fromSymbolUnit(data?.args?.value ?? 0, symbol)} ${symbol}`,
-                ]
-              : []),
-            ...(isAssetTransfer
-              ? [
-                  <BreakText>
-                    <CopyText text={data?.args?.target?.id}>
-                      <InLink to={`/${node}/address/${data?.args?.target?.id}`}>
-                        {data?.args?.target?.id}
-                      </InLink>
-                    </CopyText>
-                  </BreakText>,
-                  `${
-                    assetTransfer
-                      ? fromAssetUnit(
-                          assetTransfer.balance ?? 0,
-                          assetTransfer.assetDecimals
-                        )
-                      : 0
-                  } ${assetTransfer?.assetSymbol || ""}`,
-                ]
+            ...(hasTransfers
+              ? [<TransfersList assetTransfers={assetTransfers} />]
               : []),
             <MinorText>
               <Result isSuccess={data?.isSuccess} />

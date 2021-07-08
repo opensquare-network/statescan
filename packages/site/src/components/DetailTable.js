@@ -20,6 +20,7 @@ const Item = styled.div`
 
 const Head = styled.div`
   display: flex;
+  align-items: center;
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
@@ -28,6 +29,7 @@ const Head = styled.div`
 `;
 
 const Badge = styled.div`
+  height: 18px;
   margin-left: 8px;
   padding: 1px 8px;
   background: #fee4ef;

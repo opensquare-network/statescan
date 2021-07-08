@@ -103,6 +103,14 @@ async function saveAssetTimeline(
   extrinsicIndex,
   extrinsicHash
 ) {
+  const api = await getApi();
+  const asset = (
+    await api.query.assets.asset.at(blockIndexer.blockHash, assetId)
+  ).toJSON();
+  const metadata = (
+    await api.query.assets.metadata.at(blockIndexer.blockHash, assetId)
+  ).toJSON();
+
   const col = await getAssetCollection();
   const result = await col.updateOne(
     { assetId, destroyedAt: null },
@@ -117,6 +125,12 @@ async function saveAssetTimeline(
           eventSort,
           extrinsicIndex,
           extrinsicHash,
+          asset: {
+            ...asset,
+            ...metadata,
+            symbol: hexToString(metadata.symbol),
+            name: hexToString(metadata.name),
+          },
         },
       },
     }

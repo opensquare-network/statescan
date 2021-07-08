@@ -53,14 +53,10 @@ export default function Extrinsic() {
     history.replace("/404");
   }
 
-  const extrinsicHash = data?.hash;
-
   const { data: assetTransfers } = useQuery(
-    ["assetTransfers", extrinsicHash],
+    ["assetTransfers", id, node],
     async () => {
-      const { data } = await axios.get(
-        `${node}/extrinsics/${extrinsicHash}/transfers`
-      );
+      const { data } = await axios.get(`${node}/extrinsics/${id}/transfers`);
       return data;
     }
   );

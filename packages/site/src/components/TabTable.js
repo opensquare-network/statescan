@@ -57,6 +57,7 @@ const TabText = styled.div`
 `;
 
 const TabTag = styled.div`
+  height: 18px;
   padding: 1px 8px;
   background: #fee4ef;
   border-radius: 16px;

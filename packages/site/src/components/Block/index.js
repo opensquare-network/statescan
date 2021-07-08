@@ -110,9 +110,13 @@ export default function Block({ location }) {
         head: blockEventsHead,
         body: (eventsData?.items || []).map((item) => [
           `${item?.indexer?.blockHeight}-${item?.sort}`,
-          <InLink
-            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
-          >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>,
+          Number.isInteger(item?.phase?.value) ? (
+            <InLink
+              to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
+            >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>
+          ) : (
+            "-"
+          ),
           <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
           item.data,
         ]),
@@ -138,7 +142,9 @@ export default function Block({ location }) {
           body={[
             <FlexWrapper>
               <MinorText>{time(data?.blockTime)}</MinorText>
-              <AccessoryText>{timeDuration(data?.blockTime)}</AccessoryText>
+              <AccessoryText>
+                {data?.blockTime && timeDuration(data?.blockTime)}
+              </AccessoryText>
             </FlexWrapper>,
             "-",
             <CopyText text={data?.hash}>

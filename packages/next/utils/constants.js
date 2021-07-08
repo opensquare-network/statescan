@@ -112,7 +112,6 @@ export const extrinsicHead = [
   "Extrinsic Hash",
   "Module",
   "Call",
-  "From",
   "Result",
 ];
 
@@ -122,9 +121,7 @@ export const extrinsicTransferHead = [
   "Extrinsic Hash",
   "Module",
   "Call",
-  "From",
-  "To",
-  "Value",
+  "Tokens Transferred",
   "Result",
 ];
 

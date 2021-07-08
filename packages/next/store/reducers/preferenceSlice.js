@@ -6,12 +6,11 @@ const DEFAULT_TIMETYPE = timeTypes.age;
 const preferenceSlice = createSlice({
   name: "preference",
   initialState: {
-    // timeType: window.localStorage.getItem("timeType") || DEFAULT_TIMETYPE
     timeType: DEFAULT_TIMETYPE,
   },
   reducers: {
     setTimeType(state, { payload }) {
-      window.localStorage.setItem("timeType", payload);
+      state.timeType = payload;
     },
   },
 });

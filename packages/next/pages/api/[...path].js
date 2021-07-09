@@ -13,6 +13,8 @@ export default (req, res) => {
   return new Promise((resolve, reject) => {
     req.url = req.url.replace(/^\/api/, "");
 
+    console.log(`Server Request: ${API_URL}${req.url}`);
+
     proxy.once("error", (e) => {
       res.status(500).json({ error: e.message });
       reject();
@@ -22,7 +24,5 @@ export default (req, res) => {
       target: API_URL,
       autoRewrite: false,
     });
-
-    proxy.on("end", resolve);
   });
 };

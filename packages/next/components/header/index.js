@@ -13,6 +13,7 @@ import Icon from "./icon.svg";
 import IconActive from "./icon-active.svg";
 import NodeSwitcher from "components/nodeSwitcher";
 import Subheader from "./subheader";
+import SearchS from "components/search/search-s";
 
 const Container = styled.header`
   position: relative;
@@ -40,7 +41,6 @@ const Background = styled.div`
   width: 100%;
   height: 320px;
   background: linear-gradient(180deg, #eeeeee 0%, #ffffff 100%);
-  z-index: -1;
   ${(p) =>
     p.isHomePage &&
     css`
@@ -170,10 +170,10 @@ export default function Header() {
 
   return (
     <>
+      <Background isHomePage={isHomePage}>
+        <Masked />
+      </Background>
       <Container>
-        <Background isHomePage={isHomePage}>
-          <Masked />
-        </Background>
         <Wrapper>
           <FlexWrapper>
             <IconWrapper
@@ -207,12 +207,12 @@ export default function Header() {
             )}
           </FlexWrapper>
           <FlexWrapper>
-            {/* <SearchS /> */}
+            <SearchS />
             <NodeSwitcher />
           </FlexWrapper>
         </Wrapper>
+        {isHomePage && <Subheader />}
       </Container>
-      {isHomePage && <Subheader />}
     </>
   );
 }

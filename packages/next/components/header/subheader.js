@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNode } from "utils/hooks";
 import { nodes } from "utils/constants";
-// import SearchL from "../Search/search-l";
+import SearchL from "components/search/search-l";
 
 const Wrapper = styled.div`
   display: flex;
@@ -54,7 +54,7 @@ export default function Subheader() {
     <Wrapper>
       <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />
       <Title>{name} Explorer</Title>
-      {/* <SearchL node={node} /> */}
+      <SearchL node={node} />
     </Wrapper>
   );
 }

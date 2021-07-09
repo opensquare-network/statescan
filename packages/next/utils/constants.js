@@ -151,3 +151,10 @@ export const timeTypes = {
   age: "age",
   date: "date",
 };
+
+export const EmptyQuery = {
+  total: 0,
+  page: 1,
+  pageSize: 10,
+  items: [],
+};

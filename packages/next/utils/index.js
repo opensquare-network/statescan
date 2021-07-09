@@ -3,6 +3,11 @@ import BigNumber from "bignumber.js";
 
 BigNumber.config({ EXPONENTIAL_AT: 12 });
 
+export const encodeURIQuery = (q) =>
+  Object.keys(q)
+    .map((k) => `${k}=${encodeURIComponent(q[k])}`)
+    .join("&");
+
 export function addressEllipsis(address, start = 4, end = 4) {
   if (!address) return;
   if (address.length <= start + end) return address;

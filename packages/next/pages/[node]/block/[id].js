@@ -11,7 +11,7 @@ import TabTable from "components/tabTable";
 import BreakText from "components/breakText";
 import InLink from "components/inLink";
 import Result from "components/result";
-// import Pagination from "components/pgination";
+import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
 
 import { timeDuration, time } from "utils";
@@ -37,6 +37,7 @@ const AccessoryText = styled.div`
 export default function Block({
   node,
   id,
+  tab,
   blockDetail,
   blockEvents,
   blockExtrinsics,
@@ -59,14 +60,13 @@ export default function Block({
         <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
         item.args,
       ]),
-      // foot: (
-      //   <Pagination
-      //     page={blockExtrinsics?.page}
-      //     pageSize={blockExtrinsics?.pageSize}
-      //     total={blockExtrinsics?.total}
-      //     setPage={setExtrinsicsPage}
-      //   />
-      // ),
+      foot: (
+        <Pagination
+          page={blockExtrinsics?.page}
+          pageSize={blockExtrinsics?.pageSize}
+          total={blockExtrinsics?.total}
+        />
+      ),
     },
     {
       name: "Events",
@@ -84,14 +84,13 @@ export default function Block({
         <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
         item.data,
       ]),
-      // foot: (
-      //   <Pagination
-      //     page={blockEvents?.page}
-      //     pageSize={blockEvents?.pageSize}
-      //     total={blockEvents?.total}
-      //     setPage={setEventsPage}
-      //   />
-      // ),
+      foot: (
+        <Pagination
+          page={blockEvents?.page}
+          pageSize={blockEvents?.pageSize}
+          total={blockEvents?.total}
+        />
+      ),
     },
   ];
 
@@ -147,7 +146,7 @@ export default function Block({
             ]}
           />
         </div>
-        <TabTable data={tabTableData} collapse={900} />
+        <TabTable data={tabTableData} activeTab={tab} collapse={900} />
       </Section>
     </Layout>
   );
@@ -155,6 +154,10 @@ export default function Block({
 
 export async function getServerSideProps(context) {
   const { node, id } = context.params;
+  const { tab, page } = context.query;
+
+  const nPage = parseInt(page) || 1;
+  const activeTab = tab ?? "extrinsics";
 
   const [
     { result: blockDetail },
@@ -162,14 +165,16 @@ export async function getServerSideProps(context) {
     { result: blockExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/${id}`),
-    nextApi.fetch(`${node}/blocks/${id}/events`),
-    nextApi.fetch(`${node}/blocks/${id}/extrinsics`),
+    nextApi.fetch(`${node}/blocks/${id}/events`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, { page: nPage - 1 }),
   ]);
 
   return {
     props: {
       node,
       id,
+      tab: activeTab,
+      page: nPage,
       blockDetail: blockDetail ?? null,
       blockEvents: blockEvents ?? [],
       blockExtrinsics: blockExtrinsics ?? [],

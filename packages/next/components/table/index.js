@@ -5,7 +5,7 @@ import { useWindowSize } from "utils/hooks";
 import NoData from "./noData";
 import TimeHead from "./timeHead";
 import TimeBody from "./timeBody";
-// import LoadingBar from "components/LoadingBar";
+// import LoadingBar from "components/loadingBar";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 
@@ -306,7 +306,7 @@ export default function Table({
               {Array.from(Array(placeholder)).map((_, index) => (
                 <tr key={index}>
                   <td colSpan="100%" style={{ padding: "14px 24px" }}>
-                    <LoadingBar />
+                    {/* <LoadingBar /> */}
                   </td>
                 </tr>
               ))}
@@ -385,12 +385,8 @@ export default function Table({
               <tbody>
                 {Array.from(Array(3)).map((_, index) => (
                   <tr key={index}>
-                    <CollapseHead>
-                      <LoadingBar random />
-                    </CollapseHead>
-                    <CollapseBody>
-                      <LoadingBar random />
-                    </CollapseBody>
+                    <CollapseHead>{/* <LoadingBar random /> */}</CollapseHead>
+                    <CollapseBody>{/* <LoadingBar random /> */}</CollapseBody>
                   </tr>
                 ))}
               </tbody>

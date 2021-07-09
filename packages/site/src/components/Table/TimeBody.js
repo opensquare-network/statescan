@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { time, timeDuration } from "utils";
 import { timeTypes } from "utils/constants";
-import Tooltip from "components/Tooltip";
+import Tooltip from "components/tooltip";
 
 const Wrapper = styled.div`
   white-space: nowrap;

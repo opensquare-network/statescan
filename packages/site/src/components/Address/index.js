@@ -27,7 +27,7 @@ import Section from "components/Section";
 import InLink from "components/InLink";
 import Result from "components/Result";
 import Pagination from "components/Pgination";
-import Tooltip from "components/Tooltip";
+import Tooltip from "components/tooltip";
 import { useHistory } from "react-router-dom";
 import HashEllipsis from "components/HashEllipsis";
 

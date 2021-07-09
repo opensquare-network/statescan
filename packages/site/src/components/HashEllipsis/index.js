@@ -1,5 +1,5 @@
 import { hashEllipsis } from "utils";
-import Tooltip from "components/Tooltip";
+import Tooltip from "components/tooltip";
 
 export default function HashEllipsis({ hash }) {
   return (

@@ -1,7 +1,9 @@
-import { useState } from "react";
 import styled, { css } from "styled-components";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 import Table from "components/table";
+import { encodeURIQuery } from "../utils";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -17,7 +19,7 @@ const TabWrapper = styled.div`
   }
 `;
 
-const Tab = styled.div`
+const Tab = styled.a`
   cursor: pointer;
   display: flex;
   align-items: flex-start;
@@ -67,40 +69,48 @@ const TabTag = styled.div`
   color: #f22279;
 `;
 
-export default function TabTable({ data, collapse }) {
-  const [tabIndex, setTabIndex] = useState(0);
+export default function TabTable({ data, activeTab, collapse }) {
+  const router = useRouter();
+  const activeTabIndex = data
+    .map((item) => item.name.toLowerCase())
+    .indexOf(activeTab);
 
   return (
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-          <Tab
-            key={index}
-            onClick={() => setTabIndex(index)}
-            active={tabIndex === index}
+          <Link
+            href={`${router.pathname}?${encodeURIQuery({
+              node: router.query.node,
+              id: router.query.id,
+              tab: data?.[index]?.name.toLowerCase(),
+            })}`}
+            passHref
           >
-            <TabText active={tabIndex === index}>
-              {item.name}
-              <br />
-              <svg
-                width="49"
-                height="3"
-                viewBox="0 0 49 3"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <rect x="0.5" width="48" height="3" fill="#F22279" />
-              </svg>
-            </TabText>
-            <TabTag>{item.total ?? 0}</TabTag>
-          </Tab>
+            <Tab key={index} active={activeTabIndex === index}>
+              <TabText active={activeTabIndex === index}>
+                {item.name}
+                <br />
+                <svg
+                  width="49"
+                  height="3"
+                  viewBox="0 0 49 3"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <rect x="0.5" width="48" height="3" fill="#F22279" />
+                </svg>
+              </TabText>
+              <TabTag>{item.total ?? 0}</TabTag>
+            </Tab>
+          </Link>
         ))}
       </TabWrapper>
       <Table
-        head={data?.[tabIndex]?.head}
-        body={data?.[tabIndex]?.body}
-        foot={data?.[tabIndex]?.foot}
-        isLoading={data?.[tabIndex]?.isLoading}
+        head={data?.[activeTabIndex]?.head}
+        body={data?.[activeTabIndex]?.body}
+        foot={data?.[activeTabIndex]?.foot}
+        // isLoading={data?.[tabIndex]?.isLoading}
         collapse={collapse}
       />
     </div>

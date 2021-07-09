@@ -1,7 +1,10 @@
 import styled, { css } from "styled-components";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
-import { ReactComponent as ArrowLeft } from "./arrow-left.svg";
-import { ReactComponent as ArrowRight } from "./arrow-right.svg";
+import ArrowLeft from "./arrow-left.svg";
+import ArrowRight from "./arrow-right.svg";
+import { encodeURIQuery } from "../../utils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,7 +15,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Nav = styled.div`
+const Nav = styled.a`
   cursor: pointer;
   width: 30px;
   height: 28px;
@@ -41,7 +44,7 @@ const Nav = styled.div`
     `}
 `;
 
-const Item = styled.div`
+const Item = styled.a`
   cursor: pointer;
   width: 30px;
   height: 28px;
@@ -77,48 +80,61 @@ const Ellipsis = styled.div`
 
 const PAGE_OFFSET = 1;
 
-export default function Pagination({ page, pageSize, total, setPage }) {
+export default function Pagination({ page, pageSize, total }) {
+  const router = useRouter();
+
   page = page + PAGE_OFFSET;
   const totalPages = Math.ceil(total / pageSize)
     ? Math.ceil(total / pageSize)
     : 1;
 
-  const prePage = () => {
-    if (page === 1) return;
-    setPage(page - 1 - PAGE_OFFSET);
-  };
-
-  const nextPage = () => {
-    if (page === totalPages) return;
-    setPage(page + 1 - PAGE_OFFSET);
-  };
+  const prevPage = Math.max(1, page + 1 - 1 - PAGE_OFFSET);
+  const nextPage = Math.min(totalPages, page + 1 + 1 - PAGE_OFFSET);
 
   return (
     <Wrapper>
-      <Nav disabled={page === 1} onClick={prePage}>
-        <ArrowLeft />
-      </Nav>
+      <Link
+        href={`${router.pathname}?${encodeURIQuery({
+          ...router.query,
+          page: prevPage,
+        })}`}
+        passHref
+      >
+        <Nav disabled={page === 1}>
+          <ArrowLeft />
+        </Nav>
+      </Link>
+
       {Array.from(Array(totalPages)).map((_, index) =>
         index + 1 !== 1 &&
         index + 1 !== totalPages &&
         Math.abs(index + 1 - page) >= 2 ? (
           <Ellipsis key={index}>...</Ellipsis>
         ) : (
-          <Item
-            onClick={() => {
-              if (page === index + 1) return;
-              setPage(index + 1 - PAGE_OFFSET);
-            }}
-            key={index}
-            active={page === index + 1}
+          <Link
+            href={`${router.pathname}?${encodeURIQuery({
+              ...router.query,
+              page: index + 1 + 1 - PAGE_OFFSET,
+            })}`}
+            passHref
           >
-            {index + 1}
-          </Item>
+            <Item key={index} active={page === index + 1}>
+              {index + 1}
+            </Item>
+          </Link>
         )
       )}
-      <Nav disabled={page === totalPages} onClick={nextPage}>
-        <ArrowRight />
-      </Nav>
+      <Link
+        href={`${router.pathname}?${encodeURIQuery({
+          ...router.query,
+          page: nextPage,
+        })}`}
+        passHref
+      >
+        <Nav disabled={page === totalPages}>
+          <ArrowRight />
+        </Nav>
+      </Link>
     </Wrapper>
   );
 }

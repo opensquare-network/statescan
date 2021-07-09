@@ -5,7 +5,7 @@ import Layout from "components/layout";
 import Overview from "components/overview";
 import Table from "components/table";
 import MinorText from "components/minorText";
-import InLink from "components/InLink";
+import InLink from "components/inLink";
 import Symbol from "components/Symbol";
 import AddressEllipsis from "components/AddressEllipsis";
 import {

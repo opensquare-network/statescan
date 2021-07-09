@@ -1,3 +1,5 @@
+import Layout from "components/layout";
+
 export default function Block() {
-  return <div>block</div>;
+  return <Layout>block</Layout>;
 }

@@ -1,7 +1,18 @@
 import httpProxy from "http-proxy";
 
 const API_URL = process.env.API_URL;
-const proxy = httpProxy.createProxyServer();
+const proxy = httpProxy.createProxyServer(
+  API_URL === "https://dev-api.statescan.io/"
+    ? {
+        changeOrigin: true,
+        target: {
+          protocol: "https:",
+          host: "dev-api.statescan.io",
+          port: 443,
+        },
+      }
+    : undefined
+);
 
 export const config = {
   api: {
@@ -12,8 +23,6 @@ export const config = {
 export default (req, res) => {
   return new Promise((resolve, reject) => {
     req.url = req.url.replace(/^\/api/, "");
-
-    console.log(`Server Request: ${API_URL}${req.url}`);
 
     proxy.once("error", (e) => {
       res.status(500).json({ error: e.message });

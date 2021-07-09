@@ -1,6 +1,5 @@
 import styled, { css } from "styled-components";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 import { nodeSelector } from "store/reducers/nodeSlice";
 import { nodes } from "utils/constants";
@@ -33,7 +32,7 @@ const NavWrapper = styled.div`
     `}
 `;
 
-const StyledLink = styled(Link)`
+const StyledLink = styled.div`
   text-decoration: none;
   color: #111111;
   :hover {

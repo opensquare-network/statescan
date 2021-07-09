@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 
-import ToastItem from "./ToastItem";
+import ToastItem from "./toastItem";
 import { toastsSelector } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`

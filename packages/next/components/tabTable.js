@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
 
-import Table from "components/Table";
+import Table from "components/table";
 
 const TabWrapper = styled.div`
   display: flex;

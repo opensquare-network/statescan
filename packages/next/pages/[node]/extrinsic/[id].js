@@ -1,3 +1,5 @@
+import Layout from "components/layout";
+
 export default function Extrinsic() {
-  return <div>extrinsic</div>;
+  return <Layout>extrinsic</Layout>;
 }

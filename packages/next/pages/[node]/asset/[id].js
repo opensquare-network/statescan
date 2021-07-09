@@ -1,5 +1,5 @@
 import Layout from "components/layout";
 
 export default function Asset() {
-  return <Layout />;
+  return <Layout>asset</Layout>;
 }

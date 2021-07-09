@@ -5,7 +5,6 @@ import { useWindowSize } from "utils/hooks";
 import NoData from "./noData";
 import TimeHead from "./timeHead";
 import TimeBody from "./timeBody";
-// import LoadingBar from "components/loadingBar";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 
@@ -194,8 +193,6 @@ export default function Table({
   foot,
   rowHeight = 48,
   collapse,
-  isLoading,
-  placeholder = 3,
 }) {
   const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState(false);
@@ -240,7 +237,7 @@ export default function Table({
               ))}
             </tr>
           </thead>
-          {!isLoading && body && body.length > 0 ? (
+          {body && body.length > 0 ? (
             <>
               <tbody>
                 {(body || []).map((row, bodyIndex) => (
@@ -301,16 +298,6 @@ export default function Table({
                 </tfoot>
               )}
             </>
-          ) : isLoading ? (
-            <tbody>
-              {Array.from(Array(placeholder)).map((_, index) => (
-                <tr key={index}>
-                  <td colSpan="100%" style={{ padding: "14px 24px" }}>
-                    {/* <LoadingBar /> */}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
           ) : (
             <tbody>
               <tr>
@@ -324,7 +311,7 @@ export default function Table({
       )}
       {isCollapse && (
         <CollapseWrapper>
-          {!isLoading && body && body.length > 0 ? (
+          {body && body.length > 0 ? (
             <>
               <div>
                 {(body || []).map((bodyItem, bodyIndex) => (
@@ -380,17 +367,6 @@ export default function Table({
               </div>
               {foot && <CollapseFoot>{foot}</CollapseFoot>}
             </>
-          ) : isLoading ? (
-            <CollapseTable>
-              <tbody>
-                {Array.from(Array(3)).map((_, index) => (
-                  <tr key={index}>
-                    <CollapseHead>{/* <LoadingBar random /> */}</CollapseHead>
-                    <CollapseBody>{/* <LoadingBar random /> */}</CollapseBody>
-                  </tr>
-                ))}
-              </tbody>
-            </CollapseTable>
           ) : (
             <NoData isCollapse={isCollapse} />
           )}

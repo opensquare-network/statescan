@@ -1,5 +1,5 @@
 import io from "socket.io-client";
-import store from "../store";
+import { store } from "../store";
 import { setOverview, setScanHeight } from "../store/reducers/chainSlice";
 
 const chainStatusRoom = "CHAIN_STATUS_ROOM";

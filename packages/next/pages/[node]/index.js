@@ -19,10 +19,13 @@ import {
   transfersLatestHead,
   assetsHead,
 } from "utils/constants";
-import { useNode, useSymbol } from "utils/hooks";
+import { useSymbol } from "utils/hooks";
 import PageNotFound from "components/pageNotFound";
 import { useSelector } from "react-redux";
-import { overviewSelector, isLoadingSelector } from "store/reducers/chainSlice";
+import { overviewSelector } from "store/reducers/chainSlice";
+import nextApi from "services/nextApi";
+import { useEffect } from "react";
+import { connect } from "services/websocket";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -45,12 +48,16 @@ const FootWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-export default function Home() {
-  const node = useNode();
+export default function Home({ node, overview: ssrOverview }) {
   const router = useRouter();
-  const overview = useSelector(overviewSelector);
-  const isLoading = useSelector(isLoadingSelector);
+  const pushedOverview = useSelector(overviewSelector);
   const symbol = useSymbol();
+
+  useEffect(() => {
+    connect(node);
+  }, []);
+
+  const overview = ssrOverview || pushedOverview;
 
   return (
     <Layout>
@@ -58,7 +65,7 @@ export default function Home() {
         <PageNotFound />
       ) : (
         <Wrapper>
-          <Overview />
+          <Overview node={node} overviewData={overview} />
           <TableWrapper>
             <Table
               title="Latest Blocks"
@@ -72,8 +79,6 @@ export default function Home() {
                 item.eventsCount,
               ])}
               collapse={900}
-              isLoading={isLoading}
-              placeholder={5}
             />
             <Table
               title="Latest Transfers"
@@ -97,8 +102,6 @@ export default function Home() {
                   : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
               ])}
               collapse={900}
-              isLoading={isLoading}
-              placeholder={5}
             />
           </TableWrapper>
           <Table
@@ -125,11 +128,44 @@ export default function Home() {
               </FootWrapper>
             }
             collapse={900}
-            isLoading={isLoading}
-            placeholder={5}
           />
         </Wrapper>
       )}
     </Layout>
   );
+}
+
+export async function getServerSideProps(context) {
+  const { node } = context.params;
+  console.log(node);
+
+  const [
+    { result: latestBlocks },
+    { result: popularAssets },
+    { result: latestTransfers },
+    { result: assetsCount },
+    { result: transfersCount },
+    { result: holdersCount },
+  ] = await Promise.all([
+    nextApi.fetch(`${node}/blocks/latest`),
+    nextApi.fetch(`${node}/assets/popular`),
+    nextApi.fetch(`${node}/transfers/latest`),
+    nextApi.fetch(`${node}/assets/count`),
+    nextApi.fetch(`${node}/transfers/count`),
+    nextApi.fetch(`${node}/holders/count`),
+  ]);
+
+  return {
+    props: {
+      node,
+      overview: {
+        latestBlocks,
+        latestTransfers,
+        popularAssets,
+        assetsCount,
+        transfersCount,
+        holdersCount,
+      },
+    },
+  };
 }

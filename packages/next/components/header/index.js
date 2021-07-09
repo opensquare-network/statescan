@@ -12,6 +12,7 @@ import {
 import Icon from "./icon.svg";
 import IconActive from "./icon-active.svg";
 import NodeSwitcher from "components/nodeSwitcher";
+import Subheader from "./subheader";
 
 const Container = styled.header`
   position: relative;
@@ -211,7 +212,7 @@ export default function Header() {
           </FlexWrapper>
         </Wrapper>
       </Container>
-      {/* {isHomePage && <Subheader />} */}
+      {isHomePage && <Subheader />}
     </>
   );
 }

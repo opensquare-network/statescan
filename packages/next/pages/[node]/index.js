@@ -59,78 +59,82 @@ export default function Home({ node, overview: ssrOverview }) {
 
   const overview = ssrOverview || pushedOverview;
 
+  if ("/404" === router.asPath) {
+    return (
+      <Layout>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-      {router.asPath === "/404" ? (
-        <PageNotFound />
-      ) : (
-        <Wrapper>
-          <Overview node={node} overviewData={overview} />
-          <TableWrapper>
-            <Table
-              title="Latest Blocks"
-              head={blocksLatestHead}
-              body={(overview?.latestBlocks || []).map((item) => [
-                <InLink to={`/${node}/block/${item.header.number}`}>
-                  {item.header.number.toLocaleString()}
-                </InLink>,
-                <MinorText>{timeDuration(item.blockTime)}</MinorText>,
-                item.extrinsicsCount,
-                item.eventsCount,
-              ])}
-              collapse={900}
-            />
-            <Table
-              title="Latest Transfers"
-              head={transfersLatestHead}
-              body={(overview?.latestTransfers || []).map((item) => [
-                <InLink
-                  to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-                >
-                  {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-                </InLink>,
-                <InLink to={`/${node}/address/${item.from}`}>
-                  <AddressEllipsis address={item.from} />
-                </InLink>,
-                <InLink to={`/${node}/address/${item.to}`}>
-                  <AddressEllipsis address={item.to} />
-                </InLink>,
-                item?.assetSymbol
-                  ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-                      item.assetSymbol
-                    }`
-                  : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
-              ])}
-              collapse={900}
-            />
-          </TableWrapper>
+      <Wrapper>
+        <Overview node={node} overviewData={overview} />
+        <TableWrapper>
           <Table
-            title="Assets"
-            head={assetsHead}
-            body={(overview?.popularAssets || []).map((item) => [
-              <InLink
-                to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
-              >{`#${item.assetId}`}</InLink>,
-              <Symbol symbol={item.symbol} />,
-              item.name,
-              <InLink to={`/${node}/address/${item.owner}`}>
-                <AddressEllipsis address={item.owner} />
+            title="Latest Blocks"
+            head={blocksLatestHead}
+            body={(overview?.latestBlocks || []).map((item) => [
+              <InLink to={`/${node}/block/${item.header.number}`}>
+                {item.header.number.toLocaleString()}
               </InLink>,
-              <InLink to={`/${node}/address/${item.issuer}`}>
-                <AddressEllipsis address={item.issuer} />
-              </InLink>,
-              item.accounts,
-              bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),
+              <MinorText>{timeDuration(item.blockTime)}</MinorText>,
+              item.extrinsicsCount,
+              item.eventsCount,
             ])}
-            foot={
-              <FootWrapper>
-                <InLink to={`/${node}/assets`}>View all</InLink>
-              </FootWrapper>
-            }
             collapse={900}
           />
-        </Wrapper>
-      )}
+          <Table
+            title="Latest Transfers"
+            head={transfersLatestHead}
+            body={(overview?.latestTransfers || []).map((item) => [
+              <InLink
+                to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+              >
+                {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+              </InLink>,
+              <InLink to={`/${node}/address/${item.from}`}>
+                <AddressEllipsis address={item.from} />
+              </InLink>,
+              <InLink to={`/${node}/address/${item.to}`}>
+                <AddressEllipsis address={item.to} />
+              </InLink>,
+              item?.assetSymbol
+                ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
+                    item.assetSymbol
+                  }`
+                : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+            ])}
+            collapse={900}
+          />
+        </TableWrapper>
+        <Table
+          title="Assets"
+          head={assetsHead}
+          body={(overview?.popularAssets || []).map((item) => [
+            <InLink
+              to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+            >{`#${item.assetId}`}</InLink>,
+            <Symbol symbol={item.symbol} />,
+            item.name,
+            <InLink to={`/${node}/address/${item.owner}`}>
+              <AddressEllipsis address={item.owner} />
+            </InLink>,
+            <InLink to={`/${node}/address/${item.issuer}`}>
+              <AddressEllipsis address={item.issuer} />
+            </InLink>,
+            item.accounts,
+            bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),
+          ])}
+          foot={
+            <FootWrapper>
+              <InLink to={`/${node}/assets`}>View all</InLink>
+            </FootWrapper>
+          }
+          collapse={900}
+        />
+      </Wrapper>
     </Layout>
   );
 }

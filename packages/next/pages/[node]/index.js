@@ -6,8 +6,8 @@ import Overview from "components/overview";
 import Table from "components/table";
 import MinorText from "components/minorText";
 import InLink from "components/inLink";
-import Symbol from "components/Symbol";
-import AddressEllipsis from "components/AddressEllipsis";
+import Symbol from "components/symbol";
+import AddressEllipsis from "components/addressEllipsis";
 import {
   bigNumber2Locale,
   fromAssetUnit,
@@ -20,7 +20,7 @@ import {
   assetsHead,
 } from "utils/constants";
 import { useNode, useSymbol } from "utils/hooks";
-import PageNotFound from "components/PageNotFound";
+import PageNotFound from "components/pageNotFound";
 import { useSelector } from "react-redux";
 import { overviewSelector, isLoadingSelector } from "store/reducers/chainSlice";
 

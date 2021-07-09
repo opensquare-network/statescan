@@ -9,6 +9,9 @@ import {
   useHomePage,
   useNode,
 } from "utils/hooks";
+import Icon from "./icon.svg";
+import IconActive from "./icon-active.svg";
+import NodeSwitcher from "components/nodeSwitcher";
 
 const Container = styled.header`
   position: relative;
@@ -176,13 +179,7 @@ export default function Header() {
               isActive={isActive}
               onClick={() => setIsActive(!isActive)}
             >
-              <img
-                src={
-                  isActive
-                    ? "/imgs/icons/menu-active.svg"
-                    : "/imgs/icons/menu.svg"
-                }
-              />
+              {isActive ? <IconActive /> : <Icon />}
             </IconWrapper>
             <Link href={`/${node}`}>
               <img src="/imgs/logo.svg" alt="logo" />
@@ -210,7 +207,7 @@ export default function Header() {
           </FlexWrapper>
           <FlexWrapper>
             {/* <SearchS /> */}
-            {/* <NodeSwitcher /> */}
+            <NodeSwitcher />
           </FlexWrapper>
         </Wrapper>
       </Container>

@@ -124,7 +124,7 @@ export default function Home({ node, overview: ssrOverview }) {
             ])}
             foot={
               <FootWrapper>
-                <InLink to={`${node}/assets`}>View all</InLink>
+                <InLink to={`/${node}/assets`}>View all</InLink>
               </FootWrapper>
             }
             collapse={900}

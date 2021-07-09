@@ -8,14 +8,14 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 24px 32px 32px;
+  padding: 24px 8px 32px;
 
   > :not(:first-child) {
     margin-top: 32px;
   }
 
   @media screen and (max-width: 900px) {
-    padding: 16px 32px 16px;
+    padding: 16px 8px 16px;
   }
 `;
 

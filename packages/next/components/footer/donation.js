@@ -9,7 +9,6 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-
   > :not(:first-child) {
     margin-left: 8px;
   }
@@ -66,7 +65,7 @@ const CopyButton = styled.div`
 export default function Donation() {
   const [copied, setCopied] = useState(false);
   const isMounted = useIsMounted();
-  const address = process.env.REACT_APP_DONATION_ADDRESS;
+  const address = process.env.NEXT_PUBLIC_DONATION_ADDRESS;
 
   const onCopy = () => {
     if (copied) return;

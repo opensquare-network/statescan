@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-import LoadingBar from "./LoadingBar";
-
 const Wrapper = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
@@ -49,31 +47,18 @@ const Data = styled.div`
   align-items: center;
 `;
 
-export default function DetailTable({ head, badge, body, isLoading }) {
+export default function DetailTable({ head, badge, body }) {
   return (
     <Wrapper>
       {(head || []).map((item, index) => (
         <Item key={index}>
-          {isLoading ? (
-            <>
-              <Head>
-                <LoadingBar random />
-              </Head>
-              <Data>
-                <LoadingBar random />
-              </Data>
-            </>
-          ) : (
-            <>
-              <Head title={item}>
-                {item}
-                {badge?.[index] !== null && badge?.[index] !== undefined && (
-                  <Badge>{badge?.[index]}</Badge>
-                )}
-              </Head>
-              <Data>{body?.[index]}</Data>
-            </>
-          )}
+          <Head title={item}>
+            {item}
+            {badge?.[index] !== null && badge?.[index] !== undefined && (
+              <Badge>{badge?.[index]}</Badge>
+            )}
+          </Head>
+          <Data>{body?.[index]}</Data>
         </Item>
       ))}
     </Wrapper>

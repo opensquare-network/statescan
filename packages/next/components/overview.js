@@ -69,10 +69,8 @@ const easeOutQuart = (t, b, c, d) => {
   return -c * ((t = t / d - 1) * t * t * t - 1) + b;
 };
 
-export default function Overview() {
-  const overviewData = useSelector(overviewSelector);
+export default function Overview({ node, overviewData }) {
   const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
-  const node = useNode();
   const tokenMap = new Map([
     ["westmint", "WND"],
     ["kusama", "KSM"],

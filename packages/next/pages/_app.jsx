@@ -1,6 +1,7 @@
 import { Provider } from "react-redux";
 import NProgress from "nprogress";
 import Router from "next/router";
+import Head from 'next/head'
 
 import { store } from "../store";
 
@@ -20,9 +21,18 @@ Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+    <>
+      <Head>
+        <title>Kusama | Polkadot Asset Explorer</title>
+        <meta
+          name="description"
+          content="Statescan allows you to explorer and search the Kusama | Polkadot blockchain for assets."
+        />
+      </Head>
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
+    </>
   );
 }
 

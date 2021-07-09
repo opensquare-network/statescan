@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+import Background from "./background";
 import Header from "components/header";
 import Main from "components/main";
 import Footer from "components/footer";
@@ -13,11 +14,14 @@ const Wrapper = styled.div`
 
 export default function Layout({ children }) {
   return (
-    <Wrapper>
-      <Header />
-      <Main>{children}</Main>
-      <Footer />
-      <Toast />
-    </Wrapper>
+    <>
+      <Background />
+      <Wrapper>
+        <Header />
+        <Main>{children}</Main>
+        <Footer />
+        <Toast />
+      </Wrapper>
+    </>
   );
 }

@@ -20,7 +20,7 @@ import CopyText from "components/CopyText";
 import TabTable from "components/TabTable";
 import BreakText from "components/BreakText";
 import Pagination from "components/Pgination";
-import Tooltip from "components/Tooltip";
+import Tooltip from "components/tooltip";
 import { useHistory } from "react-router-dom";
 
 export default function Asset() {

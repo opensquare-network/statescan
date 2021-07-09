@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "components/header";
 import Main from "components/main";
 import Footer from "components/footer";
+import Toast from "components/toast";
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,6 +17,7 @@ export default function Layout({ children }) {
       <Header />
       <Main>{children}</Main>
       <Footer />
+      <Toast />
     </Wrapper>
   );
 }

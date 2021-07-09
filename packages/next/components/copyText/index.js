@@ -2,7 +2,8 @@ import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import copy from "copy-to-clipboard";
 
-import { ReactComponent as Icon } from "./copy.svg";
+import Icon from "../../public/imgs/icons/copy.svg";
+
 import { useNode } from "utils/hooks";
 import { addToast } from "store/reducers/toastSlice";
 

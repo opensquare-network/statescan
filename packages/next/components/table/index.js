@@ -2,10 +2,10 @@ import { useEffect, useState, Fragment } from "react";
 import styled, { css } from "styled-components";
 
 import { useWindowSize } from "utils/hooks";
-import NoData from "./NoData";
-import TimeHead from "./TimeHead";
-import TimeBody from "./TimeBody";
-import LoadingBar from "components/LoadingBar";
+import NoData from "./noData";
+import TimeHead from "./timeHead";
+import TimeBody from "./timeBody";
+// import LoadingBar from "components/LoadingBar";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 

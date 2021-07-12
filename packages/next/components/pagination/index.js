@@ -112,15 +112,14 @@ export default function Pagination({ page, pageSize, total }) {
           <Ellipsis key={index}>...</Ellipsis>
         ) : (
           <Link
+            key={index}
             href={`${router.pathname}?${encodeURIQuery({
               ...router.query,
               page: index + 1 + 1 - PAGE_OFFSET,
             })}`}
             passHref
           >
-            <Item key={index} active={page === index + 1}>
-              {index + 1}
-            </Item>
+            <Item active={page === index + 1}>{index + 1}</Item>
           </Link>
         )
       )}

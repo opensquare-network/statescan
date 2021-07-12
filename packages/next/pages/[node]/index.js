@@ -57,7 +57,7 @@ export default function Home({ node, overview: ssrOverview }) {
     connect(node);
   }, []);
 
-  const overview = ssrOverview || pushedOverview;
+  const overview = pushedOverview || ssrOverview;
 
   if ("/404" === router.asPath) {
     return (
@@ -141,7 +141,6 @@ export default function Home({ node, overview: ssrOverview }) {
 
 export async function getServerSideProps(context) {
   const { node } = context.params;
-  console.log(node);
 
   const [
     { result: latestBlocks },

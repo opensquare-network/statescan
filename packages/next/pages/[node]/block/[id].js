@@ -1,6 +1,6 @@
-import nextApi from "services/nextApi";
 import styled from "styled-components";
 
+import nextApi from "services/nextApi";
 import Layout from "components/layout";
 import Section from "components/section";
 import Nav from "components/nav";

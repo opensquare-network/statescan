@@ -127,6 +127,8 @@ const TableDataItem = styled.pre`
   word-break: break-all;
   word-wrap: break-word;
   white-space: pre-wrap;
+  font-family: "SF Mono";
+  letter-spacing: -0.5px;
 `;
 
 const CollapseWrapper = styled.div`

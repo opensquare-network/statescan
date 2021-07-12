@@ -19,6 +19,7 @@ import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import BreakText from "components/breakText";
 import TransfersList from "components/transfersList";
+import MonoText from "components/MonoText";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -40,15 +41,6 @@ export default function Extrinsic({
   extrinsicTransfer,
   extrinsicEvents,
 }) {
-  console.log({
-    node,
-    id,
-    tab,
-    extrinsicDetail,
-    extrinsicTransfer,
-    extrinsicEvents,
-  });
-
   const tabTableData = [
     {
       name: "Events",
@@ -114,7 +106,9 @@ export default function Extrinsic({
               </InLink>,
               <BreakText>
                 <CopyText text={extrinsicDetail?.hash}>
-                  <MinorText>{extrinsicDetail?.hash}</MinorText>
+                  <MinorText>
+                    <MonoText>{extrinsicDetail?.hash}</MonoText>
+                  </MinorText>
                 </CopyText>
               </BreakText>,
               <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,

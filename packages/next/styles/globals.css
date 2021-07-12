@@ -20,3 +20,11 @@ a {
 p {
   margin: 0;
 }
+
+#nprogress .bar {
+  background: #e6007a;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #e6007a, 0 0 5px #e6007a;
+}

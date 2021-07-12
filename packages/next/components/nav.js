@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 import { nodeSelector } from "store/reducers/nodeSlice";
 import { nodes } from "utils/constants";
@@ -33,6 +34,7 @@ const NavWrapper = styled.div`
 `;
 
 const StyledLink = styled.div`
+  cursor: pointer;
   text-decoration: none;
   color: #111111;
   :hover {
@@ -62,14 +64,14 @@ export default function Nav({ data }) {
   return (
     <Wrapper>
       <NavWrapper node={node}>
-        <StyledLink node={node} to={`/${node}`}>
-          {nodeName}
-        </StyledLink>
+        <Link href={`/${node}`}>
+          <StyledLink node={node}>{nodeName}</StyledLink>
+        </Link>
         {(data || []).map((item, index) =>
           item.path ? (
-            <StyledLink node={node} to={item.path} key={index}>
-              {item.name}
-            </StyledLink>
+            <Link href={item.path} key={index}>
+              <StyledLink node={node}>{item.name}</StyledLink>
+            </Link>
           ) : (
             <NoLink key={index}>{item.name}</NoLink>
           )

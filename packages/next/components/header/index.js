@@ -149,7 +149,11 @@ export default function Header() {
             {isActive ? <IconActive /> : <Icon />}
           </IconWrapper>
           <Link href={`/${node}`}>
-            <img src="/imgs/logo.svg" alt="logo" />
+            <img
+              src="/imgs/logo.svg"
+              alt="logo"
+              style={{ cursor: "pointer" }}
+            />
           </Link>
           {(isActive || width > 900) && (
             <MenuWrapper ref={ref}>

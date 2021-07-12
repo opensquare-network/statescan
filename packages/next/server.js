@@ -12,6 +12,12 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+const PORT = process.env.PORT;
+if (!PORT) {
+  console.log("PROT is not defined");
+  process.exit();
+}
+
 const API_URL = process.env.API_URL;
 if (!API_URL) {
   console.log("API_URL is not defined");
@@ -60,8 +66,8 @@ app.prepare().then(() => {
     }
   });
 
-  httpServer.listen(3000, (err) => {
+  httpServer.listen(PORT, (err) => {
     if (err) throw err;
-    console.log("> Ready on http://localhost:3000");
+    console.log(`> Ready on http://localhost:${PORT}`);
   });
 });

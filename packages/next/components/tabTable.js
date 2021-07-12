@@ -102,17 +102,23 @@ export default function TabTable({ data, activeTab, collapse }) {
                   <rect x="0.5" width="48" height="3" fill="#F22279" />
                 </svg>
               </TabText>
-              <TabTag>{item.total ?? 0}</TabTag>
+              {item.total !== undefined && item.total !== null && (
+                <TabTag>{item.total}</TabTag>
+              )}
             </Tab>
           </Link>
         ))}
       </TabWrapper>
-      <Table
-        head={data?.[activeTabIndex]?.head}
-        body={data?.[activeTabIndex]?.body}
-        foot={data?.[activeTabIndex]?.foot}
-        collapse={collapse}
-      />
+      {data?.[activeTabIndex]?.component ? (
+        data?.[activeTabIndex]?.component
+      ) : (
+        <Table
+          head={data?.[activeTabIndex]?.head}
+          body={data?.[activeTabIndex]?.body}
+          foot={data?.[activeTabIndex]?.foot}
+          collapse={collapse}
+        />
+      )}
     </div>
   );
 }

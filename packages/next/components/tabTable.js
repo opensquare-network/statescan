@@ -80,6 +80,7 @@ export default function TabTable({ data, activeTab, collapse }) {
       <TabWrapper>
         {(data || []).map((item, index) => (
           <Link
+            key={index}
             href={`${router.pathname}?${encodeURIQuery({
               node: router.query.node,
               id: router.query.id,
@@ -87,7 +88,7 @@ export default function TabTable({ data, activeTab, collapse }) {
             })}`}
             passHref
           >
-            <Tab key={index} active={activeTabIndex === index}>
+            <Tab active={activeTabIndex === index}>
               <TabText active={activeTabIndex === index}>
                 {item.name}
                 <br />
@@ -110,7 +111,6 @@ export default function TabTable({ data, activeTab, collapse }) {
         head={data?.[activeTabIndex]?.head}
         body={data?.[activeTabIndex]?.body}
         foot={data?.[activeTabIndex]?.foot}
-        // isLoading={data?.[tabIndex]?.isLoading}
         collapse={collapse}
       />
     </div>

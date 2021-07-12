@@ -174,7 +174,6 @@ export async function getServerSideProps(context) {
       node,
       id,
       tab: activeTab,
-      page: nPage,
       blockDetail: blockDetail ?? null,
       blockEvents: blockEvents ?? [],
       blockExtrinsics: blockExtrinsics ?? [],

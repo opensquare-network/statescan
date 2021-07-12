@@ -1,9 +1,10 @@
 import styled, { css } from "styled-components";
 import { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
+import InLink from "components/inLink";
+import nextApi from "services/nextApi";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -67,6 +68,7 @@ const ExploreButton = styled.div`
 `;
 
 const ExploreHintsWrapper = styled.div`
+  z-index: 9999999;
   background-color: #ffffff;
   padding-top: 8px;
   padding-bottom: 8px;
@@ -142,14 +144,16 @@ export default function SearchL({ node }) {
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    axios.get(`/westmint/search/autocomplete?prefix=${value}`).then((res) => {
-      setHintAssets(res.data.assets || []);
-    });
+    nextApi
+      .fetch(`westmint/search/autocomplete?prefix=${value}`)
+      .then((res) => {
+        setHintAssets(res.result?.assets || []);
+      });
   };
 
   const onSearch = () => {
-    axios.get(`/westmint/search?q=${searchKeyword}`).then((res) => {
-      const { asset, extrinsic, block, address } = res.data;
+    nextApi.fetch(`westmint/search?q=${searchKeyword}`).then((res) => {
+      const { asset, extrinsic, block, address } = res.result || {};
       if (asset) {
         const { blockHeight } = asset.createdAt;
         return router.push(`/westmint/asset/${asset.assetId}_${blockHeight}`);
@@ -159,7 +163,7 @@ export default function SearchL({ node }) {
         return router.push(`/westmint/extrinsic/${blockHeight}-${index}`);
       }
       if (block) {
-        const height = res.data.block?.header?.number;
+        const height = block.header?.number;
         return height && router.push(`/westmint/block/${height}`);
       }
       if (address) {
@@ -211,20 +215,17 @@ export default function SearchL({ node }) {
           {assets.map((hint, index) => {
             const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
             return (
-              <ExploreHint
-                className={selected === index && "selected"}
+              <InLink
                 key={index}
-                onClick={() => {
-                  router.push(
-                    `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-                  );
-                }}
+                to={`/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
               >
-                <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
-                <Token>{hint.symbol}</Token>
-                <TokenDesc>{hint.name}</TokenDesc>
-                <Height>#{hint.createdAt.blockHeight}</Height>
-              </ExploreHint>
+                <ExploreHint className={selected === index && "selected"}>
+                  <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
+                  <Token>{hint.symbol}</Token>
+                  <TokenDesc>{hint.name}</TokenDesc>
+                  <Height>#{hint.createdAt.blockHeight}</Height>
+                </ExploreHint>
+              </InLink>
             );
           })}
         </ExploreHintsWrapper>

@@ -19,7 +19,7 @@ import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import BreakText from "components/breakText";
 import TransfersList from "components/transfersList";
-import MonoText from "components/MonoText";
+import MonoText from "components/monoText";
 
 const FlexWrapper = styled.div`
   display: flex;

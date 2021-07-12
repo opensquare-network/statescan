@@ -1,6 +1,6 @@
 import { addressEllipsis } from "utils";
 import Tooltip from "components/tooltip";
-import MonoText from "./MonoText";
+import MonoText from "./monoText";
 
 export default function AddressEllipsis({ address }) {
   return (

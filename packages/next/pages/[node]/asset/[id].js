@@ -19,7 +19,7 @@ import BreakText from "components/breakText";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import nextApi from "services/nextApi";
-import MonoText from "components/MonoText";
+import MonoText from "components/monoText";
 
 export default function Asset({
   node,

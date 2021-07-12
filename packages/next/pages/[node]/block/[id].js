@@ -13,7 +13,7 @@ import InLink from "components/inLink";
 import Result from "components/result";
 import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
-import MonoText from "components/MonoText";
+import MonoText from "components/monoText";
 
 import { timeDuration, time } from "utils";
 import {

@@ -14,7 +14,9 @@ export function connect(chain) {
     socket.disconnect();
   }
 
-  socket = io(process.env.REACT_APP_SOCKET_IO_URL || "dev-api.statescan.io");
+  socket = io(process.env.NEXT_PUBLIC_SOCKET_IO_URL, {
+    path: "/api/socket.io/",
+  });
   socket.connect();
 
   socket.on("connect", () => {

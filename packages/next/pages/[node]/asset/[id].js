@@ -19,6 +19,7 @@ import BreakText from "components/breakText";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import nextApi from "services/nextApi";
+import MonoText from "components/MonoText";
 
 export default function Asset({
   node,
@@ -72,9 +73,11 @@ export default function Asset({
       body: (assetHolders?.items || []).map((item, index) => [
         index + 1,
         <BreakText>
-          <InLink to={`/${node}/address/${item?.address}`}>
-            {item?.address}
-          </InLink>
+          <MonoText>
+            <InLink to={`/${node}/address/${item?.address}`}>
+              {item?.address}
+            </InLink>
+          </MonoText>
         </BreakText>,
         bigNumber2Locale(fromAssetUnit(item?.balance, item?.assetDecimals)),
       ]),
@@ -106,16 +109,20 @@ export default function Asset({
               <MinorText>{`#${asset?.assetId}`}</MinorText>,
               <BreakText>
                 <CopyText text={asset?.owner}>
-                  <InLink to={`/${node}/address/${asset?.owner}`}>
-                    {asset?.owner}
-                  </InLink>
+                  <MonoText>
+                    <InLink to={`/${node}/address/${asset?.owner}`}>
+                      {asset?.owner}
+                    </InLink>
+                  </MonoText>
                 </CopyText>
               </BreakText>,
               <BreakText>
                 <CopyText text={asset?.issuer}>
-                  <InLink to={`/${node}/address/${asset?.issuer}`}>
-                    {asset?.issuer}
-                  </InLink>
+                  <MonoText>
+                    <InLink to={`/${node}/address/${asset?.issuer}`}>
+                      {asset?.issuer}
+                    </InLink>
+                  </MonoText>
                 </CopyText>
               </BreakText>,
               `${bigNumber2Locale(

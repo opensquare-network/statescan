@@ -13,6 +13,7 @@ import InLink from "components/inLink";
 import Result from "components/result";
 import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
+import MonoText from "components/MonoText";
 
 import { timeDuration, time } from "utils";
 import {
@@ -112,32 +113,42 @@ export default function Block({
               "-",
               <CopyText text={blockDetail?.hash}>
                 <BreakText>
-                  <MinorText>{blockDetail?.hash}</MinorText>
+                  <MinorText>
+                    <MonoText>{blockDetail?.hash}</MonoText>
+                  </MinorText>
                 </BreakText>
               </CopyText>,
               <BreakText>
                 <MinorText>
-                  <InLink
-                    to={`/${node}/block/${(
-                      Number.parseInt(id) - 1
-                    ).toString()}`}
-                  >
-                    {blockDetail?.header?.parentHash}
-                  </InLink>
+                  <MonoText>
+                    <InLink
+                      to={`/${node}/block/${(
+                        Number.parseInt(id) - 1
+                      ).toString()}`}
+                    >
+                      {blockDetail?.header?.parentHash}
+                    </InLink>
+                  </MonoText>
                 </MinorText>
               </BreakText>,
               <BreakText>
-                <MinorText>{blockDetail?.header?.stateRoot}</MinorText>
+                <MinorText>
+                  <MonoText>{blockDetail?.header?.stateRoot}</MonoText>
+                </MinorText>
               </BreakText>,
               <BreakText>
-                <MinorText>{blockDetail?.header?.extrinsicsRoot}</MinorText>
+                <MinorText>
+                  <MonoText>{blockDetail?.header?.extrinsicsRoot}</MonoText>
+                </MinorText>
               </BreakText>,
               blockDetail?.author ? (
                 <BreakText>
                   <CopyText text={blockDetail?.author}>
-                    <InLink to={`/${node}/address/${blockDetail?.author}`}>
-                      {blockDetail?.author}
-                    </InLink>
+                    <MonoText>
+                      <InLink to={`/${node}/address/${blockDetail?.author}`}>
+                        {blockDetail?.author}
+                      </InLink>
+                    </MonoText>
                   </CopyText>
                 </BreakText>
               ) : (

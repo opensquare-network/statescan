@@ -1,10 +1,11 @@
 import { addressEllipsis } from "utils";
 import Tooltip from "components/tooltip";
+import MonoText from "./MonoText";
 
 export default function AddressEllipsis({ address }) {
   return (
     <Tooltip content={address}>
-      <div>{addressEllipsis(address)}</div>
+      <MonoText>{addressEllipsis(address)}</MonoText>
     </Tooltip>
   );
 }

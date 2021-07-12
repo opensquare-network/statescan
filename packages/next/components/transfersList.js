@@ -20,19 +20,19 @@ const TransferItem = styled.div`
   }
 
   & > :nth-child(1) {
-    margin-right: 16px;
+    margin-right: 8px;
   }
   & > :nth-child(2) {
-    margin-right: 20px;
+    margin-right: 32px;
   }
   & > :nth-child(3) {
-    margin-right: 16px;
+    margin-right: 8px;
   }
   & > :nth-child(4) {
-    margin-right: 20px;
+    margin-right: 32px;
   }
   & > :nth-child(5) {
-    margin-right: 16px;
+    margin-right: 8px;
   }
   & > :nth-child(6) {
     margin-right: 4px;

@@ -8,7 +8,7 @@ import { useNode } from "utils/hooks";
 import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`
-  display: flex;
+  display: inline;
   align-items: center;
   @media screen and (max-width: 580px) {
     display: block;

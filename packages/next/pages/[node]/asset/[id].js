@@ -92,6 +92,7 @@ export default function Asset({
     },
     {
       name: "Timeline",
+      total: asset?.timeline?.length,
       component: <Timeline data={asset?.timeline} />,
     },
   ];

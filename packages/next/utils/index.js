@@ -146,7 +146,7 @@ export function zip(arrLeft, arrRight) {
 
 export function objectFromEntries(entries) {
   if (!entries || !entries[Symbol.iterator]) {
-    throw new Error("Object.fromEntries() requires a single iterable argument");
+    throw new Error("objectFromEntries() requires a single iterable argument");
   }
 
   const o = {};

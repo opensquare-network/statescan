@@ -14,7 +14,7 @@ import InLink from "components/inLink";
 import CopyText from "components/copyText";
 import Result from "components/result";
 import MinorText from "components/minorText";
-import { capitalize, time, timeDuration } from "utils";
+import { capitalize, objectFromEntries, time, timeDuration, zip } from "utils";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import BreakText from "components/breakText";
@@ -49,7 +49,12 @@ export default function Extrinsic({
       body: (extrinsicEvents?.items || []).map((item) => [
         `${item?.indexer?.blockHeight}-${item?.sort}`,
         `${item?.section}(${item?.method})`,
-        item.data,
+        objectFromEntries(
+          zip(
+            ["Docs", ...item.meta.args],
+            [item.meta.documentation, ...item.data]
+          )
+        ),
       ]),
       foot: (
         <Pagination

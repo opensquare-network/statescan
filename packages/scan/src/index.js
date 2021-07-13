@@ -43,6 +43,7 @@ async function main() {
       await scanBlock(block);
       await updateScanHeight(block.height);
       scanHeight = block.height + 1;
+      await sleep(1);
     }
   }
 }

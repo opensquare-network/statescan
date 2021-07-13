@@ -141,7 +141,7 @@ export function bigNumber2Locale(x) {
 }
 
 export function zip(arrLeft, arrRight) {
-  return arrLeft.map((v1, i) => [v1, arrRight[i]]);
+  return arrLeft.map((val, i) => [val, arrRight[i]]);
 }
 
 export function objectFromEntries(entries) {

@@ -139,3 +139,22 @@ export function bigNumber2Locale(x) {
   }
   return result;
 }
+
+export function zip(arrLeft, arrRight) {
+  return arrLeft.map((v1, i) => [v1, arrRight[i]]);
+}
+
+export function objectFromEntries(entries) {
+  if (!entries || !entries[Symbol.iterator]) {
+    throw new Error("Object.fromEntries() requires a single iterable argument");
+  }
+
+  const o = {};
+
+  Object.keys(entries).forEach((key) => {
+    const [k, v] = entries[key];
+    o[k] = v;
+  });
+
+  return o;
+}

@@ -15,7 +15,7 @@ import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
 import MonoText from "components/monoText";
 
-import { timeDuration, time } from "utils";
+import { timeDuration, time, zip, objectFromEntries } from "utils";
 import {
   blockHead,
   blockExtrinsicsHead,
@@ -83,7 +83,12 @@ export default function Block({
           "-"
         ),
         <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
-        item.data,
+        objectFromEntries(
+          zip(
+            ["Docs", ...item.meta.args],
+            [item.meta.documentation, ...item.data]
+          )
+        ),
       ]),
       foot: (
         <Pagination

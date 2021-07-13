@@ -93,6 +93,50 @@ async function updateOrCreateAsset(blockIndexer, assetId) {
   );
 }
 
+async function saveAssetTimeline(
+  blockIndexer,
+  assetId,
+  section,
+  method,
+  eventData,
+  eventSort,
+  extrinsicIndex,
+  extrinsicHash
+) {
+  const api = await getApi();
+  const asset = (
+    await api.query.assets.asset.at(blockIndexer.blockHash, assetId)
+  ).toJSON();
+  const metadata = (
+    await api.query.assets.metadata.at(blockIndexer.blockHash, assetId)
+  ).toJSON();
+
+  const col = await getAssetCollection();
+  const result = await col.updateOne(
+    { assetId, destroyedAt: null },
+    {
+      $push: {
+        timeline: {
+          type: "event",
+          section,
+          method,
+          eventData,
+          eventIndexer: blockIndexer,
+          eventSort,
+          extrinsicIndex,
+          extrinsicHash,
+          asset: {
+            ...asset,
+            ...metadata,
+            symbol: hexToString(metadata.symbol),
+            name: hexToString(metadata.name),
+          },
+        },
+      },
+    }
+  );
+}
+
 async function destroyAsset(blockIndexer, assetId) {
   const col = await getAssetCollection();
   const result = await col.updateOne(
@@ -222,16 +266,40 @@ async function handleAssetsEvent(
       AssetsEvents.OwnerChanged,
       AssetsEvents.AssetFrozen,
       AssetsEvents.AssetThawed,
-      AssetsEvents.Transferred,
     ].includes(method)
   ) {
     const [assetId] = eventData;
     await updateOrCreateAsset(blockIndexer, assetId);
+    await saveAssetTimeline(
+      blockIndexer,
+      assetId,
+      section,
+      method,
+      eventData,
+      eventSort,
+      extrinsicIndex,
+      extrinsicHash
+    );
   }
 
   if (method === AssetsEvents.Destroyed) {
     const [assetId] = eventData;
     await destroyAsset(blockIndexer, assetId);
+    await saveAssetTimeline(
+      blockIndexer,
+      assetId,
+      section,
+      method,
+      eventData,
+      eventSort,
+      extrinsicIndex,
+      extrinsicHash
+    );
+  }
+
+  if (method === AssetsEvents.Transferred) {
+    const [assetId] = eventData;
+    await updateOrCreateAsset(blockIndexer, assetId);
   }
 
   // Save transfers

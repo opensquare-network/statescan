@@ -18,6 +18,7 @@ import TabTable from "components/tabTable";
 import BreakText from "components/breakText";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
+import Timeline from "components/timeline";
 import nextApi from "services/nextApi";
 import MonoText from "components/monoText";
 
@@ -88,6 +89,11 @@ export default function Asset({
           total={assetHolders?.total}
         />
       ),
+    },
+    {
+      name: "Timeline",
+      total: asset?.timeline?.length,
+      component: <Timeline data={asset?.timeline} />,
     },
   ];
 

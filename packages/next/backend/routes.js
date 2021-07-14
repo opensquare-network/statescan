@@ -5,6 +5,7 @@ const router = new Router();
 const chainFeatureRouters = [
   require("./features/blocks/routes"),
   require("./features/extrinsics/routes"),
+  require("./features/events/routes"),
   require("./features/transfers/routes"),
   require("./features/assets/routes"),
   require("./features/holders/routes"),

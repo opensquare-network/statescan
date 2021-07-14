@@ -17,6 +17,7 @@ import {
   addressExtrincsHead,
   addressHead,
   addressTransfersHead,
+  EmptyQuery,
 } from "utils/constants";
 import MinorText from "components/minorText";
 import BreakText from "components/breakText";
@@ -193,9 +194,9 @@ export async function getServerSideProps(context) {
       id,
       tab: activeTab,
       addressDetail: addressDetail ?? null,
-      addressAssets: addressAssets ?? [],
-      addressTransfers: addressTransfers ?? [],
-      addressExtrinsics: addressExtrinsics ?? [],
+      addressAssets: addressAssets ?? EmptyQuery,
+      addressTransfers: addressTransfers ?? EmptyQuery,
+      addressExtrinsics: addressExtrinsics ?? EmptyQuery,
     },
   };
 }

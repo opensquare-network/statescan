@@ -4,7 +4,7 @@ import Table from "components/table";
 import InLink from "components/inLink";
 import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
-import { assetsHead } from "utils/constants";
+import { assetsHead, EmptyQuery } from "utils/constants";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import Pagination from "components/pagination";
 import nextApi from "services/nextApi";
@@ -53,7 +53,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       node,
-      assets,
+      assets: assets ?? EmptyQuery,
     },
   };
 }

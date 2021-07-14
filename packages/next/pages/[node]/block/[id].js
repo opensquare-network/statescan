@@ -20,6 +20,7 @@ import {
   blockHead,
   blockExtrinsicsHead,
   blockEventsHead,
+  EmptyQuery,
 } from "utils/constants";
 
 const FlexWrapper = styled.div`
@@ -191,8 +192,8 @@ export async function getServerSideProps(context) {
       id,
       tab: activeTab,
       blockDetail: blockDetail ?? null,
-      blockEvents: blockEvents ?? [],
-      blockExtrinsics: blockExtrinsics ?? [],
+      blockEvents: blockEvents ?? EmptyQuery,
+      blockExtrinsics: blockExtrinsics ?? EmptyQuery,
     },
   };
 }

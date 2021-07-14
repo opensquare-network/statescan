@@ -162,12 +162,12 @@ export async function getServerSideProps(context) {
     props: {
       node,
       overview: {
-        latestBlocks,
-        latestTransfers,
-        popularAssets,
-        assetsCount,
-        transfersCount,
-        holdersCount,
+        latestBlocks: latestBlocks ?? [],
+        latestTransfers: latestTransfers ?? [],
+        popularAssets: popularAssets ?? [],
+        assetsCount: assetsCount ?? 0,
+        transfersCount: transfersCount ?? 0,
+        holdersCount: holdersCount ?? 0,
       },
     },
   };

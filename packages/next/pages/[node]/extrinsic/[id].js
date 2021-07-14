@@ -9,6 +9,7 @@ import {
   extrinsicHead,
   extrinsicTransferHead,
   extrinsicEventsHead,
+  EmptyQuery,
 } from "utils/constants";
 import InLink from "components/inLink";
 import CopyText from "components/copyText";
@@ -168,8 +169,8 @@ export async function getServerSideProps(context) {
       id,
       tab: activeTab,
       extrinsicDetail: extrinsicDetail ?? null,
-      extrinsicTransfer: extrinsicTransfer ?? [],
-      extrinsicEvents: extrinsicEvents ?? [],
+      extrinsicTransfer: extrinsicTransfer ?? EmptyQuery,
+      extrinsicEvents: extrinsicEvents ?? EmptyQuery,
     },
   };
 }

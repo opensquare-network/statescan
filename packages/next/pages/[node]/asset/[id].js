@@ -6,6 +6,7 @@ import {
   assetHead,
   assetTransfersHead,
   assetHoldersHead,
+  EmptyQuery,
 } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
@@ -168,9 +169,9 @@ export async function getServerSideProps(context) {
       node,
       id,
       tab: activeTab,
-      asset,
-      assetTransfers,
-      assetHolders,
+      asset: asset ?? null,
+      assetTransfers: assetTransfers ?? EmptyQuery,
+      assetHolders: assetHolders ?? EmptyQuery,
     },
   };
 }

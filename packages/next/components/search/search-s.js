@@ -38,6 +38,9 @@ const ExploreHintsWrapper = styled.div`
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border: 1px solid #ffffff;
+  .selected {
+    background-color: #fafafa;
+  }
 `;
 const Input = styled.input`
   padding-left: 44px;
@@ -110,6 +113,7 @@ export default function SearchS() {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [assets, setHintAssets] = useState([]);
   const [focus, setFocus] = useState(false);
+  const [selected, select] = useState(0);
   const iconMap = new Map([["osn", "osn"]]);
 
   useEffect(() => {
@@ -129,11 +133,28 @@ export default function SearchS() {
   };
 
   const onKeyDown = (e) => {
+    if (!focus) {
+      return;
+    }
+
     if (e.code === "Enter") {
-      return onSearch();
+      if (selected > assets.length - 1) {
+        return onSearch();
+      }
+      const hint = assets[selected];
+      return router.push(
+        `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+      );
+    }
+
+    if (e.code === "ArrowDown" && selected < assets.length - 1) {
+      select(selected + 1);
+    }
+
+    if (e.code === "ArrowUp" && selected > 0) {
+      select(selected - 1);
     }
   };
-
   const onSearch = () => {
     nextApi.fetch(`westmint/search?q=${searchKeyword}`).then((res) => {
       const { asset, extrinsic, block, address } = res.result || {};
@@ -168,7 +189,7 @@ export default function SearchS() {
         onBlur={() => setTimeout(() => setFocus(false), 100)}
         onKeyDown={onKeyDown}
       />
-      {focus && assets.length > 0 && (
+      {focus && assets?.length > 0 && (
         <ExploreHintsWrapper>
           {assets.map((hint, index) => {
             const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
@@ -177,7 +198,7 @@ export default function SearchS() {
                 key={index}
                 to={`/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
               >
-                <ExploreHint>
+                <ExploreHint className={selected === index && "selected"}>
                   <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
                   <Token>{hint.symbol}</Token>
                   <TokenDesc>{hint.name}</TokenDesc>

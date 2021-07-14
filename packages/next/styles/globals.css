@@ -6,6 +6,7 @@ body {
     Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   background: #fafafa;
   color: #111111;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {

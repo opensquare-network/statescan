@@ -6,6 +6,33 @@ const {
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
+async function getBlocks(ctx) {
+  const { chain } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const col = await getBlockCollection(chain);
+  const items = await col
+    .find({})
+    .sort({
+      "header.number": -1,
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+  const total = await col.estimatedDocumentCount();
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
 async function getLatestBlocks(ctx) {
   const { chain } = ctx.params;
 
@@ -115,6 +142,7 @@ async function getBlockEvents(ctx) {
 }
 
 module.exports = {
+  getBlocks,
   getLatestBlocks,
   getBlockHeight,
   getBlock,

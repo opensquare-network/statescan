@@ -3,6 +3,7 @@ const extrinsicsController = require("./extrinsics.controller");
 
 const router = new Router();
 
+router.get("/extrinsics", extrinsicsController.getExtrinsics);
 router.get("/extrinsics/latest", extrinsicsController.getLatestExtrinsics);
 router.get("/extrinsics/count", extrinsicsController.getExtrinsicsCount);
 router.get("/extrinsics/:indexOrHash", extrinsicsController.getExtrinsic);

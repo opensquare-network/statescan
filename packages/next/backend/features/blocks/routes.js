@@ -3,6 +3,7 @@ const blocksController = require("./blocks.controller");
 
 const router = new Router();
 
+router.get("/blocks", blocksController.getBlocks);
 router.get("/blocks/latest", blocksController.getLatestBlocks);
 router.get("/blocks/height", blocksController.getBlockHeight);
 router.get("/blocks/:heightOrHash", blocksController.getBlock);

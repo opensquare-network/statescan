@@ -50,17 +50,21 @@ const Data = styled.div`
 export default function DetailTable({ head, badge, body }) {
   return (
     <Wrapper>
-      {(head || []).map((item, index) => (
-        <Item key={index}>
-          <Head title={item}>
-            {item}
-            {badge?.[index] !== null && badge?.[index] !== undefined && (
-              <Badge>{badge?.[index]}</Badge>
-            )}
-          </Head>
-          <Data>{body?.[index]}</Data>
-        </Item>
-      ))}
+      {(head || []).map((item, index) =>
+        body?.[index] === undefined ? (
+          <></>
+        ) : (
+          <Item key={index}>
+            <Head title={item}>
+              {item}
+              {badge?.[index] !== null && badge?.[index] !== undefined && (
+                <Badge>{badge?.[index]}</Badge>
+              )}
+            </Head>
+            <Data>{body?.[index]}</Data>
+          </Item>
+        )
+      )}
     </Wrapper>
   );
 }

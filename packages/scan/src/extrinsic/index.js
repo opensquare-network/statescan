@@ -36,6 +36,17 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     signer = "";
   }
 
+  const era = extrinsic.era.toJSON();
+  let lifetime = undefined;
+  if (extrinsic.era.isMortalEra) {
+    const mortalEra = extrinsic.era.asMortalEra;
+    lifetime = [
+      mortalEra.birth(indexer.blockHeight),
+      mortalEra.death(indexer.blockHeight),
+    ];
+  }
+  const tip = extrinsic.tip?.toJSON();
+  const nonce = extrinsic.nonce?.toJSON();
   const isSuccess = isExtrinsicSuccess(events);
 
   const version = extrinsic.version;
@@ -50,6 +61,10 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     callIndex,
     version,
     args,
+    era,
+    lifetime,
+    tip,
+    nonce,
     data,
     isSuccess,
   };

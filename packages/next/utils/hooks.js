@@ -66,11 +66,6 @@ export function useNode() {
   return node;
 }
 
-export function useSymbol() {
-  const [symbol, setSymbol] = useState();
-  const node = useNode();
-  useEffect(() => {
-    setSymbol(nodes.find((item) => item.value === node)?.symbol);
-  }, [node]);
-  return symbol;
+export function getSymbol(node) {
+  return nodes.find((item) => item.value === node)?.symbol;
 }

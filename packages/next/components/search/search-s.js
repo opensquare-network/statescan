@@ -90,19 +90,27 @@ const ExploreHint = styled.div`
 const Token = styled.span`
   margin-right: 8px;
   overflow: hidden;
-  width: 92px;
+  width: 80px;
   font-weight: 500;
   color: #111111;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-grow: 0;
 `;
 
 const TokenDesc = styled.span`
-  width: 299px;
+  width: 117px;
   margin-right: 8px;
   overflow: hidden;
   color: rgba(17, 17, 17, 0.35);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-grow: 0;
 `;
 
 const Height = styled.span`
+  flex-grow: 1;
+  text-align: right;
   color: rgba(17, 17, 17, 0.65);
 `;
 
@@ -202,7 +210,7 @@ export default function SearchS() {
                   <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
                   <Token>{hint.symbol}</Token>
                   <TokenDesc>{hint.name}</TokenDesc>
-                  <Height>#{hint.createdAt.blockHeight}</Height>
+                  <Height>#{hint.assetId}</Height>
                 </ExploreHint>
               </InLink>
             );

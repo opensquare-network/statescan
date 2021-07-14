@@ -223,7 +223,7 @@ export default function SearchL({ node }) {
                   <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
                   <Token>{hint.symbol}</Token>
                   <TokenDesc>{hint.name}</TokenDesc>
-                  <Height>#{hint.createdAt.blockHeight}</Height>
+                  <Height>#{hint.assetId}</Height>
                 </ExploreHint>
               </InLink>
             );

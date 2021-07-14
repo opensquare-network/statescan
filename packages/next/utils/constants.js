@@ -64,7 +64,7 @@ export const addressTransfersHead = [
 export const extrinsicEventsHead = [
   { name: "Event ID", width: 160 },
   { name: "Action" },
-  { name: "Data", type: "data", align: "right", width: 76 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
 export const blockExtrinsicsHead = [
@@ -79,7 +79,7 @@ export const blockEventsHead = [
   { name: "Event ID", width: 160 },
   { name: "Extrinsic ID", width: 160 },
   { name: "Action" },
-  { name: "Data", type: "data", align: "right", width: 76 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
 export const assetTransfersHead = [

@@ -1,7 +1,7 @@
 import Layout from "components/layout";
 
 import Nav from "components/nav";
-import { useSymbol } from "utils/hooks";
+import { getSymbol } from "utils/hooks";
 import {
   assetHead,
   assetTransfersHead,
@@ -31,7 +31,7 @@ export default function Asset({
 }) {
   const assetSymbol = asset?.symbol;
 
-  const symbol = useSymbol();
+  const symbol = getSymbol(node);
 
   const tabTableData = [
     {

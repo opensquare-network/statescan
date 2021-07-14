@@ -170,7 +170,7 @@ export default function Header() {
                   onClick={() => setIsActive(false)}
                   selected={location.pathname === "/[node]/assets"}
                 >
-                  Asset
+                  Assets
                 </MenuItem>
               </Link>
             </MenuWrapper>

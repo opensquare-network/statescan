@@ -10,7 +10,7 @@ import {
   fromAssetUnit,
   fromSymbolUnit,
 } from "utils";
-import { useNode, useSymbol } from "utils/hooks";
+import { getSymbol } from "utils/hooks";
 import DetailTable from "components/detailTable";
 import {
   addressAssetsHead,
@@ -38,7 +38,7 @@ export default function Address({
   addressTransfers,
   addressExtrinsics,
 }) {
-  const symbol = useSymbol();
+  const symbol = getSymbol(node);
 
   const tabTableData = [
     {

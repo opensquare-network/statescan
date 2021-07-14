@@ -19,7 +19,7 @@ import {
   transfersLatestHead,
   assetsHead,
 } from "utils/constants";
-import { useSymbol } from "utils/hooks";
+import { getSymbol } from "utils/hooks";
 import PageNotFound from "components/pageNotFound";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
@@ -51,7 +51,7 @@ const FootWrapper = styled.div`
 export default function Home({ node, overview: ssrOverview }) {
   const router = useRouter();
   const pushedOverview = useSelector(overviewSelector);
-  const symbol = useSymbol();
+  const symbol = getSymbol(node);
 
   useEffect(() => {
     connect(node);

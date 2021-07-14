@@ -10,6 +10,7 @@ import { addToast } from "store/reducers/toastSlice";
 const Wrapper = styled.div`
   display: inline;
   align-items: center;
+  line-height: 24px;
   @media screen and (max-width: 580px) {
     display: block;
   }

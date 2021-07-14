@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import MinorText from "components/minorText";
 import MajorText from "components/majorText";
 import AddressEllipsis from "components/addressEllipsis";
-import { useNode, useSymbol } from "utils/hooks";
+import { getSymbol } from "utils/hooks";
 import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
 import InLink from "components/inLink";
 
@@ -69,16 +69,15 @@ const Button = styled.div`
     `}
 `;
 
-export default function TransfersList({ assetTransfers }) {
+export default function TransfersList({ node, assetTransfers }) {
   const [showAll, setShowAll] = useState(false);
-  const symbol = useSymbol();
-  const node = useNode();
+  const symbol = getSymbol(node);
 
   return (
     <Wrapper>
       {((showAll ? assetTransfers : assetTransfers.slice(0, 6)) || []).map(
-        (item) => (
-          <TransferItem>
+        (item, index) => (
+          <TransferItem key={index}>
             <MinorText>From</MinorText>
             <InLink to={`/${node}/address/${item?.from}`}>
               <AddressEllipsis address={item.from} />

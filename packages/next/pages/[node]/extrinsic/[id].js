@@ -35,7 +35,6 @@ const AccessoryText = styled.div`
 
 export default function Extrinsic({
   node,
-  id,
   tab,
   extrinsicDetail,
   extrinsicTransfer,
@@ -119,7 +118,12 @@ export default function Extrinsic({
               <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,
               <MinorText>{capitalize(extrinsicDetail?.name)}</MinorText>,
               ...(hasTransfers
-                ? [<TransfersList assetTransfers={extrinsicTransfer} />]
+                ? [
+                    <TransfersList
+                      node={node}
+                      assetTransfers={extrinsicTransfer}
+                    />,
+                  ]
                 : []),
               <MinorText>
                 <Result isSuccess={extrinsicDetail?.isSuccess} />

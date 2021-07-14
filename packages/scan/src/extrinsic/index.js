@@ -36,9 +36,9 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     signer = "";
   }
 
-  const era = extrinsic.era.toJSON();
+  const era = extrinsic.era?.toJSON();
   let lifetime = undefined;
-  if (extrinsic.era.isMortalEra) {
+  if (extrinsic.era?.isMortalEra) {
     const mortalEra = extrinsic.era.asMortalEra;
     lifetime = [
       mortalEra.birth(indexer.blockHeight),

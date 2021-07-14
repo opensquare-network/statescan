@@ -65,8 +65,6 @@ export default function Extrinsic({
     },
   ];
 
-  const hasTransfers = extrinsicTransfer?.length > 0;
-
   return (
     <Layout>
       <Section>
@@ -80,20 +78,17 @@ export default function Extrinsic({
             ]}
           />
           <DetailTable
-            head={hasTransfers ? extrinsicTransferHead : extrinsicHead}
-            badge={
-              hasTransfers
-                ? [
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    extrinsicTransfer?.length,
-                    null,
-                  ]
-                : null
-            }
+            head={extrinsicHead}
+            badge={[
+              null,
+              null,
+              null,
+              null,
+              null,
+              null,
+              extrinsicTransfer?.length,
+              null,
+            ]}
             body={[
               <FlexWrapper>
                 <MinorText>
@@ -108,6 +103,21 @@ export default function Extrinsic({
               >
                 {extrinsicDetail?.indexer?.blockHeight}
               </InLink>,
+              extrinsicDetail?.lifetime ? (
+                <MinorText>
+                  <InLink
+                    to={`/${node}/block/${extrinsicDetail?.lifetime?.[0]}`}
+                  >
+                    {extrinsicDetail?.lifetime?.[0]}
+                  </InLink>
+                  {" - "}
+                  <InLink
+                    to={`/${node}/block/${extrinsicDetail?.lifetime?.[1]}`}
+                  >
+                    {extrinsicDetail?.lifetime?.[1]}
+                  </InLink>
+                </MinorText>
+              ) : undefined,
               <BreakText>
                 <CopyText text={extrinsicDetail?.hash}>
                   <MinorText>
@@ -117,14 +127,12 @@ export default function Extrinsic({
               </BreakText>,
               <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,
               <MinorText>{capitalize(extrinsicDetail?.name)}</MinorText>,
-              ...(hasTransfers
-                ? [
-                    <TransfersList
-                      node={node}
-                      assetTransfers={extrinsicTransfer}
-                    />,
-                  ]
-                : []),
+              extrinsicTransfer?.length > 0 ? (
+                <TransfersList node={node} assetTransfers={extrinsicTransfer} />
+              ) : undefined,
+              extrinsicDetail?.nonce === undefined ? undefined : (
+                <MinorText>{extrinsicDetail?.nonce}</MinorText>
+              ),
               <MinorText>
                 <Result isSuccess={extrinsicDetail?.isSuccess} />
               </MinorText>,

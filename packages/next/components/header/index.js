@@ -14,6 +14,7 @@ import IconActive from "./icon-active.svg";
 import NodeSwitcher from "components/nodeSwitcher";
 import Subheader from "./subheader";
 import SearchS from "components/search/search-s";
+import SubMenu from "./subMenu";
 
 const Container = styled.header`
   position: relative;
@@ -33,6 +34,9 @@ const Wrapper = styled.div`
     css`
       height: 464px;
     `};
+  @media screen and (max-width: 900px) {
+    height: 68px;
+  }
 `;
 
 const FlexWrapper = styled.div`
@@ -89,7 +93,7 @@ const MenuWrapper = styled.div`
     border-radius: 8px;
     padding: 8px 0px;
     flex-direction: column;
-    width: 80px;
+    z-index: 99;
   }
 `;
 
@@ -165,10 +169,11 @@ export default function Header() {
                   Home
                 </MenuItem>
               </Link>
+              <SubMenu closeMenu={() => setIsActive(false)} />
               <Link href={`/${node}/assets`}>
                 <MenuItem
                   onClick={() => setIsActive(false)}
-                  selected={location.pathname === "/[node]/assets"}
+                  selected={router.pathname === "/[node]/assets"}
                 >
                   Assets
                 </MenuItem>

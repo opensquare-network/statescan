@@ -23,7 +23,7 @@ module.exports = (app) => {
 
   for (const r of chainFeatureRouters) {
     router.use(
-      "/:chain(westmint)",
+      "/:chain(westmint|statemine)",
       r.routes(),
       r.allowedMethods({ throw: true })
     );

@@ -12,12 +12,12 @@ const Wrapper = styled.div`
   min-height: 100vh;
 `;
 
-export default function Layout({ children }) {
+export default function Layout({ node, children }) {
   return (
     <>
       <Background />
       <Wrapper>
-        <Header />
+        <Header node={node} />
         <Main>{children}</Main>
         <Footer />
         <Toast />

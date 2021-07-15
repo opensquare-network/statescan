@@ -7,6 +7,7 @@ const {
 
 const scanDbs = {
   westmint: DB(process.env.SCAN_DB_WND_NAME || "statescan-wnd"),
+  statemine: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
 };
 
 const db = (chain) => scanDbs[chain];

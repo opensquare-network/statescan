@@ -41,7 +41,10 @@ async function initDb() {
     useUnifiedTopology: true,
   });
 
-  db = client.db(getDbName());
+  const dbName = getDbName();
+  console.log(`Use scan DB name:`, dbName);
+
+  db = client.db(dbName);
   statusCol = db.collection(statusCollectionName);
   blockCol = db.collection(blockCollectionName);
   eventCol = db.collection(eventCollectionName);

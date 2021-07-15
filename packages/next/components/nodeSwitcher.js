@@ -1,11 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
-import { useRouter } from "next/router";
 
 import { useOnClickOutside } from "utils/hooks";
-import { setNode } from "store/reducers/nodeSlice";
-import { useNode } from "utils/hooks";
 import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
@@ -79,7 +75,7 @@ const Options = styled.div`
   right: 0;
 `;
 
-const Item = styled.div`
+const Item = styled.a`
   height: 36px;
   display: flex;
   align-items: center;
@@ -96,31 +92,11 @@ const Item = styled.div`
     `}
 `;
 
-export default function NodeSwitcher() {
-  const dispatch = useDispatch();
-  const node = useNode();
-  const [currentNode, setCurrentNode] = useState();
+export default function NodeSwitcher({ node }) {
+  const currentNode = nodes.find((item) => item.value === node);
   const [show, setShow] = useState(false);
   const ref = useRef();
-  const router = useRouter();
   useOnClickOutside(ref, () => setShow(false));
-
-  useEffect(() => {
-    setCurrentNode(() => nodes.find((item) => item.value === node));
-  }, [node]);
-
-  const replacePathname = useCallback(() => {
-    const newPathname = router.asPath.replace(/^\/\w+/, `/${node}`);
-    if (newPathname !== router.asPath) {
-      router.replace(newPathname);
-    }
-  }, [router, node]);
-
-  useEffect(() => {
-    if (router.asPath !== "/404" && node) {
-      replacePathname();
-    }
-  }, [node, router, replacePathname]);
 
   return (
     <Wrapper ref={ref}>
@@ -140,9 +116,7 @@ export default function NodeSwitcher() {
               key={index}
               active={item.value === currentNode?.value}
               onClick={() => {
-                dispatch(setNode(item.value));
-                replacePathname();
-                setShow(false);
+                location.href = `/${item.value}`;
               }}
             >
               <FlexWrapper>

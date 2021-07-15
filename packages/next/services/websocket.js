@@ -9,17 +9,17 @@ let socket = null;
 
 export function connect(chain) {
   if (socket) {
-    socket.emit("unsubscribe", { chain, data: chainStatusRoom });
-    socket.emit("unsubscribe", { chain, data: overviewRoom });
+    socket.emit("unsubscribe", chainStatusRoom);
+    socket.emit("unsubscribe", overviewRoom);
     socket.disconnect();
   }
 
-  socket = io(process.env.NEXT_PUBLIC_SOCKET_IO_URL);
+  socket = io(`/${chain}`);
   socket.connect();
 
   socket.on("connect", () => {
-    socket.emit("subscribe", { chain, data: chainStatusRoom });
-    socket.emit("subscribe", { chain, data: overviewRoom });
+    socket.emit("subscribe", chainStatusRoom);
+    socket.emit("subscribe", overviewRoom);
 
     socket.on("scanStatus", ({ height }) => {
       store.dispatch(setScanHeight(height));

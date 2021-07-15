@@ -102,10 +102,10 @@ export default function Block({
   ];
 
   return (
-    <Layout>
+    <Layout node={node}>
       <Section>
         <div>
-          <Nav data={[{ name: "Block" }, { name: id }]} />
+          <Nav data={[{ name: "Block" }, { name: id }]} node={node} />
           <DetailTable
             head={blockHead}
             body={[

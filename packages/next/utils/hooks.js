@@ -1,8 +1,6 @@
 import { useCallback, useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 
-import { nodeSelector } from "store/reducers/nodeSlice";
 import { nodes } from "utils/constants";
 
 export function useToggle(initalState = false) {
@@ -62,8 +60,14 @@ export function useWindowSize() {
 }
 
 export function useNode() {
-  const node = useSelector(nodeSelector);
-  return node;
+  const router = useRouter();
+  const match = router.asPath.match(/\/([^\/]+)(\/|$)/);
+  if (match) {
+    const node = match[1];
+    return node;
+  }
+
+  return null;
 }
 
 export function getSymbol(node) {

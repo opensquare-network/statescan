@@ -130,6 +130,10 @@ const TableDataItem = styled.pre`
   white-space: pre-wrap;
   font-family: "SF Mono";
   letter-spacing: -0.5px;
+  overflow-x: auto;
+  :-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const CollapseWrapper = styled.div`

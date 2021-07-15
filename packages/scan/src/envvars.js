@@ -5,7 +5,7 @@ const CHAINS = {
 };
 
 function currentChain() {
-  if (["statemine", "statemint", "westmint"].includes(process.env.CHAIN)) {
+  if (Object.values(CHAINS).includes(process.env.CHAIN)) {
     return process.env.CHAIN;
   } else {
     return "statemint";

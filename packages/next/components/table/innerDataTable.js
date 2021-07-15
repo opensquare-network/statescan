@@ -8,7 +8,7 @@ const StyledTable = styled.table`
 
 const StyledTr = styled.tr`
   ${(p) =>
-    p.isInnerTable
+    p.nested
       ? css`
           :first-child {
             > td {
@@ -56,15 +56,15 @@ const StyledTd = styled.td`
   }
 `;
 
-export default function InnerDataTable({ data, isInnerTable = false }) {
+export default function InnerDataTable({ data, nested = false }) {
   const formatValue = (fieldValue) =>
     Array.isArray(fieldValue) ? (
       <StyledTd style={{ padding: 0 }}>
-        <InnerDataTable data={fieldValue} isInnerTable />
+        <InnerDataTable data={fieldValue} nested />
       </StyledTd>
     ) : typeof fieldValue === "object" ? (
       <StyledTd style={{ padding: 0 }}>
-        <InnerDataTable data={fieldValue} isInnerTable />
+        <InnerDataTable data={fieldValue} nested />
       </StyledTd>
     ) : (
       <StyledTd style={{ minWidth: 320, padding: "14px 24px" }}>
@@ -75,8 +75,10 @@ export default function InnerDataTable({ data, isInnerTable = false }) {
   if (Array.isArray(data) && data.length < 2) {
     return (
       <StyledTable>
-        {data.map((item) => (
-          <StyledTr isInnerTable={isInnerTable}>{formatValue(item)}</StyledTr>
+        {data.map((item, index) => (
+          <StyledTr key={index} nested={nested}>
+            {formatValue(item)}
+          </StyledTr>
         ))}
       </StyledTable>
     );
@@ -85,10 +87,10 @@ export default function InnerDataTable({ data, isInnerTable = false }) {
   if (typeof data === "object") {
     return (
       <StyledTable>
-        {Object.keys(data).map((fieldName) => {
+        {Object.keys(data).map((fieldName, index) => {
           const width = 40;
           return (
-            <StyledTr isInnerTable={isInnerTable}>
+            <StyledTr key={index} nested={nested}>
               <StyledTd
                 style={{
                   whiteSpace: "nowrap",

@@ -9,9 +9,19 @@ async function getEvents(ctx) {
     return;
   }
 
+  const { module, method } = ctx.query;
+
+  const q = {};
+  if (module) {
+    q.section = module;
+  }
+  if (method) {
+    q.method = method;
+  }
+
   const col = await getEventCollection(chain);
   const items = await col
-    .find({})
+    .find(q)
     .sort({
       "indexer.blockHeight": -1,
       sort: -1,
@@ -19,7 +29,7 @@ async function getEvents(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.estimatedDocumentCount();
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,
@@ -29,6 +39,26 @@ async function getEvents(ctx) {
   };
 }
 
+async function getEventModules(ctx) {
+  const { chain } = ctx.params;
+
+  const col = await getEventCollection(chain);
+  const items = await col.distinct("section");
+
+  ctx.body = items;
+}
+
+async function getEventModuleMethods(ctx) {
+  const { chain, moduleName } = ctx.params;
+
+  const col = await getEventCollection(chain);
+  const items = await col.distinct("method", { section: moduleName });
+
+  ctx.body = items;
+}
+
 module.exports = {
   getEvents,
+  getEventModules,
+  getEventModuleMethods,
 };

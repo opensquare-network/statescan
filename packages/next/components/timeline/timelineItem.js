@@ -5,7 +5,7 @@ import InLink from "components/inLink";
 import CopyText from "components/copyText";
 import BreakText from "components/breakText";
 import MonoText from "components/monoText";
-import { useNode } from "utils/hooks";
+import { bigNumber2Locale, fromAssetUnit } from "utils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -130,9 +130,16 @@ const Titles = {
   Burned: "Burn",
 };
 
-export default function TimelineItem({ data }) {
-  const node = useNode();
+function formatBalance(balance, asset) {
+  if (Number.isInteger(asset.decimals) && asset.symbol) {
+    return `${bigNumber2Locale(fromAssetUnit(balance, asset.decimals))} ${
+      asset.symbol
+    }`;
+  }
+  return bigNumber2Locale(balance);
+}
 
+export default function TimelineItem({ data, node }) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.method] || timelineItem.method;
 
@@ -153,7 +160,10 @@ export default function TimelineItem({ data }) {
               </CopyText>
             </BreakText>
           ),
-          "Min Balance": `${timelineItem.asset.minBalance} ${timelineItem.asset.symbol}`,
+          "Min Balance": formatBalance(
+            timelineItem.asset.minBalance,
+            timelineItem.asset
+          ),
         };
       }
       case "ForceCreated": {
@@ -170,7 +180,10 @@ export default function TimelineItem({ data }) {
             </BreakText>
           ),
           Sufficient: <FiledText>{timelineItem.asset.isSufficient}</FiledText>,
-          "Min Balance": `${timelineItem.asset.minBalance} ${timelineItem.asset.symbol}`,
+          "Min Balance": formatBalance(
+            timelineItem.asset.minBalance,
+            timelineItem.asset
+          ),
         };
       }
       case "MetadataSet": {
@@ -236,7 +249,10 @@ export default function TimelineItem({ data }) {
               </CopyText>
             </BreakText>
           ),
-          "Min Balance": `${timelineItem.asset.minBalance} ${timelineItem.asset.symbol}`,
+          "Min Balance": formatBalance(
+            timelineItem.asset.minBalance,
+            timelineItem.asset
+          ),
           Sufficient: <BoldText>{timelineItem.asset.isSufficient}</BoldText>,
           Frozen: <BoldText>{timelineItem.asset.isFrozen}</BoldText>,
         };
@@ -309,7 +325,6 @@ export default function TimelineItem({ data }) {
       }
       case "Issued": {
         const [assetId, beneficiary, amount] = timelineItem.eventData;
-        const { symbol } = timelineItem.asset;
         return {
           "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
           Beneficiary: (
@@ -323,12 +338,11 @@ export default function TimelineItem({ data }) {
               </CopyText>
             </BreakText>
           ),
-          Amount: `${amount} ${symbol}`,
+          Amount: formatBalance(amount, timelineItem.asset),
         };
       }
       case "Burned": {
         const [assetId, who, amount] = timelineItem.eventData;
-        const { symbol } = timelineItem.asset;
         return {
           "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
           Who: (
@@ -340,7 +354,7 @@ export default function TimelineItem({ data }) {
               </CopyText>
             </BreakText>
           ),
-          Amount: `${amount} ${symbol}`,
+          Amount: formatBalance(amount, timelineItem.asset),
         };
       }
     }

@@ -118,6 +118,15 @@ export const extrinsicsHead = [
   { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
+export const eventsHead = [
+  { name: "Event ID", width: 160 },
+  { name: "Height", width: 160 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "Extrinsics Hash" },
+  { name: "Action" },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",

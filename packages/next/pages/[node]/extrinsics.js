@@ -10,7 +10,6 @@ import ThemeText from "components/themeText";
 import Result from "components/result";
 
 export default function Extrinsics({ node, extrinsics }) {
-  console.log({ extrinsics });
   return (
     <Layout>
       <section>
@@ -31,8 +30,8 @@ export default function Extrinsics({ node, extrinsics }) {
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,
             <Result isSuccess={item?.isSuccess} />,
-            `${item.section}(${item.name})`,
-            item.args,
+            `${item?.section}(${item?.name})`,
+            item?.args,
           ])}
           foot={
             <Pagination

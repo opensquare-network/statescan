@@ -8,7 +8,6 @@ import InLink from "components/inLink";
 import AddressEllipsis from "components/addressEllipsis";
 
 export default function Transfers({ node, transfers }) {
-  console.log({ transfers }, Math.ceil(transfers?.total / transfers?.pageSize));
   return (
     <Layout>
       <section>

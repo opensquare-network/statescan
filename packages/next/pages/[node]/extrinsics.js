@@ -37,7 +37,7 @@ export default function Extrinsics({ node, extrinsics }) {
             <Pagination
               page={extrinsics?.page}
               pageSize={extrinsics?.pageSize}
-              total={Math.ceil(extrinsics?.total / extrinsics?.pageSize)}
+              total={extrinsics?.total}
             />
           }
           collapse={900}

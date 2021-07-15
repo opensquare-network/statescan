@@ -32,7 +32,7 @@ export default function Blocks({ node, blocks }) {
             <Pagination
               page={blocks?.page}
               pageSize={blocks?.pageSize}
-              total={Math.ceil(blocks?.total / blocks?.pageSize)}
+              total={blocks?.total}
             />
           }
           collapse={900}

@@ -35,7 +35,7 @@ export default function Events({ node, events }) {
             <Pagination
               page={events?.page}
               pageSize={events?.pageSize}
-              total={Math.ceil(events?.total / events?.pageSize)}
+              total={events?.total}
             />
           }
           collapse={900}

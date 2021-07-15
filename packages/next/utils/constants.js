@@ -127,6 +127,16 @@ export const eventsHead = [
   { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
+export const transfersHead = [
+  { name: "Event ID", width: 136 },
+  { name: "Block", width: 136 },
+  { name: "Method", width: 200 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "From", width: 160 },
+  { name: "to", width: 160 },
+  { name: "Value", align: "right" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",

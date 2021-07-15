@@ -10,11 +10,11 @@ const Wrapper = styled.div`
   padding: 0 24px;
 `;
 
-export default function Timeline({ data }) {
+export default function Timeline({ data, node }) {
   return (
     <Wrapper>
       {(data || []).map((item) => {
-        return <TimelineItem data={item} />;
+        return <TimelineItem data={item} node={node} />;
       })}
     </Wrapper>
   );

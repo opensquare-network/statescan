@@ -136,7 +136,7 @@ function formatBalance(balance, asset) {
       asset.symbol
     }`;
   }
-  return bigNumber2Locale(balance);
+  return bigNumber2Locale(`${balance}`);
 }
 
 export default function TimelineItem({ data, node }) {

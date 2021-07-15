@@ -58,6 +58,7 @@ const TitleWrapper = styled.div`
 `;
 
 const MenuWrapper = styled.div`
+  z-index: 99;
   position: absolute;
   min-width: 170px;
   background: #ffffff;
@@ -146,7 +147,10 @@ export default function SubMenu({ closeMenu }) {
           {menus.map((item, index) => (
             <Link key={index} href={`/${node}/${item.value}`}>
               <MenuItem
-                onClick={closeMenu}
+                onClick={() => {
+                  closeMenu();
+                  setIsActive(false);
+                }}
                 selected={router.pathname === `/[node]/${item.value}`}
               >
                 {item.name}

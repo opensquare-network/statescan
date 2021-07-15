@@ -1,5 +1,66 @@
 import Layout from "components/layout";
+import nextApi from "services/nextApi";
+import { extrinsicsHead, EmptyQuery } from "utils/constants";
+import Nav from "components/nav";
+import Table from "components/table";
+import Pagination from "components/pagination";
+import InLink from "components/inLink";
+import HashEllipsis from "components/hashEllipsis";
+import ThemeText from "components/themeText";
+import Result from "components/result";
 
-export default function Extrinsics() {
-  return <Layout>extrinsics</Layout>;
+export default function Extrinsics({ node, extrinsics }) {
+  console.log({ extrinsics });
+  return (
+    <Layout>
+      <section>
+        <Nav data={[{ name: "Extrinsics" }]} />
+        <Table
+          head={extrinsicsHead}
+          body={(extrinsics?.items || []).map((item) => [
+            <InLink
+              to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
+            >
+              {item?.indexer?.blockHeight}-{item?.indexer?.index}
+            </InLink>,
+            <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
+              {item?.indexer?.blockHeight}
+            </InLink>,
+            item?.indexer?.blockTime,
+            <ThemeText>
+              <HashEllipsis hash={item?.hash} />
+            </ThemeText>,
+            <Result isSuccess={item?.isSuccess} />,
+            `${item.section}(${item.name})`,
+            item.args,
+          ])}
+          foot={
+            <Pagination
+              page={extrinsics?.page}
+              pageSize={extrinsics?.pageSize}
+              total={Math.ceil(extrinsics?.total / extrinsics?.pageSize)}
+            />
+          }
+          collapse={900}
+        />
+      </section>
+    </Layout>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { node } = context.params;
+  const { page } = context.query;
+  const nPage = parseInt(page) || 1;
+
+  const { result: extrinsics } = await nextApi.fetch(`${node}/extrinsics`, {
+    page: nPage - 1,
+  });
+
+  return {
+    props: {
+      node,
+      extrinsics: extrinsics ?? EmptyQuery,
+    },
+  };
 }

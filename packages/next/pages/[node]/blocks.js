@@ -9,7 +9,6 @@ import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
 
 export default function Blocks({ node, blocks }) {
-  console.log({ blocks });
   return (
     <Layout>
       <section>

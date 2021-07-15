@@ -108,6 +108,16 @@ export const blocksHead = [
   { name: "Events", align: "right" },
 ];
 
+export const extrinsicsHead = [
+  { name: "Extrinsics ID", width: 136 },
+  { name: "Height", width: 136 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "Extrinsics Hash" },
+  { name: "Result", width: 160 },
+  { name: "Action", width: 240 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",

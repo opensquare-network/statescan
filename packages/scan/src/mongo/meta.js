@@ -6,6 +6,9 @@ function getDbName() {
   if (CHAINS.WESTMINT === chain) {
     return process.env.MONGO_DB_META_WND_NAME || "meta-westmint";
   }
+  if (CHAINS.STATEMINE === chain) {
+    return process.env.MONGO_DB_META_KSM_NAME || "meta-statemine";
+  }
 
   throw new Error("Not find metadata database");
 }

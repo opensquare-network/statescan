@@ -1,5 +1,61 @@
 import Layout from "components/layout";
+import nextApi from "services/nextApi";
+import { blocksHead, EmptyQuery } from "utils/constants";
+import Nav from "components/nav";
+import Table from "components/table";
+import Pagination from "components/pagination";
+import InLink from "components/inLink";
+import HashEllipsis from "components/hashEllipsis";
+import ThemeText from "components/themeText";
 
-export default function Blocks() {
-  return <Layout>blocks</Layout>;
+export default function Blocks({ node, blocks }) {
+  console.log({ blocks });
+  return (
+    <Layout>
+      <section>
+        <Nav data={[{ name: "Blocks" }]} />
+        <Table
+          head={blocksHead}
+          body={(blocks?.items || []).map((item) => [
+            <InLink to={`/${node}/block/${item?.header?.number}`}>
+              {item?.header?.number}
+            </InLink>,
+            item?.blockTime,
+            "-",
+            <ThemeText>
+              <HashEllipsis hash={item?.hash} />
+            </ThemeText>,
+            "-",
+            item?.extrinsicsCount,
+            item?.eventsCount,
+          ])}
+          foot={
+            <Pagination
+              page={blocks?.page}
+              pageSize={blocks?.pageSize}
+              total={Math.ceil(blocks?.total / blocks?.pageSize)}
+            />
+          }
+          collapse={900}
+        />
+      </section>
+    </Layout>
+  );
+}
+
+export async function getServerSideProps(context) {
+  const { node } = context.params;
+  const { page } = context.query;
+  const nPage = parseInt(page) || 1;
+
+  const { result: blocks } = await nextApi.fetch(`${node}/blocks`, {
+    page: nPage - 1,
+  });
+
+  return {
+    props: {
+      node,
+      blocks: blocks ?? EmptyQuery,
+    },
+  };
 }

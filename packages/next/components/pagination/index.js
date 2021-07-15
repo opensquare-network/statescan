@@ -45,8 +45,9 @@ const Nav = styled.a`
 `;
 
 const Item = styled.a`
+  padding: 0 8px;
   cursor: pointer;
-  width: 30px;
+  min-width: 30px;
   height: 28px;
   background: #fafafa;
   border-radius: 4px;

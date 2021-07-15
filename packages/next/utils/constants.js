@@ -98,6 +98,16 @@ export const assetHoldersHead = [
   { name: "Quantity", align: "right" },
 ];
 
+export const blocksHead = [
+  { name: "Height", width: 136 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "Status", width: 160 },
+  { name: "Hash", width: 280 },
+  { name: "Validator", width: 152 },
+  { name: "Extrinsics", align: "right" },
+  { name: "Events", align: "right" },
+];
+
 export const addressHead = [
   "Address",
   "Balance",

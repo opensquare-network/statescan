@@ -13,9 +13,19 @@ async function getExtrinsics(ctx) {
     return;
   }
 
+  const { module, method } = ctx.query;
+
+  const q = {};
+  if (module) {
+    q.section = module;
+  }
+  if (method) {
+    q.name = method;
+  }
+
   const col = await getExtrinsicCollection(chain);
   const items = await col
-    .find({})
+    .find(q)
     .sort({
       "indexer.blockHeight": -1,
       "indexer.index": -1,
@@ -23,7 +33,7 @@ async function getExtrinsics(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.estimatedDocumentCount();
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,
@@ -170,6 +180,24 @@ async function getExtrinsicTransfers(ctx) {
   ctx.body = items;
 }
 
+async function getExtrinsicModules(ctx) {
+  const { chain } = ctx.params;
+
+  const col = await getExtrinsicCollection(chain);
+  const items = await col.distinct("section");
+
+  ctx.body = items;
+}
+
+async function getExtrinsicModuleMethods(ctx) {
+  const { chain, moduleName } = ctx.params;
+
+  const col = await getExtrinsicCollection(chain);
+  const items = await col.distinct("name", { section: moduleName });
+
+  ctx.body = items;
+}
+
 module.exports = {
   getExtrinsics,
   getLatestExtrinsics,
@@ -177,4 +205,6 @@ module.exports = {
   getExtrinsic,
   getExtrinsicEvents,
   getExtrinsicTransfers,
+  getExtrinsicModules,
+  getExtrinsicModuleMethods,
 };

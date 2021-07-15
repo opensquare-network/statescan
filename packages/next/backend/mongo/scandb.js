@@ -58,6 +58,7 @@ function DB(dbName) {
       "indexer.blockHeight": -1,
       "indexer.index": 1,
     });
+    extrinsicCol.createIndex({ section: 1, name: 1 });
 
     eventCol.createIndex({ "indexer.blockHash": 1, sort: 1 });
     eventCol.createIndex({ "indexer.blockHeight": 1, sort: 1 });
@@ -67,6 +68,7 @@ function DB(dbName) {
       "phase.value": 1,
       sort: 1,
     });
+    eventCol.createIndex({ section: 1, method: 1 });
 
     addressCol.createIndex({ address: 1 });
 

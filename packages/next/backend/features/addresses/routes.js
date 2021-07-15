@@ -3,6 +3,7 @@ const addressesController = require("./addresses.controller");
 
 const router = new Router();
 
+router.get("/addresses", addressesController.getAddresses);
 router.get("/addresses/count", addressesController.getAddressCount);
 router.get("/addresses/:address", addressesController.getAddress);
 router.get(

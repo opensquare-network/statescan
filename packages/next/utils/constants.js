@@ -38,7 +38,7 @@ export const addressExtrincsHead = [
   { name: "Time", type: "time", width: 200 },
   { name: "Result", width: 160 },
   { name: "Action", width: 320 },
-  { name: "Data", type: "data", width: 76 },
+  { name: "Data", type: "data", width: 76, display: "table" },
 ];
 
 export const addressAssetsHead = [
@@ -64,7 +64,7 @@ export const addressTransfersHead = [
 export const extrinsicEventsHead = [
   { name: "Event ID", width: 160 },
   { name: "Action" },
-  { name: "Data", type: "data", align: "right", width: 76 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
 export const blockExtrinsicsHead = [
@@ -72,14 +72,14 @@ export const blockExtrinsicsHead = [
   { name: "Hash" },
   { name: "Result", width: 160 },
   { name: "Action", width: 320 },
-  { name: "Data", type: "data", align: "right", width: 76 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
 export const blockEventsHead = [
   { name: "Event ID", width: 160 },
   { name: "Extrinsic ID", width: 160 },
   { name: "Action" },
-  { name: "Data", type: "data", align: "right", width: 76 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
 export const assetTransfersHead = [

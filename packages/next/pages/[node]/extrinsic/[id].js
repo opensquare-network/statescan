@@ -7,7 +7,6 @@ import Nav from "components/nav";
 import DetailTable from "components/detailTable";
 import {
   extrinsicHead,
-  extrinsicTransferHead,
   extrinsicEventsHead,
   EmptyQuery,
 } from "utils/constants";

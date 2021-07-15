@@ -7,6 +7,7 @@ import TimeHead from "./timeHead";
 import TimeBody from "./timeBody";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
+import InnerDataTable from "./innerDataTable";
 
 const Title = styled.h4`
   font-weight: bold;
@@ -129,6 +130,10 @@ const TableDataItem = styled.pre`
   white-space: pre-wrap;
   font-family: "SF Mono";
   letter-spacing: -0.5px;
+  overflow-x: auto;
+  :-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const CollapseWrapper = styled.div`
@@ -280,10 +285,21 @@ export default function Table({
                       <StyledTr>
                         <TableDataWrapper colSpan="100%">
                           <TableDataItem>
-                            {JSON.stringify(
-                              body?.[bodyIndex]?.[body[bodyIndex].length - 1],
-                              null,
-                              2
+                            {head[body[bodyIndex].length - 1].display ===
+                            "table" ? (
+                              <InnerDataTable
+                                data={
+                                  body?.[bodyIndex]?.[
+                                    body[bodyIndex].length - 1
+                                  ]
+                                }
+                              />
+                            ) : (
+                              JSON.stringify(
+                                body?.[bodyIndex]?.[body[bodyIndex].length - 1],
+                                null,
+                                2
+                              )
                             )}
                           </TableDataItem>
                         </TableDataWrapper>
@@ -355,10 +371,19 @@ export default function Table({
                     {showData[bodyIndex] && (
                       <CollapseTableDataWrapper>
                         <TableDataItem>
-                          {JSON.stringify(
-                            body?.[bodyIndex]?.[body[bodyIndex].length - 1],
-                            null,
-                            2
+                          {head[body[bodyIndex].length - 1].display ===
+                          "table" ? (
+                            <InnerDataTable
+                              data={
+                                body?.[bodyIndex]?.[body[bodyIndex].length - 1]
+                              }
+                            />
+                          ) : (
+                            JSON.stringify(
+                              body?.[bodyIndex]?.[body[bodyIndex].length - 1],
+                              null,
+                              2
+                            )
                           )}
                         </TableDataItem>
                       </CollapseTableDataWrapper>

@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -52,7 +53,7 @@ export default function DetailTable({ head, badge, body }) {
     <Wrapper>
       {(head || []).map((item, index) =>
         body?.[index] === undefined ? (
-          <></>
+          <Fragment key={index}></Fragment>
         ) : (
           <Item key={index}>
             <Head title={item}>

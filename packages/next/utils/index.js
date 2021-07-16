@@ -144,17 +144,9 @@ export function zip(arrLeft, arrRight) {
   return arrLeft.map((val, i) => [val, arrRight[i]]);
 }
 
-export function objectFromEntries(entries) {
-  if (!entries || !entries[Symbol.iterator]) {
-    throw new Error("objectFromEntries() requires a single iterable argument");
-  }
-
-  const o = {};
-
-  Object.keys(entries).forEach((key) => {
-    const [k, v] = entries[key];
-    o[k] = v;
-  });
-
-  return o;
+export function makeTablePairs(keys, vals) {
+  return {
+    object_type: "table_pairs",
+    object_data: zip(keys, vals),
+  };
 }

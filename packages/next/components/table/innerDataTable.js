@@ -89,11 +89,17 @@ export default function InnerDataTable({ data, nested = false }) {
   }
 
   if (typeof data === "object") {
+    let entries = [];
+    if (data.object_type === "table_pairs" && data.object_data !== undefined) {
+      entries = data.object_data;
+    } else {
+      entries = Object.entries(data);
+    }
     return (
-      Object.keys(data).length > 0 && (
+      entries.length > 0 && (
         <StyledTable>
           <tbody>
-            {Object.keys(data).map((fieldName, index) => {
+            {entries.map(([fieldName, fieldValue], index) => {
               const width = 40;
               return (
                 <StyledTr key={index} nested={nested}>
@@ -107,7 +113,7 @@ export default function InnerDataTable({ data, nested = false }) {
                   >
                     {fieldName}
                   </StyledTd>
-                  {formatValue(data[fieldName])}
+                  {formatValue(fieldValue)}
                 </StyledTr>
               );
             })}

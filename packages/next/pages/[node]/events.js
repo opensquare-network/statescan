@@ -19,7 +19,7 @@ export default function Events({ node, events, filter }) {
           head={eventsHead}
           body={(events?.items || []).map((item) => [
             <InLink
-              to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.sort}`}
+              to={`/${node}/block/${item?.indexer?.blockHeight}-${item?.sort}`}
             >
               {item?.indexer?.blockHeight}-{item?.sort}
             </InLink>,
@@ -27,9 +27,13 @@ export default function Events({ node, events, filter }) {
               {item?.indexer?.blockHeight}
             </InLink>,
             item?.indexer?.blockTime,
-            <ThemeText>
-              <HashEllipsis hash={item?.extrinsicHash} />
-            </ThemeText>,
+            item?.extrinsicHash ? (
+              <ThemeText>
+                <HashEllipsis hash={item?.extrinsicHash} />
+              </ThemeText>
+            ) : (
+              "-"
+            ),
             `${item?.section}(${item?.meta?.name})`,
             item?.meta,
           ])}
@@ -63,7 +67,7 @@ export async function getServerSideProps(context) {
   filter.push({
     value: module ?? null,
     name: "Module",
-    text: "module",
+    query: "module",
     options: (modules || []).reduce(
       (acc, cur) => {
         acc.push({ text: cur, value: cur });
@@ -79,7 +83,7 @@ export async function getServerSideProps(context) {
     filter.push({
       value: method ?? null,
       name: "Method",
-      text: "method",
+      query: "method",
       options: (methods || []).reduce(
         (acc, cur) => {
           acc.push({ text: cur, value: cur });

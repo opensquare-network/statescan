@@ -43,7 +43,11 @@ export default function Filter({ total, data }) {
       {(data || []).map((item, index) => (
         <SelectWrapper key={index}>
           <div>{item.name}</div>
-          <Select value={item.value} options={item.options} text={item.text} />
+          <Select
+            value={item.value}
+            options={item.options}
+            query={item.query}
+          />
         </SelectWrapper>
       ))}
     </Wrapper>

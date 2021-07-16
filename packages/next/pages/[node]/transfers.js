@@ -6,8 +6,12 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import AddressEllipsis from "components/addressEllipsis";
+import { bigNumber2Locale, fromSymbolUnit, fromAssetUnit } from "utils";
+import { getSymbol } from "utils/hooks";
 
 export default function Transfers({ node, transfers }) {
+  const symbol = getSymbol(node);
+
   return (
     <Layout node={node}>
       <section>
@@ -31,7 +35,14 @@ export default function Transfers({ node, transfers }) {
             <InLink to={`/${node}/address/${item?.to}`}>
               <AddressEllipsis address={item?.to} />
             </InLink>,
-            `${item?.balance} ${item?.assetSymbol ?? ""}`,
+            // `${item?.balance} ${item?.assetSymbol ?? ""}`,
+            item.assetSymbol
+              ? `${bigNumber2Locale(
+                  fromAssetUnit(item.balance, item.assetDecimals)
+                )} ${item.assetSymbol}`
+              : `${bigNumber2Locale(
+                  fromSymbolUnit(item.balance, symbol)
+                )} ${symbol}`,
           ])}
           foot={
             <Pagination

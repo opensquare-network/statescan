@@ -7,12 +7,14 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
+import Filter from "components/filter";
 
-export default function Events({ node, events }) {
+export default function Events({ node, events, filter }) {
   return (
     <Layout>
       <section>
         <Nav data={[{ name: "Events" }]} />
+        <Filter total={`All ${events?.total} events`} data={filter} />
         <Table
           head={eventsHead}
           body={(events?.items || []).map((item) => [
@@ -47,17 +49,52 @@ export default function Events({ node, events }) {
 
 export async function getServerSideProps(context) {
   const { node } = context.params;
-  const { page } = context.query;
+  const { page, module, method } = context.query;
   const nPage = parseInt(page) || 1;
 
   const { result: events } = await nextApi.fetch(`${node}/events`, {
     page: nPage - 1,
+    module,
+    method,
   });
+
+  const filter = [];
+  const { result: modules } = await nextApi.fetch(`${node}/events/modules`);
+  filter.push({
+    value: module ?? null,
+    name: "Module",
+    text: "module",
+    options: (modules || []).reduce(
+      (acc, cur) => {
+        acc.push({ text: cur, value: cur });
+        return acc;
+      },
+      [{ text: "All", value: null }]
+    ),
+  });
+  if (module) {
+    const { result: methods } = await nextApi.fetch(
+      `${node}/events/modules/${module}/methods`
+    );
+    filter.push({
+      value: method ?? null,
+      name: "Method",
+      text: "method",
+      options: (methods || []).reduce(
+        (acc, cur) => {
+          acc.push({ text: cur, value: cur });
+          return acc;
+        },
+        [{ text: "All", value: null }]
+      ),
+    });
+  }
 
   return {
     props: {
       node,
       events: events ?? EmptyQuery,
+      filter,
     },
   };
 }

@@ -105,6 +105,52 @@ export const assetHoldersHead = [
   { name: "Quantity", align: "right" },
 ];
 
+export const blocksHead = [
+  { name: "Height", width: 136 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "Status", width: 160 },
+  { name: "Hash", width: 280 },
+  { name: "Validator", width: 152 },
+  { name: "Extrinsics", align: "right" },
+  { name: "Events", align: "right" },
+];
+
+export const extrinsicsHead = [
+  { name: "Extrinsics ID", width: 136 },
+  { name: "Height", width: 136 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "Extrinsics Hash" },
+  { name: "Result", width: 160 },
+  { name: "Action", width: 240 },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
+];
+
+export const eventsHead = [
+  { name: "Event ID", width: 160 },
+  { name: "Height", width: 160 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "Extrinsics Hash" },
+  { name: "Action" },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
+];
+
+export const transfersHead = [
+  { name: "Event ID", width: 136 },
+  { name: "Block", width: 136 },
+  { name: "Method", width: 200 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "From", width: 160 },
+  { name: "to", width: 160 },
+  { name: "Value", align: "right" },
+];
+
+export const addressesHead = [
+  { name: "Rank", width: 96 },
+  { name: "Address" },
+  { name: "Loacked DOT", width: 240 },
+  { name: "Balance DOT", width: 240 },
+];
+
 export const addressHead = [
   "Address",
   "Balance",

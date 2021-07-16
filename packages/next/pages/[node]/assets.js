@@ -7,7 +7,7 @@ import AddressEllipsis from "components/addressEllipsis";
 import { assetsHead, EmptyQuery } from "utils/constants";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import Pagination from "components/pagination";
-import nextApi from "services/nextApi";
+import { ssrNextApi as nextApi } from "services/nextApi";
 
 export default function Assets({ node, assets }) {
   return (

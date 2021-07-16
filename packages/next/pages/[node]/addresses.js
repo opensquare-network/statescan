@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import Layout from "components/layout";
-import nextApi from "services/nextApi";
+import { ssrNextApi as nextApi } from "services/nextApi";
 import { addressesHead, EmptyQuery } from "utils/constants";
 import Nav from "components/nav";
 import Table from "components/table";

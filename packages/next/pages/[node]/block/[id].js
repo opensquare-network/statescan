@@ -40,10 +40,15 @@ export default function Block({
   node,
   id,
   tab,
+  event,
   blockDetail,
   blockEvents,
   blockExtrinsics,
 }) {
+  const expand = (blockEvents?.items || []).findIndex(
+    (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
+  );
+
   const tabTableData = [
     {
       name: "Extrinsics",
@@ -91,6 +96,7 @@ export default function Block({
           )
         ),
       ]),
+      expand,
       foot: (
         <Pagination
           page={blockEvents?.page}
@@ -171,7 +177,7 @@ export default function Block({
 
 export async function getServerSideProps(context) {
   const { node, id } = context.params;
-  const { tab, page } = context.query;
+  const { tab, page, event } = context.query;
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "extrinsics";
@@ -191,6 +197,7 @@ export async function getServerSideProps(context) {
       node,
       id,
       tab: activeTab,
+      event: event ?? null,
       blockDetail: blockDetail ?? null,
       blockEvents: blockEvents ?? EmptyQuery,
       blockExtrinsics: blockExtrinsics ?? EmptyQuery,

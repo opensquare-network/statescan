@@ -19,7 +19,7 @@ export default function Events({ node, events, filter }) {
           head={eventsHead}
           body={(events?.items || []).map((item) => [
             <InLink
-              to={`/${node}/block/${item?.indexer?.blockHeight}-${item?.sort}`}
+              to={`/${node}/block/${item?.indexer?.blockHeight}?tab=events&event=${item?.indexer?.blockHeight}-${item?.sort}`}
             >
               {item?.indexer?.blockHeight}-{item?.sort}
             </InLink>,

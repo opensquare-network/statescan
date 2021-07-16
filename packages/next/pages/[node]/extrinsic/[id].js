@@ -20,6 +20,7 @@ import Pagination from "components/pagination";
 import BreakText from "components/breakText";
 import TransfersList from "components/transfersList";
 import MonoText from "components/monoText";
+import PageNotFound from "components/pageNotFound";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -41,6 +42,14 @@ export default function Extrinsic({
   extrinsicTransfer,
   extrinsicEvents,
 }) {
+  if (!extrinsicDetail) {
+    return (
+      <Layout node={node}>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
   const expand = (extrinsicEvents?.items || []).findIndex(
     (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
   );

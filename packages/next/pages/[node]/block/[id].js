@@ -22,6 +22,7 @@ import {
   blockEventsHead,
   EmptyQuery,
 } from "utils/constants";
+import PageNotFound from "components/pageNotFound";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -44,6 +45,14 @@ export default function Block({
   blockEvents,
   blockExtrinsics,
 }) {
+  if (!blockDetail) {
+    return (
+      <Layout node={node}>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
   const tabTableData = [
     {
       name: "Extrinsics",

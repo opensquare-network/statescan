@@ -22,6 +22,7 @@ import Tooltip from "components/tooltip";
 import Timeline from "components/timeline";
 import nextApi from "services/nextApi";
 import MonoText from "components/monoText";
+import PageNotFound from "components/pageNotFound";
 
 export default function Asset({
   node,
@@ -30,6 +31,14 @@ export default function Asset({
   assetTransfers,
   assetHolders,
 }) {
+  if (!asset) {
+    return (
+      <Layout node={node}>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
   const assetSymbol = asset?.symbol;
 
   const symbol = getSymbol(node);

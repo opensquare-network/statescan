@@ -10,9 +10,9 @@ import ThemeText from "components/themeText";
 
 export default function Blocks({ node, blocks }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Blocks" }]} />
+        <Nav data={[{ name: "Blocks" }]} node={node} />
         <Table
           head={blocksHead}
           body={(blocks?.items || []).map((item) => [

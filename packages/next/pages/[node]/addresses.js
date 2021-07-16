@@ -8,9 +8,9 @@ import InLink from "components/inLink";
 
 export default function Addresses({ node, addresses }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Addresses" }]} />
+        <Nav data={[{ name: "Addresses" }]} node={node} />
         <Table
           head={addressesHead}
           body={(addresses?.items || []).map((item) => [

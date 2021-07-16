@@ -11,9 +11,9 @@ import Result from "components/result";
 
 export default function Extrinsics({ node, extrinsics }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Extrinsics" }]} />
+        <Nav data={[{ name: "Extrinsics" }]} node={node} />
         <Table
           head={extrinsicsHead}
           body={(extrinsics?.items || []).map((item) => [

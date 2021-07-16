@@ -11,9 +11,9 @@ import Filter from "components/filter";
 
 export default function Events({ node, events, filter }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Events" }]} />
+        <Nav data={[{ name: "Events" }]} node={node} />
         <Filter total={`All ${events?.total} events`} data={filter} />
         <Table
           head={eventsHead}

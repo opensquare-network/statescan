@@ -9,9 +9,9 @@ import AddressEllipsis from "components/addressEllipsis";
 
 export default function Transfers({ node, transfers }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Transfers" }]} />
+        <Nav data={[{ name: "Transfers" }]} node={node} />
         <Table
           head={transfersHead}
           body={(transfers?.items || []).map((item) => [

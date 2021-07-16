@@ -254,14 +254,14 @@ export default function Table({
                         <td
                           key={index}
                           style={{
-                            textAlign: head[index].align ?? "left",
+                            textAlign: head?.[index].align ?? "left",
                             height: `${rowHeight}px`,
                           }}
                         >
-                          {head[index].type === "time" && (
+                          {head?.[index].type === "time" && (
                             <TimeBody timeType={timeType} ts={item} />
                           )}
-                          {head[index].type === "data" && (
+                          {head?.[index].type === "data" && (
                             <Wrapper>
                               <DataImg
                                 src={`/imgs/icons/data-show${
@@ -276,7 +276,7 @@ export default function Table({
                               />
                             </Wrapper>
                           )}
-                          {!head[index].type && item}
+                          {!head?.[index].type && item}
                           <div className="border-bottom"></div>
                         </td>
                       ))}
@@ -285,7 +285,7 @@ export default function Table({
                       <StyledTr>
                         <TableDataWrapper colSpan="100%">
                           <TableDataItem>
-                            {head[body[bodyIndex].length - 1].display ===
+                            {head?.[body[bodyIndex].length - 1].display ===
                             "table" ? (
                               <InnerDataTable
                                 data={
@@ -338,7 +338,7 @@ export default function Table({
                       <tbody>
                         {head.map((headItem, index) => (
                           <tr key={index}>
-                            {head[index].type === "data" && (
+                            {head?.[index].type === "data" && (
                               <>
                                 <CollapseHead></CollapseHead>
                                 <CollapseBody>
@@ -358,7 +358,7 @@ export default function Table({
                                 </CollapseBody>
                               </>
                             )}
-                            {!head[index].type && (
+                            {!head?.[index].type && (
                               <>
                                 <CollapseHead>{headItem.name}</CollapseHead>
                                 <CollapseBody>{bodyItem[index]}</CollapseBody>
@@ -371,7 +371,7 @@ export default function Table({
                     {showData[bodyIndex] && (
                       <CollapseTableDataWrapper>
                         <TableDataItem>
-                          {head[body[bodyIndex].length - 1].display ===
+                          {head?.[body[bodyIndex].length - 1].display ===
                           "table" ? (
                             <InnerDataTable
                               data={

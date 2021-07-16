@@ -65,7 +65,7 @@ export default function Extrinsic({
         objectFromEntries(
           zip(
             ["Docs", ...item.meta.args],
-            [item.meta.documentation, ...item.data]
+            [item.meta.documentation.join(""), ...item.data]
           )
         ),
       ]),

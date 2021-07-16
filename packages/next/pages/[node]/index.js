@@ -21,7 +21,7 @@ import {
 import { getSymbol } from "utils/hooks";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
-import nextApi from "services/nextApi";
+import { ssrNextApi as nextApi } from "services/nextApi";
 import { useEffect } from "react";
 import { connect } from "services/websocket";
 

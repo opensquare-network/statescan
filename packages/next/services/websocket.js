@@ -14,7 +14,7 @@ export function connect(chain) {
     socket.disconnect();
   }
 
-  socket = io(`/${chain}`);
+  socket = io(new URL(`/${chain}`, process.env.NEXT_PUBLIC_API_END_POINT).href);
   socket.connect();
 
   socket.on("connect", () => {

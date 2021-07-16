@@ -20,7 +20,7 @@ import BreakText from "components/breakText";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import Timeline from "components/timeline";
-import nextApi from "services/nextApi";
+import { ssrNextApi as nextApi } from "services/nextApi";
 import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
 

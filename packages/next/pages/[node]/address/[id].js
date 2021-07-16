@@ -1,4 +1,4 @@
-import nextApi from "services/nextApi";
+import { ssrNextApi as nextApi } from "services/nextApi";
 
 import Layout from "components/layout";
 import Nav from "components/nav";

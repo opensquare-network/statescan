@@ -6,6 +6,13 @@ export const nodes = [
     symbol: "WND",
     icon: "/imgs/icons/westend.svg",
   },
+  {
+    name: "Statemine",
+    sub: "Kusama",
+    value: "statemine",
+    symbol: "KSM",
+    icon: "/imgs/icons/kusama.svg",
+  },
 ];
 
 export const blocksLatestHead = [

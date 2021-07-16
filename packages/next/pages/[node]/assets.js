@@ -11,9 +11,9 @@ import nextApi from "services/nextApi";
 
 export default function Assets({ node, assets }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Asset Tracker" }]} />
+        <Nav data={[{ name: "Asset Tracker" }]} node={node} />
         <Table
           head={assetsHead}
           body={(assets?.items || []).map((item) => [

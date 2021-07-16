@@ -61,14 +61,14 @@ export default function Home({ node, overview: ssrOverview }) {
 
   if ("/404" === router.asPath) {
     return (
-      <Layout>
+      <Layout node={node}>
         <PageNotFound />
       </Layout>
     );
   }
 
   return (
-    <Layout>
+    <Layout node={node}>
       <Wrapper>
         <Overview node={node} overviewData={overview} />
         <TableWrapper>

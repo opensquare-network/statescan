@@ -3,12 +3,7 @@ import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
 
-import {
-  useOnClickOutside,
-  useWindowSize,
-  useHomePage,
-  useNode,
-} from "utils/hooks";
+import { useOnClickOutside, useWindowSize, useHomePage } from "utils/hooks";
 import Icon from "./icon.svg";
 import IconActive from "./icon-active.svg";
 import NodeSwitcher from "components/nodeSwitcher";
@@ -123,10 +118,9 @@ const MenuItem = styled.div`
   }
 `;
 
-export default function Header() {
+export default function Header({ node }) {
   const router = useRouter();
   const isHomePage = useHomePage();
-  const node = useNode();
   const [isActive, setIsActive] = useState(false);
   const { width } = useWindowSize();
   const ref = useRef();
@@ -178,7 +172,7 @@ export default function Header() {
         </FlexWrapper>
         <FlexWrapper>
           <SearchS />
-          <NodeSwitcher />
+          <NodeSwitcher node={node} />
         </FlexWrapper>
       </Wrapper>
       {isHomePage && <Subheader />}

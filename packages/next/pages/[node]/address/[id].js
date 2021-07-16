@@ -1,4 +1,3 @@
-import { useParams } from "react-router";
 import nextApi from "services/nextApi";
 
 import Layout from "components/layout";
@@ -135,10 +134,13 @@ export default function Address({
   ];
 
   return (
-    <Layout>
+    <Layout node={node}>
       <Section>
         <div>
-          <Nav data={[{ name: "Address" }, { name: addressEllipsis(id) }]} />
+          <Nav
+            data={[{ name: "Address" }, { name: addressEllipsis(id) }]}
+            node={node}
+          />
           <DetailTable
             head={addressHead}
             body={[

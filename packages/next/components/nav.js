@@ -1,8 +1,6 @@
 import styled, { css } from "styled-components";
-import { useSelector } from "react-redux";
 import Link from "next/link";
 
-import { nodeSelector } from "store/reducers/nodeSlice";
 import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
@@ -56,9 +54,7 @@ const StyledLink = styled.div`
 
 const NoLink = styled.div``;
 
-export default function Nav({ data }) {
-  const node = useSelector(nodeSelector);
-
+export default function Nav({ data, node }) {
   const nodeName = nodes.find((item) => item.value === node)?.name;
 
   return (

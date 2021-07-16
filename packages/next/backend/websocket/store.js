@@ -3,6 +3,10 @@ const data = {
     scanHeight: 0,
     overview: null,
   },
+  statemine: {
+    scanHeight: 0,
+    overview: null,
+  },
 };
 
 function setScanHeight(chain, height) {

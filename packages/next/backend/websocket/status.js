@@ -9,7 +9,7 @@ async function feedScanStatus(chain, io) {
     const statusRow = arr.find((item) => item.name === "main-scan-height");
 
     if (statusRow) {
-      io.to(`${chain}:${chainStatusRoom}`).emit("scanStatus", {
+      io.to(chainStatusRoom).emit("scanStatus", {
         height: statusRow.value,
       });
       setScanHeight(chain, statusRow.value);

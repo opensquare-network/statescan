@@ -3,31 +3,35 @@ const { getScanHeight, getOverview } = require("./store");
 const { feedScanStatus } = require("./status");
 const { feedOverview } = require("./overview");
 
-async function listenAndEmitInfo(io) {
+async function listenAndEmitInfo(io, chain) {
   io.on("connection", (socket) => {
     socket.on("subscribe", (room) => {
-      const roomId = `${room?.chain}:${room?.data}`;
-      socket.join(roomId);
+      socket.join(room);
 
-      if (room?.data === chainStatusRoom) {
-        const scanHeight = getScanHeight(room?.chain);
-        io.to(roomId).emit("scanStatus", { height: scanHeight });
-      } else if (room?.data === overviewRoom) {
-        const overview = getOverview(room?.chain);
-        io.to(roomId).emit("overview", overview);
+      if (room === chainStatusRoom) {
+        const scanHeight = getScanHeight(chain);
+        io.to(room).emit("scanStatus", { height: scanHeight });
+      } else if (room === overviewRoom) {
+        const overview = getOverview(chain);
+        io.to(room).emit("overview", overview);
       }
     });
 
     socket.on("unsubscribe", (room) => {
-      const roomId = `${room?.chain}:${room?.data}`;
-      socket.leave(roomId);
+      socket.leave(room);
     });
   });
 
-  await feedScanStatus("westmint", io);
-  await feedOverview("westmint", io);
+  await feedScanStatus(chain, io);
+  await feedOverview(chain, io);
+}
+
+function ioHandler(io) {
+  ["westmint", "statemine"].forEach((chain) => {
+    listenAndEmitInfo(io.of(`/${chain}`), chain);
+  });
 }
 
 module.exports = {
-  listenAndEmitInfo,
+  ioHandler,
 };

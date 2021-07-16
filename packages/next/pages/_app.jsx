@@ -1,12 +1,14 @@
 import { Provider } from "react-redux";
 import NProgress from "nprogress";
 import Router from "next/router";
-import Head from 'next/head'
+import Head from "next/head";
 
 import { store } from "../store";
 
 import "nprogress/nprogress.css";
 import "styles/globals.css";
+import { useNode } from "utils/hooks";
+import { useEffect } from "react";
 
 NProgress.configure({
   minimum: 0.3,
@@ -20,6 +22,13 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 
 function MyApp({ Component, pageProps }) {
+  const node = useNode();
+  useEffect(() => {
+    if (node) {
+      localStorage.setItem("node", node);
+    }
+  }, [node]);
+
   return (
     <>
       <Head>

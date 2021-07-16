@@ -19,6 +19,8 @@ async function getApi() {
       wsEndpoint = process.env.WS_WND_ENDPOINT || defaultWndEndPoint;
     }
 
+    console.log(`Connect to endpoint:`, wsEndpoint);
+
     provider = new WsProvider(wsEndpoint);
     api = await ApiPromise.create({ provider });
   }

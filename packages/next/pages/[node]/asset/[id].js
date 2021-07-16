@@ -99,7 +99,7 @@ export default function Asset({
   ];
 
   return (
-    <Layout>
+    <Layout node={node}>
       <Section>
         <div>
           <Nav
@@ -107,6 +107,7 @@ export default function Asset({
               { name: "Asset Tracker", path: `/${node}/assets` },
               { name: assetSymbol },
             ]}
+            node={node}
           />
           <DetailTable
             head={assetHead}

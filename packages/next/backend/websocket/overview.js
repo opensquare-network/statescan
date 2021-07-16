@@ -18,7 +18,7 @@ async function feedOverview(chain, io) {
     }
 
     setOverview(chain, overview);
-    io.to(`${chain}:${overviewRoom}`).emit("overview", overview);
+    io.to(overviewRoom).emit("overview", overview);
   } catch (e) {
     console.error("feed overview error:", e);
   } finally {

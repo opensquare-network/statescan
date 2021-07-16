@@ -66,7 +66,7 @@ export default function Extrinsic({
   ];
 
   return (
-    <Layout>
+    <Layout node={node}>
       <Section>
         <div>
           <Nav
@@ -76,6 +76,7 @@ export default function Extrinsic({
                 name: `${extrinsicDetail?.indexer?.blockHeight}-${extrinsicDetail?.indexer?.index}`,
               },
             ]}
+            node={node}
           />
           <DetailTable
             head={extrinsicHead}

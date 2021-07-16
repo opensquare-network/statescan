@@ -147,8 +147,8 @@ export const transfersHead = [
 export const addressesHead = [
   { name: "Rank", width: 96 },
   { name: "Address" },
-  { name: "Loacked DOT", width: 240 },
-  { name: "Balance DOT", width: 240 },
+  { name: "Loacked", width: 240, align: "right" },
+  { name: "Balance", width: 240, align: "right" },
 ];
 
 export const addressHead = [

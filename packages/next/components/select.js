@@ -69,7 +69,7 @@ const OptionItem = styled.div`
     `}
 `;
 
-export default function Select({ value, options, text }) {
+export default function Select({ value, options, query }) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function Select({ value, options, text }) {
                 router.push(
                   `${router.pathname}?${encodeURIQuery({
                     ...router.query,
-                    [text]: item.value,
+                    [query]: item.value,
                   })}`
                 );
               }}

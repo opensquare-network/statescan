@@ -61,12 +61,11 @@ export function useWindowSize() {
 
 export function useNode() {
   const router = useRouter();
-  const match = router.asPath.match(/\/([^\/]+)(\/|$)/);
+  const match = router.asPath.match(/\/([^\/]+)(\/|)/);
   if (match) {
     const node = match[1];
     return node;
   }
-
   return null;
 }
 

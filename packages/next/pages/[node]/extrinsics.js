@@ -11,9 +11,9 @@ import Result from "components/result";
 
 export default function Extrinsics({ node, extrinsics }) {
   return (
-    <Layout>
+    <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Extrinsics" }]} />
+        <Nav data={[{ name: "Extrinsics" }]} node={node} />
         <Table
           head={extrinsicsHead}
           body={(extrinsics?.items || []).map((item) => [
@@ -26,9 +26,9 @@ export default function Extrinsics({ node, extrinsics }) {
               {item?.indexer?.blockHeight}
             </InLink>,
             item?.indexer?.blockTime,
-            <ThemeText>
+            <InLink to={`/${node}/extrinsic/${item?.hash}`}>
               <HashEllipsis hash={item?.hash} />
-            </ThemeText>,
+            </InLink>,
             <Result isSuccess={item?.isSuccess} />,
             `${item?.section}(${item?.name})`,
             item?.args,

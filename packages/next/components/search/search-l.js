@@ -144,30 +144,28 @@ export default function SearchL({ node }) {
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    nextApi
-      .fetch(`westmint/search/autocomplete?prefix=${value}`)
-      .then((res) => {
-        setHintAssets(res.result?.assets || []);
-      });
+    nextApi.fetch(`${node}/search/autocomplete?prefix=${value}`).then((res) => {
+      setHintAssets(res.result?.assets || []);
+    });
   };
 
   const onSearch = () => {
-    nextApi.fetch(`westmint/search?q=${searchKeyword}`).then((res) => {
+    nextApi.fetch(`${node}/search?q=${searchKeyword}`).then((res) => {
       const { asset, extrinsic, block, address } = res.result || {};
       if (asset) {
         const { blockHeight } = asset.createdAt;
-        return router.push(`/westmint/asset/${asset.assetId}_${blockHeight}`);
+        return router.push(`/${node}/asset/${asset.assetId}_${blockHeight}`);
       }
       if (extrinsic) {
         const { blockHeight, index } = extrinsic.indexer;
-        return router.push(`/westmint/extrinsic/${blockHeight}-${index}`);
+        return router.push(`/${node}/extrinsic/${blockHeight}-${index}`);
       }
       if (block) {
         const height = block.header?.number;
-        return height && router.push(`/westmint/block/${height}`);
+        return height && router.push(`/${node}/block/${height}`);
       }
       if (address) {
-        return router.push(`/westmint/address/${address.address}`);
+        return router.push(`/${node}/address/${address.address}`);
       }
       dispatch(addToast({ type: "error", message: "No result found" }));
     });
@@ -184,7 +182,7 @@ export default function SearchL({ node }) {
       }
       const hint = assets[selected];
       return router.push(
-        `/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+        `/${node}/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
       );
     }
 
@@ -217,7 +215,7 @@ export default function SearchL({ node }) {
             return (
               <InLink
                 key={index}
-                to={`/westmint/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
+                to={`/${node}/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
               >
                 <ExploreHint className={selected === index && "selected"}>
                   <img src={`/imgs/token-icons/${icon}.svg`} alt="" />

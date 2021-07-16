@@ -176,7 +176,7 @@ export default function Header({ node }) {
           )}
         </FlexWrapper>
         <FlexWrapper>
-          <SearchS />
+          <SearchS node={node} />
           <NodeSwitcher node={node} />
         </FlexWrapper>
       </Wrapper>

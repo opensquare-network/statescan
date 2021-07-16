@@ -12,6 +12,7 @@ const Wrapper = styled.div`
     color: rgba(17, 17, 17, 0.65);
   }
   > :last-child {
+    margin-top: 4px;
     color: rgba(17, 17, 17, 0.35);
   }
   @media screen and (max-width: 900px) {

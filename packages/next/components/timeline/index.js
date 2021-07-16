@@ -8,13 +8,16 @@ const Wrapper = styled.div`
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-radius: 8px;
   padding: 0 24px;
+  background-color: #ffffff;
 `;
 
 export default function Timeline({ data, node, asset }) {
   return (
     <Wrapper>
-      {(data || []).map((item) => {
-        return <TimelineItem data={item} node={node} asset={asset} />;
+      {(data || []).map((item, index) => {
+        return (
+          <TimelineItem key={index} data={item} node={node} asset={asset} />
+        );
       })}
     </Wrapper>
   );

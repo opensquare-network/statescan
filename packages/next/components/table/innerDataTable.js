@@ -68,44 +68,52 @@ export default function InnerDataTable({ data, nested = false }) {
       </StyledTd>
     ) : (
       <StyledTd style={{ minWidth: 320, padding: "14px 24px" }}>
-        {fieldValue}
+        {fieldValue.toString()}
       </StyledTd>
     );
 
   if (Array.isArray(data) && data.length < 2) {
     return (
-      <StyledTable>
-        {data.map((item, index) => (
-          <StyledTr key={index} nested={nested}>
-            {formatValue(item)}
-          </StyledTr>
-        ))}
-      </StyledTable>
+      data.length > 0 && (
+        <StyledTable>
+          <tbody>
+            {data.map((item, index) => (
+              <StyledTr key={index} nested={nested}>
+                {formatValue(item)}
+              </StyledTr>
+            ))}
+          </tbody>
+        </StyledTable>
+      )
     );
   }
 
   if (typeof data === "object") {
     return (
-      <StyledTable>
-        {Object.keys(data).map((fieldName, index) => {
-          const width = 40;
-          return (
-            <StyledTr key={index} nested={nested}>
-              <StyledTd
-                style={{
-                  whiteSpace: "nowrap",
-                  width,
-                  minWidth: width,
-                  padding: "14px 24px",
-                }}
-              >
-                {fieldName}
-              </StyledTd>
-              {formatValue(data[fieldName])}
-            </StyledTr>
-          );
-        })}
-      </StyledTable>
+      Object.keys(data).length > 0 && (
+        <StyledTable>
+          <tbody>
+            {Object.keys(data).map((fieldName, index) => {
+              const width = 40;
+              return (
+                <StyledTr key={index} nested={nested}>
+                  <StyledTd
+                    style={{
+                      whiteSpace: "nowrap",
+                      width,
+                      minWidth: width,
+                      padding: "14px 24px",
+                    }}
+                  >
+                    {fieldName}
+                  </StyledTd>
+                  {formatValue(data[fieldName])}
+                </StyledTr>
+              );
+            })}
+          </tbody>
+        </StyledTable>
+      )
     );
   }
 

@@ -23,7 +23,7 @@ const Head = styled.div`
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  padding: 10px 24px;
+  padding: 8px 24px;
   flex-basis: 320px;
 `;
 
@@ -41,7 +41,7 @@ const Badge = styled.div`
 
 const Data = styled.div`
   font-size: 14px;
-  min-height: 40px;
+  min-height: 36px;
   padding: 0 24px;
   flex-grow: 1;
   display: flex;

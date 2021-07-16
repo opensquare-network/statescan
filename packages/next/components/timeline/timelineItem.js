@@ -69,7 +69,10 @@ const TimelineHeader = styled.div`
   flex-direction: column;
   padding: 10px 48px 10px 0;
   min-width: 280px;
-  > :not(:first-child) {
+  > :nth-child(2) {
+    margin-top: 4px;
+  }
+  > :nth-child(3) {
     margin-top: 8px;
   }
   @media screen and (max-width: 900px) {
@@ -92,7 +95,7 @@ const FiledWrapper = styled.div`
 `;
 
 const FiledTitle = styled.div`
-  padding: 10px 0;
+  padding: 8px 0;
   min-width: 176px;
   font-weight: 500;
   font-size: 14px;
@@ -102,7 +105,7 @@ const FiledTitle = styled.div`
 
 const FiledBody = styled.div`
   flex-grow: 1;
-  padding: 10px 0 10px 24px;
+  padding: 8px 0 8px 24px;
   font-size: 14px;
   @media screen and (max-width: 900px) {
     padding-left: 0px;
@@ -113,6 +116,47 @@ const FiledText = styled.p`
   font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.65);
+`;
+
+const Links = styled.div`
+  display: flex;
+
+  > :not(:first-child) {
+    margin-left: 8px;
+  }
+`;
+
+const LinkItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 8px;
+
+  height: 20px;
+
+  background: #f4f4f4;
+  border-radius: 4px;
+
+  span {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: rgba(17, 17, 17, 0.65);
+  }
+  svg {
+    margin-left: 8px;
+  }
+
+  :hover {
+    span {
+      color: #111111;
+    }
+    svg > path {
+      stroke-opacity: 0.35;
+    }
+  }
 `;
 
 const Titles = {
@@ -371,6 +415,24 @@ export default function TimelineItem({ data, node, asset }) {
         <TimelineHeader>
           <BoldText>{getTitle(data)}</BoldText>
           <Time ts={data.eventIndexer.blockTime} />
+          <Links>
+            <InLink
+              to={`/${node}/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}`}
+            >
+              <LinkItem>
+                <span>{"Extrinsic"}</span>
+                <icons.LinkIcon />
+              </LinkItem>
+            </InLink>
+            <InLink
+              to={`/${node}/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}?event=${data.eventIndexer.blockHeight}-${data.eventSort}`}
+            >
+              <LinkItem>
+                <span>{"Event"}</span>
+                <icons.LinkIcon />
+              </LinkItem>
+            </InLink>
+          </Links>
         </TimelineHeader>
         <TimelineFields className="fileds">
           {(Object.entries(getFields(data)) || []).map((item, index) => (

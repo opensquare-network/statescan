@@ -10,6 +10,7 @@ import Burned from "./burn.svg";
 import AssetFrozen from "./freeze-asset.svg";
 import AssetThawed from "./thaw-asset.svg";
 import Destroyed from "./destroy.svg";
+import LinkIcon from "./link.svg";
 
 export default {
   Created,
@@ -24,4 +25,5 @@ export default {
   AssetFrozen,
   AssetThawed,
   Destroyed,
+  LinkIcon,
 };

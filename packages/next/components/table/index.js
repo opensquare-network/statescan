@@ -200,15 +200,29 @@ export default function Table({
   foot,
   rowHeight = 48,
   collapse,
+  expand,
 }) {
   const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState(false);
-  const [showData, setShowData] = useState([]);
+
+  // Hanlding expand json data by default
+  const initExpand = [];
+  if (expand >= 0) {
+    initExpand[expand] = true;
+  }
+  const [showData, setShowData] = useState(initExpand);
+  useEffect(() => {
+    if (!initExpand.some((item) => item)) {
+      setShowData((body || []).map(() => false));
+    }
+  }, [body]);
+
   const timeType = useSelector(timeTypeSelector);
   const doSetTimeType = (timeType) => {
     dispatch(setTimeType(timeType));
   };
   const size = useWindowSize();
+
   useEffect(() => {
     if (collapse && collapse > size.width) {
       setIsCollapse(true);
@@ -216,9 +230,6 @@ export default function Table({
       setIsCollapse(false);
     }
   }, [size, collapse]);
-  useEffect(() => {
-    setShowData((body || []).map(() => false));
-  }, [body]);
 
   return (
     <div>

@@ -36,10 +36,15 @@ const AccessoryText = styled.div`
 export default function Extrinsic({
   node,
   tab,
+  event,
   extrinsicDetail,
   extrinsicTransfer,
   extrinsicEvents,
 }) {
+  const expand = (extrinsicEvents?.items || []).findIndex(
+    (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
+  );
+
   const tabTableData = [
     {
       name: "Events",
@@ -55,6 +60,7 @@ export default function Extrinsic({
           )
         ),
       ]),
+      expand,
       foot: (
         <Pagination
           page={extrinsicEvents?.page}
@@ -148,7 +154,7 @@ export default function Extrinsic({
 
 export async function getServerSideProps(context) {
   const { node, id } = context.params;
-  const { tab, page } = context.query;
+  const { tab, page, event } = context.query;
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "events";
@@ -168,6 +174,7 @@ export async function getServerSideProps(context) {
       node,
       id,
       tab: activeTab,
+      event: event ?? null,
       extrinsicDetail: extrinsicDetail ?? null,
       extrinsicTransfer: extrinsicTransfer ?? EmptyQuery,
       extrinsicEvents: extrinsicEvents ?? EmptyQuery,

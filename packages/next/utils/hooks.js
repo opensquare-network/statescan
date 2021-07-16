@@ -64,7 +64,9 @@ export function useNode() {
   const match = router.asPath.match(/\/([^\/]+)(\/|)/);
   if (match) {
     const node = match[1];
-    return node;
+    if (nodes.findIndex((item) => item.value === node) >= 0) {
+      return node;
+    }
   }
   return null;
 }

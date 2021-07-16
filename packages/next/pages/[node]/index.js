@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useRouter } from "next/router";
 
 import Layout from "components/layout";
 import Overview from "components/overview";
@@ -20,7 +19,6 @@ import {
   assetsHead,
 } from "utils/constants";
 import { getSymbol } from "utils/hooks";
-import PageNotFound from "components/pageNotFound";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
 import nextApi from "services/nextApi";
@@ -49,7 +47,6 @@ const FootWrapper = styled.div`
 `;
 
 export default function Home({ node, overview: ssrOverview }) {
-  const router = useRouter();
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
 
@@ -58,14 +55,6 @@ export default function Home({ node, overview: ssrOverview }) {
   }, []);
 
   const overview = pushedOverview || ssrOverview;
-
-  if ("/404" === router.asPath) {
-    return (
-      <Layout node={node}>
-        <PageNotFound />
-      </Layout>
-    );
-  }
 
   return (
     <Layout node={node}>

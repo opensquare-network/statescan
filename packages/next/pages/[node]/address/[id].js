@@ -28,6 +28,7 @@ import Result from "components/result";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import HashEllipsis from "components/hashEllipsis";
+import PageNotFound from "components/pageNotFound";
 
 export default function Address({
   node,
@@ -38,6 +39,14 @@ export default function Address({
   addressTransfers,
   addressExtrinsics,
 }) {
+  if (!addressDetail) {
+    return (
+      <Layout node={node}>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
   const symbol = getSymbol(node);
 
   const tabTableData = [

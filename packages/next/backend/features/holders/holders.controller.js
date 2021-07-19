@@ -76,7 +76,7 @@ async function getHolderExtrinsics(ctx) {
   const col = await getExtrinsicCollection(chain);
   const items = await col
     .find(q, { projection: { data: 0 } })
-    .sort({ "indexer.blockHeight": -1, "indexer.index": 1 })
+    .sort({ "indexer.blockHeight": -1, "indexer.index": -1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
@@ -105,7 +105,7 @@ async function getHolderTransfers(ctx) {
   const col = await getAssetTransferCollection(chain);
   const items = await col
     .find(q)
-    .sort({ "indexer.blockHeight": -1, "indexer.index": 1 })
+    .sort({ "indexer.blockHeight": -1, "indexer.index": -1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();

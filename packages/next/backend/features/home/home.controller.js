@@ -24,6 +24,11 @@ async function search(ctx) {
     return;
   }
 
+  const lowerQ = q.toLowerCase();
+  const isHash = !!lowerQ.match(/^0x[0-9a-f]{64}$/);
+  const isNum = q.match(/^[0-9]+$/);
+  const isAddr = q.match(/^[0-9a-zA-Z]{48}$/);
+
   const assetCol = await getAssetCollection(chain);
   const addressCol = await getAddressCollection(chain);
   const blockCol = await getBlockCollection(chain);
@@ -35,14 +40,18 @@ async function search(ctx) {
     assetCol.findOne({
       $or: [{ name: icaseQ }, { symbol: icaseQ }],
     }),
-    addressCol.findOne({ address: icaseQ }),
-    blockCol.findOne(
-      {
-        $or: [{ hash: icaseQ }, { "header.number": Number(q) }],
-      },
-      { projection: { extrinsics: 0 } }
-    ),
-    extrinsicCol.findOne({ hash: icaseQ }, { projection: { data: 0 } }),
+    isAddr ? addressCol.findOne({ address: icaseQ }) : null,
+    isNum
+      ? blockCol.findOne(
+          { "header.number": Number(q) },
+          { projection: { extrinsics: 0 } }
+        )
+      : isHash
+      ? blockCol.findOne({ hash: q }, { projection: { extrinsics: 0 } })
+      : null,
+    isHash
+      ? extrinsicCol.findOne({ hash: q }, { projection: { data: 0 } })
+      : null,
   ]);
 
   ctx.body = {

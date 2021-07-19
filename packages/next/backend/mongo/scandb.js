@@ -52,19 +52,23 @@ function DB(dbName) {
 
     extrinsicCol.createIndex({ hash: 1 });
     extrinsicCol.createIndex({ "indexer.blockHash": 1, "indexer.index": 1 });
-    extrinsicCol.createIndex({ "indexer.blockHeight": 1, "indexer.index": 1 });
+    extrinsicCol.createIndex({
+      "indexer.blockHeight": -1,
+      "indexer.index": -1,
+    });
     extrinsicCol.createIndex({
       signer: 1,
       "indexer.blockHeight": -1,
       "indexer.index": 1,
     });
     extrinsicCol.createIndex({ section: 1, name: 1 });
+    extrinsicCol.createIndex({ section: 1, name: 1 });
 
     eventCol.createIndex({ "indexer.blockHash": 1, sort: 1 });
-    eventCol.createIndex({ "indexer.blockHeight": 1, sort: 1 });
+    eventCol.createIndex({ "indexer.blockHeight": -1, sort: 1 });
     eventCol.createIndex({ extrinsicHash: 1, sort: 1 });
     eventCol.createIndex({
-      "indexer.blockHeight": 1,
+      "indexer.blockHeight": -1,
       "phase.value": 1,
       sort: 1,
     });

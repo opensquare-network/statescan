@@ -8,9 +8,12 @@ import InLink from "components/inLink";
 import AddressEllipsis from "components/addressEllipsis";
 import { bigNumber2Locale, fromSymbolUnit, fromAssetUnit } from "utils";
 import { getSymbol } from "utils/hooks";
+import Tooltip from "components/tooltip";
 
 export default function Transfers({ node, transfers }) {
   const symbol = getSymbol(node);
+
+  console.log(transfers);
 
   return (
     <Layout node={node}>
@@ -27,7 +30,7 @@ export default function Transfers({ node, transfers }) {
             <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
               {item?.indexer?.blockHeight}
             </InLink>,
-            "-",
+            <Tooltip bg label={item?.method} />,
             item?.indexer?.blockTime,
             <InLink to={`/${node}/address/${item?.from}`}>
               <AddressEllipsis address={item?.from} />

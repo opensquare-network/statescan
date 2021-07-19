@@ -9,8 +9,9 @@ const TabWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 18px;
-  overflow: scroll;
+  overflow: auto;
   -ms-overflow-style: none;
+  scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
   }

@@ -9,6 +9,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 import InnerDataTable from "./innerDataTable";
 
+const Wrapper = styled.div``;
+
 const Title = styled.h4`
   font-weight: bold;
   font-size: 20px;
@@ -130,6 +132,28 @@ const TableDataItem = styled.pre`
   white-space: pre-wrap;
   font-family: "SF Mono";
   letter-spacing: -0.5px;
+
+  @media screen and (max-width: 1200px) {
+    max-width: calc(100vw - var(--scrollbar-width) - 48px - 48px);
+  }
+  max-width: calc(1200px - 48px);
+
+  overflow-x: auto;
+`;
+
+const CollapseTableDataItem = styled.pre`
+  background: #fafafa;
+  border-radius: 4px;
+  padding: 16px 24px;
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  font-family: "SF Mono";
+  letter-spacing: -0.5px;
+
   overflow-x: auto;
   :-webkit-scrollbar {
     display: none;
@@ -184,7 +208,7 @@ const CollapseFoot = styled.div`
   padding: 16px 24px;
 `;
 
-const Wrapper = styled.div`
+const IconWrapper = styled.div`
   display: flex;
   align-items: center;
 `;
@@ -232,7 +256,7 @@ export default function Table({
   }, [size, collapse]);
 
   return (
-    <div>
+    <Wrapper>
       {title && <Title>{title}</Title>}
       {!isCollapse && (
         <StyledTable>
@@ -273,7 +297,7 @@ export default function Table({
                             <TimeBody timeType={timeType} ts={item} />
                           )}
                           {head?.[index].type === "data" && (
-                            <Wrapper>
+                            <IconWrapper>
                               <DataImg
                                 src={`/imgs/icons/data-show${
                                   showData[bodyIndex] ? "-active" : ""
@@ -285,7 +309,7 @@ export default function Table({
                                   setShowData(data);
                                 }}
                               />
-                            </Wrapper>
+                            </IconWrapper>
                           )}
                           {!head?.[index].type && item}
                           <div className="border-bottom"></div>
@@ -353,7 +377,7 @@ export default function Table({
                               <>
                                 <CollapseHead></CollapseHead>
                                 <CollapseBody>
-                                  <Wrapper>
+                                  <IconWrapper>
                                     <DataImg
                                       src={`/imgs/icons/data-show${
                                         showData[bodyIndex] ? "-active" : ""
@@ -365,7 +389,7 @@ export default function Table({
                                         setShowData(data);
                                       }}
                                     />
-                                  </Wrapper>
+                                  </IconWrapper>
                                 </CollapseBody>
                               </>
                             )}
@@ -381,7 +405,7 @@ export default function Table({
                     </CollapseTable>
                     {showData[bodyIndex] && (
                       <CollapseTableDataWrapper>
-                        <TableDataItem>
+                        <CollapseTableDataItem>
                           {head?.[body[bodyIndex].length - 1].display ===
                           "table" ? (
                             <InnerDataTable
@@ -396,7 +420,7 @@ export default function Table({
                               2
                             )
                           )}
-                        </TableDataItem>
+                        </CollapseTableDataItem>
                       </CollapseTableDataWrapper>
                     )}
                     <div className="border-bottom"></div>
@@ -410,6 +434,6 @@ export default function Table({
           )}
         </CollapseWrapper>
       )}
-    </div>
+    </Wrapper>
   );
 }

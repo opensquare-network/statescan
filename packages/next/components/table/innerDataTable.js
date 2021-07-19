@@ -4,6 +4,13 @@ const StyledTable = styled.table`
   width: 100%;
   border-spacing: 0px;
   border-radius: 4px;
+
+  tbody {
+    ::before,
+    ::after {
+      display: none !important;
+    }
+  }
 `;
 
 const StyledTr = styled.tr`
@@ -63,9 +70,15 @@ export default function InnerDataTable({ data, nested = false }) {
         <InnerDataTable data={fieldValue} nested />
       </StyledTd>
     ) : typeof fieldValue === "object" ? (
-      <StyledTd style={{ padding: 0 }}>
-        <InnerDataTable data={fieldValue} nested />
-      </StyledTd>
+      fieldValue === null ? (
+        <StyledTd style={{ minWidth: 320, padding: "14px 24px" }}>
+          null
+        </StyledTd>
+      ) : (
+        <StyledTd style={{ padding: 0 }}>
+          <InnerDataTable data={fieldValue} nested />
+        </StyledTd>
+      )
     ) : (
       <StyledTd style={{ minWidth: 320, padding: "14px 24px" }}>
         {fieldValue.toString()}
@@ -95,12 +108,14 @@ export default function InnerDataTable({ data, nested = false }) {
     } else {
       entries = Object.entries(data);
     }
+
+    const width = Array.isArray(data) ? 40 : 160;
+
     return (
       entries.length > 0 && (
         <StyledTable>
           <tbody>
             {entries.map(([fieldName, fieldValue], index) => {
-              const width = 40;
               return (
                 <StyledTr key={index} nested={nested}>
                   <StyledTd

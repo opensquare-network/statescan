@@ -1,3 +1,7 @@
+:root {
+  --scrollbar-width: 15px;
+}
+
 html,
 body {
   padding: 0;

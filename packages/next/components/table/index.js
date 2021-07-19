@@ -289,14 +289,14 @@ export default function Table({
                         <td
                           key={index}
                           style={{
-                            textAlign: head?.[index].align ?? "left",
+                            textAlign: head?.[index]?.align ?? "left",
                             height: `${rowHeight}px`,
                           }}
                         >
-                          {head?.[index].type === "time" && (
+                          {head?.[index]?.type === "time" && (
                             <TimeBody timeType={timeType} ts={item} />
                           )}
-                          {head?.[index].type === "data" && (
+                          {head?.[index]?.type === "data" && (
                             <IconWrapper>
                               <DataImg
                                 src={`/imgs/icons/data-show${
@@ -311,7 +311,7 @@ export default function Table({
                               />
                             </IconWrapper>
                           )}
-                          {!head?.[index].type && item}
+                          {!head?.[index]?.type && item}
                           <div className="border-bottom"></div>
                         </td>
                       ))}

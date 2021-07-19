@@ -11,7 +11,6 @@ import Filter from "components/filter";
 import { makeTablePairs } from "utils";
 
 export default function Events({ node, events, filter }) {
-  console.log({ events });
   return (
     <Layout node={node}>
       <section>
@@ -58,8 +57,11 @@ export default function Events({ node, events, filter }) {
 
 export async function getServerSideProps(context) {
   const { node } = context.params;
-  const { page, module, method } = context.query;
+  let { page, module, method } = context.query;
   const nPage = parseInt(page) || 1;
+
+  module = module === "null" ? null : module;
+  method = method === "null" ? null : method;
 
   const { result: events } = await nextApi.fetch(`${node}/events`, {
     page: nPage - 1,
@@ -70,7 +72,7 @@ export async function getServerSideProps(context) {
   const filter = [];
   const { result: modules } = await nextApi.fetch(`${node}/events/modules`);
   filter.push({
-    value: module ?? null,
+    value: module && (modules || []).indexOf(module) > -1 ? module : null,
     name: "Module",
     query: "module",
     options: (modules || []).reduce(
@@ -86,7 +88,7 @@ export async function getServerSideProps(context) {
       `${node}/events/modules/${module}/methods`
     );
     filter.push({
-      value: method ?? null,
+      value: method && (methods || []).indexOf(method) > -1 ? method : null,
       name: "Method",
       query: "method",
       options: (methods || []).reduce(
@@ -96,6 +98,13 @@ export async function getServerSideProps(context) {
         },
         [{ text: "All", value: null }]
       ),
+    });
+  } else {
+    filter.push({
+      value: null,
+      name: "Method",
+      query: "method",
+      options: [{ text: "All", value: null }],
     });
   }
 

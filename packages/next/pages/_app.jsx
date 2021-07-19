@@ -37,6 +37,7 @@ function MyApp({ Component, pageProps }) {
           name="description"
           content="Statescan allows you to explorer and search the Kusama | Polkadot blockchain for assets."
         />
+        <meta name="viewport" content="width=device-width, user-scalable=no" />
       </Head>
       <Provider store={store}>
         <Component {...pageProps} />

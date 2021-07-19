@@ -7,6 +7,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
+import AddressEllipsis from "components/addressEllipsis";
 
 export default function Blocks({ node, blocks }) {
   return (
@@ -24,7 +25,13 @@ export default function Blocks({ node, blocks }) {
             <ThemeText>
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,
-            "-",
+            item?.author ? (
+              <InLink to={`/${node}/address/${item?.author}`}>
+                <AddressEllipsis address={item?.author} />
+              </InLink>
+            ) : (
+              "-"
+            ),
             item?.extrinsicsCount,
             item?.eventsCount,
           ])}

@@ -8,8 +8,10 @@ import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
 import Filter from "components/filter";
+import { makeTablePairs } from "utils";
 
 export default function Events({ node, events, filter }) {
+  console.log({ events });
   return (
     <Layout node={node}>
       <section>
@@ -35,7 +37,10 @@ export default function Events({ node, events, filter }) {
               "-"
             ),
             `${item?.section}(${item?.meta?.name})`,
-            item?.meta,
+            makeTablePairs(
+              ["Docs", ...item.meta.args],
+              [item.meta.documentation.join(""), ...item.data]
+            ),
           ])}
           foot={
             <Pagination

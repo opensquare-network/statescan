@@ -62,7 +62,6 @@ function DB(dbName) {
       "indexer.index": 1,
     });
     extrinsicCol.createIndex({ section: 1, name: 1 });
-    extrinsicCol.createIndex({ section: 1, name: 1 });
 
     eventCol.createIndex({ "indexer.blockHash": 1, sort: 1 });
     eventCol.createIndex({ "indexer.blockHeight": -1, sort: 1 });

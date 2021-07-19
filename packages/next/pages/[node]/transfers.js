@@ -13,8 +13,6 @@ import Tooltip from "components/tooltip";
 export default function Transfers({ node, transfers }) {
   const symbol = getSymbol(node);
 
-  console.log(transfers);
-
   return (
     <Layout node={node}>
       <section>
@@ -38,7 +36,6 @@ export default function Transfers({ node, transfers }) {
             <InLink to={`/${node}/address/${item?.to}`}>
               <AddressEllipsis address={item?.to} />
             </InLink>,
-            // `${item?.balance} ${item?.assetSymbol ?? ""}`,
             item.assetSymbol
               ? `${bigNumber2Locale(
                   fromAssetUnit(item.balance, item.assetDecimals)

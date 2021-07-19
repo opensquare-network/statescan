@@ -8,6 +8,24 @@ export const encodeURIQuery = (q) =>
     .map((k) => `${k}=${encodeURIComponent(q[k])}`)
     .join("&");
 
+export function debounce(fn, delay, isImmediate) {
+  var timer = null;
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timer);
+    if (isImmediate && timer === null) {
+      fn.apply(context, args);
+      timer = 0;
+      return;
+    }
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+      timer = null;
+    }, delay);
+  };
+}
+
 export function addressEllipsis(address, start = 4, end = 4) {
   if (!address) return;
   if (address.length <= start + end) return address;

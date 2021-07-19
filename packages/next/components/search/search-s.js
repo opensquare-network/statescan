@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useHomePage } from "utils/hooks";
 import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import InLink from "components/inLink";
 import nextApi from "services/nextApi";
+import debounce from "lodash/debounce";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -38,6 +39,7 @@ const ExploreHintsWrapper = styled.div`
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border: 1px solid #ffffff;
+
   .selected {
     background-color: #fafafa;
   }
@@ -129,13 +131,21 @@ export default function SearchS({ node }) {
     setHintAssets([]);
   }, [router]);
 
+  const delayedQuery = useCallback(
+    debounce((value) => {
+      nextApi
+        .fetch(`${node}/search/autocomplete?prefix=${value}`)
+        .then((res) => {
+          setHintAssets(res.result?.assets || []);
+        });
+    }, 500),
+    []
+  );
+
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    //todo debounce this
-    nextApi.fetch(`${node}/search/autocomplete?prefix=${value}`).then((res) => {
-      setHintAssets(res.result?.assets || []);
-    });
+    delayedQuery(value);
   };
 
   const onKeyDown = (e) => {

@@ -1,10 +1,11 @@
 import styled, { css } from "styled-components";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import InLink from "components/inLink";
 import nextApi from "services/nextApi";
+import debounce from "lodash/debounce";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -141,12 +142,21 @@ export default function SearchL({ node }) {
   const [selected, select] = useState(0);
   const iconMap = new Map([["osn", "osn"]]);
 
+  const delayedQuery = useCallback(
+    debounce((value) => {
+      nextApi
+        .fetch(`${node}/search/autocomplete?prefix=${value}`)
+        .then((res) => {
+          setHintAssets(res.result?.assets || []);
+        });
+    }, 500),
+    []
+  );
+
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    nextApi.fetch(`${node}/search/autocomplete?prefix=${value}`).then((res) => {
-      setHintAssets(res.result?.assets || []);
-    });
+    delayedQuery(value);
   };
 
   const onSearch = () => {

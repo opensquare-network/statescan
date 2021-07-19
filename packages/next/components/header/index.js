@@ -95,7 +95,7 @@ const MenuWrapper = styled.div`
 const MenuItem = styled.div`
   font-weight: 500;
   font-size: 15px;
-  line-height: 20px;
+  line-height: 24px;
   cursor: pointer;
   text-decoration: none;
   color: #111111;

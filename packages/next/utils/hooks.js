@@ -48,8 +48,8 @@ export function useWindowSize() {
   useEffect(() => {
     function handleResize() {
       setWindowSize({
-        width: window.visualViewport.width,
-        height: window.visualViewport.height,
+        width: window.screen.width,
+        height: window.screen.height,
       });
     }
     window.addEventListener("resize", handleResize);

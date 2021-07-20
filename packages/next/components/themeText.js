@@ -1,17 +1,14 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
 
-import { useNode } from "utils/hooks";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
-  color: #f22279;
-  ${(p) =>
-    p.node === "kusama" &&
-    css`
-      color: #265deb;
-    `}
+  color: ${(p) => p.themeColor};
 `;
 
 export default function ThemeText({ children }) {
-  const node = useNode();
-  return <Wrapper node={node}>{children}</Wrapper>;
+  const theme = useSelector(themeSelector);
+
+  return <Wrapper themeColor={theme.color}>{children}</Wrapper>;
 }

@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import InLink from "components/inLink";
 import nextApi from "services/nextApi";
 import debounce from "lodash/debounce";
+import { useSelector } from "react-redux";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -52,7 +54,7 @@ const ExploreInput = styled.input`
 `;
 
 const ExploreButton = styled.div`
-  background: #f22279;
+  background: ${(p) => p.themeColor};
   border-radius: 8px;
   padding: 12px 16px;
   font-weight: 500;
@@ -141,6 +143,7 @@ export default function SearchL({ node }) {
   const [focus, setFocus] = useState(false);
   const [selected, select] = useState(0);
   const iconMap = new Map([["osn", "osn"]]);
+  const theme = useSelector(themeSelector);
 
   const delayedQuery = useCallback(
     debounce((value) => {
@@ -215,7 +218,11 @@ export default function SearchL({ node }) {
         onFocus={() => setFocus(true)}
         onBlur={() => setTimeout(() => setFocus(false), 100)}
       />
-      <ExploreButton node={node} onClick={onSearch}>
+      <ExploreButton
+        node={node}
+        onClick={onSearch}
+        themeColor={theme.buttonColor}
+      >
         Explore
       </ExploreButton>
       {focus && assets?.length > 0 && (

@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 import ArrowDown from "./arrow-down.svg";
 import { useOnClickOutside, useWindowSize, useNode } from "utils/hooks";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   position: relative;
@@ -26,9 +28,9 @@ const TitleWrapper = styled.div`
   color: #111111;
   cursor: pointer;
   :hover {
-    color: #f22279;
+    color: ${(p) => p.themeColor};
     > svg {
-      stroke: #f22279;
+      stroke: ${(p) => p.themeColor};
     }
   }
   display: flex;
@@ -40,9 +42,9 @@ const TitleWrapper = styled.div`
   ${(p) =>
     p.isActive &&
     css`
-      color: #f22279;
+      color: ${(p) => p.themeColor};
       > svg {
-        stroke: #f22279;
+        stroke: ${(p) => p.themeColor};
       }
     `}
   @media screen and (max-width: 900px) {
@@ -128,6 +130,7 @@ export default function SubMenu({ closeMenu }) {
   const { width } = useWindowSize();
   const ref = useRef();
   const node = useNode();
+  const theme = useSelector(themeSelector);
   useOnClickOutside(ref, () => setIsActive(false));
 
   useEffect(() => {
@@ -138,7 +141,11 @@ export default function SubMenu({ closeMenu }) {
 
   return (
     <Wrapper>
-      <TitleWrapper onClick={() => setIsActive(true)} isActive={isActive}>
+      <TitleWrapper
+        onClick={() => setIsActive(true)}
+        isActive={isActive}
+        themeColor={theme.color}
+      >
         BlockChain
         <ArrowDown />
       </TitleWrapper>

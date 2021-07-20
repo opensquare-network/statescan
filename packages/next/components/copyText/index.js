@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
 import styled, { css } from "styled-components";
 import copy from "copy-to-clipboard";
+import { useSelector } from "react-redux";
 
 import Icon from "../../public/imgs/icons/copy.svg";
-
-import { useNode } from "utils/hooks";
 import { addToast } from "store/reducers/toastSlice";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   display: inline;
@@ -25,17 +25,13 @@ const Wrapper = styled.div`
 
 const StyledIcon = styled(Icon)`
   cursor: pointer;
-  stroke: #f22279;
-  ${(p) =>
-    p.node === "kusama" &&
-    css`
-      stroke: #265deb;
-    `}
+  stroke: ${(p) => p.themeColor};
 `;
 
 export default function CopyText({ children, text }) {
   const dispatch = useDispatch();
-  const node = useNode();
+  const theme = useSelector(themeSelector);
+
   const onCopy = () => {
     if (text && copy(text)) {
       dispatch(addToast({ type: "success", message: "Copied" }));
@@ -45,7 +41,7 @@ export default function CopyText({ children, text }) {
   return (
     <Wrapper>
       <span>{children}</span>
-      <StyledIcon node={node} onClick={onCopy} />
+      <StyledIcon themeColor={theme.color} onClick={onCopy} />
     </Wrapper>
   );
 }

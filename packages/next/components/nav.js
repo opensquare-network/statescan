@@ -1,7 +1,9 @@
 import styled, { css } from "styled-components";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 import { nodes } from "utils/constants";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   height: 36px;
@@ -20,15 +22,8 @@ const NavWrapper = styled.div`
     margin-left: 8px;
   }
   > :last-child {
-    color: #f22279;
+    color: ${(p) => p.themeColor};
   }
-  ${(p) =>
-    p.node === "kusama" &&
-    css`
-      > :last-child {
-        color: #265deb;
-      }
-    `}
 `;
 
 const StyledLink = styled.div`
@@ -36,7 +31,7 @@ const StyledLink = styled.div`
   text-decoration: none;
   color: #111111;
   :hover {
-    color: #f22279;
+    color: ${(p) => p.themeColor};
   }
   ::after {
     content: "/";
@@ -56,12 +51,15 @@ const NoLink = styled.div``;
 
 export default function Nav({ data, node }) {
   const nodeName = nodes.find((item) => item.value === node)?.name;
+  const theme = useSelector(themeSelector);
 
   return (
     <Wrapper>
-      <NavWrapper node={node}>
+      <NavWrapper node={node} themeColor={theme.color}>
         <Link href={`/${node}`}>
-          <StyledLink node={node}>{nodeName}</StyledLink>
+          <StyledLink node={node} themeColor={theme.color}>
+            {nodeName}
+          </StyledLink>
         </Link>
         {(data || []).map((item, index) =>
           item.path ? (

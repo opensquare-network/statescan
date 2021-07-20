@@ -7,6 +7,7 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { getSymbol } from "utils/hooks";
+import { bigNumber2Locale, fromSymbolUnit } from "utils";
 
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
@@ -14,7 +15,7 @@ export default function Addresses({ node, addresses }) {
   useEffect(() => {
     addressesHead[2].name = `${addressesHead[2].name} ${symbol}`;
     addressesHead[3].name = `${addressesHead[3].name} ${symbol}`;
-  }, [addressesHead]);
+  }, []);
 
   return (
     <Layout node={node}>
@@ -27,8 +28,12 @@ export default function Addresses({ node, addresses }) {
             <InLink to={`/${node}/address/${item?.address}`}>
               {item?.address}
             </InLink>,
-            "-",
-            "-",
+            `${bigNumber2Locale(
+              fromSymbolUnit(item?.data?.reserved, symbol)
+            )} ${symbol}`,
+            `${bigNumber2Locale(
+              fromSymbolUnit(item?.data?.free, symbol)
+            )} ${symbol}`,
           ])}
           foot={
             <Pagination

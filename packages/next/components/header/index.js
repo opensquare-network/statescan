@@ -17,6 +17,20 @@ const Container = styled.header`
   @media screen and (max-width: 1200px) {
     padding: 0 1.5rem;
   }
+
+  .logo-s {
+    display: none;
+  }
+
+  @media screen and (max-width: 900px) {
+    .logo-full {
+      display: none;
+    }
+
+    .logo-s {
+      display: initial;
+    }
+  }
 `;
 
 const Wrapper = styled.div`
@@ -50,24 +64,28 @@ const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
   padding: 6px;
+
   > svg {
     stroke: rgba(17, 17, 17, 0.65);
   }
+
   :hover {
     background: #fafafa;
+
     > svg {
       stroke: #111111;
     }
   }
+
   ${(p) =>
     p.isActive &&
     css`
       background: #fafafa;
+
       > svg {
         stroke: #111111;
       }
-    `}
-  @media screen and (max-width: 900px) {
+    `} @media screen and(max-width: 900 px) {
     display: block;
   }
 `;
@@ -99,21 +117,26 @@ const MenuItem = styled.div`
   cursor: pointer;
   text-decoration: none;
   color: #111111;
+
   :hover {
     color: #f22279;
   }
+
   :not(:first-child) {
     margin-left: 40px;
   }
+
   @media screen and (max-width: 900px) {
     padding: 6px 12px;
     :hover {
       color: inherit;
       background: #fafafa;
     }
+
     :not(:first-child) {
       margin-left: 0;
     }
+
     ${(p) =>
       p.selected &&
       css`
@@ -148,7 +171,16 @@ export default function Header({ node }) {
           </IconWrapper>
           <Link href={`/${node}`}>
             <img
+              className="logo-full"
               src="/imgs/logo.svg"
+              alt="logo"
+              style={{ cursor: "pointer" }}
+            />
+          </Link>
+          <Link href={`/${node}`}>
+            <img
+              className="logo-s"
+              src="/imgs/logo-s.svg"
               alt="logo"
               style={{ cursor: "pointer" }}
             />

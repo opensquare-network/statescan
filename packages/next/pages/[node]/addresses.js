@@ -8,6 +8,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { getSymbol } from "utils/hooks";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
+import BreakText from "components/breakText";
 
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
@@ -25,9 +26,11 @@ export default function Addresses({ node, addresses }) {
           head={addressesHead}
           body={(addresses?.items || []).map((item) => [
             "-",
-            <InLink to={`/${node}/address/${item?.address}`}>
-              {item?.address}
-            </InLink>,
+            <BreakText>
+              <InLink to={`/${node}/address/${item?.address}`}>
+                {item?.address}
+              </InLink>
+            </BreakText>,
             `${bigNumber2Locale(
               fromSymbolUnit(item?.data?.reserved, symbol)
             )} ${symbol}`,

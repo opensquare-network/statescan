@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import LineChart from "components/charts/lineChart";
 import { useEffect, useRef, useState } from "react";
+import nextApi from "../services/nextApi";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -74,7 +75,7 @@ export default function Overview({ node, overviewData }) {
   ]);
   const token = tokenMap.get(node) ?? "";
 
-  const [chartData, setChartData] = useState([]);
+  const chartData = overviewData?.price ?? [];
 
   const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
   const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);
@@ -137,12 +138,7 @@ export default function Overview({ node, overviewData }) {
     }
   }, [blocksHeightData, overviewData]);
 
-  // axios.get(`/${node}/prices/daily`).then((res) => {
-  //   const data = res.data;
-  //   if (data.length > 0) {
-  //     setChartData(data?.reverse() ?? []);
-  //   }
-  // });
+  nextApi.fetch(`/${node}/prices/daily`);
 
   return (
     <Wrapper>

@@ -138,8 +138,6 @@ export default function Overview({ node, overviewData }) {
     }
   }, [blocksHeightData, overviewData]);
 
-  nextApi.fetch(`/${node}/prices/daily`);
-
   return (
     <Wrapper>
       <ItemWrapper>

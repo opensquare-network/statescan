@@ -227,7 +227,7 @@ export default function Table({
   expand,
 }) {
   const dispatch = useDispatch();
-  const [isCollapse, setIsCollapse] = useState(false);
+  const [isCollapse, setIsCollapse] = useState();
 
   // Hanlding expand json data by default
   const initExpand = [];
@@ -254,6 +254,10 @@ export default function Table({
       setIsCollapse(false);
     }
   }, [size, collapse]);
+
+  if (!size.width || isCollapse === undefined) {
+    return null;
+  }
 
   return (
     <Wrapper>

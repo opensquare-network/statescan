@@ -60,19 +60,18 @@ export async function getServerSideProps(context) {
   let { page, module, method } = context.query;
   const nPage = parseInt(page) || 1;
 
-  module = module === "null" ? null : module;
-  method = method === "null" ? null : method;
-
   const { result: events } = await nextApi.fetch(`${node}/events`, {
-    page: nPage - 1,
-    module,
-    method,
+    ...{
+      page: nPage - 1,
+    },
+    ...(module ? { module } : {}),
+    ...(method ? { method } : {}),
   });
 
   const filter = [];
   const { result: modules } = await nextApi.fetch(`${node}/events/modules`);
   filter.push({
-    value: module && (modules || []).indexOf(module) > -1 ? module : null,
+    value: module && (modules || []).indexOf(module) > -1 ? module : "",
     name: "Module",
     query: "module",
     options: (modules || []).reduce(
@@ -80,7 +79,7 @@ export async function getServerSideProps(context) {
         acc.push({ text: cur, value: cur });
         return acc;
       },
-      [{ text: "All", value: null }]
+      [{ text: "All", value: "" }]
     ),
   });
   if (module) {
@@ -88,7 +87,7 @@ export async function getServerSideProps(context) {
       `${node}/events/modules/${module}/methods`
     );
     filter.push({
-      value: method && (methods || []).indexOf(method) > -1 ? method : null,
+      value: method && (methods || []).indexOf(method) > -1 ? method : "",
       name: "Method",
       query: "method",
       options: (methods || []).reduce(
@@ -96,15 +95,15 @@ export async function getServerSideProps(context) {
           acc.push({ text: cur, value: cur });
           return acc;
         },
-        [{ text: "All", value: null }]
+        [{ text: "All", value: "" }]
       ),
     });
   } else {
     filter.push({
-      value: null,
+      value: "",
       name: "Method",
       query: "method",
-      options: [{ text: "All", value: null }],
+      options: [{ text: "All", value: "" }],
     });
   }
 

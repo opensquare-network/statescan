@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   color: rgba(17, 17, 17, 0.65);
@@ -6,14 +9,16 @@ const Wrapper = styled.div`
 
   a {
     text-decoration: none;
-    color: #f22279;
+    color: ${(p) => p.themeColor};
 
     &:hover {
-      color: #f22279;
+      color: ${(p) => p.themeColor};
     }
   }
 `;
 
 export default function MinorText({ children }) {
-  return <Wrapper>{children}</Wrapper>;
+  const theme = useSelector(themeSelector);
+
+  return <Wrapper themeColor={theme.color}>{children}</Wrapper>;
 }

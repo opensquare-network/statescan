@@ -1,3 +1,8 @@
+export const DEFAULT_THEME_COLOR = "#F22279";
+export const DEFAULT_THEME_COLOR_SECONDARY = "#FEE4EF";
+export const DEFAULT_THEME_BUTTON_COLOR = "#F22279";
+export const DEFAULT_THEME_LOGO = "logo-img-1.svg";
+
 export const nodes = [
   {
     name: "Westmint",
@@ -12,6 +17,10 @@ export const nodes = [
     value: "statemine",
     symbol: "KSM",
     icon: "/imgs/icons/kusama.svg",
+    color: "#3765DC",
+    colorSecondary: "#EAF0FF",
+    buttonColor: "#000000",
+    logo: "logo-img-2.svg",
   },
 ];
 

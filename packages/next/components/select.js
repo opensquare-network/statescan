@@ -1,9 +1,11 @@
 import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import { encodeURIQuery } from "utils";
 import { useOnClickOutside } from "utils/hooks";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   position: relative;
@@ -25,7 +27,7 @@ const SelectWrapper = styled.div`
     margin-left: 8px;
   }
   :hover {
-    color: #f22279;
+    color: ${(p) => p.themeColor};
   }
   ${(p) =>
     p.isActive &&
@@ -73,13 +75,18 @@ export default function Select({ value, options, query }) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
   const router = useRouter();
+  const theme = useSelector(themeSelector);
   useOnClickOutside(ref, () => setIsActive(false));
 
   const showText = options.find((item) => item.value === value)?.text;
 
   return (
     <Wrapper ref={ref}>
-      <SelectWrapper onClick={() => setIsActive(!isActive)} isActive={isActive}>
+      <SelectWrapper
+        onClick={() => setIsActive(!isActive)}
+        isActive={isActive}
+        themeColor={theme.color}
+      >
         <span>{showText}</span>
         <img src="/imgs/icons/arrow-down.svg" />
       </SelectWrapper>

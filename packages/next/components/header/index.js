@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
 import { useOnClickOutside, useWindowSize, useHomePage } from "utils/hooks";
 import Icon from "./icon.svg";
@@ -10,6 +11,7 @@ import NodeSwitcher from "components/nodeSwitcher";
 import Subheader from "./subheader";
 import SearchS from "components/search/search-s";
 import SubMenu from "./subMenu";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Container = styled.header`
   position: relative;
@@ -119,7 +121,7 @@ const MenuItem = styled.div`
   color: #111111;
 
   :hover {
-    color: #f22279;
+    color: ${(p) => p.themeColor};
   }
 
   :not(:first-child) {
@@ -151,6 +153,7 @@ export default function Header({ node }) {
   const [isActive, setIsActive] = useState(false);
   const { width } = useWindowSize();
   const ref = useRef();
+  const theme = useSelector(themeSelector);
   useOnClickOutside(ref, () => setIsActive(false));
 
   useEffect(() => {
@@ -189,6 +192,7 @@ export default function Header({ node }) {
             <MenuWrapper ref={ref}>
               <Link href={`/${node}`}>
                 <MenuItem
+                  themeColor={theme.color}
                   onClick={() => setIsActive(false)}
                   selected={router.pathname === "/[node]"}
                 >
@@ -198,6 +202,7 @@ export default function Header({ node }) {
               <SubMenu closeMenu={() => setIsActive(false)} />
               <Link href={`/${node}/assets`}>
                 <MenuItem
+                  themeColor={theme.color}
                   onClick={() => setIsActive(false)}
                   selected={router.pathname === "/[node]/assets"}
                 >
@@ -212,7 +217,7 @@ export default function Header({ node }) {
           <NodeSwitcher node={node} />
         </FlexWrapper>
       </Wrapper>
-      {isHomePage && <Subheader />}
+      {isHomePage && <Subheader node={node} />}
     </Container>
   );
 }

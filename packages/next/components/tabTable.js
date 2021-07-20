@@ -1,9 +1,11 @@
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 import { useState } from "react";
 
 import Table from "components/table";
 import { encodeURIQuery } from "../utils";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -40,7 +42,7 @@ const Tab = styled.a`
       p.active &&
       css`
         * {
-          fill: #f22279;
+          fill: ${(p) => p.themeColor};
         }
       `}
   }
@@ -62,12 +64,12 @@ const TabText = styled.div`
 const TabTag = styled.div`
   height: 18px;
   padding: 1px 8px;
-  background: #fee4ef;
+  background: ${(p) => p.themeColorSecondary};
   border-radius: 16px;
   font-size: 12px;
   line-height: 16px;
   font-weight: bold;
-  color: #f22279;
+  color: ${(p) => p.themeColor};
 `;
 
 export default function TabTable({ data, activeTab, collapse }) {
@@ -75,6 +77,7 @@ export default function TabTable({ data, activeTab, collapse }) {
   const [activeTabIndex, setActiveTabIndex] = useState(
     data.map((item) => item.name.toLowerCase()).indexOf(activeTab)
   );
+  const theme = useSelector(themeSelector);
 
   return (
     <div>
@@ -95,7 +98,7 @@ export default function TabTable({ data, activeTab, collapse }) {
               setActiveTabIndex(index);
             }}
           >
-            <Tab active={activeTabIndex === index}>
+            <Tab active={activeTabIndex === index} themeColor={theme.color}>
               <TabText active={activeTabIndex === index}>
                 {item.name}
                 <br />
@@ -106,11 +109,16 @@ export default function TabTable({ data, activeTab, collapse }) {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <rect x="0.5" width="48" height="3" fill="#F22279" />
+                  <rect x="0.5" width="48" height="3" fill={theme.color} />
                 </svg>
               </TabText>
               {item.total !== undefined && item.total !== null && (
-                <TabTag>{item.total}</TabTag>
+                <TabTag
+                  themeColor={theme.color}
+                  themeColorSecondary={theme.colorSecondary}
+                >
+                  {item.total}
+                </TabTag>
               )}
             </Tab>
           </div>

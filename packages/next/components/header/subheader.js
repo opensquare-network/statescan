@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useNode } from "utils/hooks";
 import { nodes } from "utils/constants";
 import SearchL from "components/search/search-l";
+import { useSelector } from "react-redux";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,9 +42,8 @@ const Title = styled.h1`
   }
 `;
 
-export default function Subheader() {
-  const node = useNode();
-  const logo = node === "kusama" ? "kusama.svg" : "polkadot.svg";
+export default function Subheader({ node }) {
+  const theme = useSelector(themeSelector);
   const [name, setName] = useState();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function Subheader() {
 
   return (
     <Wrapper>
-      <Logo src={`/imgs/logo-img-${logo}`} alt="logo" />
+      <Logo src={`/imgs/${theme.logo}`} alt="logo" />
       <Title>{name} Explorer</Title>
       <SearchL node={node} />
     </Wrapper>

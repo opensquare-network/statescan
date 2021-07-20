@@ -1,10 +1,12 @@
 import styled, { css } from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 import ArrowLeft from "./arrow-left.svg";
 import ArrowRight from "./arrow-right.svg";
 import { encodeURIQuery } from "../../utils";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   display: flex;
@@ -64,8 +66,8 @@ const Item = styled.a`
   ${(p) =>
     p.active &&
     css`
-      background: #fee4ef !important;
-      color: #f22279 !important;
+      background: ${(p) => p.themeColorSecondary} !important;
+      color: ${(p) => p.themeColor} !important;
       cursor: auto;
     `}
 `;
@@ -83,6 +85,7 @@ const PAGE_OFFSET = 1;
 
 export default function Pagination({ page, pageSize, total }) {
   const router = useRouter();
+  const theme = useSelector(themeSelector);
 
   page = page + PAGE_OFFSET;
   const totalPages = Math.ceil(total / pageSize)
@@ -120,7 +123,13 @@ export default function Pagination({ page, pageSize, total }) {
             })}`}
             passHref
           >
-            <Item active={page === index + 1}>{index + 1}</Item>
+            <Item
+              active={page === index + 1}
+              themeColor={theme.color}
+              themeColorSecondary={theme.colorSecondary}
+            >
+              {index + 1}
+            </Item>
           </Link>
         )
       )}

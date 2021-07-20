@@ -6,7 +6,6 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
-import ThemeText from "components/themeText";
 import Result from "components/result";
 
 export default function Extrinsics({ node, extrinsics }) {

@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
+import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -31,12 +33,12 @@ const Badge = styled.div`
   height: 18px;
   margin-left: 8px;
   padding: 1px 8px;
-  background: #fee4ef;
+  background: ${(p) => p.themeColorSecondary};
   border-radius: 16px;
   font-size: 12px;
   line-height: 16px;
   font-weight: bold;
-  color: #f22279;
+  color: ${(p) => p.themeColor};
 `;
 
 const Data = styled.div`
@@ -49,6 +51,8 @@ const Data = styled.div`
 `;
 
 export default function DetailTable({ head, badge, body }) {
+  const theme = useSelector(themeSelector);
+
   return (
     <Wrapper>
       {(head || []).map((item, index) =>
@@ -59,7 +63,12 @@ export default function DetailTable({ head, badge, body }) {
             <Head title={item}>
               {item}
               {badge?.[index] !== null && badge?.[index] !== undefined && (
-                <Badge>{badge?.[index]}</Badge>
+                <Badge
+                  themeColor={theme.color}
+                  themeColorSecondary={theme.colorSecondary}
+                >
+                  {badge?.[index]}
+                </Badge>
               )}
             </Head>
             <Data>{body?.[index]}</Data>

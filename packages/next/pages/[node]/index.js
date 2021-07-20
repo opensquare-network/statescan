@@ -138,6 +138,7 @@ export async function getServerSideProps(context) {
     { result: assetsCount },
     { result: transfersCount },
     { result: holdersCount },
+    { result: price },
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/latest`),
     nextApi.fetch(`${node}/assets/popular`),
@@ -145,6 +146,7 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/assets/count`),
     nextApi.fetch(`${node}/transfers/count`),
     nextApi.fetch(`${node}/holders/count`),
+    nextApi.fetch(`${node}/prices/daily`),
   ]);
 
   return {
@@ -157,6 +159,7 @@ export async function getServerSideProps(context) {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
+        price: price ?? [],
       },
     },
   };

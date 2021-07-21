@@ -74,6 +74,7 @@ export async function getServerSideProps(context) {
     value: module && (modules || []).indexOf(module) > -1 ? module : "",
     name: "Module",
     query: "module",
+    subQuery: ["method"],
     options: (modules || []).reduce(
       (acc, cur) => {
         acc.push({ text: cur, value: cur });

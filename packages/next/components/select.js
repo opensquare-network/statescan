@@ -71,7 +71,7 @@ const OptionItem = styled.div`
     `}
 `;
 
-export default function Select({ value, options, query }) {
+export default function Select({ value, options, query, subQuery }) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
   const router = useRouter();
@@ -79,6 +79,10 @@ export default function Select({ value, options, query }) {
   useOnClickOutside(ref, () => setIsActive(false));
 
   const showText = options.find((item) => item.value === value)?.text;
+  const subQeuryObj = {};
+  (subQuery || []).forEach((item) => {
+    subQeuryObj[item] = "";
+  });
 
   return (
     <Wrapper ref={ref}>
@@ -102,6 +106,7 @@ export default function Select({ value, options, query }) {
                   `${router.pathname}?${encodeURIQuery({
                     ...router.query,
                     [query]: item.value,
+                    ...subQeuryObj,
                   })}`
                 );
               }}

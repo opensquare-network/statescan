@@ -47,6 +47,7 @@ export default function Filter({ total, data }) {
             value={item.value}
             options={item.options}
             query={item.query}
+            subQuery={item.subQuery}
           />
         </SelectWrapper>
       ))}

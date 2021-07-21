@@ -9,7 +9,7 @@ import { themeSelector } from "store/reducers/themeSlice";
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
   ${(p) =>
-    p.cursor &&
+    p.cursor === "true" &&
     css`
       cursor: pointer;
     `}
@@ -23,14 +23,14 @@ export default function HashEllipsis({ hash, to }) {
       {to ? (
         <Link href={to} passHref>
           <MonoText>
-            <StyledLink themecolor={theme.color} cursor={true}>
+            <StyledLink themecolor={theme.color} cursor={"true"}>
               {hashEllipsis(hash)}
             </StyledLink>
           </MonoText>
         </Link>
       ) : (
         <MonoText>
-          <StyledLink themecolor={theme.color} cursor={false}>
+          <StyledLink themecolor={theme.color} cursor={"false"}>
             {hashEllipsis(hash)}
           </StyledLink>
         </MonoText>

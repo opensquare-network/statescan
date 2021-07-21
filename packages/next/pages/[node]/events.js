@@ -6,7 +6,6 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
-import ThemeText from "components/themeText";
 import Filter from "components/filter";
 import { makeTablePairs } from "utils";
 
@@ -29,9 +28,10 @@ export default function Events({ node, events, filter }) {
             </InLink>,
             item?.indexer?.blockTime,
             item?.extrinsicHash ? (
-              <ThemeText>
-                <HashEllipsis hash={item?.extrinsicHash} />
-              </ThemeText>
+              <HashEllipsis
+                hash={item?.extrinsicHash}
+                to={`/${node}/extrinsic/${item?.extrinsicHash}`}
+              />
             ) : (
               "-"
             ),
@@ -74,6 +74,7 @@ export async function getServerSideProps(context) {
     value: module && (modules || []).indexOf(module) > -1 ? module : "",
     name: "Module",
     query: "module",
+    subQuery: ["method"],
     options: (modules || []).reduce(
       (acc, cur) => {
         acc.push({ text: cur, value: cur });

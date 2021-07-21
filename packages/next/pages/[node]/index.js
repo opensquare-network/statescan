@@ -83,12 +83,14 @@ export default function Home({ node, overview: ssrOverview }) {
               >
                 {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
               </InLink>,
-              <InLink to={`/${node}/address/${item.from}`}>
-                <AddressEllipsis address={item.from} />
-              </InLink>,
-              <InLink to={`/${node}/address/${item.to}`}>
-                <AddressEllipsis address={item.to} />
-              </InLink>,
+              <AddressEllipsis
+                address={item.from}
+                to={`/${node}/address/${item.from}`}
+              />,
+              <AddressEllipsis
+                address={item.to}
+                to={`/${node}/address/${item.to}`}
+              />,
               item?.assetSymbol
                 ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
                     item.assetSymbol
@@ -107,12 +109,14 @@ export default function Home({ node, overview: ssrOverview }) {
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
             item.name,
-            <InLink to={`/${node}/address/${item.owner}`}>
-              <AddressEllipsis address={item.owner} />
-            </InLink>,
-            <InLink to={`/${node}/address/${item.issuer}`}>
-              <AddressEllipsis address={item.issuer} />
-            </InLink>,
+            <AddressEllipsis
+              address={item.owner}
+              to={`/${node}/address/${item.owner}`}
+            />,
+            <AddressEllipsis
+              address={item.issuer}
+              to={`/${node}/address/${item.issuer}`}
+            />,
             item.accounts,
             bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),
           ])}

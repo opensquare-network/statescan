@@ -42,7 +42,7 @@ const Tab = styled.a`
       p.active &&
       css`
         * {
-          fill: ${(p) => p.themeColor};
+          fill: ${(p) => p.themecolor};
         }
       `}
   }
@@ -64,12 +64,12 @@ const TabText = styled.div`
 const TabTag = styled.div`
   height: 18px;
   padding: 1px 8px;
-  background: ${(p) => p.themeColorSecondary};
+  background: ${(p) => p.themecolorSecondary};
   border-radius: 16px;
   font-size: 12px;
   line-height: 16px;
   font-weight: bold;
-  color: ${(p) => p.themeColor};
+  color: ${(p) => p.themecolor};
 `;
 
 export default function TabTable({ data, activeTab, collapse }) {
@@ -98,7 +98,7 @@ export default function TabTable({ data, activeTab, collapse }) {
               setActiveTabIndex(index);
             }}
           >
-            <Tab active={activeTabIndex === index} themeColor={theme.color}>
+            <Tab active={activeTabIndex === index} themecolor={theme.color}>
               <TabText active={activeTabIndex === index}>
                 {item.name}
                 <br />
@@ -114,8 +114,8 @@ export default function TabTable({ data, activeTab, collapse }) {
               </TabText>
               {item.total !== undefined && item.total !== null && (
                 <TabTag
-                  themeColor={theme.color}
-                  themeColorSecondary={theme.colorSecondary}
+                  themecolor={theme.color}
+                  themecolorSecondary={theme.colorSecondary}
                 >
                   {item.total}
                 </TabTag>

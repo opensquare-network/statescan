@@ -27,7 +27,7 @@ const SelectWrapper = styled.div`
     margin-left: 8px;
   }
   :hover {
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
   }
   ${(p) =>
     p.isActive &&
@@ -71,7 +71,7 @@ const OptionItem = styled.div`
     `}
 `;
 
-export default function Select({ value, options, query }) {
+export default function Select({ value, options, query, subQuery }) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
   const router = useRouter();
@@ -79,13 +79,17 @@ export default function Select({ value, options, query }) {
   useOnClickOutside(ref, () => setIsActive(false));
 
   const showText = options.find((item) => item.value === value)?.text;
+  const subQeuryObj = {};
+  (subQuery || []).forEach((item) => {
+    subQeuryObj[item] = "";
+  });
 
   return (
     <Wrapper ref={ref}>
       <SelectWrapper
         onClick={() => setIsActive(!isActive)}
         isActive={isActive}
-        themeColor={theme.color}
+        themecolor={theme.color}
       >
         <span>{showText}</span>
         <img src="/imgs/icons/arrow-down.svg" />
@@ -102,6 +106,7 @@ export default function Select({ value, options, query }) {
                   `${router.pathname}?${encodeURIQuery({
                     ...router.query,
                     [query]: item.value,
+                    ...subQeuryObj,
                   })}`
                 );
               }}

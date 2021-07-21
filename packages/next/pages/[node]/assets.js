@@ -22,12 +22,14 @@ export default function Assets({ node, assets }) {
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
             item.name,
-            <InLink to={`/${node}/address/${item.owner}`}>
-              <AddressEllipsis address={item.owner} />
-            </InLink>,
-            <InLink to={`/${node}/address/${item.issuer}`}>
-              <AddressEllipsis address={item.issuer} />
-            </InLink>,
+            <AddressEllipsis
+              address={item.owner}
+              to={`/${node}/address/${item.owner}`}
+            />,
+            <AddressEllipsis
+              address={item.issuer}
+              to={`/${node}/address/${item.issuer}`}
+            />,
             item.accounts,
             `${bigNumber2Locale(fromAssetUnit(item.supply, item.decimals))}`,
           ])}

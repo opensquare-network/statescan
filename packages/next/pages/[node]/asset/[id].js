@@ -55,12 +55,14 @@ export default function Asset({
         >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
         <Tooltip label={item.method} bg />,
         item.indexer.blockTime,
-        <InLink to={`/${node}/address/${item?.from}`}>
-          <AddressEllipsis address={item?.from} />
-        </InLink>,
-        <InLink to={`/${node}/address/${item?.to}`}>
-          <AddressEllipsis address={item?.to} />
-        </InLink>,
+        <AddressEllipsis
+          address={item?.from}
+          to={`/${node}/address/${item?.from}`}
+        />,
+        <AddressEllipsis
+          address={item?.to}
+          to={`/${node}/address/${item?.to}`}
+        />,
         item.assetSymbol
           ? `${bigNumber2Locale(
               fromAssetUnit(item.balance, item.assetDecimals)

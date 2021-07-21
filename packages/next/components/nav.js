@@ -22,7 +22,7 @@ const NavWrapper = styled.div`
     margin-left: 8px;
   }
   > :last-child {
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
   }
 `;
 
@@ -31,7 +31,7 @@ const StyledLink = styled.div`
   text-decoration: none;
   color: #111111;
   :hover {
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
   }
   ::after {
     content: "/";
@@ -55,9 +55,9 @@ export default function Nav({ data, node }) {
 
   return (
     <Wrapper>
-      <NavWrapper node={node} themeColor={theme.color}>
+      <NavWrapper node={node} themecolor={theme.color}>
         <Link href={`/${node}`}>
-          <StyledLink node={node} themeColor={theme.color}>
+          <StyledLink node={node} themecolor={theme.color}>
             {nodeName}
           </StyledLink>
         </Link>

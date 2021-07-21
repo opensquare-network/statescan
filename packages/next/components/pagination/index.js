@@ -66,8 +66,8 @@ const Item = styled.a`
   ${(p) =>
     p.active &&
     css`
-      background: ${(p) => p.themeColorSecondary} !important;
-      color: ${(p) => p.themeColor} !important;
+      background: ${(p) => p.themecolorSecondary} !important;
+      color: ${(p) => p.themecolor} !important;
       cursor: auto;
     `}
 `;
@@ -125,8 +125,8 @@ export default function Pagination({ page, pageSize, total }) {
           >
             <Item
               active={page === index + 1}
-              themeColor={theme.color}
-              themeColorSecondary={theme.colorSecondary}
+              themecolor={theme.color}
+              themecolorSecondary={theme.colorSecondary}
             >
               {index + 1}
             </Item>

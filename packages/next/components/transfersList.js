@@ -79,13 +79,15 @@ export default function TransfersList({ node, assetTransfers }) {
         (item, index) => (
           <TransferItem key={index}>
             <MinorText>From</MinorText>
-            <InLink to={`/${node}/address/${item?.from}`}>
-              <AddressEllipsis address={item.from} />
-            </InLink>
+            <AddressEllipsis
+              address={item.from}
+              to={`/${node}/address/${item?.from}`}
+            />
             <MinorText>To</MinorText>
-            <InLink to={`/${node}/address/${item?.to}`}>
-              <AddressEllipsis address={item.to} />
-            </InLink>
+            <AddressEllipsis
+              address={item.to}
+              to={`/${node}/address/${item?.to}`}
+            />
             <MinorText>For</MinorText>
             <MajorText>
               {item.assetSymbol

@@ -9,10 +9,10 @@ const Wrapper = styled.div`
 
   a {
     text-decoration: none;
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
 
     &:hover {
-      color: ${(p) => p.themeColor};
+      color: ${(p) => p.themecolor};
     }
   }
 `;
@@ -20,5 +20,5 @@ const Wrapper = styled.div`
 export default function MinorText({ children }) {
   const theme = useSelector(themeSelector);
 
-  return <Wrapper themeColor={theme.color}>{children}</Wrapper>;
+  return <Wrapper themecolor={theme.color}>{children}</Wrapper>;
 }

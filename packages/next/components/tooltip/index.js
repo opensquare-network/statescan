@@ -1,6 +1,9 @@
 import styled, { css } from "styled-components";
+import { useDispatch } from "react-redux";
+import copy from "copy-to-clipboard";
 
 import { ReactComponent as Icon } from "./icon.svg";
+import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`
   cursor: pointer;
@@ -41,6 +44,11 @@ const PopupWrapper = styled.div`
   left: 50%;
   bottom: 100%;
   transform: translateX(-50%);
+  ${(p) =>
+    p.isCopy &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 const Popup = styled.div`
@@ -77,14 +85,22 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-export default function Tooltip({ label, bg, content, children }) {
+export default function Tooltip({ label, bg, content, children, isCopy }) {
+  const dispatch = useDispatch();
+
+  const onCopy = () => {
+    if (isCopy && content && copy(content)) {
+      dispatch(addToast({ type: "success", message: "Copied" }));
+    }
+  };
+
   return (
     <>
       {children ? (
         <ChildrenWrapper>
           {children}
           {content && (
-            <PopupWrapper>
+            <PopupWrapper onClick={onCopy} isCopy>
               <Popup>
                 {content}
                 <Triangle />
@@ -97,7 +113,7 @@ export default function Tooltip({ label, bg, content, children }) {
           {label && label}
           {!label && <Icon />}
           {content && (
-            <PopupWrapper>
+            <PopupWrapper onClick={onCopy} isCopy>
               <Popup>
                 {content}
                 <Triangle />

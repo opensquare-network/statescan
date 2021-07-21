@@ -25,9 +25,10 @@ export default function Extrinsics({ node, extrinsics }) {
               {item?.indexer?.blockHeight}
             </InLink>,
             item?.indexer?.blockTime,
-            <InLink to={`/${node}/extrinsic/${item?.hash}`}>
-              <HashEllipsis hash={item?.hash} />
-            </InLink>,
+            <HashEllipsis
+              hash={item?.hash}
+              to={`/${node}/extrinsic/${item?.hash}`}
+            />,
             <Result isSuccess={item?.isSuccess} />,
             `${item?.section}(${item?.name})`,
             item?.args,

@@ -57,11 +57,11 @@ export default function Asset({
         item.indexer.blockTime,
         <AddressEllipsis
           address={item?.from}
-          to={`/${node}/address/${item?.from}`}
+          to={`/${node}/account/${item?.from}`}
         />,
         <AddressEllipsis
           address={item?.to}
-          to={`/${node}/address/${item?.to}`}
+          to={`/${node}/account/${item?.to}`}
         />,
         item.assetSymbol
           ? `${bigNumber2Locale(
@@ -87,7 +87,7 @@ export default function Asset({
         index + 1,
         <BreakText>
           <MonoText>
-            <InLink to={`/${node}/address/${item?.address}`}>
+            <InLink to={`/${node}/account/${item?.address}`}>
               {item?.address}
             </InLink>
           </MonoText>
@@ -129,7 +129,7 @@ export default function Asset({
               <BreakText>
                 <CopyText text={asset?.owner}>
                   <MonoText>
-                    <InLink to={`/${node}/address/${asset?.owner}`}>
+                    <InLink to={`/${node}/account/${asset?.owner}`}>
                       {asset?.owner}
                     </InLink>
                   </MonoText>
@@ -138,7 +138,7 @@ export default function Asset({
               <BreakText>
                 <CopyText text={asset?.issuer}>
                   <MonoText>
-                    <InLink to={`/${node}/address/${asset?.issuer}`}>
+                    <InLink to={`/${node}/account/${asset?.issuer}`}>
                       {asset?.issuer}
                     </InLink>
                   </MonoText>

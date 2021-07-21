@@ -24,11 +24,11 @@ export default function Assets({ node, assets }) {
             item.name,
             <AddressEllipsis
               address={item.owner}
-              to={`/${node}/address/${item.owner}`}
+              to={`/${node}/account/${item.owner}`}
             />,
             <AddressEllipsis
               address={item.issuer}
-              to={`/${node}/address/${item.issuer}`}
+              to={`/${node}/account/${item.issuer}`}
             />,
             item.accounts,
             `${bigNumber2Locale(fromAssetUnit(item.supply, item.decimals))}`,

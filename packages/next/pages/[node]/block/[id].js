@@ -168,7 +168,7 @@ export default function Block({
                 <BreakText>
                   <CopyText text={blockDetail?.author}>
                     <MonoText>
-                      <InLink to={`/${node}/address/${blockDetail?.author}`}>
+                      <InLink to={`/${node}/account/${blockDetail?.author}`}>
                         {blockDetail?.author}
                       </InLink>
                     </MonoText>

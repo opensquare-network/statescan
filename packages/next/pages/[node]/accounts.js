@@ -27,7 +27,7 @@ export default function Addresses({ node, addresses }) {
           body={(addresses?.items || []).map((item) => [
             "-",
             <BreakText>
-              <InLink to={`/${node}/address/${item?.address}`}>
+              <InLink to={`/${node}/account/${item?.address}`}>
                 {item?.address}
               </InLink>
             </BreakText>,

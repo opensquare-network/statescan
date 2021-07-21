@@ -32,11 +32,11 @@ export default function Transfers({ node, transfers }) {
             item?.indexer?.blockTime,
             <AddressEllipsis
               address={item?.from}
-              to={`/${node}/address/${item?.from}`}
+              to={`/${node}/account/${item?.from}`}
             />,
             <AddressEllipsis
               address={item?.to}
-              to={`/${node}/address/${item?.to}`}
+              to={`/${node}/account/${item?.to}`}
             />,
             item.assetSymbol
               ? `${bigNumber2Locale(

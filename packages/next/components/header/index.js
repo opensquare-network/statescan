@@ -87,7 +87,9 @@ const IconWrapper = styled.div`
       > svg {
         stroke: #111111;
       }
-    `} @media screen and(max-width: 900 px) {
+    `}
+
+  @media screen and (max-width: 900px) {
     display: block;
   }
 `;

@@ -20,15 +20,13 @@ export default function HashEllipsis({ hash, to }) {
         <Link href={to} passHref>
           <MonoText>
             <StyledLink themecolor={theme.color}>
-              {hashEllipsis(address)}
+              {hashEllipsis(hash)}
             </StyledLink>
           </MonoText>
         </Link>
       ) : (
         <MonoText>
-          <StyledLink themecolor={theme.color}>
-            {hashEllipsis(address)}
-          </StyledLink>
+          <StyledLink themecolor={theme.color}>{hashEllipsis(hash)}</StyledLink>
         </MonoText>
       )}
     </Tooltip>

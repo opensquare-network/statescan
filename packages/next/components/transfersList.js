@@ -81,12 +81,12 @@ export default function TransfersList({ node, assetTransfers }) {
             <MinorText>From</MinorText>
             <AddressEllipsis
               address={item.from}
-              to={`/${node}/address/${item?.from}`}
+              to={`/${node}/account/${item?.from}`}
             />
             <MinorText>To</MinorText>
             <AddressEllipsis
               address={item.to}
-              to={`/${node}/address/${item?.to}`}
+              to={`/${node}/account/${item?.to}`}
             />
             <MinorText>For</MinorText>
             <MajorText>

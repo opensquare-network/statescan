@@ -86,7 +86,7 @@ export default function Address({
         item.from !== id ? (
           <AddressEllipsis
             address={item.from}
-            to={`/${node}/address/${item.from}`}
+            to={`/${node}/account/${item.from}`}
           />
         ) : (
           <AddressEllipsis address={item.from} />
@@ -94,7 +94,7 @@ export default function Address({
         item.to !== id ? (
           <AddressEllipsis
             address={item.to}
-            to={`/${node}/address/${item.to}`}
+            to={`/${node}/account/${item.to}`}
           />
         ) : (
           <AddressEllipsis address={item.to} />

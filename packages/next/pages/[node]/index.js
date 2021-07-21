@@ -85,11 +85,11 @@ export default function Home({ node, overview: ssrOverview }) {
               </InLink>,
               <AddressEllipsis
                 address={item.from}
-                to={`/${node}/address/${item.from}`}
+                to={`/${node}/account/${item.from}`}
               />,
               <AddressEllipsis
                 address={item.to}
-                to={`/${node}/address/${item.to}`}
+                to={`/${node}/account/${item.to}`}
               />,
               item?.assetSymbol
                 ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
@@ -111,11 +111,11 @@ export default function Home({ node, overview: ssrOverview }) {
             item.name,
             <AddressEllipsis
               address={item.owner}
-              to={`/${node}/address/${item.owner}`}
+              to={`/${node}/account/${item.owner}`}
             />,
             <AddressEllipsis
               address={item.issuer}
-              to={`/${node}/address/${item.issuer}`}
+              to={`/${node}/account/${item.issuer}`}
             />,
             item.accounts,
             bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),

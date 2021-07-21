@@ -28,7 +28,7 @@ export default function Blocks({ node, blocks }) {
             item?.author ? (
               <AddressEllipsis
                 address={item?.author}
-                to={`/${node}/address/${item?.author}`}
+                to={`/${node}/account/${item?.author}`}
               />
             ) : (
               "-"

@@ -178,7 +178,7 @@ export default function SearchL({ node }) {
         return height && router.push(`/${node}/block/${height}`);
       }
       if (address) {
-        return router.push(`/${node}/address/${address.address}`);
+        return router.push(`/${node}/account/${address.address}`);
       }
       dispatch(addToast({ type: "error", message: "No result found" }));
     });

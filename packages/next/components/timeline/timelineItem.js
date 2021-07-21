@@ -206,7 +206,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={admin}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${admin}`}>{admin}</InLink>
+                  <InLink to={`/${node}/account/${admin}`}>{admin}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>
@@ -222,7 +222,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={admin}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${admin}`}>{admin}</InLink>
+                  <InLink to={`/${node}/account/${admin}`}>{admin}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>
@@ -254,7 +254,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={timelineItem.asset.admin}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${timelineItem.asset.admin}`}>
+                  <InLink to={`/${node}/account/${timelineItem.asset.admin}`}>
                     {timelineItem.asset.admin}
                   </InLink>
                 </MonoText>
@@ -265,7 +265,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={timelineItem.asset.owner}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${timelineItem.asset.owner}`}>
+                  <InLink to={`/${node}/account/${timelineItem.asset.owner}`}>
                     {timelineItem.asset.owner}
                   </InLink>
                 </MonoText>
@@ -276,7 +276,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={timelineItem.asset.issuer}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${timelineItem.asset.issuer}`}>
+                  <InLink to={`/${node}/account/${timelineItem.asset.issuer}`}>
                     {timelineItem.asset.issuer}
                   </InLink>
                 </MonoText>
@@ -287,7 +287,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={timelineItem.asset.freezer}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${timelineItem.asset.freezer}`}>
+                  <InLink to={`/${node}/account/${timelineItem.asset.freezer}`}>
                     {timelineItem.asset.freezer}
                   </InLink>
                 </MonoText>
@@ -307,7 +307,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={admin}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${admin}`}>{admin}</InLink>
+                  <InLink to={`/${node}/account/${admin}`}>{admin}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>
@@ -316,7 +316,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={issuer}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${issuer}`}>{issuer}</InLink>
+                  <InLink to={`/${node}/account/${issuer}`}>{issuer}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>
@@ -325,7 +325,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={freezer}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${freezer}`}>{freezer}</InLink>
+                  <InLink to={`/${node}/account/${freezer}`}>{freezer}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>
@@ -340,7 +340,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={owner}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${owner}`}>{owner}</InLink>
+                  <InLink to={`/${node}/account/${owner}`}>{owner}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>
@@ -373,7 +373,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={beneficiary}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${beneficiary}`}>
+                  <InLink to={`/${node}/account/${beneficiary}`}>
                     {beneficiary}
                   </InLink>
                 </MonoText>
@@ -391,7 +391,7 @@ export default function TimelineItem({ data, node, asset }) {
             <BreakText>
               <CopyText text={who}>
                 <MonoText>
-                  <InLink to={`/${node}/address/${who}`}>{who}</InLink>
+                  <InLink to={`/${node}/account/${who}`}>{who}</InLink>
                 </MonoText>
               </CopyText>
             </BreakText>

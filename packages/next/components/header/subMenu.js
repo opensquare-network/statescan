@@ -132,7 +132,7 @@ const menus = [
   //   value: "teleports",
   // },
   {
-    name: "Addresses",
+    name: "Account",
     value: "addresses",
   },
 ];

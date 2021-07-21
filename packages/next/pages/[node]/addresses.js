@@ -21,7 +21,7 @@ export default function Addresses({ node, addresses }) {
   return (
     <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Addresses" }]} node={node} />
+        <Nav data={[{ name: "Accounts" }]} node={node} />
         <Table
           head={addressesHead}
           body={(addresses?.items || []).map((item) => [

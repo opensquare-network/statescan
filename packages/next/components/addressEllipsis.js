@@ -8,7 +8,11 @@ import { themeSelector } from "store/reducers/themeSlice";
 
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
-  cursor: pointer;
+  ${(p) =>
+    p.cursor &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 export default function AddressEllipsis({ address, to }) {
@@ -19,14 +23,14 @@ export default function AddressEllipsis({ address, to }) {
       {to ? (
         <Link href={to} passHref>
           <MonoText>
-            <StyledLink themecolor={theme.color}>
+            <StyledLink themecolor={theme.color} cursor={true}>
               {addressEllipsis(address)}
             </StyledLink>
           </MonoText>
         </Link>
       ) : (
         <MonoText>
-          <StyledLink themecolor={theme.color}>
+          <StyledLink themecolor={theme.color} cursor={false}>
             {addressEllipsis(address)}
           </StyledLink>
         </MonoText>

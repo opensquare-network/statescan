@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useSelector } from "react-redux";
 import { hashEllipsis } from "../utils";
 import Tooltip from "./tooltip";
@@ -8,7 +8,11 @@ import { themeSelector } from "store/reducers/themeSlice";
 
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
-  cursor: pointer;
+  ${(p) =>
+    p.cursor &&
+    css`
+      cursor: pointer;
+    `}
 `;
 
 export default function HashEllipsis({ hash, to }) {
@@ -19,14 +23,16 @@ export default function HashEllipsis({ hash, to }) {
       {to ? (
         <Link href={to} passHref>
           <MonoText>
-            <StyledLink themecolor={theme.color}>
+            <StyledLink themecolor={theme.color} cursor={true}>
               {hashEllipsis(hash)}
             </StyledLink>
           </MonoText>
         </Link>
       ) : (
         <MonoText>
-          <StyledLink themecolor={theme.color}>{hashEllipsis(hash)}</StyledLink>
+          <StyledLink themecolor={theme.color} cursor={false}>
+            {hashEllipsis(hash)}
+          </StyledLink>
         </MonoText>
       )}
     </Tooltip>

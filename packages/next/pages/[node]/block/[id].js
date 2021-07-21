@@ -119,7 +119,10 @@ export default function Block({
     <Layout node={node}>
       <Section>
         <div>
-          <Nav data={[{ name: "Block" }, { name: id }]} node={node} />
+          <Nav
+            data={[{ name: "Block" }, { name: blockDetail?.header?.number }]}
+            node={node}
+          />
           <DetailTable
             head={blockHead}
             body={[

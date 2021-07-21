@@ -149,7 +149,7 @@ export default function Address({
       <Section>
         <div>
           <Nav
-            data={[{ name: "Address" }, { name: addressEllipsis(id) }]}
+            data={[{ name: "Account" }, { name: addressEllipsis(id) }]}
             node={node}
           />
           <DetailTable

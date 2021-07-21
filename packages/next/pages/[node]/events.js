@@ -6,7 +6,6 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
-import ThemeText from "components/themeText";
 import Filter from "components/filter";
 import { makeTablePairs } from "utils";
 
@@ -29,9 +28,9 @@ export default function Events({ node, events, filter }) {
             </InLink>,
             item?.indexer?.blockTime,
             item?.extrinsicHash ? (
-              <ThemeText>
+              <InLink to={`/${node}/extrinsic/${item?.extrinsicHash}`}>
                 <HashEllipsis hash={item?.extrinsicHash} />
-              </ThemeText>
+              </InLink>
             ) : (
               "-"
             ),

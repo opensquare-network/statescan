@@ -38,6 +38,7 @@ const TitleWrapper = styled.div`
   > svg {
     margin-left: 4px;
     stroke: #111111;
+    stroke-width: 1.5;
   }
   ${(p) =>
     p.isActive &&

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -62,7 +62,7 @@ const TitleWrapper = styled.div`
 const MenuWrapper = styled.div`
   z-index: 99;
   position: absolute;
-  min-width: 170px;
+  min-width: 136px;
   background: #ffffff;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
@@ -101,25 +101,38 @@ const MenuItem = styled.div`
     `}
 `;
 
+const Divider = styled.div`
+  margin: 8px 0;
+  height: 1px;
+  background: #f8f8f8;
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
+`;
+
 const menus = [
   {
-    name: "View Blocks",
+    name: "Blocks",
     value: "blocks",
   },
   {
-    name: "View Extrinsics",
+    name: "Extrinsics",
     value: "extrinsics",
   },
   {
-    name: "View Transfers",
-    value: "transfers",
-  },
-  {
-    name: "View Events",
+    name: "Events",
     value: "events",
   },
   {
-    name: "View Addresses",
+    name: "Transfers",
+    value: "transfers",
+  },
+  // {
+  //   name: "Teleports",
+  //   value: "teleports",
+  // },
+  {
+    name: "Account",
     value: "addresses",
   },
 ];
@@ -152,17 +165,20 @@ export default function SubMenu({ closeMenu }) {
       {(isActive || width <= 900) && (
         <MenuWrapper ref={ref}>
           {menus.map((item, index) => (
-            <Link key={index} href={`/${node}/${item.value}`}>
-              <MenuItem
-                onClick={() => {
-                  closeMenu();
-                  setIsActive(false);
-                }}
-                selected={router.pathname === `/[node]/${item.value}`}
-              >
-                {item.name}
-              </MenuItem>
-            </Link>
+            <Fragment key={index}>
+              <Link href={`/${node}/${item.value}`}>
+                <MenuItem
+                  onClick={() => {
+                    closeMenu();
+                    setIsActive(false);
+                  }}
+                  selected={router.pathname === `/[node]/${item.value}`}
+                >
+                  {item.name}
+                </MenuItem>
+              </Link>
+              {index === 2 && <Divider />}
+            </Fragment>
           ))}
         </MenuWrapper>
       )}

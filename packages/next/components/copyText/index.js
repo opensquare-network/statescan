@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import copy from "copy-to-clipboard";
 import { useSelector } from "react-redux";
 
@@ -25,7 +25,7 @@ const Wrapper = styled.div`
 
 const StyledIcon = styled(Icon)`
   cursor: pointer;
-  stroke: ${(p) => p.themeColor};
+  stroke: ${(p) => p.themecolor};
 `;
 
 export default function CopyText({ children, text }) {
@@ -41,7 +41,7 @@ export default function CopyText({ children, text }) {
   return (
     <Wrapper>
       <span>{children}</span>
-      <StyledIcon themeColor={theme.color} onClick={onCopy} />
+      <StyledIcon themecolor={theme.color} onClick={onCopy} />
     </Wrapper>
   );
 }

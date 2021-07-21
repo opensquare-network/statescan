@@ -121,7 +121,7 @@ const MenuItem = styled.div`
   color: #111111;
 
   :hover {
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
   }
 
   :not(:first-child) {
@@ -192,7 +192,7 @@ export default function Header({ node }) {
             <MenuWrapper ref={ref}>
               <Link href={`/${node}`}>
                 <MenuItem
-                  themeColor={theme.color}
+                  themecolor={theme.color}
                   onClick={() => setIsActive(false)}
                   selected={router.pathname === "/[node]"}
                 >
@@ -202,7 +202,7 @@ export default function Header({ node }) {
               <SubMenu closeMenu={() => setIsActive(false)} />
               <Link href={`/${node}/assets`}>
                 <MenuItem
-                  themeColor={theme.color}
+                  themecolor={theme.color}
                   onClick={() => setIsActive(false)}
                   selected={router.pathname === "/[node]/assets"}
                 >

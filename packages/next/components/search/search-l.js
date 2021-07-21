@@ -54,7 +54,7 @@ const ExploreInput = styled.input`
 `;
 
 const ExploreButton = styled.div`
-  background: ${(p) => p.themeColor};
+  background: ${(p) => p.themecolor};
   border-radius: 8px;
   padding: 12px 16px;
   font-weight: 500;
@@ -221,7 +221,7 @@ export default function SearchL({ node }) {
       <ExploreButton
         node={node}
         onClick={onSearch}
-        themeColor={theme.buttonColor}
+        themecolor={theme.buttonColor}
       >
         Explore
       </ExploreButton>

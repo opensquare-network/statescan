@@ -26,9 +26,10 @@ export default function Blocks({ node, blocks }) {
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,
             item?.author ? (
-              <InLink to={`/${node}/address/${item?.author}`}>
-                <AddressEllipsis address={item?.author} />
-              </InLink>
+              <AddressEllipsis
+                address={item?.author}
+                to={`/${node}/address/${item?.author}`}
+              />
             ) : (
               "-"
             ),

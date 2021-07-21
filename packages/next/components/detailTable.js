@@ -33,12 +33,12 @@ const Badge = styled.div`
   height: 18px;
   margin-left: 8px;
   padding: 1px 8px;
-  background: ${(p) => p.themeColorSecondary};
+  background: ${(p) => p.themecolorSecondary};
   border-radius: 16px;
   font-size: 12px;
   line-height: 16px;
   font-weight: bold;
-  color: ${(p) => p.themeColor};
+  color: ${(p) => p.themecolor};
 `;
 
 const Data = styled.div`
@@ -64,8 +64,8 @@ export default function DetailTable({ head, badge, body }) {
               {item}
               {badge?.[index] !== null && badge?.[index] !== undefined && (
                 <Badge
-                  themeColor={theme.color}
-                  themeColorSecondary={theme.colorSecondary}
+                  themecolor={theme.color}
+                  themecolorSecondary={theme.colorSecondary}
                 >
                   {badge?.[index]}
                 </Badge>

@@ -67,9 +67,10 @@ export default function Block({
         <InLink
           to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
-        <InLink to={`/${node}/extrinsic/${item?.hash}`}>
-          <HashEllipsis hash={item?.hash} />
-        </InLink>,
+        <HashEllipsis
+          hash={item?.hash}
+          to={`/${node}/extrinsic/${item?.hash}`}
+        />,
         <MinorText>
           <Result isSuccess={item?.isSuccess} />
         </MinorText>,

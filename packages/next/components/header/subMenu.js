@@ -28,9 +28,9 @@ const TitleWrapper = styled.div`
   color: #111111;
   cursor: pointer;
   :hover {
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
     > svg {
-      stroke: ${(p) => p.themeColor};
+      stroke: ${(p) => p.themecolor};
     }
   }
   display: flex;
@@ -42,9 +42,9 @@ const TitleWrapper = styled.div`
   ${(p) =>
     p.isActive &&
     css`
-      color: ${(p) => p.themeColor};
+      color: ${(p) => p.themecolor};
       > svg {
-        stroke: ${(p) => p.themeColor};
+        stroke: ${(p) => p.themecolor};
       }
     `}
   @media screen and (max-width: 900px) {
@@ -144,7 +144,7 @@ export default function SubMenu({ closeMenu }) {
       <TitleWrapper
         onClick={() => setIsActive(true)}
         isActive={isActive}
-        themeColor={theme.color}
+        themecolor={theme.color}
       >
         BlockChain
         <ArrowDown />

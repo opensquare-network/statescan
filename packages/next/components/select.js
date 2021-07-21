@@ -27,7 +27,7 @@ const SelectWrapper = styled.div`
     margin-left: 8px;
   }
   :hover {
-    color: ${(p) => p.themeColor};
+    color: ${(p) => p.themecolor};
   }
   ${(p) =>
     p.isActive &&
@@ -89,7 +89,7 @@ export default function Select({ value, options, query, subQuery }) {
       <SelectWrapper
         onClick={() => setIsActive(!isActive)}
         isActive={isActive}
-        themeColor={theme.color}
+        themecolor={theme.color}
       >
         <span>{showText}</span>
         <img src="/imgs/icons/arrow-down.svg" />

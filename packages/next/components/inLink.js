@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { themeSelector } from "store/reducers/themeSlice";
 
 const StyledLink = styled.a`
-  color: ${(p) => p.themeColor};
+  color: ${(p) => p.themecolor};
   cursor: pointer;
   text-decoration: none;
 `;
@@ -15,7 +15,7 @@ export default function InLink({ to, children }) {
 
   return (
     <Link href={to} passHref>
-      <StyledLink themeColor={theme.color}>{children}</StyledLink>
+      <StyledLink themecolor={theme.color}>{children}</StyledLink>
     </Link>
   );
 }

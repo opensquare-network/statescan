@@ -28,9 +28,10 @@ export default function Events({ node, events, filter }) {
             </InLink>,
             item?.indexer?.blockTime,
             item?.extrinsicHash ? (
-              <InLink to={`/${node}/extrinsic/${item?.extrinsicHash}`}>
-                <HashEllipsis hash={item?.extrinsicHash} />
-              </InLink>
+              <HashEllipsis
+                hash={item?.extrinsicHash}
+                to={`/${node}/extrinsic/${item?.extrinsicHash}`}
+              />
             ) : (
               "-"
             ),

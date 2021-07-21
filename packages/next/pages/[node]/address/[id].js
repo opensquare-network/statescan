@@ -84,16 +84,18 @@ export default function Address({
         <Tooltip label={item.method} bg />,
         item.indexer.blockTime,
         item.from !== id ? (
-          <InLink to={`/${node}/address/${item.from}`}>
-            <AddressEllipsis address={item.from} />
-          </InLink>
+          <AddressEllipsis
+            address={item.from}
+            to={`/${node}/address/${item.from}`}
+          />
         ) : (
           <AddressEllipsis address={item.from} />
         ),
         item.to !== id ? (
-          <InLink to={`/${node}/address/${item.to}`}>
-            <AddressEllipsis address={item.to} />
-          </InLink>
+          <AddressEllipsis
+            address={item.to}
+            to={`/${node}/address/${item.to}`}
+          />
         ) : (
           <AddressEllipsis address={item.to} />
         ),
@@ -123,9 +125,10 @@ export default function Address({
         >
           {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         </InLink>,
-        <InLink to={`/${node}/extrinsic/${item?.hash}`}>
-          <HashEllipsis hash={item?.hash} />
-        </InLink>,
+        <HashEllipsis
+          hash={item?.hash}
+          to={`/${node}/extrinsic/${item?.hash}`}
+        />,
         item?.indexer?.blockTime,
         <Result isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,

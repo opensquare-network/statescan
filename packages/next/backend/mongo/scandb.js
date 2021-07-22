@@ -74,6 +74,7 @@ function DB(dbName) {
     eventCol.createIndex({ section: 1, method: 1 });
 
     addressCol.createIndex({ address: 1 });
+    addressCol.createIndex({ "data.free": -1 });
 
     assetCol.createIndex({ symbol: 1 });
     assetCol.createIndex({ name: 1 });

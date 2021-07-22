@@ -248,6 +248,7 @@ export default function Table({
   const size = useWindowSize();
 
   useEffect(() => {
+    if (!size.width) return;
     if (collapse && collapse > size.width) {
       setIsCollapse(true);
     } else {

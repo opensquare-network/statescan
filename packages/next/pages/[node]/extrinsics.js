@@ -7,6 +7,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import Result from "components/result";
+import BreakText from "components/breakText";
 
 export default function Extrinsics({ node, extrinsics }) {
   return (
@@ -30,7 +31,7 @@ export default function Extrinsics({ node, extrinsics }) {
               to={`/${node}/extrinsic/${item?.hash}`}
             />,
             <Result isSuccess={item?.isSuccess} />,
-            `${item?.section}(${item?.name})`,
+            <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
             item?.args,
           ])}
           foot={

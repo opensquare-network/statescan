@@ -128,10 +128,10 @@ const menus = [
     name: "Transfers",
     value: "transfers",
   },
-  // {
-  //   name: "Teleports",
-  //   value: "teleports",
-  // },
+  {
+    name: "Teleports",
+    value: "teleports",
+  },
   {
     name: "Accounts",
     value: "accounts",

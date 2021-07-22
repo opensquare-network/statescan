@@ -24,8 +24,8 @@ export default function Addresses({ node, addresses }) {
         <Nav data={[{ name: "Accounts" }]} node={node} />
         <Table
           head={addressesHead}
-          body={(addresses?.items || []).map((item) => [
-            "-",
+          body={(addresses?.items || []).map((item, index) => [
+            `#${addresses.page * addresses.pageSize + index + 1}`,
             <BreakText>
               <InLink to={`/${node}/account/${item?.address}`}>
                 {item?.address}

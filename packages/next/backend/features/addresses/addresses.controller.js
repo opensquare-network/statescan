@@ -19,6 +19,7 @@ async function getAddresses(ctx) {
   const col = await getAddressCollection(chain);
   const items = await col
     .find(q)
+    .sort({ "data.free": -1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();

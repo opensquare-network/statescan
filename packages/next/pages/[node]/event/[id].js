@@ -6,10 +6,17 @@ import Nav from "components/nav";
 import DetailTable from "components/detailTable";
 import MinorText from "components/minorText";
 import InLink from "components/inLink";
-import { timeDuration, time } from "utils";
+import {
+  timeDuration,
+  time,
+  fromAssetUnit,
+  fromSymbolUnit,
+  bigNumber2Locale,
+} from "utils";
 import { eventHead } from "utils/constants";
 import PageNotFound from "components/pageNotFound";
 import EventAttributes from "components/EventAttributes";
+import { getSymbol } from "utils/hooks";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -25,6 +32,8 @@ const AccessoryText = styled.div`
 `;
 
 export default function Block({ node, id, eventDetail }) {
+  const symbol = getSymbol(node);
+
   if (!eventDetail) {
     return (
       <Layout node={node}>
@@ -62,7 +71,18 @@ export default function Block({ node, id, eventDetail }) {
               eventDetail?.section,
               eventDetail?.method,
               eventDetail?.meta?.documentation?.[0],
-              "-",
+              eventDetail?.transfer
+                ? eventDetail.transfer.assetSymbol
+                  ? `${bigNumber2Locale(
+                      fromAssetUnit(
+                        eventDetail.transfer.balance,
+                        eventDetail.transfer.assetDecimals
+                      )
+                    )} ${eventDetail.transfer.assetSymbol}`
+                  : `${bigNumber2Locale(
+                      fromSymbolUnit(eventDetail.transfer.balance, symbol)
+                    )} ${symbol}`
+                : "-",
             ]}
             foot={<EventAttributes data={eventDetail?.data} />}
           />

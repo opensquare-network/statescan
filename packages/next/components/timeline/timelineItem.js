@@ -425,7 +425,7 @@ export default function TimelineItem({ data, node, asset }) {
               </LinkItem>
             </InLink>
             <InLink
-              to={`/${node}/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}?event=${data.eventIndexer.blockHeight}-${data.eventSort}`}
+              to={`/${node}/event/${data.eventIndexer.blockHeight}-${data.eventSort}`}
             >
               <LinkItem>
                 <span>{"Event"}</span>

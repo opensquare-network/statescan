@@ -12,6 +12,7 @@ import {
   fromAssetUnit,
   fromSymbolUnit,
   bigNumber2Locale,
+  makeTablePairs,
 } from "utils";
 import { eventHead } from "utils/constants";
 import PageNotFound from "components/pageNotFound";
@@ -84,7 +85,11 @@ export default function Block({ node, id, eventDetail }) {
                     )} ${symbol}`
                 : "-",
             ]}
-            foot={<EventAttributes data={eventDetail?.data} />}
+            foot={
+              <EventAttributes
+                data={makeTablePairs(eventDetail.meta.args, eventDetail.data)}
+              />
+            }
           />
         </div>
       </Section>

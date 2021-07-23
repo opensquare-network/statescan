@@ -39,6 +39,19 @@ async function getEvents(ctx) {
   };
 }
 
+async function getEvent(ctx) {
+  const { chain, blockHeight, eventSort } = ctx.params;
+
+  const col = await getEventCollection(chain);
+  const event = await col
+    .findOne({
+      "indexer.blockHeight": Number(blockHeight),
+      "sort": Number(eventSort),
+    });
+
+  ctx.body = event;
+}
+
 async function getEventModules(ctx) {
   const { chain } = ctx.params;
 
@@ -58,6 +71,7 @@ async function getEventModuleMethods(ctx) {
 }
 
 module.exports = {
+  getEvent,
   getEvents,
   getEventModules,
   getEventModuleMethods,

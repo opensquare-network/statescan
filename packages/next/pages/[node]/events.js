@@ -38,7 +38,7 @@ export default function Events({ node, events, filter }) {
             `${item?.section}(${item?.meta?.name})`,
             makeTablePairs(
               ["Docs", ...item.meta.args],
-              [item.meta.documentation.join(""), ...item.data]
+              [item.meta.documentation?.join("") || "", ...item.data]
             ),
           ])}
           foot={

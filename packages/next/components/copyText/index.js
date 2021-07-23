@@ -8,14 +8,11 @@ import { addToast } from "store/reducers/toastSlice";
 import { themeSelector } from "store/reducers/themeSlice";
 
 const Wrapper = styled.div`
-  display: flex;
+  display: inline;
   align-items: center;
-  line-height: 24px;
+  line-height: 20px;
   @media screen and (max-width: 580px) {
     display: block;
-    svg {
-      margin-top: 2px;
-    }
   }
   * {
     display: inline;

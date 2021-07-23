@@ -6,7 +6,6 @@ import { ReactComponent as Icon } from "./icon.svg";
 import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`
-  cursor: pointer;
   display: inline-block;
   position: relative;
   font-size: 14px;

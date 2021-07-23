@@ -11,6 +11,7 @@ const preferenceSlice = createSlice({
   reducers: {
     setTimeType(state, { payload }) {
       state.timeType = payload;
+      localStorage.setItem("timeType", payload);
     },
   },
 });

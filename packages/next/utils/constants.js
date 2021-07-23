@@ -202,6 +202,17 @@ export const assetHead = [
   "Transfers",
 ];
 
+export const eventHead = [
+  "Timestamp",
+  "Block",
+  "Extrinsics ID",
+  "Event Index",
+  "Module",
+  "Event Name",
+  "Description",
+  "Value",
+];
+
 export const timeTypes = {
   age: "age",
   date: "date",

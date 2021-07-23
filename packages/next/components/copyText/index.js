@@ -13,6 +13,9 @@ const Wrapper = styled.div`
   line-height: 24px;
   @media screen and (max-width: 580px) {
     display: block;
+    svg {
+      margin-top: 2px;
+    }
   }
   * {
     display: inline;

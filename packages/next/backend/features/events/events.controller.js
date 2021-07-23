@@ -1,4 +1,4 @@
-const { getEventCollection, getAssetTransferCollection } = require("../../mongo");
+const { getEventCollection, getAssetTransferCollection, getAssetCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getEvents(ctx) {

@@ -30,3 +30,21 @@ p {
   font-family: "SF Mono";
   src: url("/fonts/SFMono-Regular.ttf");
 }
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Regular-700.ttf") format("truetype");
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Bold.ttf") format("truetype");
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Medium.ttf") format("truetype");
+  font-weight: 500;
+}

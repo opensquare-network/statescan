@@ -90,7 +90,9 @@ export default function Block({
       total: blockEvents?.total,
       head: blockEventsHead,
       body: (blockEvents?.items || []).map((item) => [
-        `${item?.indexer?.blockHeight}-${item?.sort}`,
+        <InLink
+          to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
+        >{`${item?.indexer?.blockHeight}-${item?.sort}`}</InLink>,
         Number.isInteger(item?.phase?.value) ? (
           <InLink
             to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}

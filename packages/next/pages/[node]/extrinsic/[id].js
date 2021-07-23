@@ -60,7 +60,11 @@ export default function Extrinsic({
       total: extrinsicEvents?.total,
       head: extrinsicEventsHead,
       body: (extrinsicEvents?.items || []).map((item) => [
-        `${item?.indexer?.blockHeight}-${item?.sort}`,
+        <InLink
+          to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
+        >
+          {`${item?.indexer?.blockHeight}-${item?.sort}`}
+        </InLink>,
         `${item?.section}(${item?.method})`,
         makeTablePairs(
           ["Docs", ...item.meta.args],

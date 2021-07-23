@@ -50,7 +50,7 @@ const Data = styled.div`
   align-items: center;
 `;
 
-export default function DetailTable({ head, badge, body }) {
+export default function DetailTable({ head, badge, body, foot }) {
   const theme = useSelector(themeSelector);
 
   return (
@@ -75,6 +75,7 @@ export default function DetailTable({ head, badge, body }) {
           </Item>
         )
       )}
+      {foot && foot}
     </Wrapper>
   );
 }

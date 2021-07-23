@@ -87,13 +87,7 @@ export default function Block({ node, id, eventDetail }) {
             ]}
             foot={
               <EventAttributes
-                data={makeTablePairs(
-                  ["Docs", ...eventDetail.meta.args],
-                  [
-                    eventDetail.meta.documentation?.join("") || "",
-                    ...eventDetail.data,
-                  ]
-                )}
+                data={makeTablePairs(eventDetail.meta.args, eventDetail.data)}
               />
             }
           />

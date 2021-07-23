@@ -59,17 +59,19 @@ async function getEvent(ctx) {
 
     if (transfer) {
       const assetCol = await getAssetCollection(chain);
-      const asset = await assetCol.findOne({ _id: transfer.asset });
+      const asset = transfer.asset
+        ? await assetCol.findOne({ _id: transfer.asset })
+        : null;
 
       ctx.body = {
         ...event,
         transfer: {
           ...transfer,
-          assetId: asset.assetId,
-          assetCreatedAt: asset.createdAt,
-          assetName: asset.name,
-          assetSymbol: asset.symbol,
-          assetDecimals: asset.decimals,
+          assetId: asset?.assetId,
+          assetCreatedAt: asset?.createdAt,
+          assetName: asset?.name,
+          assetSymbol: asset?.symbol,
+          assetDecimals: asset?.decimals,
         }
       };
 

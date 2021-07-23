@@ -105,6 +105,7 @@ export default function Select({ value, options, query, subQuery }) {
                 router.push(
                   `${router.pathname}?${encodeURIQuery({
                     ...router.query,
+                    page: 1,
                     [query]: item.value,
                     ...subQeuryObj,
                   })}`

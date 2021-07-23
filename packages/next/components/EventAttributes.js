@@ -11,6 +11,9 @@ const Divider = styled.div`
 
 const Title = styled.div`
   padding: 8px 24px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
 `;
 
 const TableDataItem = styled.pre`

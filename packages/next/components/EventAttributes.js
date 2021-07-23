@@ -26,7 +26,7 @@ const TableDataItem = styled.pre`
   word-break: break-all;
   word-wrap: break-word;
   white-space: pre-wrap;
-  font-family: "SF Mono";
+  font-family: "Inter";
   letter-spacing: -0.5px;
   overflow-x: auto;
 `;

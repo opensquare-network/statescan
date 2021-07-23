@@ -72,6 +72,8 @@ async function getEvent(ctx) {
           assetDecimals: asset.decimals,
         }
       };
+
+      return;
     }
   }
 

@@ -21,6 +21,7 @@ const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
 const approvalCollectionName = "approval";
+const teleportCollectionMame = "teleport";
 
 let client = null;
 let db = null;
@@ -35,6 +36,7 @@ let assetCol = null;
 let assetHolderCol = null;
 let addressCol = null;
 let approvalCol = null;
+let teleportCol = null;
 
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
@@ -54,6 +56,7 @@ async function initDb() {
   assetHolderCol = db.collection(assetHolderCollectionName);
   addressCol = db.collection(addressCollectionName);
   approvalCol = db.collection(approvalCollectionName);
+  teleportCol = db.collection(teleportCollectionMame);
 
   await _createIndexes();
 }
@@ -118,6 +121,11 @@ async function getAssetApprovalCollection() {
   return approvalCol;
 }
 
+async function getTeleportCollection() {
+  await tryInit(teleportCol);
+  return teleportCol;
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
@@ -128,4 +136,5 @@ module.exports = {
   getAssetHolderCollection,
   getAddressCollection,
   getAssetApprovalCollection,
+  getTeleportCollection,
 };

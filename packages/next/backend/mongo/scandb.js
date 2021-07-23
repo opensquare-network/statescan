@@ -76,6 +76,7 @@ function DB(dbName) {
     addressCol.createIndex({ address: 1 });
     addressCol.createIndex({ "data.free": -1 });
 
+    assetCol.createIndex({ assetId: 1 });
     assetCol.createIndex({ symbol: 1 });
     assetCol.createIndex({ name: 1 });
 

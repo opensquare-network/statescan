@@ -1,15 +1,17 @@
+const { blake2AsHex } = require("@polkadot/util-crypto");
 const {
   getTeleportCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
 
-async function saveNewTeleportAsset(extrinsicIndexer, extrinsicHash, pubSentAt, beneficiary, amount, fee, teleportAssetJson) {
+async function saveNewTeleportAsset(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson) {
   const col = await getTeleportCollection();
 
   await col.insertOne({
     indexer: extrinsicIndexer,
     extrinsicHash,
     teleportDirection: "in",
+    messageId,
     pubSentAt,
     teleportAsset: teleportAssetJson,
     beneficiary,
@@ -43,6 +45,7 @@ async function handleTeleportAssetDownwardMessage(
 
   const pubSentAt = downwardMessages[0].pubSentAt.toJSON();
   const pubMsg = downwardMessages[0].pubMsg;
+  const messageId = blake2AsHex(pubMsg.toHex());
 
   const api = await getApi();
   const versionedXcm = api.registry.createType("VersionedXcm", pubMsg, true);
@@ -66,7 +69,7 @@ async function handleTeleportAssetDownwardMessage(
   const amount = concreteFungible.amount;
   const beneficiary = depositAsset.dest.x1?.accountId32.id;
 
-  await saveNewTeleportAsset(extrinsicIndexer, hash, pubSentAt, beneficiary, amount, fee, teleportAssetJson);
+  await saveNewTeleportAsset(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson);
 }
 
 module.exports = {

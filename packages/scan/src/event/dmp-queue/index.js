@@ -12,11 +12,12 @@ const DmpQueueEvents = Object.freeze({
 
 async function updateTeleportCompletion(
   extrinsicHash,
+  messageId,
   complete,
 ) {
   const col = await getTeleportCollection();
   const result = await col.updateOne(
-    { extrinsicHash },
+    { extrinsicHash, messageId },
     {
       $set: {
         complete
@@ -48,11 +49,11 @@ async function handleExecutedDownwardEvent(
     const [messageId, result] = eventData;
 
     if (result.imcomplete) {
-      await updateTeleportCompletion(extrinsicHash, false);
+      await updateTeleportCompletion(extrinsicHash, messageId, false);
     }
 
     if (result.complete) {
-      await updateTeleportCompletion(extrinsicHash, true);
+      await updateTeleportCompletion(extrinsicHash, messageId, true);
     }
   }
 

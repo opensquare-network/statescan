@@ -123,7 +123,7 @@ const CollapseTableDataWrapper = styled.div`
 const TableDataItem = styled.pre`
   background: #fafafa;
   border-radius: 4px;
-  padding: 16px 24px;
+  padding: 32px;
   font-size: 14px;
   line-height: 20px;
   margin: 0;

@@ -2,7 +2,7 @@ const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
 const { getExtrinsicCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
-const { handleTeleportAssetDownwardMessage } = require("./xcm");
+const { handleTeleportAssetDownwardMessage, handleTeleportAssets } = require("./xcm");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
   let index = 0;
@@ -77,6 +77,7 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   }
 
   await handleTeleportAssetDownwardMessage(extrinsic, indexer);
+  await handleTeleportAssets(extrinsic, indexer);
 }
 
 function normalizeExtrinsic(extrinsic, events) {

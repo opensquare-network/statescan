@@ -52,7 +52,7 @@ const StyledTd = styled.td`
   font-size: 14px;
   line-height: 20px;
 
-  height: 48px;
+  height: 40px;
   border-style: solid;
   border-width: 1px 0 0 1px;
   border-color: #eeeeee;
@@ -71,7 +71,7 @@ export default function InnerDataTable({ data, nested = false }) {
       </StyledTd>
     ) : typeof fieldValue === "object" ? (
       fieldValue === null ? (
-        <StyledTd style={{ minWidth: 320, padding: "14px 24px" }}>
+        <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
           null
         </StyledTd>
       ) : (
@@ -80,7 +80,7 @@ export default function InnerDataTable({ data, nested = false }) {
         </StyledTd>
       )
     ) : (
-      <StyledTd style={{ minWidth: 320, padding: "14px 24px" }}>
+      <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
         {fieldValue.toString()}
       </StyledTd>
     );
@@ -123,7 +123,7 @@ export default function InnerDataTable({ data, nested = false }) {
                       whiteSpace: "nowrap",
                       width,
                       minWidth: width,
-                      padding: "14px 24px",
+                      padding: "10px 24px",
                     }}
                   >
                     {fieldName}

@@ -68,7 +68,7 @@ export default function Extrinsic({
         `${item?.section}(${item?.method})`,
         makeTablePairs(
           ["Docs", ...item.meta.args],
-          [item.meta.documentation?.join("") || "", ...item.data]
+          [item.meta.documentation?.join("").trim() || "", ...item.data]
         ),
       ]),
       expand,

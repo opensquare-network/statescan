@@ -73,7 +73,7 @@ export default function Block({ node, id, eventDetail }) {
               eventDetail?.sort,
               eventDetail?.section,
               eventDetail?.method,
-              eventDetail?.meta?.documentation?.[0],
+              eventDetail?.meta?.documentation?.join("").trim() || "",
               eventDetail?.transfer
                 ? eventDetail.transfer.assetSymbol
                   ? `${bigNumber2Locale(

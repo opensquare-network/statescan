@@ -8,12 +8,14 @@ import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import Result from "components/result";
 import BreakText from "components/breakText";
+import Filter from "components/filter";
 
-export default function Extrinsics({ node, extrinsics }) {
+export default function Extrinsics({ node, extrinsics, filter }) {
   return (
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Extrinsics" }]} node={node} />
+        <Filter total={`All ${extrinsics?.total} extrinsics`} data={filter} />
         <Table
           head={extrinsicsHead}
           body={(extrinsics?.items || []).map((item) => [
@@ -50,17 +52,60 @@ export default function Extrinsics({ node, extrinsics }) {
 
 export async function getServerSideProps(context) {
   const { node } = context.params;
-  const { page } = context.query;
+  const { page, module, method } = context.query;
   const nPage = parseInt(page) || 1;
 
   const { result: extrinsics } = await nextApi.fetch(`${node}/extrinsics`, {
     page: nPage - 1,
+    ...(module ? { module } : {}),
+    ...(method ? { method } : {}),
   });
+
+  const filter = [];
+  const { result: modules } = await nextApi.fetch(`${node}/extrinsics/modules`);
+  filter.push({
+    value: module && (modules || []).indexOf(module) > -1 ? module : "",
+    name: "Module",
+    query: "module",
+    subQuery: ["method"],
+    options: (modules || []).reduce(
+      (acc, cur) => {
+        acc.push({ text: cur, value: cur });
+        return acc;
+      },
+      [{ text: "All", value: "" }]
+    ),
+  });
+  if (module) {
+    const { result: methods } = await nextApi.fetch(
+      `${node}/extrinsics/modules/${module}/methods`
+    );
+    filter.push({
+      value: method && (methods || []).indexOf(method) > -1 ? method : "",
+      name: "Method",
+      query: "method",
+      options: (methods || []).reduce(
+        (acc, cur) => {
+          acc.push({ text: cur, value: cur });
+          return acc;
+        },
+        [{ text: "All", value: "" }]
+      ),
+    });
+  } else {
+    filter.push({
+      value: "",
+      name: "Method",
+      query: "method",
+      options: [{ text: "All", value: "" }],
+    });
+  }
 
   return {
     props: {
       node,
       extrinsics: extrinsics ?? EmptyQuery,
+      filter,
     },
   };
 }

@@ -4,7 +4,7 @@ const {
 } = require("../../mongo");
 const { getApi } = require("../../api");
 
-async function saveNewTeleportAsset(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson) {
+async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson) {
   const col = await getTeleportCollection();
 
   await col.insertOne({
@@ -16,7 +16,19 @@ async function saveNewTeleportAsset(extrinsicIndexer, extrinsicHash, messageId, 
     teleportAsset: teleportAssetJson,
     beneficiary,
     amount,
-    fee,
+  });
+}
+
+async function saveNewTeleportAssetOut(extrinsicIndexer, extrinsicHash, beneficiary, amount, teleportAssetJson) {
+  const col = await getTeleportCollection();
+
+  await col.insertOne({
+    indexer: extrinsicIndexer,
+    extrinsicHash,
+    teleportDirection: "out",
+    teleportAsset: teleportAssetJson,
+    beneficiary,
+    amount,
   });
 }
 
@@ -62,16 +74,38 @@ async function handleTeleportAssetDownwardMessage(
   const teleportAssetJson = teleportAsset.toJSON();
 
   const concreteFungible = teleportAssetJson.assets.find(item => item.concreteFungible).concreteFungible;
-  const buyExecution = teleportAssetJson.effects.find(item => item.buyExecution).buyExecution;
   const depositAsset = teleportAssetJson.effects.find(item => item.depositAsset).depositAsset;
 
-  const fee = buyExecution.debt;
   const amount = concreteFungible.amount;
   const beneficiary = depositAsset.dest.x1?.accountId32.id;
 
-  await saveNewTeleportAsset(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson);
+  await saveNewTeleportAssetIn(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson);
 }
+
+
+async function handleTeleportAssets(
+  extrinsic,
+  extrinsicIndexer
+) {
+  const hash = extrinsic.hash.toHex();
+  const name = extrinsic.method.method;
+  const section = extrinsic.method.section;
+
+  if (section !== "polkadotXcm" || name !== "teleportAssets") {
+    return;
+  }
+
+  const { args } = extrinsic.method.toJSON();
+
+  const concreteFungible = args.assets.find(item => item.concreteFungible).concreteFungible;
+  const beneficiary = args.beneficiary.x1?.accountId32.id;
+  const amount = concreteFungible.amount;
+
+  await saveNewTeleportAssetOut(extrinsicIndexer, hash, beneficiary, amount, args);
+}
+
 
 module.exports = {
   handleTeleportAssetDownwardMessage,
+  handleTeleportAssets,
 };

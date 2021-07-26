@@ -12,7 +12,7 @@ async function test() {
   const testBlocks = process.env.CHAIN === CHAINS.WESTMINT
     ? [109591]
     : process.env.CHAIN === CHAINS.STATEMINE
-    ? [276700, 276830, 288674]
+    ? [276700, 276830, 288674, 288686]
     : [];
 
   for (const scanHeight of testBlocks) {

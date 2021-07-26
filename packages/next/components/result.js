@@ -8,6 +8,9 @@ const Wrapper = styled.div`
     height: 20px;
     margin-right: 8px;
   }
+  > span {
+    padding-top: 2px;
+  }
 `;
 
 export default function Result({ isSuccess }) {
@@ -17,7 +20,7 @@ export default function Result({ isSuccess }) {
         src={isSuccess ? "/imgs/icons/success.svg" : "/imgs/icons/failure.svg"}
         alt="icon"
       />
-      {isSuccess ? "Success" : "Failure"}
+      <span>{isSuccess ? "Success" : "Failure"}</span>
     </Wrapper>
   );
 }

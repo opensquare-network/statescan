@@ -1,7 +1,5 @@
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   color: rgba(17, 17, 17, 0.65);
@@ -18,7 +16,7 @@ const Wrapper = styled.div`
 `;
 
 export default function MinorText({ children }) {
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   return <Wrapper themecolor={theme.color}>{children}</Wrapper>;
 }

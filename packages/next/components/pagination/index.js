@@ -1,12 +1,11 @@
 import styled, { css } from "styled-components";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 import ArrowLeft from "./arrow-left.svg";
 import ArrowRight from "./arrow-right.svg";
 import { encodeURIQuery } from "../../utils";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -84,7 +83,7 @@ const PAGE_OFFSET = 1;
 
 export default function Pagination({ page, pageSize, total }) {
   const router = useRouter();
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   page = page + PAGE_OFFSET;
   const totalPages = Math.ceil(total / pageSize)

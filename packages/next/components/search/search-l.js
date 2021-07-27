@@ -6,8 +6,7 @@ import { useDispatch } from "react-redux";
 import InLink from "components/inLink";
 import nextApi from "services/nextApi";
 import debounce from "lodash/debounce";
-import { useSelector } from "react-redux";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -143,7 +142,7 @@ export default function SearchL({ node }) {
   const [focus, setFocus] = useState(false);
   const [selected, select] = useState(0);
   const iconMap = new Map([["osn", "osn"]]);
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   const delayedQuery = useCallback(
     debounce((value) => {

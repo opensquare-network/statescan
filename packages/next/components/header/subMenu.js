@@ -2,11 +2,10 @@ import { useState, useEffect, useRef, Fragment } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 
 import ArrowDown from "./arrow-down.svg";
 import { useOnClickOutside, useWindowSize, useNode } from "utils/hooks";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   position: relative;
@@ -144,7 +143,7 @@ export default function SubMenu({ closeMenu }) {
   const { width } = useWindowSize();
   const ref = useRef();
   const node = useNode();
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
   useOnClickOutside(ref, () => setIsActive(false));
 
   useEffect(() => {

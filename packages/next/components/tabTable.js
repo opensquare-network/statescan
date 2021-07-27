@@ -1,11 +1,10 @@
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 import { useState } from "react";
 
 import Table from "components/table";
 import { encodeURIQuery } from "../utils";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -77,7 +76,7 @@ export default function TabTable({ data, activeTab, collapse }) {
   const [activeTabIndex, setActiveTabIndex] = useState(
     data.map((item) => item.name.toLowerCase()).indexOf(activeTab)
   );
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   return (
     <div>

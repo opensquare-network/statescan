@@ -1,11 +1,10 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import copy from "copy-to-clipboard";
-import { useSelector } from "react-redux";
 
 import Icon from "../../public/imgs/icons/copy.svg";
 import { addToast } from "store/reducers/toastSlice";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: inline;
@@ -30,7 +29,7 @@ const StyledIcon = styled(Icon)`
 
 export default function CopyText({ children, text }) {
   const dispatch = useDispatch();
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   const onCopy = () => {
     if (text && copy(text)) {

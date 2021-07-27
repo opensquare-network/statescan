@@ -45,6 +45,7 @@ async function main() {
       await updateScanHeight(block.height);
     }
 
+    logger.info(`block ${targetHeight} done`);
     scanHeight = targetHeight + 1;
     await sleep(1);
   }
@@ -75,8 +76,6 @@ async function scanBlock(blockInDb) {
   const blockIndexer = getBlockIndexer(block);
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
-
-  logger.info(`block ${blockInDb.height} done`);
 }
 
 async function getRegistryByHeight(height) {

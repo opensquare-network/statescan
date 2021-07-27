@@ -1,11 +1,10 @@
 import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 
 import { encodeURIQuery } from "utils";
 import { useOnClickOutside } from "utils/hooks";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   position: relative;
@@ -75,7 +74,7 @@ export default function Select({ value, options, query, subQuery }) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
   const router = useRouter();
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
   useOnClickOutside(ref, () => setIsActive(false));
 
   const showText = options.find((item) => item.value === value)?.text;

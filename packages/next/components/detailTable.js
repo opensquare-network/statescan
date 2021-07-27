@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -53,7 +52,7 @@ const Data = styled.div`
 `;
 
 export default function DetailTable({ head, badge, body, foot }) {
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   return (
     <Wrapper>

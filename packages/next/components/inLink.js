@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import Link from "next/link";
-import { useSelector } from "react-redux";
-
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const StyledLink = styled.a`
   color: ${(p) => p.themecolor};
@@ -11,7 +9,7 @@ const StyledLink = styled.a`
 `;
 
 export default function InLink({ to, children }) {
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   return (
     <Link href={to} passHref>

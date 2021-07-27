@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { nodes } from "utils/constants";
 import SearchL from "components/search/search-l";
-import { useSelector } from "react-redux";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -43,7 +42,7 @@ const Title = styled.h1`
 `;
 
 export default function Subheader({ node }) {
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
   const [name, setName] = useState();
 
   useEffect(() => {

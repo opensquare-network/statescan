@@ -1,10 +1,9 @@
 import styled, { css } from "styled-components";
-import { useSelector } from "react-redux";
 import { hashEllipsis } from "../utils";
 import Tooltip from "./tooltip";
 import MonoText from "./monoText";
 import Link from "next/link";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
@@ -16,7 +15,7 @@ const StyledLink = styled.div`
 `;
 
 export default function HashEllipsis({ hash, to }) {
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   return (
     <Tooltip content={hash} isCopy>

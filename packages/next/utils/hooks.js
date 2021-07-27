@@ -1,7 +1,13 @@
 import { useCallback, useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
-import { nodes } from "utils/constants";
+import {
+  nodes,
+  DEFAULT_THEME_COLOR,
+  DEFAULT_THEME_COLOR_SECONDARY,
+  DEFAULT_THEME_BUTTON_COLOR,
+  DEFAULT_THEME_LOGO,
+} from "utils/constants";
 
 export function useToggle(initalState = false) {
   const [state, setState] = useState(initalState);
@@ -72,6 +78,22 @@ export function useNode() {
   }
   return null;
 }
+
+export function useTheme() {
+  const node = useNode();
+  const nodeConfig = (nodes || []).find((item) => item.value === node);
+  const color = nodeConfig?.color ?? DEFAULT_THEME_COLOR;
+  const colorSecondary =
+    nodeConfig?.colorSecondary ?? DEFAULT_THEME_COLOR_SECONDARY;
+  const buttonColor = nodeConfig?.buttonColor ?? DEFAULT_THEME_BUTTON_COLOR;
+  const logo = nodeConfig?.logo ?? DEFAULT_THEME_LOGO;
+  return {
+    color,
+    colorSecondary,
+    buttonColor,
+    logo,
+  };
+};
 
 export function getSymbol(node) {
   return nodes.find((item) => item.value === node)?.symbol;

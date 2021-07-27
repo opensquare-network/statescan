@@ -135,7 +135,7 @@ export default function Block({
                     timeDuration(blockDetail?.blockTime)}
                 </AccessoryText>
               </FlexWrapper>,
-              "-",
+              "Finalized",
               <CopyText text={blockDetail?.hash}>
                 <BreakText>
                   <MinorText>

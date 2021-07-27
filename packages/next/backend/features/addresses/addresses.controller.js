@@ -159,7 +159,7 @@ async function getAddressAssets(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$address", "$$address"] },
+                    { $eq: ["$owner", "$$address"] },
                   ],
                 },
               },

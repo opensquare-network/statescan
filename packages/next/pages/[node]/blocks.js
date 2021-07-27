@@ -21,7 +21,7 @@ export default function Blocks({ node, blocks }) {
               {item?.header?.number}
             </InLink>,
             item?.blockTime,
-            "-",
+            "Finalized",
             <ThemeText>
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,

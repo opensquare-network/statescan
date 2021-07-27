@@ -57,6 +57,7 @@ export async function getServerSideProps(context) {
 
   const { result: extrinsics } = await nextApi.fetch(`${node}/extrinsics`, {
     page: nPage - 1,
+    pageSize: 25,
     ...(module ? { module } : {}),
     ...(method ? { method } : {}),
   });

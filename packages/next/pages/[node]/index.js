@@ -46,7 +46,7 @@ const FootWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-export default function Home({ node, overview: ssrOverview }) {
+export default function Home({ node, overview: ssrOverview, price }) {
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
 
@@ -59,7 +59,7 @@ export default function Home({ node, overview: ssrOverview }) {
   return (
     <Layout node={node}>
       <Wrapper>
-        <Overview node={node} overviewData={overview} />
+        <Overview node={node} overviewData={overview} price={price} />
         <TableWrapper>
           <Table
             title="Latest Blocks"
@@ -163,8 +163,8 @@ export async function getServerSideProps(context) {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
-        price: price ?? [],
       },
+      price: price ?? [],
     },
   };
 }

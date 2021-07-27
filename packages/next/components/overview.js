@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import LineChart from "components/charts/lineChart";
 import { useEffect, useRef, useState } from "react";
-import nextApi from "../services/nextApi";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -66,7 +65,7 @@ const easeOutQuart = (t, b, c, d) => {
   return -c * ((t = t / d - 1) * t * t * t - 1) + b;
 };
 
-export default function Overview({ node, overviewData }) {
+export default function Overview({ node, overviewData, price }) {
   const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
   const tokenMap = new Map([
     ["westmint", "WND"],
@@ -75,7 +74,7 @@ export default function Overview({ node, overviewData }) {
   ]);
   const token = tokenMap.get(node) ?? "";
 
-  const chartData = overviewData?.price ?? [];
+  const chartData = price ?? [];
 
   const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
   const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);

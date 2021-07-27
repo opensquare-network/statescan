@@ -38,6 +38,13 @@ async function saveNewTransfer(
 }
 
 async function updateOrCreateAddress(blockIndexer, address) {
+  const col = await getAddressCollection();
+  const exists = await col.findOne({ address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight });
+  if (exists) {
+    // Yes, we have the address info already up to date
+    return;
+  }
+
   const api = await getApi();
 
   const account = await api.query.system.account.at(
@@ -45,7 +52,6 @@ async function updateOrCreateAddress(blockIndexer, address) {
     address
   );
   if (account) {
-    const col = await getAddressCollection();
     await col.updateOne(
       { address },
       {

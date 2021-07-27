@@ -59,6 +59,7 @@ export async function getServerSideProps(context) {
 
   const { result: addresses } = await nextApi.fetch(`${node}/addresses`, {
     page: nPage - 1,
+    pageSize: 25,
   });
 
   return {

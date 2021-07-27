@@ -53,7 +53,10 @@ export async function getServerSideProps(context) {
 
   const nPage = parseInt(page) || 1;
 
-  const { result: assets } = await nextApi.fetch(`${node}/assets`, { page: nPage - 1, pageSize: 50 });
+  const { result: assets } = await nextApi.fetch(`${node}/assets`, {
+    page: nPage - 1,
+    pageSize: 25,
+  });
 
   return {
     props: {

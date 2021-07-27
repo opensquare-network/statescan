@@ -16,7 +16,9 @@ const Wrapper = styled.div`
 const Item = styled.div`
   display: flex;
   align-items: start;
-  flex-wrap: wrap;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 const Head = styled.div`
@@ -26,7 +28,7 @@ const Head = styled.div`
   font-size: 14px;
   line-height: 20px;
   padding: 8px 24px;
-  flex-basis: 320px;
+  min-width: 26.7%;
 `;
 
 const Badge = styled.div`

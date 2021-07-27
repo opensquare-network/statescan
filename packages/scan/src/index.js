@@ -41,8 +41,13 @@ async function main() {
 
     for (const block of blocks) {
       // TODO: do following operations in one transaction
-      await scanBlock(block);
-      await updateScanHeight(block.height);
+      try {
+        await scanBlock(block);
+        await updateScanHeight(block.height);
+      } catch (e) {
+        await sleep(3000);
+        logger.error(`Error with block scan ${block.height}`, e);
+      }
     }
 
     logger.info(`block ${targetHeight} done`);

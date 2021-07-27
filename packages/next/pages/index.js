@@ -5,7 +5,7 @@ export default function Root() {
   const router = useRouter();
 
   useEffect(() => {
-    const node = localStorage.getItem("node") || "westmint";
+    const node = localStorage.getItem("node") || "statemine";
     router.push(`/${node}`);
   }, [router]);
 

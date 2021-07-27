@@ -49,8 +49,11 @@ export default function Assets({ node, assets }) {
 
 export async function getServerSideProps(context) {
   const { node } = context.params;
+  const { tab, page } = context.query;
 
-  const { result: assets } = await nextApi.fetch(`${node}/assets`);
+  const nPage = parseInt(page) || 1;
+
+  const { result: assets } = await nextApi.fetch(`${node}/assets`, { page: nPage - 1, pageSize: 50 });
 
   return {
     props: {

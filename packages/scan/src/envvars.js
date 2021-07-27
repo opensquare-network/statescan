@@ -8,7 +8,7 @@ function currentChain() {
   if (Object.values(CHAINS).includes(process.env.CHAIN)) {
     return process.env.CHAIN;
   } else {
-    return "statemint";
+    return CHAINS.STATEMINE;
   }
 }
 

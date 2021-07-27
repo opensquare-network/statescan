@@ -69,10 +69,18 @@ export default function Overview({ node, overviewData, price }) {
   const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
   const tokenMap = new Map([
     ["westmint", "WND"],
-    ["kusama", "KSM"],
+    ["statemine", "KSM"],
     ["polkadot", "DOT"],
   ]);
+
+  const colorMap = new Map([
+    ["KSM", "#0f0f0f"],
+    ["WND", "#F22279"],
+  ]);
+
   const token = tokenMap.get(node) ?? "";
+
+  const color = colorMap.get(token) ?? "#ddd";
 
   const chartData = price ?? [];
 
@@ -158,7 +166,7 @@ export default function Overview({ node, overviewData, price }) {
       <Divider />
       <div />
       <ChartWrapper>
-        <LineChart token={token} data={chartData} color={"#F22279"} />
+        <LineChart token={token} data={chartData} color={color} />
       </ChartWrapper>
     </Wrapper>
   );

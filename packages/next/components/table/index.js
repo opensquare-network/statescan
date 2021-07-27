@@ -222,7 +222,7 @@ export default function Table({
   head,
   body,
   foot,
-  rowHeight = 48,
+  rowHeight = 49,
   collapse,
   expand,
 }) {

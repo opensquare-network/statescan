@@ -6,6 +6,7 @@ import CopyText from "components/copyText";
 import BreakText from "components/breakText";
 import MonoText from "components/monoText";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
+import BigNumber from "bignumber.js";
 
 const Wrapper = styled.div`
   display: flex;
@@ -175,9 +176,10 @@ const Titles = {
 };
 
 function formatBalance(balance, asset) {
+  const balanceStr = new BigNumber(balance).toString();
   return (
     <>
-      {bigNumber2Locale(`${balance}`)}
+      {bigNumber2Locale(balanceStr)}
       {Number.isInteger(asset.decimals) && asset.symbol ? (
         <span style={{ marginLeft: 8 }}>
           ({bigNumber2Locale(fromAssetUnit(balance, asset.decimals))}{" "}

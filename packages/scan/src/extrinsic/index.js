@@ -2,6 +2,7 @@ const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
 const { getExtrinsicCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
+const asyncLocalStorage = require("../asynclocalstorage");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
   let index = 0;
@@ -69,8 +70,9 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     isSuccess,
   };
 
+  const session = asyncLocalStorage.getStore();
   const exCol = await getExtrinsicCollection();
-  const result = await exCol.insertOne(doc);
+  const result = await exCol.insertOne(doc, { session });
   if (result.result && !result.result.ok) {
     // FIXME: 处理交易插入不成功的情况
   }

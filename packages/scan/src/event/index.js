@@ -67,6 +67,7 @@ async function handleEvents(events, blockIndexer, extrinsics) {
       data,
       topics,
     });
+
   }
 
   const result = await bulk.execute(null, { session });

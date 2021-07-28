@@ -12,30 +12,18 @@ const Wrapper = styled.div`
 
 const Item = styled.div`
   cursor: pointer;
-  ${(p) =>
-    p.active &&
-    css`
-      color: rgba(17, 17, 17, 0.65);
-    `}
+  &:hover {
+    color: rgba(17, 17, 17, 0.65);
+  }
 `;
 
 export default function TimeHead({ timeType, setTimeType }) {
   return (
     <Wrapper>
       {timeType === timeTypes.age ? (
-        <Item
-          active={timeType === timeTypes.age}
-          onClick={() => setTimeType(timeTypes.date)}
-        >
-          Age
-        </Item>
+        <Item onClick={() => setTimeType(timeTypes.date)}>Age</Item>
       ) : (
-        <Item
-          active={timeType === timeTypes.date}
-          onClick={() => setTimeType(timeTypes.age)}
-        >
-          Date Time
-        </Item>
+        <Item onClick={() => setTimeType(timeTypes.age)}>Date Time</Item>
       )}
     </Wrapper>
   );

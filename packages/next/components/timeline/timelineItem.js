@@ -95,7 +95,7 @@ const FiledWrapper = styled.div`
   }
 `;
 
-const FiledTitle = styled.div`
+const FieldTitle = styled.div`
   padding: 8px 0;
   min-width: 176px;
   font-weight: 500;
@@ -104,16 +104,17 @@ const FiledTitle = styled.div`
   flex: 0 0 auto;
 `;
 
-const FiledBody = styled.div`
+const FieldBody = styled.div`
   flex-grow: 1;
   padding: 8px 0 8px 24px;
   font-size: 14px;
+  word-break: break-all;
   @media screen and (max-width: 900px) {
     padding-left: 0px;
   }
 `;
 
-const FiledText = styled.p`
+const FieldText = styled.p`
   font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.65);
@@ -203,7 +204,7 @@ export default function TimelineItem({ data, node, asset }) {
       case "Created": {
         const [assetId, admin] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <BreakText>
               <CopyText text={admin}>
@@ -219,7 +220,7 @@ export default function TimelineItem({ data, node, asset }) {
       case "ForceCreated": {
         const [assetId, admin] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <BreakText>
               <CopyText text={admin}>
@@ -229,29 +230,29 @@ export default function TimelineItem({ data, node, asset }) {
               </CopyText>
             </BreakText>
           ),
-          Sufficient: <FiledText>{timelineItem.asset.isSufficient}</FiledText>,
+          Sufficient: <FieldText>{timelineItem.asset.isSufficient}</FieldText>,
           "Min Balance": formatBalance(timelineItem.asset.minBalance, asset),
         };
       }
       case "MetadataSet": {
         const [assetId, name, symbol, decimals] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
-          Symbol: <FiledText>{timelineItem.asset.symbol}</FiledText>,
-          Name: <FiledText>{timelineItem.asset.name}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
+          Symbol: <FieldText>{timelineItem.asset.symbol}</FieldText>,
+          Name: <FieldText>{timelineItem.asset.name}</FieldText>,
           Decimals: decimals,
         };
       }
       case "MetadataCleared": {
         const [assetId] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
         };
       }
       case "AssetStatusChanged": {
         const [assetId] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <BreakText>
               <CopyText text={timelineItem.asset.admin}>
@@ -304,7 +305,7 @@ export default function TimelineItem({ data, node, asset }) {
       case "TeamChanged": {
         const [assetId, issuer, admin, freezer] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: admin(
             <BreakText>
               <CopyText text={admin}>
@@ -337,7 +338,7 @@ export default function TimelineItem({ data, node, asset }) {
       case "OwnerChanged": {
         const [assetId, owner] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <BreakText>
               <CopyText text={owner}>
@@ -352,25 +353,25 @@ export default function TimelineItem({ data, node, asset }) {
       case "AssetFrozen": {
         const [assetId] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
         };
       }
       case "AssetThawed": {
         const [assetId] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
         };
       }
       case "Destoryed": {
         const [assetId] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
         };
       }
       case "Issued": {
         const [assetId, beneficiary, amount] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Beneficiary: (
             <BreakText>
               <CopyText text={beneficiary}>
@@ -388,7 +389,7 @@ export default function TimelineItem({ data, node, asset }) {
       case "Burned": {
         const [assetId, who, amount] = timelineItem.eventData;
         return {
-          "Asset ID": <FiledText>{`#${assetId}`}</FiledText>,
+          "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Who: (
             <BreakText>
               <CopyText text={who}>
@@ -439,8 +440,8 @@ export default function TimelineItem({ data, node, asset }) {
         <TimelineFields className="fileds">
           {(Object.entries(getFields(data)) || []).map((item, index) => (
             <FiledWrapper key={index}>
-              <FiledTitle>{item[0]}</FiledTitle>
-              <FiledBody>{item[1]}</FiledBody>
+              <FieldTitle>{item[0]}</FieldTitle>
+              <FieldBody>{item[1]}</FieldBody>
             </FiledWrapper>
           ))}
         </TimelineFields>

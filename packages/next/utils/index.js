@@ -1,7 +1,7 @@
 import moment from "moment";
 import BigNumber from "bignumber.js";
 
-BigNumber.config({ EXPONENTIAL_AT: 12 });
+BigNumber.config({ EXPONENTIAL_AT: 36 });
 
 export const encodeURIQuery = (q) =>
   Object.keys(q)

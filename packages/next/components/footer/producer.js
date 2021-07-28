@@ -18,7 +18,7 @@ const Text = styled.p`
 export default function Producer() {
   return (
     <Wrapper>
-      <Text>{`© ${new Date().getFullYear()} statemint`}</Text>
+      <Text>{`© ${new Date().getFullYear()} Statescan`}</Text>
       <Text>·</Text>
       <Text>Powered by</Text>
       <img src="/imgs/logo-opensquare.svg" alt="opensquare" />

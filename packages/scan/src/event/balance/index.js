@@ -3,6 +3,7 @@ const {
   getAssetTransferCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
+const asyncLocalStorage = require("../../asynclocalstorage");
 
 const Modules = Object.freeze({
   Balances: "balances",
@@ -25,6 +26,7 @@ async function saveNewTransfer(
   to,
   balance
 ) {
+  const session = asyncLocalStorage.getStore();
   const col = await getAssetTransferCollection();
   const result = await col.insertOne({
     indexer: blockIndexer,
@@ -34,12 +36,16 @@ async function saveNewTransfer(
     from,
     to,
     balance,
-  });
+  }, { session });
 }
 
 async function updateOrCreateAddress(blockIndexer, address) {
+  const session = asyncLocalStorage.getStore();
   const col = await getAddressCollection();
-  const exists = await col.findOne({ address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight });
+  const exists = await col.findOne(
+    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
+    { session },
+  );
   if (exists) {
     // Yes, we have the address info already up to date
     return;
@@ -60,7 +66,7 @@ async function updateOrCreateAddress(blockIndexer, address) {
           lastUpdatedAt: blockIndexer,
         },
       },
-      { upsert: true }
+      { upsert: true, session }
     );
   }
 }

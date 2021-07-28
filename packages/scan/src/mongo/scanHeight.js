@@ -1,4 +1,5 @@
 const { getStatusCollection } = require("./index");
+const asyncLocalStorage = require("../asynclocalstorage");
 
 const genesisHeight = 1;
 const mainScanName = "main-scan-height";
@@ -18,11 +19,12 @@ async function getNextScanHeight() {
 }
 
 async function updateScanHeight(height) {
+  const session = asyncLocalStorage.getStore();
   const statusCol = await getStatusCollection();
-  await statusCol.findOneAndUpdate(
+  await statusCol.updateOne(
     { name: mainScanName },
     { $set: { value: height } },
-    { upsert: true }
+    { upsert: true, session }
   );
 }
 

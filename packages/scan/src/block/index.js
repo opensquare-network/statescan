@@ -1,5 +1,6 @@
 const extractBlockTime = require("./extractBlockTime");
 const { getBlockCollection } = require("../mongo");
+const asyncLocalStorage = require("../asynclocalstorage");
 
 async function handleBlock(block, blockEvents, author) {
   const hash = block.hash.toHex();
@@ -7,6 +8,7 @@ async function handleBlock(block, blockEvents, author) {
   const authorJson = author?.toJSON();
   const blockTime = extractBlockTime(block.extrinsics);
 
+  const session = asyncLocalStorage.getStore();
   const blockCol = await getBlockCollection();
   const result = await blockCol.insertOne({
     hash,
@@ -15,7 +17,7 @@ async function handleBlock(block, blockEvents, author) {
     eventsCount: (blockEvents || []).length,
     extrinsicsCount: (block.extrinsics || []).length,
     ...blockJson,
-  });
+  }, { session });
 
   if (result.result && !result.result.ok) {
     // TODO: Handle insertion failed

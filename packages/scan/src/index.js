@@ -13,6 +13,8 @@ const { handleExtrinsics } = require("./extrinsic");
 const { handleEvents } = require("./event");
 const { logger } = require("./logger");
 const { isHex } = require("./utils");
+const asyncLocalStorage = require("./asynclocalstorage");
+const { withSession } = require("./mongo");
 
 let registry;
 
@@ -21,7 +23,9 @@ async function main() {
 
   let scanHeight = await getNextScanHeight();
   while (true) {
+    // chainHeight is the current on-chain last block height
     const chainHeight = getLatestHeight();
+
     if (scanHeight > chainHeight) {
       // Just wait if the to scan height greater than current chain height
       await sleep(1000);
@@ -29,6 +33,8 @@ async function main() {
     }
 
     let targetHeight = chainHeight;
+
+    // Retrieve & Scan no more than 100 blocks at a time
     if (scanHeight + 100 < chainHeight) {
       targetHeight = scanHeight + 100;
     }
@@ -40,19 +46,28 @@ async function main() {
     }
 
     for (const block of blocks) {
-      // TODO: do following operations in one transaction
-      try {
-        await scanBlock(block);
-        await updateScanHeight(block.height);
-      } catch (e) {
-        await sleep(3000);
-        logger.error(`Error with block scan ${block.height}`, e);
-      }
+      await withSession(async (session) => {
+        await session.startTransaction();
+        try {
+          await asyncLocalStorage.run(session, async () => {
+            await scanBlock(block);
+            await updateScanHeight(block.height);
+          });
+
+          await session.commitTransaction();
+
+          scanHeight = block.height + 1;
+          await sleep(1);
+
+        } catch (e) {
+          await session.abortTransaction();
+          logger.error(`Error with block scan ${block.height}`, e);
+          await sleep(3000);
+        }
+      });
     }
 
-    logger.info(`block ${targetHeight} done`);
-    scanHeight = targetHeight + 1;
-    await sleep(1);
+    logger.info(`block ${scanHeight - 1} done`);
   }
 }
 

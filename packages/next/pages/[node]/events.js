@@ -61,9 +61,8 @@ export async function getServerSideProps(context) {
   const nPage = parseInt(page) || 1;
 
   const { result: events } = await nextApi.fetch(`${node}/events`, {
-    ...{
-      page: nPage - 1,
-    },
+    page: nPage - 1,
+    pageSize: 25,
     ...(module ? { module } : {}),
     ...(method ? { method } : {}),
   });

@@ -36,6 +36,15 @@ let assetHolderCol = null;
 let addressCol = null;
 let approvalCol = null;
 
+async function getCollection(colName) {
+  try {
+    await db.createCollection(colName);
+  } catch (e) {
+    // ignore
+  }
+  return db.collection(colName);
+}
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
@@ -45,15 +54,16 @@ async function initDb() {
   console.log(`Use scan DB name:`, dbName);
 
   db = client.db(dbName);
-  statusCol = db.collection(statusCollectionName);
-  blockCol = db.collection(blockCollectionName);
-  eventCol = db.collection(eventCollectionName);
-  extrinsicCol = db.collection(extrinsicCollectionName);
-  assetTransferCol = db.collection(assetTransferCollectionName);
-  assetCol = db.collection(assetCollectionName);
-  assetHolderCol = db.collection(assetHolderCollectionName);
-  addressCol = db.collection(addressCollectionName);
-  approvalCol = db.collection(approvalCollectionName);
+
+  statusCol = getCollection(statusCollectionName);
+  blockCol = getCollection(blockCollectionName);
+  eventCol = getCollection(eventCollectionName);
+  extrinsicCol = getCollection(extrinsicCollectionName);
+  assetTransferCol = getCollection(assetTransferCollectionName);
+  assetCol = getCollection(assetCollectionName);
+  assetHolderCol = getCollection(assetHolderCollectionName);
+  addressCol = getCollection(addressCollectionName);
+  approvalCol = getCollection(approvalCollectionName);
 
   await _createIndexes();
 }
@@ -118,6 +128,10 @@ async function getAssetApprovalCollection() {
   return approvalCol;
 }
 
+async function withSession(fn) {
+  return client.withSession(fn);
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
@@ -128,4 +142,5 @@ module.exports = {
   getAssetHolderCollection,
   getAddressCollection,
   getAssetApprovalCollection,
+  withSession,
 };

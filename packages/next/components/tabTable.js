@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import Link from "next/link";
 
 import Table from "components/table";
 import { encodeURIQuery } from "../utils";
@@ -73,29 +73,23 @@ const TabTag = styled.div`
 
 export default function TabTable({ data, activeTab, collapse }) {
   const router = useRouter();
-  const [activeTabIndex, setActiveTabIndex] = useState(
-    data.map((item) => item.name.toLowerCase()).indexOf(activeTab)
-  );
   const theme = useTheme();
+  const activeTabIndex = data
+    .map((item) => item.name.toLowerCase())
+    .indexOf(activeTab);
 
   return (
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-          <div
+          <Link
             key={index}
-            onClick={() => {
-              router.push(
-                `${router.pathname}?${encodeURIQuery({
-                  node: router.query.node,
-                  id: router.query.id,
-                  tab: data?.[index]?.name.toLowerCase(),
-                })}`,
-                undefined,
-                { shallow: true }
-              );
-              setActiveTabIndex(index);
-            }}
+            href={`${router.pathname}?${encodeURIQuery({
+              node: router.query.node,
+              id: router.query.id,
+              tab: data?.[index]?.name.toLowerCase(),
+            })}`}
+            passHref
           >
             <Tab active={activeTabIndex === index} themecolor={theme.color}>
               <TabText active={activeTabIndex === index}>
@@ -120,7 +114,7 @@ export default function TabTable({ data, activeTab, collapse }) {
                 </TabTag>
               )}
             </Tab>
-          </div>
+          </Link>
         ))}
       </TabWrapper>
       {data?.[activeTabIndex]?.component ? (

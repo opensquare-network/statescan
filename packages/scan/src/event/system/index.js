@@ -1,5 +1,6 @@
 const { getAddressCollection } = require("../../mongo");
 const { getApi } = require("../../api");
+const asyncLocalStorage = require("../../asynclocalstorage");
 
 const Modules = Object.freeze({
   System: "system",
@@ -18,6 +19,7 @@ async function updateOrCreateAddress(blockIndexer, address, killed) {
     address
   );
   if (account) {
+    const session = asyncLocalStorage.getStore();
     const col = await getAddressCollection();
     await col.updateOne(
       { address },
@@ -28,7 +30,7 @@ async function updateOrCreateAddress(blockIndexer, address, killed) {
           killed,
         },
       },
-      { upsert: true }
+      { upsert: true, session }
     );
   }
 }

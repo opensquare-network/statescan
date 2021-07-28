@@ -3,6 +3,7 @@ const {
   getAssetTransferCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
+const asyncLocalStorage = require("../../asynclocalstorage");
 
 const Modules = Object.freeze({
   Balances: "balances",
@@ -25,6 +26,7 @@ async function saveNewTransfer(
   to,
   balance
 ) {
+  const session = asyncLocalStorage.getStore();
   const col = await getAssetTransferCollection();
   const result = await col.insertOne({
     indexer: blockIndexer,
@@ -34,7 +36,7 @@ async function saveNewTransfer(
     from,
     to,
     balance,
-  });
+  }, { session });
 }
 
 async function updateOrCreateAddress(blockIndexer, address) {
@@ -45,6 +47,7 @@ async function updateOrCreateAddress(blockIndexer, address) {
     address
   );
   if (account) {
+    const session = asyncLocalStorage.getStore();
     const col = await getAddressCollection();
     await col.updateOne(
       { address },
@@ -54,7 +57,7 @@ async function updateOrCreateAddress(blockIndexer, address) {
           lastUpdatedAt: blockIndexer,
         },
       },
-      { upsert: true }
+      { upsert: true, session }
     );
   }
 }

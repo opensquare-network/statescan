@@ -118,6 +118,10 @@ async function getAssetApprovalCollection() {
   return approvalCol;
 }
 
+async function withSession(fn) {
+  return client.withSession(fn);
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
@@ -128,4 +132,5 @@ module.exports = {
   getAssetHolderCollection,
   getAddressCollection,
   getAssetApprovalCollection,
+  withSession,
 };

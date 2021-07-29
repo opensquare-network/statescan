@@ -73,6 +73,11 @@ export default function Home({ node, overview: ssrOverview, price }) {
               item.eventsCount,
             ])}
             collapse={900}
+            foot={
+              <FootWrapper>
+                <InLink to={`/${node}/blocks`}>View all</InLink>
+              </FootWrapper>
+            }
           />
           <Table
             title="Latest Transfers"
@@ -98,6 +103,11 @@ export default function Home({ node, overview: ssrOverview, price }) {
                 : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
             ])}
             collapse={900}
+            foot={
+              <FootWrapper>
+                <InLink to={`/${node}/transfers`}>View all</InLink>
+              </FootWrapper>
+            }
           />
         </TableWrapper>
         <Table

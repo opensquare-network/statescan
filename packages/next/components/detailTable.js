@@ -1,7 +1,6 @@
 import { Fragment } from "react";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -16,7 +15,9 @@ const Wrapper = styled.div`
 const Item = styled.div`
   display: flex;
   align-items: start;
-  flex-wrap: wrap;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+  }
 `;
 
 const Head = styled.div`
@@ -26,7 +27,7 @@ const Head = styled.div`
   font-size: 14px;
   line-height: 20px;
   padding: 8px 24px;
-  flex-basis: 320px;
+  min-width: 26.7%;
 `;
 
 const Badge = styled.div`
@@ -50,8 +51,8 @@ const Data = styled.div`
   align-items: center;
 `;
 
-export default function DetailTable({ head, badge, body }) {
-  const theme = useSelector(themeSelector);
+export default function DetailTable({ head, badge, body, foot }) {
+  const theme = useTheme();
 
   return (
     <Wrapper>
@@ -75,6 +76,7 @@ export default function DetailTable({ head, badge, body }) {
           </Item>
         )
       )}
+      {foot && foot}
     </Wrapper>
   );
 }

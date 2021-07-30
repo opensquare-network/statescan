@@ -25,7 +25,7 @@ export default function LineChart({
     <ChartWrapper>
       <Title>{token} · Last 30d</Title>
       {data.length ? (
-        <Chart padding={[0, 0, 0, 0]} width={227} height={34} data={data}>
+        <Chart padding={[2, 0, 0, 0]} width={227} height={34} data={data}>
           <Axis name="time" visible={false} />
           <Axis name="price" visible={false} />
           <LineAdvance

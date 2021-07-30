@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import { useHistory } from "react-router";
+import { useRouter } from "next/router";
+
+import { useNode } from "utils/hooks";
 
 const Wrapper = styled.div`
   padding: 40px 64px;
@@ -40,7 +42,8 @@ const Button = styled.div`
 `;
 
 export default function PageNotFound() {
-  const history = useHistory();
+  const router = useRouter();
+  const node = useNode();
 
   return (
     <Wrapper>
@@ -51,7 +54,7 @@ export default function PageNotFound() {
       </TextWrapper>
       <Button
         onClick={() => {
-          history.replace("/");
+          router.replace(`/${node}`);
         }}
       >
         Back home

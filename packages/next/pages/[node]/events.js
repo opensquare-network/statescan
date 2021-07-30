@@ -19,7 +19,7 @@ export default function Events({ node, events, filter }) {
           head={eventsHead}
           body={(events?.items || []).map((item) => [
             <InLink
-              to={`/${node}/block/${item?.indexer?.blockHeight}?tab=events&event=${item?.indexer?.blockHeight}-${item?.sort}`}
+              to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
             >
               {item?.indexer?.blockHeight}-{item?.sort}
             </InLink>,
@@ -38,7 +38,7 @@ export default function Events({ node, events, filter }) {
             `${item?.section}(${item?.meta?.name})`,
             makeTablePairs(
               ["Docs", ...item.meta.args],
-              [item.meta.documentation.join(""), ...item.data]
+              [item.meta.documentation?.join("").trim() || "", ...item.data]
             ),
           ])}
           foot={
@@ -61,9 +61,8 @@ export async function getServerSideProps(context) {
   const nPage = parseInt(page) || 1;
 
   const { result: events } = await nextApi.fetch(`${node}/events`, {
-    ...{
-      page: nPage - 1,
-    },
+    page: nPage - 1,
+    pageSize: 25,
     ...(module ? { module } : {}),
     ...(method ? { method } : {}),
   });

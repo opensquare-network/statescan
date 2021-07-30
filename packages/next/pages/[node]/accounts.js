@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import { useEffect } from "react";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
@@ -9,6 +10,10 @@ import InLink from "components/inLink";
 import { getSymbol } from "utils/hooks";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
 import BreakText from "components/breakText";
+
+const AccountFont = styled.div`
+  font-family: "SF Mono";
+`;
 
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
@@ -28,7 +33,7 @@ export default function Addresses({ node, addresses }) {
             `#${addresses.page * addresses.pageSize + index + 1}`,
             <BreakText>
               <InLink to={`/${node}/account/${item?.address}`}>
-                {item?.address}
+                <AccountFont>{item?.address}</AccountFont>
               </InLink>
             </BreakText>,
             `${bigNumber2Locale(
@@ -59,6 +64,7 @@ export async function getServerSideProps(context) {
 
   const { result: addresses } = await nextApi.fetch(`${node}/addresses`, {
     page: nPage - 1,
+    pageSize: 25,
   });
 
   return {

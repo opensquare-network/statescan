@@ -123,7 +123,7 @@ const CollapseTableDataWrapper = styled.div`
 const TableDataItem = styled.pre`
   background: #fafafa;
   border-radius: 4px;
-  padding: 16px 24px;
+  padding: 32px;
   font-size: 14px;
   line-height: 20px;
   margin: 0;
@@ -144,7 +144,7 @@ const TableDataItem = styled.pre`
 const CollapseTableDataItem = styled.pre`
   background: #fafafa;
   border-radius: 4px;
-  padding: 16px 24px;
+  padding: 32px;
   font-size: 14px;
   line-height: 20px;
   margin: 0;
@@ -222,7 +222,7 @@ export default function Table({
   head,
   body,
   foot,
-  rowHeight = 48,
+  rowHeight = 49,
   collapse,
   expand,
 }) {
@@ -242,6 +242,10 @@ export default function Table({
   }, [body]);
 
   const timeType = useSelector(timeTypeSelector);
+  useEffect(() => {
+    const timeType = localStorage.getItem("timeType");
+    dispatch(setTimeType(timeType));
+  }, []);
   const doSetTimeType = (timeType) => {
     dispatch(setTimeType(timeType));
   };

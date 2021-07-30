@@ -4,13 +4,13 @@ export const DEFAULT_THEME_BUTTON_COLOR = "#F22279";
 export const DEFAULT_THEME_LOGO = "logo-img-1.svg";
 
 export const nodes = [
-  {
-    name: "Westmint",
-    sub: "Westend",
-    value: "westmint",
-    symbol: "WND",
-    icon: "/imgs/icons/westend.svg",
-  },
+  // {
+  //   name: "Westmint",
+  //   sub: "Westend",
+  //   value: "westmint",
+  //   symbol: "WND",
+  //   icon: "/imgs/icons/westend.svg",
+  // },
   {
     name: "Statemine",
     sub: "Kusama",
@@ -212,6 +212,17 @@ export const assetHead = [
   "Decimals",
   "Holders",
   "Transfers",
+];
+
+export const eventHead = [
+  "Timestamp",
+  "Block",
+  "Extrinsics ID",
+  "Event Index",
+  "Module",
+  "Event Name",
+  "Description",
+  "Value",
 ];
 
 export const timeTypes = {

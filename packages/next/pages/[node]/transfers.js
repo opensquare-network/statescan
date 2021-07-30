@@ -21,7 +21,7 @@ export default function Transfers({ node, transfers }) {
           head={transfersHead}
           body={(transfers?.items || []).map((item) => [
             <InLink
-              to={`/${node}/block/${item?.indexer?.blockHeight}?tab=events&event=${item?.indexer?.blockHeight}-${item?.eventSort}`}
+              to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.eventSort}`}
             >
               {item?.indexer?.blockHeight}-{item?.eventSort}
             </InLink>,
@@ -67,6 +67,7 @@ export async function getServerSideProps(context) {
 
   const { result: transfers } = await nextApi.fetch(`${node}/transfers`, {
     page: nPage - 1,
+    pageSize: 25,
   });
 
   return {

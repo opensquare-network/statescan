@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import LineChart from "components/charts/lineChart";
 import { useEffect, useRef, useState } from "react";
-import nextApi from "../services/nextApi";
 
 const Wrapper = styled.div`
   background: #ffffff;
@@ -66,16 +65,24 @@ const easeOutQuart = (t, b, c, d) => {
   return -c * ((t = t / d - 1) * t * t * t - 1) + b;
 };
 
-export default function Overview({ node, overviewData }) {
+export default function Overview({ node, overviewData, price }) {
   const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
   const tokenMap = new Map([
     ["westmint", "WND"],
-    ["kusama", "KSM"],
+    ["statemine", "KSM"],
     ["polkadot", "DOT"],
   ]);
+
+  const colorMap = new Map([
+    ["KSM", "#0f0f0f"],
+    ["WND", "#F22279"],
+  ]);
+
   const token = tokenMap.get(node) ?? "";
 
-  const chartData = overviewData?.price ?? [];
+  const color = colorMap.get(token) ?? "#ddd";
+
+  const chartData = price ?? [];
 
   const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
   const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);
@@ -159,7 +166,7 @@ export default function Overview({ node, overviewData }) {
       <Divider />
       <div />
       <ChartWrapper>
-        <LineChart token={token} data={chartData} color={"#F22279"} />
+        <LineChart token={token} data={chartData} color={color} />
       </ChartWrapper>
     </Wrapper>
   );

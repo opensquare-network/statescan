@@ -1,4 +1,4 @@
-const { getEventCollection } = require("../../mongo");
+const { getEventCollection, getAssetTransferCollection, getAssetCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getEvents(ctx) {
@@ -39,6 +39,49 @@ async function getEvents(ctx) {
   };
 }
 
+async function getEvent(ctx) {
+  const { chain, blockHeight, eventSort } = ctx.params;
+
+  const col = await getEventCollection(chain);
+  const event = await col
+    .findOne({
+      "indexer.blockHeight": Number(blockHeight),
+      "sort": Number(eventSort),
+    });
+
+  if (event) {
+    const transferCol = await getAssetTransferCollection(chain);
+    const transfer = await transferCol
+      .findOne({
+        "indexer.blockHeight": Number(blockHeight),
+        "eventSort": Number(eventSort),
+      });
+
+    if (transfer) {
+      const assetCol = await getAssetCollection(chain);
+      const asset = transfer.asset
+        ? await assetCol.findOne({ _id: transfer.asset })
+        : null;
+
+      ctx.body = {
+        ...event,
+        transfer: {
+          ...transfer,
+          assetId: asset?.assetId,
+          assetCreatedAt: asset?.createdAt,
+          assetName: asset?.name,
+          assetSymbol: asset?.symbol,
+          assetDecimals: asset?.decimals,
+        }
+      };
+
+      return;
+    }
+  }
+
+  ctx.body = event;
+}
+
 async function getEventModules(ctx) {
   const { chain } = ctx.params;
 
@@ -58,6 +101,7 @@ async function getEventModuleMethods(ctx) {
 }
 
 module.exports = {
+  getEvent,
   getEvents,
   getEventModules,
   getEventModuleMethods,

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 
 import { useOnClickOutside, useWindowSize, useHomePage } from "utils/hooks";
 import Icon from "./icon.svg";
@@ -11,7 +10,7 @@ import NodeSwitcher from "components/nodeSwitcher";
 import Subheader from "./subheader";
 import SearchS from "components/search/search-s";
 import SubMenu from "./subMenu";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Container = styled.header`
   position: relative;
@@ -155,7 +154,7 @@ export default function Header({ node }) {
   const [isActive, setIsActive] = useState(false);
   const { width } = useWindowSize();
   const ref = useRef();
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
   useOnClickOutside(ref, () => setIsActive(false));
 
   useEffect(() => {

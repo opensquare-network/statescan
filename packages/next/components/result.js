@@ -4,8 +4,8 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   > img {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin-right: 8px;
   }
 `;

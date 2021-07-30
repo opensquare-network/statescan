@@ -12,6 +12,9 @@ const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { handleExtrinsics } = require("./extrinsic");
 const { handleEvents } = require("./event");
 const { logger } = require("./logger");
+const { isHex } = require("./utils");
+const asyncLocalStorage = require("./asynclocalstorage");
+const { withSession } = require("./mongo");
 
 let registry;
 
@@ -20,7 +23,9 @@ async function main() {
 
   let scanHeight = await getNextScanHeight();
   while (true) {
+    // chainHeight is the current on-chain last block height
     const chainHeight = getLatestHeight();
+
     if (scanHeight > chainHeight) {
       // Just wait if the to scan height greater than current chain height
       await sleep(1000);
@@ -28,6 +33,8 @@ async function main() {
     }
 
     let targetHeight = chainHeight;
+
+    // Retrieve & Scan no more than 100 blocks at a time
     if (scanHeight + 100 < chainHeight) {
       targetHeight = scanHeight + 100;
     }
@@ -39,12 +46,28 @@ async function main() {
     }
 
     for (const block of blocks) {
-      // TODO: do following operations in one transaction
-      await scanBlock(block);
-      await updateScanHeight(block.height);
-      scanHeight = block.height + 1;
-      await sleep(1);
+      await withSession(async (session) => {
+        await session.startTransaction();
+        try {
+          await asyncLocalStorage.run(session, async () => {
+            await scanBlock(block);
+            await updateScanHeight(block.height);
+          });
+
+          await session.commitTransaction();
+
+          scanHeight = block.height + 1;
+          await sleep(1);
+
+        } catch (e) {
+          await session.abortTransaction();
+          logger.error(`Error with block scan ${block.height}`, e);
+          await sleep(3000);
+        }
+      });
     }
+
+    logger.info(`block ${scanHeight - 1} done`);
   }
 }
 
@@ -53,7 +76,13 @@ async function scanBlock(blockInDb) {
     registry = await getRegistryByHeight(blockInDb.height);
   }
 
-  const block = new GenericBlock(registry.registry, hexToU8a(blockInDb.block));
+  let block;
+  if (isHex(blockInDb.block)) {
+    block = new GenericBlock(registry.registry, hexToU8a(blockInDb.block));
+  } else {
+    block = new GenericBlock(registry.registry, blockInDb.block.block);
+  }
+
   const blockEvents = registry.registry.createType(
     "Vec<EventRecord>",
     blockInDb.events,
@@ -67,8 +96,6 @@ async function scanBlock(blockInDb) {
   const blockIndexer = getBlockIndexer(block);
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
-
-  logger.info(`block ${blockInDb.height} done`);
 }
 
 async function getRegistryByHeight(height) {

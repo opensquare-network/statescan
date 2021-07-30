@@ -77,7 +77,11 @@ export default function Address({
       total: addressTransfers?.total,
       head: addressTransfersHead,
       body: (addressTransfers?.items || []).map((item) => [
-        `${item.indexer.blockHeight}-${item.eventSort}`,
+        <InLink
+          to={`/${node}/event/${item.indexer.blockHeight}-${item.eventSort}`}
+        >
+          {`${item.indexer.blockHeight}-${item.eventSort}`}
+        </InLink>,
         <InLink
           to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,

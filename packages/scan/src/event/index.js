@@ -3,12 +3,14 @@ const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
 const { handleExecutedDownwardEvent } = require("./dmp-queue");
 const { handleSystemEvent } = require("./system");
+const asyncLocalStorage = require("../asynclocalstorage");
 
 async function handleEvents(events, blockIndexer, extrinsics) {
   if (events.length <= 0) {
     return;
   }
 
+  const session = asyncLocalStorage.getStore();
   const eventCol = await getEventCollection();
   const bulk = eventCol.initializeOrderedBulkOp();
 
@@ -73,9 +75,10 @@ async function handleEvents(events, blockIndexer, extrinsics) {
       data,
       topics,
     });
+
   }
 
-  const result = await bulk.execute();
+  const result = await bulk.execute(null, { session });
   if (result.result && !result.result.ok) {
     // TODO: 处理插入不成功的情况
   }

@@ -136,6 +136,7 @@ async function getAddressAssets(ctx) {
       },
       {
         $addFields: {
+          asset: "$asset._id",
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetSymbol: "$asset.symbol",
@@ -144,22 +145,17 @@ async function getAddressAssets(ctx) {
         },
       },
       {
-        $project: {
-          asset: 0,
-        },
-      },
-      {
         $lookup: {
           from: "approval",
-          let: { assetId: "$assetId", address: "$address" },
+          let: { asset: "$asset", address: "$address" },
           as: "approved",
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$address", "$$address"] },
+                    { $eq: ["$asset", "$$asset"] },
+                    { $eq: ["$owner", "$$address"] },
                   ],
                 },
               },

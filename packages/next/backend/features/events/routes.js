@@ -9,5 +9,6 @@ router.get(
   "/events/modules/:moduleName/methods",
   eventsController.getEventModuleMethods
 );
+router.get("/events/:blockHeight-:eventSort", eventsController.getEvent);
 
 module.exports = router;

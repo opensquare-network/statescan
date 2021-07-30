@@ -22,7 +22,7 @@ export default function Blocks({ node, blocks }) {
               {item?.header?.number}
             </InLink>,
             item?.blockTime,
-            "-",
+            "Finalized",
             <ThemeText>
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,
@@ -58,6 +58,7 @@ export async function getServerSideProps(context) {
 
   const { result: blocks } = await nextApi.fetch(`${node}/blocks`, {
     page: nPage - 1,
+    pageSize: 25,
   });
 
   return {

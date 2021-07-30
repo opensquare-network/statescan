@@ -1,9 +1,8 @@
 import styled, { css } from "styled-components";
 import Link from "next/link";
-import { useSelector } from "react-redux";
 
 import { nodes } from "utils/constants";
-import { themeSelector } from "store/reducers/themeSlice";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   height: 36px;
@@ -51,7 +50,7 @@ const NoLink = styled.div``;
 
 export default function Nav({ data, node }) {
   const nodeName = nodes.find((item) => item.value === node)?.name;
-  const theme = useSelector(themeSelector);
+  const theme = useTheme();
 
   return (
     <Wrapper>

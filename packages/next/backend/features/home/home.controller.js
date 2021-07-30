@@ -27,7 +27,7 @@ async function search(ctx) {
   const lowerQ = q.toLowerCase();
   const isHash = !!lowerQ.match(/^0x[0-9a-f]{64}$/);
   const isNum = q.match(/^[0-9]+$/);
-  const isAddr = q.match(/^[0-9a-zA-Z]{48}$/);
+  const isAddr = q.match(/^[0-9a-zA-Z]{47,48}$/);
 
   const assetCol = await getAssetCollection(chain);
   const addressCol = await getAddressCollection(chain);

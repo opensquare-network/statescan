@@ -1,6 +1,7 @@
 const {
   getTeleportCollection,
 } = require("../../mongo");
+const asyncLocalStorage = require("../../asynclocalstorage");
 
 const Modules = Object.freeze({
   DmpQueue: "dmpQueue",
@@ -15,6 +16,7 @@ async function updateTeleportCompletion(
   messageId,
   complete,
 ) {
+  const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
   const result = await col.updateOne(
     { extrinsicHash, messageId },
@@ -22,7 +24,8 @@ async function updateTeleportCompletion(
       $set: {
         complete
       }
-    }
+    },
+    { session }
   );
 }
 

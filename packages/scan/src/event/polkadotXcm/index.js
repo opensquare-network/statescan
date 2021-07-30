@@ -14,6 +14,7 @@ async function updateTeleportCompletion(
   extrinsicHash,
   complete,
 ) {
+  const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
   const result = await col.updateOne(
     { extrinsicHash },
@@ -21,7 +22,8 @@ async function updateTeleportCompletion(
       $set: {
         complete
       }
-    }
+    },
+    { session }
   );
 }
 

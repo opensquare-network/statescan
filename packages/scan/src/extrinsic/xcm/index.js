@@ -3,8 +3,10 @@ const {
   getTeleportCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
+const asyncLocalStorage = require("../asynclocalstorage");
 
 async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson) {
+  const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
 
   await col.insertOne({
@@ -16,10 +18,11 @@ async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId
     teleportAsset: teleportAssetJson,
     beneficiary,
     amount,
-  });
+  }, { session });
 }
 
 async function saveNewTeleportAssetOut(extrinsicIndexer, extrinsicHash, beneficiary, amount, teleportAssetJson) {
+  const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
 
   await col.insertOne({
@@ -29,7 +32,7 @@ async function saveNewTeleportAssetOut(extrinsicIndexer, extrinsicHash, benefici
     teleportAsset: teleportAssetJson,
     beneficiary,
     amount,
-  });
+  }, { session });
 }
 
 async function handleTeleportAssetDownwardMessage(

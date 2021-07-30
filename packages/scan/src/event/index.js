@@ -1,7 +1,7 @@
 const { getEventCollection } = require("../mongo");
 const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
-const { handleExecutedDownwardEvent } = require("./dmp-queue");
+const { handleExecutedDownwardEvent } = require("./dmpQueue");
 const { handleSystemEvent } = require("./system");
 const asyncLocalStorage = require("../asynclocalstorage");
 

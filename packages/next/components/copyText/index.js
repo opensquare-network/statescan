@@ -25,6 +25,7 @@ const Wrapper = styled.div`
 const StyledIcon = styled(Icon)`
   cursor: pointer;
   stroke: ${(p) => p.themecolor};
+  stroke-width: 1.5;
 `;
 
 export default function CopyText({ children, text }) {

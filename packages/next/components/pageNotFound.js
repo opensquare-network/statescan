@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useRouter } from "next/router";
 
-import { useNode } from "utils/hooks";
+import { useNode, useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   padding: 40px 64px;
@@ -32,7 +32,7 @@ const TextWrapper = styled.div`
 
 const Button = styled.div`
   padding: 12px 16px;
-  background: #f22279;
+  background: ${(p) => p.buttoncolor};
   border-radius: 8px;
   font-weight: 500;
   font-size: 15px;
@@ -44,6 +44,7 @@ const Button = styled.div`
 export default function PageNotFound() {
   const router = useRouter();
   const node = useNode();
+  const theme = useTheme();
 
   return (
     <Wrapper>
@@ -56,6 +57,7 @@ export default function PageNotFound() {
         onClick={() => {
           router.replace(`/${node}`);
         }}
+        buttoncolor={theme.buttonColor}
       >
         Back home
       </Button>

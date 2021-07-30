@@ -63,13 +63,15 @@ export default function Block({ node, id, eventDetail }) {
               >
                 {eventDetail?.indexer?.blockHeight}
               </InLink>,
-              eventDetail?.phase?.value
-                ? <InLink
-                    to={`/${node}/extrinsic/${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
-                  >
-                    {`${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
-                  </InLink>
-                : "-",
+              eventDetail?.phase?.value ? (
+                <InLink
+                  to={`/${node}/extrinsic/${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
+                >
+                  {`${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
+                </InLink>
+              ) : (
+                "-"
+              ),
               eventDetail?.sort,
               eventDetail?.section,
               eventDetail?.method,

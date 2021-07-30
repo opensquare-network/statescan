@@ -82,6 +82,7 @@ export default function Block({
           page={blockExtrinsics?.page}
           pageSize={blockExtrinsics?.pageSize}
           total={blockExtrinsics?.total}
+          add={{ tab: "extrinsics" }}
         />
       ),
     },
@@ -112,6 +113,7 @@ export default function Block({
           page={blockEvents?.page}
           pageSize={blockEvents?.pageSize}
           total={blockEvents?.total}
+          add={{ tab: "events" }}
         />
       ),
     },
@@ -201,8 +203,12 @@ export async function getServerSideProps(context) {
     { result: blockExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/${id}`),
-    nextApi.fetch(`${node}/blocks/${id}/events`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/blocks/${id}/events`, {
+      page: activeTab === "events" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, {
+      page: activeTab === "extrinsics" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {

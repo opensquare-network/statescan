@@ -69,6 +69,7 @@ export default function Address({
           page={addressAssets?.page}
           pageSize={addressAssets?.pageSize}
           total={addressAssets?.total}
+          add={{ tab: "assets" }}
         />
       ),
     },
@@ -116,6 +117,7 @@ export default function Address({
           page={addressTransfers?.page}
           pageSize={addressTransfers?.pageSize}
           total={addressTransfers?.total}
+          add={{ tab: "transfers" }}
         />
       ),
     },
@@ -143,6 +145,7 @@ export default function Address({
           page={addressExtrinsics?.page}
           pageSize={addressExtrinsics?.pageSize}
           total={addressExtrinsics?.total}
+          add={{ tab: "extrinsics" }}
         />
       ),
     },
@@ -200,9 +203,15 @@ export async function getServerSideProps(context) {
     { result: addressExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
-    nextApi.fetch(`${node}/addresses/${id}/assets`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/addresses/${id}/transfers`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/addresses/${id}/extrinsics`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/addresses/${id}/assets`, {
+      page: activeTab === "assets" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/addresses/${id}/transfers`, {
+      page: activeTab === "transfers" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/addresses/${id}/extrinsics`, {
+      page: activeTab === "extrinsics" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {

@@ -80,6 +80,7 @@ export default function Asset({
           page={assetTransfers?.page}
           pageSize={assetTransfers?.pageSize}
           total={assetTransfers?.total}
+          add={{ tab: "transfers" }}
         />
       ),
     },
@@ -103,6 +104,7 @@ export default function Asset({
           page={assetHolders?.page}
           pageSize={assetHolders?.pageSize}
           total={assetHolders?.total}
+          add={{ tab: "holders" }}
         />
       ),
     },
@@ -176,8 +178,12 @@ export async function getServerSideProps(context) {
     { result: assetHolders },
   ] = await Promise.all([
     nextApi.fetch(`${node}/assets/${id}`),
-    nextApi.fetch(`${node}/assets/${id}/transfers`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/assets/${id}/holders`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/assets/${id}/transfers`, {
+      page: activeTab === "transfers" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/assets/${id}/holders`, {
+      page: activeTab === "holders" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {

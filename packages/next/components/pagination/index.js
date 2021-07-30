@@ -81,7 +81,7 @@ const Ellipsis = styled.div`
 
 const PAGE_OFFSET = 1;
 
-export default function Pagination({ page, pageSize, total }) {
+export default function Pagination({ page, pageSize, total, add = {} }) {
   const router = useRouter();
   const theme = useTheme();
 
@@ -99,6 +99,7 @@ export default function Pagination({ page, pageSize, total }) {
         href={`${router.pathname}?${encodeURIQuery({
           ...router.query,
           page: prevPage,
+          ...add,
         })}`}
         passHref
       >
@@ -118,6 +119,7 @@ export default function Pagination({ page, pageSize, total }) {
             href={`${router.pathname}?${encodeURIQuery({
               ...router.query,
               page: index + 1 + 1 - PAGE_OFFSET,
+              ...add,
             })}`}
             passHref
           >
@@ -135,6 +137,7 @@ export default function Pagination({ page, pageSize, total }) {
         href={`${router.pathname}?${encodeURIQuery({
           ...router.query,
           page: nextPage,
+          ...add,
         })}`}
         passHref
       >

@@ -1,9 +1,7 @@
 import styled, { css } from "styled-components";
-import { useRouter } from "next/router";
-import Link from "next/link";
+import { useState } from "react";
 
 import Table from "components/table";
-import { encodeURIQuery } from "../utils";
 import { useTheme } from "utils/hooks";
 
 const TabWrapper = styled.div`
@@ -72,24 +70,20 @@ const TabTag = styled.div`
 `;
 
 export default function TabTable({ data, activeTab, collapse }) {
-  const router = useRouter();
+  const [activeTabIndex, setActiveTabIndex] = useState(
+    data.map((item) => item.name.toLowerCase()).indexOf(activeTab)
+  );
   const theme = useTheme();
-  const activeTabIndex = data
-    .map((item) => item.name.toLowerCase())
-    .indexOf(activeTab);
 
   return (
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-          <Link
+          <div
             key={index}
-            href={`${router.pathname}?${encodeURIQuery({
-              node: router.query.node,
-              id: router.query.id,
-              tab: data?.[index]?.name.toLowerCase(),
-            })}`}
-            passHref
+            onClick={() => {
+              setActiveTabIndex(index);
+            }}
           >
             <Tab active={activeTabIndex === index} themecolor={theme.color}>
               <TabText active={activeTabIndex === index}>
@@ -114,7 +108,7 @@ export default function TabTable({ data, activeTab, collapse }) {
                 </TabTag>
               )}
             </Tab>
-          </Link>
+          </div>
         ))}
       </TabWrapper>
       {data?.[activeTabIndex]?.component ? (

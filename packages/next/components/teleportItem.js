@@ -14,6 +14,7 @@ const Wrapper = styled.div`
 `;
 
 const iconMap = {
+  Westend: "westend.svg",
   Kusama: "teleport-kusama.svg",
   OpenSquare: "teleport-opensquare.svg",
 };

@@ -1,16 +1,29 @@
 import Layout from "components/layout";
-// import { ssrNextApi as nextApi } from "services/nextApi";
-import { teleportsHead, EmptyQuery } from "utils/constants";
+import { ssrNextApi as nextApi } from "services/nextApi";
+import { teleportsHead, EmptyQuery, nodes } from "utils/constants";
 import Nav from "components/nav";
 import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
-import AddressEllipsis from "components/AddressEllipsis";
+import AddressEllipsis from "components/addressEllipsis";
 import Filter from "components/filter";
-import { bigNumber2Locale } from "utils";
+import { bigNumber2Locale, fromSymbolUnit } from "utils";
 import TeleportItem from "components/teleportItem";
+import { getSymbol } from "utils/hooks";
+
+function getTeleportSourceAndTarget(node, direction) {
+  const chain = nodes.find(item => item.value === node);
+  if (direction === "in") {
+    return { source: chain.sub, target: chain.name };
+  } else {
+    return { source: chain.name, target: chain.sub };
+  }
+}
 
 export default function Events({ node, teleports, filter }) {
+  const symbol = getSymbol(node);
+  const teleportSourceAndTarget = (direction) => getTeleportSourceAndTarget(node, direction);
+
   return (
     <Layout node={node}>
       <section>
@@ -19,20 +32,22 @@ export default function Events({ node, teleports, filter }) {
         <Table
           head={teleportsHead}
           body={(teleports?.items || []).map((item) => [
-            <InLink to={`/${node}/extrinsic/${item?.extrinsicId}`}>
-              {item?.extrinsicId}
+            <InLink to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}>
+              {`${item.indexer.blockHeight}-${item.indexer.index}`}
             </InLink>,
-            item?.time,
-            <TeleportItem name={item?.from} />,
+            item.indexer.blockTime,
+            <TeleportItem name={teleportSourceAndTarget(item.teleportDirection).source} />,
             <img src="/imgs/arrow-transfer.svg" />,
-            <TeleportItem name={item?.to} />,
+            <TeleportItem name={teleportSourceAndTarget(item.teleportDirection).target} />,
             <AddressEllipsis
-              address={item?.receiver}
-              to={`/${node}/account/${item?.receiver}`}
+              address={item.beneficiary}
+              to={`/${node}/account/${item.beneficiary}`}
             />,
-            bigNumber2Locale(item?.amount + ""),
-            bigNumber2Locale(item?.fee + ""),
-            bigNumber2Locale(item?.totalAmount + ""),
+            item.amount === null || item.amount === undefined
+            ? "-"
+            : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))} ${symbol}`,
+            // "-",
+            // "-",
           ])}
           foot={
             <Pagination
@@ -50,44 +65,14 @@ export default function Events({ node, teleports, filter }) {
 
 export async function getServerSideProps(context) {
   const { node } = context.params;
+  const { page } = context.query;
 
-  const teleports = {
-    items: [
-      {
-        extrinsicId: "29179-1",
-        time: 1622920692098,
-        from: "Kusama",
-        to: "Parachain",
-        receiver: "5Fjw165apxdKh9qU6ot99d5EAy3fcdTV3C5UzcwrjW6LE494",
-        amount: 76314.1303,
-        fee: 0.5,
-        totalAmount: 76314.1303,
-      },
-      {
-        extrinsicId: "29179-1",
-        time: 1622920692098,
-        from: "Parachain",
-        to: "Kusama",
-        receiver: "5Fjw165apxdKh9qU6ot99d5EAy3fcdTV3C5UzcwrjW6LE494",
-        amount: 176314.1303,
-        fee: 0.5,
-        totalAmount: 176314.1303,
-      },
-      {
-        extrinsicId: "29179-1",
-        time: 1622920692098,
-        from: "Kusama",
-        to: "OpenSquare",
-        receiver: "5Fjw165apxdKh9qU6ot99d5EAy3fcdTV3C5UzcwrjW6LE494",
-        amount: 276314.1303,
-        fee: 0.5,
-        totalAmount: 276314.1303,
-      },
-    ],
-    page: 0,
-    pageSize: 10,
-    total: 3,
-  };
+  const nPage = parseInt(page) || 1;
+
+  const { result: teleports } = await nextApi.fetch(`${node}/teleports`, {
+    page: nPage - 1,
+    pageSize: 25,
+  });
 
   const filter = [
     {

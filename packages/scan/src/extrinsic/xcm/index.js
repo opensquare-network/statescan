@@ -58,31 +58,37 @@ async function handleTeleportAssetDownwardMessage(
     return;
   }
 
-  const pubSentAt = downwardMessages[0].pubSentAt.toJSON();
-  const pubMsg = downwardMessages[0].pubMsg;
-  const messageId = blake2AsHex(pubMsg.toHex());
+  for (const downwardMessage of downwardMessages) {
+    const pubSentAt = downwardMessage.pubSentAt.toJSON();
+    const pubMsg = downwardMessage.pubMsg;
+    const messageId = blake2AsHex(pubMsg.toHex());
 
-  const api = await getApi();
-  const versionedXcm = api.registry.createType("VersionedXcm", pubMsg, true);
-  if (!versionedXcm.isV0) {
-    return;
+    const api = await getApi();
+    const versionedXcm = api.registry.createType("VersionedXcm", pubMsg, true);
+    if (!versionedXcm.isV0) {
+      return;
+    }
+
+    const v0Xcm = versionedXcm.asV0;
+    if (!v0Xcm.isTeleportAsset) {
+      return;
+    }
+
+    const teleportAsset = v0Xcm.asTeleportAsset;
+    const teleportAssetJson = teleportAsset.toJSON();
+
+    const concreteFungible = teleportAssetJson.assets.find(item => item.concreteFungible)?.concreteFungible;
+    const depositAsset = teleportAssetJson.effects.find(item => item.depositAsset)?.depositAsset;
+
+    const amount = concreteFungible?.amount;
+    const beneficiary = depositAsset?.dest.x1?.accountId32.id || depositAsset?.dest.x2?.[1].accountId32.id;
+
+    if (amount === undefined || beneficiary === undefined) {
+      console.log(`Downward message parse failed:`, extrinsicIndexer);
+    }
+
+    await saveNewTeleportAssetIn(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson);
   }
-
-  const v0Xcm = versionedXcm.asV0;
-  if (!v0Xcm.isTeleportAsset) {
-    return;
-  }
-
-  const teleportAsset = v0Xcm.asTeleportAsset;
-  const teleportAssetJson = teleportAsset.toJSON();
-
-  const concreteFungible = teleportAssetJson.assets.find(item => item.concreteFungible).concreteFungible;
-  const depositAsset = teleportAssetJson.effects.find(item => item.depositAsset).depositAsset;
-
-  const amount = concreteFungible.amount;
-  const beneficiary = depositAsset.dest.x1?.accountId32.id;
-
-  await saveNewTeleportAssetIn(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson);
 }
 
 
@@ -100,9 +106,9 @@ async function handleTeleportAssets(
 
   const { args } = extrinsic.method.toJSON();
 
-  const concreteFungible = args.assets.find(item => item.concreteFungible).concreteFungible;
+  const concreteFungible = args.assets.find(item => item.concreteFungible)?.concreteFungible;
   const beneficiary = args.beneficiary.x1?.accountId32.id;
-  const amount = concreteFungible.amount;
+  const amount = concreteFungible?.amount;
 
   await saveNewTeleportAssetOut(extrinsicIndexer, hash, beneficiary, amount, args);
 }

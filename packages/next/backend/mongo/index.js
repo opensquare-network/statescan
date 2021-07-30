@@ -51,6 +51,10 @@ function getAddressCollection(chain) {
   return db(chain).getAddressCollection();
 }
 
+function getTeleportCollection(chain) {
+  return db(chain).getTeleportCollection();
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -63,4 +67,5 @@ module.exports = {
   getAddressCollection,
   getDotUsdtDailyCollection,
   getKsmUsdtDailyCollection,
+  getTeleportCollection,
 };

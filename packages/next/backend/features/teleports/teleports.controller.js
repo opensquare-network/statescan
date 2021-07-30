@@ -36,6 +36,10 @@ async function getTeleports(ctx) {
   const col = await getTeleportCollection(chain);
   const items = await col
     .find(q)
+    .sort({
+      "indexer.blockHeight": -1,
+      "indexer.index": -1,
+    })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();

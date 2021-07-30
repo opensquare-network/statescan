@@ -355,7 +355,12 @@ export default function Table({
               {foot && (
                 <tfoot>
                   <tr>
-                    <td colSpan="100%">{foot}</td>
+                    <td
+                      colSpan="100%"
+                      style={{ paddingTop: 16, paddingBottom: 16 }}
+                    >
+                      {foot}
+                    </td>
                   </tr>
                 </tfoot>
               )}

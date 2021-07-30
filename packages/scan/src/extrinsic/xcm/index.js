@@ -3,7 +3,7 @@ const {
   getTeleportCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
-const asyncLocalStorage = require("../asynclocalstorage");
+const asyncLocalStorage = require("../../asynclocalstorage");
 
 async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson) {
   const session = asyncLocalStorage.getStore();

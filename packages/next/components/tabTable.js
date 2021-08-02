@@ -1,10 +1,9 @@
 import styled, { css } from "styled-components";
 import { useRouter } from "next/router";
-import Link from "next/link";
 
 import Table from "components/table";
-import { encodeURIQuery } from "../utils";
 import { useTheme } from "utils/hooks";
+import { useState } from "react";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -77,22 +76,35 @@ export default function TabTable({ data, activeTab, collapse }) {
   const activeTabIndex = data
     .map((item) => item.name.toLowerCase())
     .indexOf(activeTab);
+  const [currentTab, setCurrentTab] = useState(activeTabIndex);
 
   return (
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-          <Link
-            key={index}
-            href={`${router.pathname}?${encodeURIQuery({
-              node: router.query.node,
-              id: router.query.id,
-              tab: data?.[index]?.name.toLowerCase(),
-            })}`}
-            passHref
-          >
-            <Tab active={activeTabIndex === index} themecolor={theme.color}>
-              <TabText active={activeTabIndex === index}>
+            <Tab
+              key={index}
+              active={currentTab === index}
+              themecolor={theme.color}
+              onClick={() => {
+                router.push(
+                  {
+                    query: {
+                      node: router.query.node,
+                      id: router.query.id,
+                      tab: item.name.toLowerCase(),
+                      ...(
+                        item.page > 0 ? { page: item.page + 1 } : {}
+                      )
+                    }
+                  },
+                  undefined,
+                  { shallow: true }
+                );
+                setCurrentTab(index);
+              }}
+            >
+              <TabText active={currentTab === index}>
                 {item.name}
                 <br />
                 <svg
@@ -114,18 +126,17 @@ export default function TabTable({ data, activeTab, collapse }) {
                 </TabTag>
               )}
             </Tab>
-          </Link>
         ))}
       </TabWrapper>
-      {data?.[activeTabIndex]?.component ? (
-        data?.[activeTabIndex]?.component
+      {data?.[currentTab]?.component ? (
+        data?.[currentTab]?.component
       ) : (
         <Table
-          head={data?.[activeTabIndex]?.head}
-          body={data?.[activeTabIndex]?.body}
-          foot={data?.[activeTabIndex]?.foot}
+          head={data?.[currentTab]?.head}
+          body={data?.[currentTab]?.body}
+          foot={data?.[currentTab]?.foot}
           collapse={collapse}
-          expand={data?.[activeTabIndex]?.expand}
+          expand={data?.[currentTab]?.expand}
         />
       )}
     </div>

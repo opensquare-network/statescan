@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { useDispatch } from "react-redux";
 import copy from "copy-to-clipboard";
 
-import { ReactComponent as Icon } from "./icon.svg";
+import Icon from "./icon.svg";
 import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`

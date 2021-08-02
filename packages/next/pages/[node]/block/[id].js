@@ -61,6 +61,7 @@ export default function Block({
   const tabTableData = [
     {
       name: "Extrinsics",
+      page: blockExtrinsics?.page,
       total: blockExtrinsics?.total,
       head: blockExtrinsicsHead,
       body: (blockExtrinsics?.items || []).map((item) => [
@@ -87,6 +88,7 @@ export default function Block({
     },
     {
       name: "Events",
+      page: blockEvents?.page,
       total: blockEvents?.total,
       head: blockEventsHead,
       body: (blockEvents?.items || []).map((item) => [
@@ -201,8 +203,8 @@ export async function getServerSideProps(context) {
     { result: blockExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/${id}`),
-    nextApi.fetch(`${node}/blocks/${id}/events`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/blocks/${id}/events`, { page: activeTab === "events" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, { page: activeTab === "extrinsics" ? nPage - 1 : 0 }),
   ]);
 
   return {

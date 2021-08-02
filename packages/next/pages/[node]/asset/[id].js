@@ -46,6 +46,7 @@ export default function Asset({
   const tabTableData = [
     {
       name: "Transfers",
+      page: assetTransfers?.page,
       total: assetTransfers?.total,
       head: assetTransfersHead,
       body: (assetTransfers?.items || []).map((item) => [
@@ -85,6 +86,7 @@ export default function Asset({
     },
     {
       name: "Holders",
+      page: assetHolders?.page,
       total: assetHolders?.total,
       head: assetHoldersHead,
       body: (assetHolders?.items || []).map((item, index) => [
@@ -176,8 +178,8 @@ export async function getServerSideProps(context) {
     { result: assetHolders },
   ] = await Promise.all([
     nextApi.fetch(`${node}/assets/${id}`),
-    nextApi.fetch(`${node}/assets/${id}/transfers`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/assets/${id}/holders`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/assets/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/assets/${id}/holders`, { page: activeTab === "holders" ? nPage - 1 : 0 }),
   ]);
 
   return {

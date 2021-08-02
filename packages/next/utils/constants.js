@@ -168,8 +168,8 @@ export const teleportsHead = [
   { name: "To", width: 160 },
   { name: "Receiver", width: 160 },
   { name: "Amount", align: "right" },
-  // { name: "Fee", width: 100, align: "right" },
-  // { name: "Total Amount", align: "right" },
+  { name: "Fee", width: 100, align: "right" },
+  { name: "Total Amount", align: "right" },
 ];
 
 export const addressHead = [

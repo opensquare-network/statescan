@@ -10,6 +10,7 @@ import Filter from "components/filter";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
 import TeleportItem from "components/teleportItem";
 import { getSymbol } from "utils/hooks";
+import BigNumber from "bignumber.js";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find(item => item.value === node);
@@ -39,15 +40,24 @@ export default function Events({ node, teleports, filter }) {
             <TeleportItem name={teleportSourceAndTarget(item.teleportDirection).source} />,
             <img src="/imgs/arrow-transfer.svg" />,
             <TeleportItem name={teleportSourceAndTarget(item.teleportDirection).target} />,
-            <AddressEllipsis
-              address={item.beneficiary}
-              to={`/${node}/account/${item.beneficiary}`}
-            />,
+            item.beneficiary
+              ? <AddressEllipsis
+                  address={item.beneficiary}
+                  to={`/${node}/account/${item.beneficiary}`}
+                />
+              : "-",
             item.amount === null || item.amount === undefined
-            ? "-"
-            : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))} ${symbol}`,
-            // "-",
-            // "-",
+              ? "-"
+              : `${bigNumber2Locale(fromSymbolUnit(
+                    new BigNumber(item.amount).minus(item.fee || 0).toString(),
+                    symbol
+                  ))} ${symbol}`,
+            item.fee === null || item.fee === undefined
+              ? "-"
+              : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))} ${symbol}`,
+            item.amount === null || item.amount === undefined
+              ? "-"
+              : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))} ${symbol}`,
           ])}
           foot={
             <Pagination

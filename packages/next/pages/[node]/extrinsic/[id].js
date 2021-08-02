@@ -57,6 +57,7 @@ export default function Extrinsic({
   const tabTableData = [
     {
       name: "Events",
+      page: extrinsicEvents?.page,
       total: extrinsicEvents?.total,
       head: extrinsicEventsHead,
       body: (extrinsicEvents?.items || []).map((item) => [
@@ -176,8 +177,8 @@ export async function getServerSideProps(context) {
     { result: extrinsicEvents },
   ] = await Promise.all([
     nextApi.fetch(`${node}/extrinsics/${id}`),
-    nextApi.fetch(`${node}/extrinsics/${id}/transfers`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/extrinsics/${id}/events`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/extrinsics/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/extrinsics/${id}/events`, { page: activeTab === "events" ? nPage - 1 : 0 }),
   ]);
 
   return {

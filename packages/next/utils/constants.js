@@ -4,13 +4,13 @@ export const DEFAULT_THEME_BUTTON_COLOR = "#F22279";
 export const DEFAULT_THEME_LOGO = "logo-img-1.svg";
 
 export const nodes = [
-  // {
-  //   name: "Westmint",
-  //   sub: "Westend",
-  //   value: "westmint",
-  //   symbol: "WND",
-  //   icon: "/imgs/icons/westend.svg",
-  // },
+  {
+    name: "Westmint",
+    sub: "Westend",
+    value: "westmint",
+    symbol: "WND",
+    icon: "/imgs/icons/westend.svg",
+  },
   {
     name: "Statemine",
     sub: "Kusama",
@@ -158,6 +158,18 @@ export const addressesHead = [
   { name: "Account" },
   { name: "Loacked", width: 240, align: "right" },
   { name: "Balance", width: 240, align: "right" },
+];
+
+export const teleportsHead = [
+  { name: "Extrinsics ID", width: 136 },
+  { name: "Time", type: "time", width: 200 },
+  { name: "From", width: 160 },
+  { name: "", width: 24 },
+  { name: "To", width: 160 },
+  { name: "Receiver", width: 160 },
+  { name: "Amount", align: "right" },
+  { name: "Fee", width: 100, align: "right" },
+  { name: "Total Amount", align: "right" },
 ];
 
 export const addressHead = [

@@ -1,6 +1,7 @@
 const { getEventCollection } = require("../mongo");
 const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
+const { handleExecutedDownwardEvent } = require("./dmpQueue");
 const { handleSystemEvent } = require("./system");
 const asyncLocalStorage = require("../asynclocalstorage");
 
@@ -38,6 +39,13 @@ async function handleEvents(events, blockIndexer, extrinsics) {
         blockIndexer
       );
       await handleSystemEvent(
+        event,
+        sort,
+        extrinsicIndex,
+        extrinsicHash,
+        blockIndexer
+      );
+      await handleExecutedDownwardEvent(
         event,
         sort,
         extrinsicIndex,

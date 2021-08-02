@@ -60,8 +60,8 @@ async function main() {
           await sleep(1);
 
         } catch (e) {
-          await session.abortTransaction();
           logger.error(`Error with block scan ${block.height}`, e);
+          await session.abortTransaction();
           await sleep(3000);
         }
       });

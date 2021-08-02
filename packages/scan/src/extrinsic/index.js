@@ -2,6 +2,7 @@ const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
 const { getExtrinsicCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
+const { handleTeleportAssetDownwardMessage, handleTeleportAssets } = require("./xcm");
 const asyncLocalStorage = require("../asynclocalstorage");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
@@ -76,6 +77,9 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   if (result.result && !result.result.ok) {
     // FIXME: 处理交易插入不成功的情况
   }
+
+  await handleTeleportAssetDownwardMessage(extrinsic, indexer);
+  await handleTeleportAssets(extrinsic, indexer);
 }
 
 function normalizeExtrinsic(extrinsic, events) {

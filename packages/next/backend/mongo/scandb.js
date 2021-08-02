@@ -9,6 +9,7 @@ function DB(dbName) {
   const assetCollectionName = "asset";
   const assetHolderCollectionName = "assetHolder";
   const addressCollectionName = "address";
+  const teleportCollectionName = "teleport";
 
   let client = null;
   let db = null;
@@ -22,6 +23,7 @@ function DB(dbName) {
   let assetCol = null;
   let assetHolderCol = null;
   let addressCol = null;
+  let teleportCol = null;
 
   async function initDb() {
     client = await MongoClient.connect(mongoUrl, {
@@ -37,6 +39,7 @@ function DB(dbName) {
     assetCol = db.collection(assetCollectionName);
     assetHolderCol = db.collection(assetHolderCollectionName);
     addressCol = db.collection(addressCollectionName);
+    teleportCol = db.collection(teleportCollectionName);
 
     await _createIndexes();
   }
@@ -85,6 +88,7 @@ function DB(dbName) {
     addressCol.createIndex({ address: 1 });
     addressCol.createIndex({ "data.free": -1 });
 
+    assetCol.createIndex({ assetId: 1 });
     assetCol.createIndex({ symbol: 1 });
     assetCol.createIndex({ name: 1 });
 
@@ -142,6 +146,11 @@ function DB(dbName) {
     return addressCol;
   }
 
+  async function getTeleportCollection() {
+    await tryInit(teleportCol);
+    return teleportCol;
+  }
+
   return {
     initDb,
     getStatusCollection,
@@ -152,6 +161,7 @@ function DB(dbName) {
     getAssetCollection,
     getAssetHolderCollection,
     getAddressCollection,
+    getTeleportCollection,
   };
 }
 

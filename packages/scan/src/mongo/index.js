@@ -21,6 +21,7 @@ const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
 const approvalCollectionName = "approval";
+const teleportCollectionMame = "teleport";
 
 let client = null;
 let db = null;
@@ -35,6 +36,7 @@ let assetCol = null;
 let assetHolderCol = null;
 let addressCol = null;
 let approvalCol = null;
+let teleportCol = null;
 
 async function getCollection(colName) {
   try {
@@ -64,6 +66,7 @@ async function initDb() {
   assetHolderCol = getCollection(assetHolderCollectionName);
   addressCol = getCollection(addressCollectionName);
   approvalCol = getCollection(approvalCollectionName);
+  teleportCol = getCollection(teleportCollectionMame);
 
   await _createIndexes();
 }
@@ -128,6 +131,11 @@ async function getAssetApprovalCollection() {
   return approvalCol;
 }
 
+async function getTeleportCollection() {
+  await tryInit(teleportCol);
+  return teleportCol;
+}
+
 async function withSession(fn) {
   return client.withSession(fn);
 }
@@ -142,5 +150,6 @@ module.exports = {
   getAssetHolderCollection,
   getAddressCollection,
   getAssetApprovalCollection,
+  getTeleportCollection,
   withSession,
 };

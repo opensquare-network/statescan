@@ -156,7 +156,7 @@ export const transfersHead = [
 export const addressesHead = [
   { name: "Rank", width: 96 },
   { name: "Account" },
-  { name: "Loacked", width: 240, align: "right" },
+  { name: "Locked", width: 240, align: "right" },
   { name: "Balance", width: 240, align: "right" },
 ];
 

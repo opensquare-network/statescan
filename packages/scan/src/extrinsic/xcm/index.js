@@ -5,7 +5,7 @@ const {
 const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
 
-async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson) {
+async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson) {
   const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
 
@@ -18,6 +18,7 @@ async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId
     teleportAsset: teleportAssetJson,
     beneficiary,
     amount,
+    fee,
   }, { session });
 }
 
@@ -79,15 +80,17 @@ async function handleTeleportAssetDownwardMessage(
 
     const concreteFungible = teleportAssetJson.assets.find(item => item.concreteFungible)?.concreteFungible;
     const depositAsset = teleportAssetJson.effects.find(item => item.depositAsset)?.depositAsset;
+    const buyExecution = teleportAssetJson.effects.find(item => item.buyExecution).buyExecution;
 
     const amount = concreteFungible?.amount;
     const beneficiary = depositAsset?.dest.x1?.accountId32.id || depositAsset?.dest.x2?.[1].accountId32.id;
+    const fee = buyExecution?.debt;
 
     if (amount === undefined || beneficiary === undefined) {
       console.log(`Downward message parse failed:`, extrinsicIndexer);
     }
 
-    await saveNewTeleportAssetIn(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, teleportAssetJson);
+    await saveNewTeleportAssetIn(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson);
   }
 }
 

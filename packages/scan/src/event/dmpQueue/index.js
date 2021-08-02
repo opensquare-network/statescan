@@ -15,7 +15,6 @@ async function updateTeleportCompletion(
   extrinsicHash,
   messageId,
   complete,
-  fee,
 ) {
   const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
@@ -24,7 +23,6 @@ async function updateTeleportCompletion(
     {
       $set: {
         complete,
-        fee,
       }
     },
     { session }
@@ -54,11 +52,11 @@ async function handleExecutedDownwardEvent(
     const [messageId, result] = eventData;
 
     if (result.incomplete) {
-      await updateTeleportCompletion(extrinsicHash, messageId, false, result.incomplete);
+      await updateTeleportCompletion(extrinsicHash, messageId, false);
     }
 
     if (result.complete) {
-      await updateTeleportCompletion(extrinsicHash, messageId, true, result.complete);
+      await updateTeleportCompletion(extrinsicHash, messageId, true);
     }
   }
 

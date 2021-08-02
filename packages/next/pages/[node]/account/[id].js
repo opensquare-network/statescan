@@ -51,6 +51,7 @@ export default function Address({
   const tabTableData = [
     {
       name: "Assets",
+      page: addressAssets?.page,
       total: addressAssets?.total,
       head: addressAssetsHead,
       body: (addressAssets?.items || []).map((item) => [
@@ -74,6 +75,7 @@ export default function Address({
     },
     {
       name: "Transfers",
+      page: addressTransfers?.page,
       total: addressTransfers?.total,
       head: addressTransfersHead,
       body: (addressTransfers?.items || []).map((item) => [
@@ -121,6 +123,7 @@ export default function Address({
     },
     {
       name: "Extrinsics",
+      page: addressExtrinsics?.page,
       total: addressExtrinsics?.total,
       head: addressExtrincsHead,
       body: (addressExtrinsics?.items || []).map((item) => [
@@ -200,9 +203,9 @@ export async function getServerSideProps(context) {
     { result: addressExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
-    nextApi.fetch(`${node}/addresses/${id}/assets`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/addresses/${id}/transfers`, { page: nPage - 1 }),
-    nextApi.fetch(`${node}/addresses/${id}/extrinsics`, { page: nPage - 1 }),
+    nextApi.fetch(`${node}/addresses/${id}/assets`, { page: activeTab === "assets" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/addresses/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/addresses/${id}/extrinsics`, { page: activeTab === "extrinsics" ? nPage - 1 : 0 }),
   ]);
 
   return {

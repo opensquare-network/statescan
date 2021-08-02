@@ -10,7 +10,6 @@ import ThemeText from "components/themeText";
 import AddressEllipsis from "components/addressEllipsis";
 
 export default function Blocks({ node, blocks }) {
-  console.log({ blocks });
   return (
     <Layout node={node}>
       <section>

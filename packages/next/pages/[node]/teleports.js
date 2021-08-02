@@ -46,7 +46,7 @@ export default function Events({ node, teleports, filter }) {
                   to={`/${node}/account/${item.beneficiary}`}
                 />
               : "-",
-            item.amount === null || item.amount === undefined
+            !item.complete || item.amount === null || item.amount === undefined
               ? "-"
               : `${bigNumber2Locale(fromSymbolUnit(
                     new BigNumber(item.amount).minus(item.fee || 0).toString(),

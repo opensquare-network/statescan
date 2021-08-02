@@ -22,7 +22,7 @@ import { getSymbol } from "utils/hooks";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "services/websocket";
 
 const Wrapper = styled.section`
@@ -49,9 +49,13 @@ const FootWrapper = styled.div`
 export default function Home({ node, overview: ssrOverview, price }) {
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
-
+  const [time, setTime] = useState(Date.now());
   useEffect(() => {
     connect(node);
+    const interval = setInterval(() => setTime(Date.now()), 1000);
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   const overview = pushedOverview || ssrOverview;

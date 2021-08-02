@@ -163,12 +163,11 @@ export const addressesHead = [
 export const teleportsHead = [
   { name: "Extrinsics ID", width: 136 },
   { name: "Time", type: "time", width: 200 },
-  { name: "From", width: 160 },
-  { name: "", width: 24 },
-  { name: "To", width: 160 },
+  { name: "Direction", width: 160 },
   { name: "Receiver", width: 160 },
+  { name: "Result" },
   { name: "Amount", align: "right" },
-  { name: "Fee", width: 100, align: "right" },
+  { name: "Fee", width: 140, align: "right" },
   { name: "Total Amount", align: "right" },
 ];
 

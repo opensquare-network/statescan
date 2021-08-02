@@ -8,9 +8,10 @@ import InLink from "components/inLink";
 import AddressEllipsis from "components/addressEllipsis";
 import Filter from "components/filter";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
-import TeleportItem from "components/teleportItem";
+import TeleportDirection from "components/teleportDirection";
 import { getSymbol } from "utils/hooks";
 import BigNumber from "bignumber.js";
+import Result from "components/result";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find(item => item.value === node);
@@ -37,14 +38,18 @@ export default function Events({ node, teleports, filter }) {
               {`${item.indexer.blockHeight}-${item.indexer.index}`}
             </InLink>,
             item.indexer.blockTime,
-            <TeleportItem name={teleportSourceAndTarget(item.teleportDirection).source} />,
-            <img src="/imgs/arrow-transfer.svg" />,
-            <TeleportItem name={teleportSourceAndTarget(item.teleportDirection).target} />,
+            <TeleportDirection
+              from={teleportSourceAndTarget(item.teleportDirection).source}
+              to={teleportSourceAndTarget(item.teleportDirection).target}
+            />,
             item.beneficiary
               ? <AddressEllipsis
                   address={item.beneficiary}
                   to={`/${node}/account/${item.beneficiary}`}
                 />
+              : "-",
+            item.teleportDirection === "in"
+              ? <Result isSuccess={item.complete} noText={true} />
               : "-",
             !item.complete || item.amount === null || item.amount === undefined
               ? "-"

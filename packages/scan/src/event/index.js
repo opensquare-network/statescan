@@ -3,6 +3,7 @@ const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
 const { handleExecutedDownwardEvent } = require("./dmpQueue");
 const { handleSystemEvent } = require("./system");
+const { handleXcmAttemptedEvent } = require("./polkadotXcm");
 const asyncLocalStorage = require("../asynclocalstorage");
 
 async function handleEvents(events, blockIndexer, extrinsics) {

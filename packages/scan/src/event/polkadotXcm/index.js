@@ -50,7 +50,7 @@ async function handleXcmAttemptedEvent(
   if ([PolkadotXcmEvents.Attempted].includes(method)) {
     const [result] = eventData;
 
-    if (result.imcomplete) {
+    if (result.incomplete) {
       await updateTeleportCompletion(extrinsicHash, false);
     }
 

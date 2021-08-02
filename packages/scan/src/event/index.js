@@ -52,6 +52,13 @@ async function handleEvents(events, blockIndexer, extrinsics) {
         extrinsicHash,
         blockIndexer
       );
+      await handleXcmAttemptedEvent(
+        event,
+        sort,
+        extrinsicIndex,
+        extrinsicHash,
+        blockIndexer
+      );
     }
 
     const index = parseInt(event.index);

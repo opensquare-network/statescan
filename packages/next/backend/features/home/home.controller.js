@@ -38,7 +38,15 @@ async function search(ctx) {
 
   const [asset, address, block, extrinsic] = await Promise.all([
     assetCol.findOne({
-      $or: [{ name: icaseQ }, { symbol: icaseQ }],
+      $or: [
+        { name: icaseQ },
+        { symbol: icaseQ },
+        ...(
+          isNum
+            ? [{ assetId: Number(q) }]
+            : []
+          )
+      ],
     }),
     isAddr ? addressCol.findOne({ address: icaseQ }) : null,
     isNum

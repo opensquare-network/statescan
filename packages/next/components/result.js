@@ -10,14 +10,14 @@ const Wrapper = styled.div`
   }
 `;
 
-export default function Result({ isSuccess }) {
+export default function Result({ isSuccess, noText = false }) {
   return (
     <Wrapper>
       <img
         src={isSuccess ? "/imgs/icons/success.svg" : "/imgs/icons/failure.svg"}
         alt="icon"
       />
-      {isSuccess ? "Success" : "Failure"}
+      {!noText && (isSuccess ? "Success" : "Failure")}
     </Wrapper>
   );
 }

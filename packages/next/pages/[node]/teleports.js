@@ -90,12 +90,12 @@ export async function getServerSideProps(context) {
   });
 
   const filter = [
-    {
-      value: "",
-      name: "Type",
-      query: "type",
-      options: [{ text: "All", value: "" }],
-    },
+    // {
+    //   value: "",
+    //   name: "Type",
+    //   query: "type",
+    //   options: [{ text: "All", value: "" }],
+    // },
   ];
 
   return {

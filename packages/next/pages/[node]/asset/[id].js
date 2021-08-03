@@ -24,7 +24,6 @@ import Timeline from "components/timeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
-import { useEffect } from "react";
 
 export default function Asset({
   node,
@@ -32,7 +31,6 @@ export default function Asset({
   asset,
   assetTransfers,
   assetHolders,
-  createdBlock,
 }) {
   if (!asset) {
     return (
@@ -41,21 +39,6 @@ export default function Asset({
       </Layout>
     );
   }
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (!createdBlock) {
-      setTimeout(() => {
-        dispatch(
-          addToast({
-            type: "success",
-            message:
-              "Asset created block not specific, showing the latest asset matching id for you ",
-          })
-        );
-      }, 400);
-    }
-  }, []);
 
   const assetSymbol = asset?.symbol;
 
@@ -191,8 +174,8 @@ export async function getServerSideProps(context) {
 
   let assetKey = ``;
   if (!createdBlock) {
-    const { result: asset } = await nextApi.fetch(`${node}/assets/${id}`);
-    assetKey = `${assetId}_${asset.createdAt.blockHeight}`;
+    const { result: blockHeight } = await nextApi.fetch(`${node}/assets/${id}`);
+    assetKey = `${assetId}_${blockHeight}`;
   } else {
     assetKey = id;
   }
@@ -222,7 +205,6 @@ export async function getServerSideProps(context) {
       asset: asset ?? null,
       assetTransfers: assetTransfers ?? EmptyQuery,
       assetHolders: assetHolders ?? EmptyQuery,
-      createdBlock: createdBlock ?? false,
     },
   };
 }

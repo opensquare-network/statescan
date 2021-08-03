@@ -88,7 +88,7 @@ async function getCreatedBlockByAssetId(ctx) {
   const option = { sort: { "createdAt.blockHeight": -1 } };
   const item = await col.findOne({ assetId: parseInt(assetId) }, option);
 
-  ctx.body = item;
+  ctx.body = item.createdAt.blockHeight;
 }
 
 async function getAssetTransfers(ctx) {

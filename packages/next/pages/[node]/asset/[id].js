@@ -171,11 +171,12 @@ export async function getServerSideProps(context) {
   const { tab, page } = context.query;
 
   const { result: asset } = await nextApi.fetch(`${node}/assets/${id}`);
+
+  if (!asset) return { props: {} };
+
   const assetKey = asset
     ? `${asset.assetId}_${asset.createdAt.blockHeight}`
     : id;
-
-  if (!asset) return { props: {} };
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "transfers";

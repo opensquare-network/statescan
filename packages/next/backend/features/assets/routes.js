@@ -7,7 +7,10 @@ router.get("/assets/latest", assetsController.getLatestAssets);
 router.get("/assets/popular", assetsController.getPopularAssets);
 router.get("/assets/count", assetsController.getAssetsCount);
 router.get("/assets", assetsController.getAssets);
-router.get("/assets/:assetId(\\d+)", assetsController.getCreatedBlockByAssetId);
+router.get(
+  "/assets/getBlockById/:assetId(\\d+)",
+  assetsController.getCreatedBlockByAssetId
+);
 router.get(
   "/assets/:assetId(\\d+)_:blockHeight(\\d+)",
   assetsController.getAsset

@@ -174,7 +174,9 @@ export async function getServerSideProps(context) {
 
   let assetKey = ``;
   if (!createdBlock) {
-    const { result: blockHeight } = await nextApi.fetch(`${node}/assets/${id}`);
+    const { result: blockHeight } = await nextApi.fetch(
+      `${node}/assets/getBlockById/${id}`
+    );
     assetKey = `${assetId}_${blockHeight}`;
   } else {
     assetKey = id;

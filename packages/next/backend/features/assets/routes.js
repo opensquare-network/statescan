@@ -9,7 +9,7 @@ router.get("/assets/count", assetsController.getAssetsCount);
 router.get("/assets", assetsController.getAssets);
 router.get(
   "/assets/getBlockById/:assetId(\\d+)",
-  assetsController.getCreatedBlockByAssetId
+  assetsController.getAssetById
 );
 router.get(
   "/assets/:assetId(\\d+)_:blockHeight(\\d+)",

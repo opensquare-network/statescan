@@ -82,13 +82,13 @@ async function getAsset(ctx) {
   ctx.body = item;
 }
 
-async function getCreatedBlockByAssetId(ctx) {
+async function getAssetById(ctx) {
   const { chain, assetId } = ctx.params;
   const col = await getAssetCollection(chain);
   const option = { sort: { "createdAt.blockHeight": -1 } };
   const item = await col.findOne({ assetId: parseInt(assetId) }, option);
 
-  ctx.body = item.createdAt.blockHeight;
+  ctx.body = item;
 }
 
 async function getAssetTransfers(ctx) {
@@ -257,7 +257,7 @@ module.exports = {
   getAssetsCount,
   getAssets,
   getAsset,
-  getCreatedBlockByAssetId,
+  getAssetById,
   getAssetTransfers,
   getAssetHolders,
 };

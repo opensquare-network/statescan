@@ -1,5 +1,6 @@
 import Layout from "components/layout";
-
+import { addToast } from "../../../store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
 import Nav from "components/nav";
 import { getSymbol } from "utils/hooks";
 import {
@@ -23,6 +24,7 @@ import Timeline from "components/timeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
+import { useEffect } from "react";
 
 export default function Asset({
   node,
@@ -30,6 +32,7 @@ export default function Asset({
   asset,
   assetTransfers,
   assetHolders,
+  createdBlock,
 }) {
   if (!asset) {
     return (
@@ -38,6 +41,21 @@ export default function Asset({
       </Layout>
     );
   }
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!createdBlock) {
+      setTimeout(() => {
+        dispatch(
+          addToast({
+            type: "success",
+            message:
+              "Asset created block not specific, showing the latest asset matching id for you ",
+          })
+        );
+      }, 400);
+    }
+  }, []);
 
   const assetSymbol = asset?.symbol;
 
@@ -169,6 +187,16 @@ export async function getServerSideProps(context) {
   const { node, id } = context.params;
   const { tab, page } = context.query;
 
+  const [assetId, createdBlock] = id.split("_");
+
+  let assetKey = ``;
+  if (!createdBlock) {
+    const { result: asset } = await nextApi.fetch(`${node}/assets/${id}`);
+    assetKey = `${assetId}_${asset.createdAt.blockHeight}`;
+  } else {
+    assetKey = id;
+  }
+
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "transfers";
 
@@ -177,9 +205,13 @@ export async function getServerSideProps(context) {
     { result: assetTransfers },
     { result: assetHolders },
   ] = await Promise.all([
-    nextApi.fetch(`${node}/assets/${id}`),
-    nextApi.fetch(`${node}/assets/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/assets/${id}/holders`, { page: activeTab === "holders" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/assets/${assetKey}`),
+    nextApi.fetch(`${node}/assets/${assetKey}/transfers`, {
+      page: activeTab === "transfers" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/assets/${assetKey}/holders`, {
+      page: activeTab === "holders" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {
@@ -190,6 +222,7 @@ export async function getServerSideProps(context) {
       asset: asset ?? null,
       assetTransfers: assetTransfers ?? EmptyQuery,
       assetHolders: assetHolders ?? EmptyQuery,
+      createdBlock: createdBlock ?? false,
     },
   };
 }

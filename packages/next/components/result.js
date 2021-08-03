@@ -14,10 +14,19 @@ export default function Result({ isSuccess, noText = false }) {
   return (
     <Wrapper>
       <img
-        src={isSuccess ? "/imgs/icons/success.svg" : "/imgs/icons/failure.svg"}
+        src={isSuccess === undefined || isSuccess === null
+              ? "/imgs/icons/unknown.svg"
+              : isSuccess
+              ? "/imgs/icons/success.svg"
+              : "/imgs/icons/failure.svg"}
         alt="icon"
       />
-      {!noText && (isSuccess ? "Success" : "Failure")}
+      {!noText && (isSuccess === undefined || isSuccess === null
+                    ? "Unknown"
+                    : isSuccess
+                    ? "Success"
+                    : "Failure"
+                    )}
     </Wrapper>
   );
 }

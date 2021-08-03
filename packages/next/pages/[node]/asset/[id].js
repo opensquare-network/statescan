@@ -1,5 +1,6 @@
 import Layout from "components/layout";
-
+import { addToast } from "../../../store/reducers/toastSlice";
+import { useDispatch } from "react-redux";
 import Nav from "components/nav";
 import { getSymbol } from "utils/hooks";
 import {
@@ -169,18 +170,24 @@ export async function getServerSideProps(context) {
   const { node, id } = context.params;
   const { tab, page } = context.query;
 
+  const { result: asset } = await nextApi.fetch(`${node}/assets/${id}`);
+
+  if (!asset) return { props: {} };
+
+  const assetKey = `${asset.assetId}_${asset.createdAt.blockHeight}`;
+
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "transfers";
 
-  const [
-    { result: asset },
-    { result: assetTransfers },
-    { result: assetHolders },
-  ] = await Promise.all([
-    nextApi.fetch(`${node}/assets/${id}`),
-    nextApi.fetch(`${node}/assets/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/assets/${id}/holders`, { page: activeTab === "holders" ? nPage - 1 : 0 }),
-  ]);
+  const [{ result: assetTransfers }, { result: assetHolders }] =
+    await Promise.all([
+      nextApi.fetch(`${node}/assets/${assetKey}/transfers`, {
+        page: activeTab === "transfers" ? nPage - 1 : 0,
+      }),
+      nextApi.fetch(`${node}/assets/${assetKey}/holders`, {
+        page: activeTab === "holders" ? nPage - 1 : 0,
+      }),
+    ]);
 
   return {
     props: {

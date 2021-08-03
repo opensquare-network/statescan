@@ -73,12 +73,20 @@ async function getAssets(ctx) {
 
 async function getAsset(ctx) {
   const { chain, blockHeight, assetId } = ctx.params;
-
   const col = await getAssetCollection(chain);
   const item = await col.findOne({
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
   });
+
+  ctx.body = item;
+}
+
+async function getAssetById(ctx) {
+  const { chain, assetId } = ctx.params;
+  const col = await getAssetCollection(chain);
+  const option = { sort: { "createdAt.blockHeight": -1 } };
+  const item = await col.findOne({ assetId: parseInt(assetId) }, option);
 
   ctx.body = item;
 }
@@ -249,6 +257,7 @@ module.exports = {
   getAssetsCount,
   getAssets,
   getAsset,
+  getAssetById,
   getAssetTransfers,
   getAssetHolders,
 };

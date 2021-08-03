@@ -174,9 +174,7 @@ export async function getServerSideProps(context) {
 
   if (!asset) return { props: {} };
 
-  const assetKey = asset
-    ? `${asset.assetId}_${asset.createdAt.blockHeight}`
-    : id;
+  const assetKey = `${asset.assetId}_${asset.createdAt.blockHeight}`;
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "transfers";

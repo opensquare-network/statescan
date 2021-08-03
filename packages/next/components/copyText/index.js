@@ -24,7 +24,6 @@ const Wrapper = styled.div`
 
 const StyledIcon = styled(Icon)`
   cursor: pointer;
-  stroke: ${(p) => p.themecolor};
 `;
 
 export default function CopyText({ children, text }) {
@@ -40,7 +39,7 @@ export default function CopyText({ children, text }) {
   return (
     <Wrapper>
       <span>{children}</span>
-      <StyledIcon themecolor={theme.color} onClick={onCopy} />
+      <StyledIcon onClick={onCopy} />
     </Wrapper>
   );
 }

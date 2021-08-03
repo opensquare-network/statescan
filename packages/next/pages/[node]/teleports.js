@@ -50,7 +50,7 @@ export default function Events({ node, teleports, filter }) {
               : "-",
             item.teleportDirection === "in"
               ? <Result isSuccess={item.complete} noText={true} />
-              : "-",
+              : <Result isSuccess={null} noText={true} />,
             !item.complete || item.amount === null || item.amount === undefined
               ? "-"
               : `${bigNumber2Locale(fromSymbolUnit(

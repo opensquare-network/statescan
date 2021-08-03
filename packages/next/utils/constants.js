@@ -168,7 +168,7 @@ export const teleportsHead = [
   { name: "Result" },
   { name: "Amount", align: "right" },
   { name: "Fee", width: 140, align: "right" },
-  { name: "Total Amount", align: "right" },
+  { name: "Total", align: "right" },
 ];
 
 export const addressHead = [

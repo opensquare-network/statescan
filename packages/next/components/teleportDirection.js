@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   font-size: 14px;
   line-height: 20px;
   > :not(:first-child) {
-    margin-left: 28px;
+    margin-left: 20px;
   }
   > img {
     width: 20px;

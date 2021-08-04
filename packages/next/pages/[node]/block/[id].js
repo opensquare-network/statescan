@@ -45,7 +45,6 @@ export default function Block({
   event,
   blockDetail,
   blockEvents,
-  blockLogs,
   blockExtrinsics,
 }) {
   if (!blockDetail) {
@@ -59,6 +58,8 @@ export default function Block({
   const expand = (blockEvents?.items || []).findIndex(
     (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
   );
+
+  const blockLogs = blockDetail?.header?.digest?.logs;
 
   const tabTableData = [
     {
@@ -253,7 +254,6 @@ export async function getServerSideProps(context) {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
     }),
   ]);
-  const blockLogs = blockDetail?.header?.digest?.logs;
 
   return {
     props: {
@@ -263,7 +263,6 @@ export async function getServerSideProps(context) {
       event: event ?? null,
       blockDetail: blockDetail ?? null,
       blockEvents: blockEvents ?? EmptyQuery,
-      blockLogs: blockLogs ?? [],
       blockExtrinsics: blockExtrinsics ?? EmptyQuery,
     },
   };

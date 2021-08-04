@@ -4,7 +4,7 @@ const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
 const { handleTeleportAssetDownwardMessage, handleTeleportAssets } = require("./xcm");
 const asyncLocalStorage = require("../asynclocalstorage");
-const { getApi } = require("../../api");
+const { getApi } = require("../api");
 
 async function updateOrCreateAddress(blockIndexer, address) {
   const session = asyncLocalStorage.getStore();

@@ -60,14 +60,6 @@ export default function Block({
     (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
   );
 
-  const hex2ascii = (hex) => {
-    let str = "";
-    for (var i = 0; i < hex.length; i += 2) {
-      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    }
-    return str;
-  };
-
   const tabTableData = [
     {
       name: "Extrinsics",
@@ -100,20 +92,41 @@ export default function Block({
       name: "Logs",
       head: blockLogsHead,
       total: blockLogs.length,
-      body: (blockLogs || []).map((item, i) => [
-        `${blockDetail?.header?.number}-${i + 1}`,
-        blockDetail?.header?.number,
-        <span style={{ textTransform: "capitalize" }}>
-          {Object.keys(item)[0]}
-        </span>,
-        makeTablePairs(
-          ["Data", "Engine"],
-          [
-            item[Object.keys(item)[0]][1],
-            hex2ascii(item[Object.keys(item)[0]][0]),
-          ]
-        ),
-      ]),
+      body: (blockLogs || []).map((item, i) => {
+        const [itemName] = Object.keys(item);
+
+        let itemFields = [];
+        switch(itemName) {
+          case "changesTrieRoot": {
+            itemFields = ["Hash"];
+            break;
+          }
+          case "preRuntime": case "consensus": case "seal": {
+            itemFields = ["Engine", "Data"];
+            break;
+          }
+          case "changesTrieSignal": {
+            itemFields = ["ChangesTrieSignal"];
+            break;
+          }
+          case "other": {
+            itemFields = ["Data"];
+            break;
+          }
+        }
+
+        return [
+          `${blockDetail?.header?.number}-${i}`,
+          blockDetail?.header?.number,
+          <span style={{ textTransform: "capitalize" }}>
+            {Object.keys(item)[0]}
+          </span>,
+          makeTablePairs(
+            itemFields,
+            item[itemName],
+          ),
+        ];
+      }),
       expand,
     },
     {

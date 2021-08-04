@@ -1,9 +1,9 @@
 import { useState } from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import MinorText from "components/minorText";
 import MajorText from "components/majorText";
 import AddressEllipsis from "components/addressEllipsis";
-import { getSymbol } from "utils/hooks";
+import { getSymbol, useTheme } from "utils/hooks";
 import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
 import InLink from "components/inLink";
 
@@ -60,17 +60,13 @@ const Footer = styled.div`
 const Button = styled.div`
   font-style: normal;
   font-weight: bold;
-  color: #f22279;
+  color: ${(p) => p.themecolor};
   cursor: pointer;
-  ${(p) =>
-    p.node === "kusama" &&
-    css`
-      color: #265deb;
-    `}
 `;
 
 export default function TransfersList({ node, assetTransfers }) {
   const [showAll, setShowAll] = useState(false);
+  const theme = useTheme();
   const symbol = getSymbol(node);
 
   return (
@@ -113,6 +109,7 @@ export default function TransfersList({ node, assetTransfers }) {
           <Divider />
           <Footer>
             <Button
+              themecolor={theme.color}
               onClick={() => {
                 setShowAll(!showAll);
               }}

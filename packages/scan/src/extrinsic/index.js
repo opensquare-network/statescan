@@ -115,7 +115,7 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   await handleTeleportAssets(extrinsic, indexer, signer);
 
   if (signer) {
-    await updateOrCreateAddress(extrinsicIndexer, signer);
+    await updateOrCreateAddress(indexer, signer);
   }
 }
 

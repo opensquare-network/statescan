@@ -21,6 +21,7 @@ import BreakText from "components/breakText";
 import TransfersList from "components/transfersList";
 import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
+import JsonAttributes from "components/jsonAttributes";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -156,6 +157,12 @@ export default function Extrinsic({
                 <Result isSuccess={extrinsicDetail?.isSuccess} />
               </MinorText>,
             ]}
+            foot={
+              <JsonAttributes
+                title={"Parameters"}
+                data={extrinsicDetail.args}
+              />
+            }
           />
         </div>
         <TabTable data={tabTableData} activeTab={tab} collapse={900} />

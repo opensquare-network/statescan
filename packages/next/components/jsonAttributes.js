@@ -30,11 +30,11 @@ const TableDataItem = styled.pre`
   overflow-x: auto;
 `;
 
-export default function EventAttributes({ data }) {
+export default function JsonAttributes({ title, data }) {
   return (
     <Wrapper>
       <Divider />
-      <Title>Attributes</Title>
+      <Title>{title}</Title>
       <TableDataItem>
         <InnerDataTable data={data} />
       </TableDataItem>

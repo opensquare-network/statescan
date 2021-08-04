@@ -106,6 +106,7 @@ export default function Extrinsic({
               null,
               null,
               null,
+              null,
               extrinsicTransfer?.length,
               null,
             ]}
@@ -147,6 +148,17 @@ export default function Extrinsic({
               </BreakText>,
               <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,
               <MinorText>{capitalize(extrinsicDetail?.name)}</MinorText>,
+              extrinsicDetail?.signer
+              ? <BreakText>
+                  <CopyText text={extrinsicDetail?.signer}>
+                    <MonoText>
+                      <InLink to={`/${node}/account/${extrinsicDetail?.signer}`}>
+                        {extrinsicDetail?.signer}
+                      </InLink>
+                    </MonoText>
+                  </CopyText>
+                </BreakText>
+              : "-",
               extrinsicTransfer?.length > 0 ? (
                 <TransfersList node={node} assetTransfers={extrinsicTransfer} />
               ) : undefined,

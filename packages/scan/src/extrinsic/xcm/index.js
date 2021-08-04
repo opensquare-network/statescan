@@ -4,7 +4,6 @@ const {
 } = require("../../mongo");
 const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
-const { getExtrinsicSigner } = require("../../utils");
 
 async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson) {
   const session = asyncLocalStorage.getStore();
@@ -132,12 +131,12 @@ async function handleTeleportAssetDownwardMessage(
 
 async function handleTeleportAssets(
   extrinsic,
-  extrinsicIndexer
+  extrinsicIndexer,
+  signer,
 ) {
   const hash = extrinsic.hash.toHex();
   const name = extrinsic.method.method;
   const section = extrinsic.method.section;
-  const signer = getExtrinsicSigner(extrinsic);
 
   if (section !== "polkadotXcm" || name !== "teleportAssets") {
     return;
@@ -150,10 +149,6 @@ async function handleTeleportAssets(
   const amount = concreteFungible?.amount;
 
   await saveNewTeleportAssetOut(extrinsicIndexer, hash, signer, beneficiary, amount, args);
-
-  if (signer) {
-    await updateOrCreateAddress(extrinsicIndexer, signer);
-  }
 }
 
 

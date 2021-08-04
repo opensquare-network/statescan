@@ -194,6 +194,7 @@ export const extrinsicHead = [
   "Extrinsic Hash",
   "Module",
   "Call",
+  "Signer",
   "Tokens Transferred",
   "Nonce",
   "Result",

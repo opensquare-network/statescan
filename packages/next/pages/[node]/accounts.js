@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import _ from "lodash";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import { addressesHead, EmptyQuery } from "utils/constants";
@@ -18,7 +18,7 @@ const AccountFont = styled.div`
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
 
-  const customAddressesHead = [...addressesHead];
+  const customAddressesHead = _.cloneDeep(addressesHead);
   customAddressesHead[2].name = `${customAddressesHead[2].name} ${symbol}`;
   customAddressesHead[3].name = `${customAddressesHead[3].name} ${symbol}`;
 

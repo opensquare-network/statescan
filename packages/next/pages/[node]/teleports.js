@@ -1,4 +1,5 @@
 import Layout from "components/layout";
+import _ from "lodash";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import { teleportsHead, EmptyQuery, nodes } from "utils/constants";
 import Nav from "components/nav";
@@ -29,7 +30,7 @@ export default function Events({ node, teleports, filter }) {
   const teleportSourceAndTarget = (direction) => getTeleportSourceAndTarget(node, direction);
 
   const nodeInfo = nodes.find(i => i.value === node);
-  const customTeleportHead = [...teleportsHead];
+  const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find(item => item.name === "Sent At");
   if (sendAtCol) {
     sendAtCol.name = <img src={nodeInfo.icon} />;

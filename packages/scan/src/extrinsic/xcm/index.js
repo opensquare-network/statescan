@@ -4,6 +4,7 @@ const {
 } = require("../../mongo");
 const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { getExtrinsicSigner } = require("../../utils");
 
 async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson) {
   const session = asyncLocalStorage.getStore();
@@ -22,7 +23,7 @@ async function saveNewTeleportAssetIn(extrinsicIndexer, extrinsicHash, messageId
   }, { session });
 }
 
-async function saveNewTeleportAssetOut(extrinsicIndexer, extrinsicHash, beneficiary, amount, teleportAssetJson) {
+async function saveNewTeleportAssetOut(extrinsicIndexer, extrinsicHash, signer, beneficiary, amount, teleportAssetJson) {
   const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
 
@@ -31,9 +32,42 @@ async function saveNewTeleportAssetOut(extrinsicIndexer, extrinsicHash, benefici
     extrinsicHash,
     teleportDirection: "out",
     teleportAsset: teleportAssetJson,
+    signer,
     beneficiary,
     amount,
   }, { session });
+}
+
+async function updateOrCreateAddress(blockIndexer, address) {
+  const session = asyncLocalStorage.getStore();
+  const col = await getAddressCollection();
+  const exists = await col.findOne(
+    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
+    { session },
+  );
+  if (exists) {
+    // Yes, we have the address info already up to date
+    return;
+  }
+
+  const api = await getApi();
+
+  const account = await api.query.system.account.at(
+    blockIndexer.blockHash,
+    address
+  );
+  if (account) {
+    await col.updateOne(
+      { address },
+      {
+        $set: {
+          ...account.toJSON(),
+          lastUpdatedAt: blockIndexer,
+        },
+      },
+      { upsert: true, session }
+    );
+  }
 }
 
 async function handleTeleportAssetDownwardMessage(
@@ -91,6 +125,7 @@ async function handleTeleportAssetDownwardMessage(
     }
 
     await saveNewTeleportAssetIn(extrinsicIndexer, hash, messageId, pubSentAt, beneficiary, amount, fee, teleportAssetJson);
+    await updateOrCreateAddress(extrinsicIndexer, beneficiary);
   }
 }
 
@@ -102,6 +137,7 @@ async function handleTeleportAssets(
   const hash = extrinsic.hash.toHex();
   const name = extrinsic.method.method;
   const section = extrinsic.method.section;
+  const signer = getExtrinsicSigner(extrinsic);
 
   if (section !== "polkadotXcm" || name !== "teleportAssets") {
     return;
@@ -113,7 +149,11 @@ async function handleTeleportAssets(
   const beneficiary = args.beneficiary.x1?.accountId32.id;
   const amount = concreteFungible?.amount;
 
-  await saveNewTeleportAssetOut(extrinsicIndexer, hash, beneficiary, amount, args);
+  await saveNewTeleportAssetOut(extrinsicIndexer, hash, signer, beneficiary, amount, args);
+
+  if (signer) {
+    await updateOrCreateAddress(extrinsicIndexer, signer);
+  }
 }
 
 

@@ -91,7 +91,7 @@ export default function Block({
     {
       name: "Logs",
       head: blockLogsHead,
-      total: blockLogs.length,
+      total: blockLogs?.length,
       body: (blockLogs || []).map((item, i) => {
         const [itemName] = Object.keys(item);
 
@@ -263,7 +263,7 @@ export async function getServerSideProps(context) {
       event: event ?? null,
       blockDetail: blockDetail ?? null,
       blockEvents: blockEvents ?? EmptyQuery,
-      blockLogs: blockLogs ?? EmptyQuery,
+      blockLogs: blockLogs ?? [],
       blockExtrinsics: blockExtrinsics ?? EmptyQuery,
     },
   };

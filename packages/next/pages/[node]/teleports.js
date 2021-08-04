@@ -6,6 +6,7 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import AddressEllipsis from "components/addressEllipsis";
+import ChainAddressEllipsis from "components/chainAddressEllipsis";
 import Filter from "components/filter";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
 import TeleportDirection from "components/teleportDirection";
@@ -51,9 +52,14 @@ export default function Events({ node, teleports, filter }) {
               to={teleportSourceAndTarget(item.teleportDirection).target}
             />,
             item.beneficiary
+              ? item.teleportDirection === "in"
               ? <AddressEllipsis
                   address={item.beneficiary}
                   to={`/${node}/account/${item.beneficiary}`}
+                />
+              : <ChainAddressEllipsis
+                  chain={teleportSourceAndTarget(item.teleportDirection).target}
+                  address={item.beneficiary}
                 />
               : "-",
             item.teleportDirection === "in"

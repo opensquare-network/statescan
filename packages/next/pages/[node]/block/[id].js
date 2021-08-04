@@ -21,6 +21,7 @@ import {
   blockExtrinsicsHead,
   blockEventsHead,
   EmptyQuery,
+  blockLogsHead,
 } from "utils/constants";
 import PageNotFound from "components/pageNotFound";
 
@@ -36,6 +37,8 @@ const FlexWrapper = styled.div`
 const AccessoryText = styled.div`
   color: rgba(17, 17, 17, 0.35);
 `;
+
+const toArray = (obj) => Array.isArray(obj) ? obj : [obj];
 
 export default function Block({
   node,
@@ -57,6 +60,8 @@ export default function Block({
   const expand = (blockEvents?.items || []).findIndex(
     (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
   );
+
+  const blockLogs = blockDetail?.header?.digest?.logs;
 
   const tabTableData = [
     {
@@ -85,6 +90,47 @@ export default function Block({
           total={blockExtrinsics?.total}
         />
       ),
+    },
+    {
+      name: "Logs",
+      head: blockLogsHead,
+      total: blockLogs?.length,
+      body: (blockLogs || []).map((item, i) => {
+        const [itemName] = Object.keys(item);
+
+        let itemFields = [];
+        switch(itemName) {
+          case "changesTrieRoot": {
+            itemFields = ["Hash"];
+            break;
+          }
+          case "preRuntime": case "consensus": case "seal": {
+            itemFields = ["Engine", "Data"];
+            break;
+          }
+          case "changesTrieSignal": {
+            itemFields = ["ChangesTrieSignal"];
+            break;
+          }
+          case "other": {
+            itemFields = ["Data"];
+            break;
+          }
+        }
+
+        return [
+          `${blockDetail?.header?.number}-${i}`,
+          blockDetail?.header?.number,
+          <span style={{ textTransform: "capitalize" }}>
+            {itemName}
+          </span>,
+          makeTablePairs(
+            itemFields,
+            toArray(item[itemName]),
+          ),
+        ];
+      }),
+      expand,
     },
     {
       name: "Events",
@@ -203,8 +249,12 @@ export async function getServerSideProps(context) {
     { result: blockExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/${id}`),
-    nextApi.fetch(`${node}/blocks/${id}/events`, { page: activeTab === "events" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, { page: activeTab === "extrinsics" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/blocks/${id}/events`, {
+      page: activeTab === "events" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, {
+      page: activeTab === "extrinsics" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {

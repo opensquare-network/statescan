@@ -98,6 +98,13 @@ export const blockEventsHead = [
   { name: "Data", type: "data", align: "right", width: 76, display: "table" },
 ];
 
+export const blockLogsHead = [
+  { name: "Log Index", width: 160 },
+  { name: "Block", width: 160 },
+  { name: "Type" },
+  { name: "Data", type: "data", align: "right", width: 76, display: "table" },
+];
+
 export const assetTransfersHead = [
   { name: "Event ID", width: 136 },
   { name: "Extrinsic ID", width: 136 },

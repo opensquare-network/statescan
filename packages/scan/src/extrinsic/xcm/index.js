@@ -1,6 +1,7 @@
 const { blake2AsHex } = require("@polkadot/util-crypto");
 const {
   getTeleportCollection,
+  getAddressCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");

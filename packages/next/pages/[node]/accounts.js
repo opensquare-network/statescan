@@ -27,7 +27,7 @@ export default function Addresses({ node, addresses }) {
       <section>
         <Nav data={[{ name: "Accounts" }]} node={node} />
         <Table
-          head={addressesHead}
+          head={customAddressesHead}
           body={(addresses?.items || []).map((item, index) => [
             `#${addresses.page * addresses.pageSize + index + 1}`,
             <BreakText>

@@ -119,7 +119,7 @@ export default function Block({
           `${blockDetail?.header?.number}-${i}`,
           blockDetail?.header?.number,
           <span style={{ textTransform: "capitalize" }}>
-            {Object.keys(item)[0]}
+            {itemName}
           </span>,
           makeTablePairs(
             itemFields,

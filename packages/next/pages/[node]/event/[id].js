@@ -16,7 +16,7 @@ import {
 } from "utils";
 import { eventHead } from "utils/constants";
 import PageNotFound from "components/pageNotFound";
-import EventAttributes from "components/EventAttributes";
+import JsonAttributes from "components/jsonAttributes";
 import { getSymbol } from "utils/hooks";
 
 const FlexWrapper = styled.div`
@@ -88,7 +88,8 @@ export default function Block({ node, id, eventDetail }) {
                 : "-",
             ]}
             foot={
-              <EventAttributes
+              <JsonAttributes
+                title={"Attributes"}
                 data={makeTablePairs(eventDetail.meta.args, eventDetail.data)}
               />
             }

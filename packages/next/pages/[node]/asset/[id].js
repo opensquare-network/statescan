@@ -1,6 +1,4 @@
 import Layout from "components/layout";
-import { addToast } from "../../../store/reducers/toastSlice";
-import { useDispatch } from "react-redux";
 import Nav from "components/nav";
 import { getSymbol } from "utils/hooks";
 import {
@@ -172,7 +170,7 @@ export async function getServerSideProps(context) {
 
   const { result: asset } = await nextApi.fetch(`${node}/assets/${id}`);
 
-  if (!asset) return { props: {} };
+  if (!asset) return { props: { node } };
 
   const assetKey = `${asset.assetId}_${asset.createdAt.blockHeight}`;
 

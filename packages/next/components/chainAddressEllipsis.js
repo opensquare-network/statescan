@@ -19,7 +19,7 @@ export default function AddressEllipsis({ chain, address }) {
 
   return (
     <Tooltip content={address} isCopy>
-      <ExplorerLink chain={chain} href={`/account/${address}`} passHref>
+      <ExplorerLink chain={chain} href={`/account/${address}`}>
         <MonoText>
           <StyledLink themecolor={theme.color} cursor={"true"}>
             {addressEllipsis(address)}

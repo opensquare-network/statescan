@@ -1,9 +1,42 @@
 const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
-const { getExtrinsicCollection } = require("../mongo");
+const { getExtrinsicCollection, getAddressCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
 const { handleTeleportAssetDownwardMessage, handleTeleportAssets } = require("./xcm");
 const asyncLocalStorage = require("../asynclocalstorage");
+const { getApi } = require("../../api");
+
+async function updateOrCreateAddress(blockIndexer, address) {
+  const session = asyncLocalStorage.getStore();
+  const col = await getAddressCollection();
+  const exists = await col.findOne(
+    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
+    { session },
+  );
+  if (exists) {
+    // Yes, we have the address info already up to date
+    return;
+  }
+
+  const api = await getApi();
+
+  const account = await api.query.system.account.at(
+    blockIndexer.blockHash,
+    address
+  );
+  if (account) {
+    await col.updateOne(
+      { address },
+      {
+        $set: {
+          ...account.toJSON(),
+          lastUpdatedAt: blockIndexer,
+        },
+      },
+      { upsert: true, session }
+    );
+  }
+}
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
   let index = 0;
@@ -34,7 +67,7 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   const section = extrinsic.method.section;
   let signer = extrinsic._raw.signature.get("signer").toString();
   //如果signer的解析长度不正确，则该交易是无签名交易
-  if (signer.length < 48) {
+  if (signer.length < 47) {
     signer = "";
   }
 
@@ -79,7 +112,11 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   }
 
   await handleTeleportAssetDownwardMessage(extrinsic, indexer);
-  await handleTeleportAssets(extrinsic, indexer);
+  await handleTeleportAssets(extrinsic, indexer, signer);
+
+  if (signer) {
+    await updateOrCreateAddress(extrinsicIndexer, signer);
+  }
 }
 
 function normalizeExtrinsic(extrinsic, events) {

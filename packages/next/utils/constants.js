@@ -156,7 +156,7 @@ export const transfersHead = [
   { name: "Method", width: 200 },
   { name: "Time", type: "time", width: 200 },
   { name: "From", width: 160 },
-  { name: "to", width: 160 },
+  { name: "To", width: 160 },
   { name: "Value", align: "right" },
 ];
 

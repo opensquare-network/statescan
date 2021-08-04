@@ -93,7 +93,7 @@ async function calcOverview(chain) {
     latestTransfers,
     popularAssets,
     assetsCount,
-    holdersCount,
+    holdersCount: holdersCount - 1, // excludes system account
     transfersCount,
   };
 }

@@ -92,6 +92,37 @@ export default function Block({
       ),
     },
     {
+      name: "Events",
+      page: blockEvents?.page,
+      total: blockEvents?.total,
+      head: blockEventsHead,
+      body: (blockEvents?.items || []).map((item) => [
+        <InLink
+          to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
+        >{`${item?.indexer?.blockHeight}-${item?.sort}`}</InLink>,
+        Number.isInteger(item?.phase?.value) ? (
+          <InLink
+            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
+          >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>
+        ) : (
+          "-"
+        ),
+        <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
+        makeTablePairs(
+          ["Docs", ...item.meta.args],
+          [item.meta.documentation?.join("").trim() || "", ...item.data]
+        ),
+      ]),
+      expand,
+      foot: (
+        <Pagination
+          page={blockEvents?.page}
+          pageSize={blockEvents?.pageSize}
+          total={blockEvents?.total}
+        />
+      ),
+    },
+    {
       name: "Logs",
       head: blockLogsHead,
       total: blockLogs?.length,
@@ -131,37 +162,6 @@ export default function Block({
         ];
       }),
       expand,
-    },
-    {
-      name: "Events",
-      page: blockEvents?.page,
-      total: blockEvents?.total,
-      head: blockEventsHead,
-      body: (blockEvents?.items || []).map((item) => [
-        <InLink
-          to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
-        >{`${item?.indexer?.blockHeight}-${item?.sort}`}</InLink>,
-        Number.isInteger(item?.phase?.value) ? (
-          <InLink
-            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
-          >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>
-        ) : (
-          "-"
-        ),
-        <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
-        makeTablePairs(
-          ["Docs", ...item.meta.args],
-          [item.meta.documentation?.join("").trim() || "", ...item.data]
-        ),
-      ]),
-      expand,
-      foot: (
-        <Pagination
-          page={blockEvents?.page}
-          pageSize={blockEvents?.pageSize}
-          total={blockEvents?.total}
-        />
-      ),
     },
   ];
 

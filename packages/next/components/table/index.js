@@ -186,7 +186,9 @@ const CollapseTableWrapper = styled.div`
   }
 `;
 
-const CollapseTable = styled.table``;
+const CollapseTable = styled.table`
+  width: 100%;
+`;
 
 const CollapseHead = styled.td`
   font-weight: 500;
@@ -200,7 +202,7 @@ const CollapseBody = styled.td`
   font-size: 14px;
   line-height: 20px;
   padding: 6px 24px;
-  width: 136px;
+  word-break: break-all;
 `;
 
 const CollapseFoot = styled.div`

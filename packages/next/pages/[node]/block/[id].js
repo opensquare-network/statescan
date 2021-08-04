@@ -38,6 +38,8 @@ const AccessoryText = styled.div`
   color: rgba(17, 17, 17, 0.35);
 `;
 
+const toArray = (obj) => Array.isArray(obj) ? obj : [obj];
+
 export default function Block({
   node,
   id,
@@ -124,7 +126,7 @@ export default function Block({
           </span>,
           makeTablePairs(
             itemFields,
-            item[itemName],
+            toArray(item[itemName]),
           ),
         ];
       }),

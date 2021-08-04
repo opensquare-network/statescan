@@ -21,6 +21,7 @@ import {
   blockExtrinsicsHead,
   blockEventsHead,
   EmptyQuery,
+  blockLogsHead,
 } from "utils/constants";
 import PageNotFound from "components/pageNotFound";
 
@@ -44,6 +45,7 @@ export default function Block({
   event,
   blockDetail,
   blockEvents,
+  blockLogs,
   blockExtrinsics,
 }) {
   if (!blockDetail) {
@@ -57,6 +59,14 @@ export default function Block({
   const expand = (blockEvents?.items || []).findIndex(
     (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
   );
+
+  const hex2ascii = (hex) => {
+    let str = "";
+    for (var i = 0; i < hex.length; i += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return str;
+  };
 
   const tabTableData = [
     {
@@ -85,6 +95,26 @@ export default function Block({
           total={blockExtrinsics?.total}
         />
       ),
+    },
+    {
+      name: "Logs",
+      head: blockLogsHead,
+      total: blockLogs.length,
+      body: (blockLogs || []).map((item, i) => [
+        `${blockDetail?.header?.number}-${i + 1}`,
+        blockDetail?.header?.number,
+        <span style={{ textTransform: "capitalize" }}>
+          {Object.keys(item)[0]}
+        </span>,
+        makeTablePairs(
+          ["Data", "Engine"],
+          [
+            item[Object.keys(item)[0]][1],
+            hex2ascii(item[Object.keys(item)[0]][0]),
+          ]
+        ),
+      ]),
+      expand,
     },
     {
       name: "Events",
@@ -203,9 +233,14 @@ export async function getServerSideProps(context) {
     { result: blockExtrinsics },
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/${id}`),
-    nextApi.fetch(`${node}/blocks/${id}/events`, { page: activeTab === "events" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, { page: activeTab === "extrinsics" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/blocks/${id}/events`, {
+      page: activeTab === "events" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, {
+      page: activeTab === "extrinsics" ? nPage - 1 : 0,
+    }),
   ]);
+  const blockLogs = blockDetail?.header?.digest?.logs;
 
   return {
     props: {
@@ -215,6 +250,7 @@ export async function getServerSideProps(context) {
       event: event ?? null,
       blockDetail: blockDetail ?? null,
       blockEvents: blockEvents ?? EmptyQuery,
+      blockLogs: blockLogs ?? EmptyQuery,
       blockExtrinsics: blockExtrinsics ?? EmptyQuery,
     },
   };

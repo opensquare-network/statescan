@@ -27,8 +27,9 @@ async function updateOrCreateAddress(blockIndexer, address, killed) {
         $set: {
           ...account.toJSON(),
           lastUpdatedAt: blockIndexer,
-          killed,
+          ...(killed ? { killed } : {}),
         },
+        ...(killed ? {} : { $unset: { killed: true } })
       },
       { upsert: true, session }
     );
@@ -59,7 +60,7 @@ async function handleSystemEvent(
     await updateOrCreateAddress(
       blockIndexer,
       address,
-      method === SystemEvents.KilledAccount ? true : undefined
+      method === SystemEvents.KilledAccount ? true : false
     );
   }
 

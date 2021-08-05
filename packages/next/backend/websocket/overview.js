@@ -86,8 +86,10 @@ async function calcOverview(chain) {
   // Calculate counts
   const assetsCount = await assetCol.countDocuments();
   const holdersCount = await addressCol.countDocuments({
-    providers: { $ne: 0 },
-    sufficients: { $ne: 0 },
+    $or: [
+      { providers: { $ne: 0 } },
+      { sufficients: { $ne: 0 } },
+    ]
   });
   const transfersCount = await trasnferCol.countDocuments();
 

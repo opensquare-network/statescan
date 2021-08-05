@@ -15,8 +15,10 @@ async function getAddresses(ctx) {
   }
 
   const q = {
-    providers: { $ne: 0 },
-    sufficients: { $ne: 0 },
+    $or: [
+      { providers: { $ne: 0 } },
+      { sufficients: { $ne: 0 } },
+    ]
   };
 
   const col = await getAddressCollection(chain);
@@ -194,8 +196,10 @@ async function getAddressCount(ctx) {
 
   const col = await getAddressCollection(chain);
   const count = await col.countDocuments({
-    providers: { $ne: 0 },
-    sufficients: { $ne: 0 },
+    $or: [
+      { providers: { $ne: 0 } },
+      { sufficients: { $ne: 0 } },
+    ]
   });
 
   ctx.body = count;

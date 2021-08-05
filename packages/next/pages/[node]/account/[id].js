@@ -28,6 +28,7 @@ import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import HashEllipsis from "components/hashEllipsis";
 import PageNotFound from "components/pageNotFound";
+import Identity from "../../../components/account/identity";
 
 export default function Address({
   node,
@@ -37,6 +38,7 @@ export default function Address({
   addressAssets,
   addressTransfers,
   addressExtrinsics,
+  identity,
 }) {
   if (!addressDetail) {
     return (
@@ -46,6 +48,7 @@ export default function Address({
     );
   }
 
+  console.log(identity);
   const symbol = getSymbol(node);
 
   const tabTableData = [
@@ -162,11 +165,14 @@ export default function Address({
           <DetailTable
             head={addressHead}
             body={[
-              <CopyText text={addressDetail?.address}>
-                <BreakText>
-                  <MinorText>{addressDetail?.address}</MinorText>
-                </BreakText>
-              </CopyText>,
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
+                <Identity identity={identity} />
+                <CopyText text={addressDetail?.address}>
+                  <BreakText>
+                    <MinorText>{addressDetail?.address}</MinorText>
+                  </BreakText>
+                </CopyText>
+              </div>,
               `${fromSymbolUnit(
                 addressDetail?.data?.free || 0,
                 symbol
@@ -201,11 +207,19 @@ export async function getServerSideProps(context) {
     { result: addressAssets },
     { result: addressTransfers },
     { result: addressExtrinsics },
+    { result: identity },
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
-    nextApi.fetch(`${node}/addresses/${id}/assets`, { page: activeTab === "assets" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/addresses/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/addresses/${id}/extrinsics`, { page: activeTab === "extrinsics" ? nPage - 1 : 0 }),
+    nextApi.fetch(`${node}/addresses/${id}/assets`, {
+      page: activeTab === "assets" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/addresses/${id}/transfers`, {
+      page: activeTab === "transfers" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/addresses/${id}/extrinsics`, {
+      page: activeTab === "extrinsics" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/identities/${id}`),
   ]);
 
   return {
@@ -217,6 +231,11 @@ export async function getServerSideProps(context) {
       addressAssets: addressAssets ?? EmptyQuery,
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
+      identity: {
+        status: "authorized",
+        name: "AlexPromoTeam",
+        source: "polkascan",
+      },
     },
   };
 }

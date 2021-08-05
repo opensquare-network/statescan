@@ -1,4 +1,5 @@
 const { DB } = require("./scandb");
+const { DB: IdenDB } = require("./idendb");
 const {
   initDb: initPriceDb,
   getDotUsdtDailyCollection,
@@ -10,11 +11,18 @@ const scanDbs = {
   statemine: DB(process.env.SCAN_DB_KSM_NAME || "statescan-ksm"),
 };
 
+const idenDbs = {
+  westmint: IdenDB(process.env.IDENTITY_DB_WND_NAME || "identity-wnd"),
+  statemine: IdenDB(process.env.IDENTITY_DB_KSM_NAME || "identity-ksm"),
+};
+
 const db = (chain) => scanDbs[chain];
+const idenDb = (chain) => idenDbs[chain];
 
 function initDb() {
   return Promise.all([
     ...Object.values(scanDbs).map((db) => db.initDb()),
+    ...Object.values(idenDbs).map((db) => db.initDb()),
     initPriceDb(),
   ]);
 }
@@ -55,8 +63,14 @@ function getTeleportCollection(chain) {
   return db(chain).getTeleportCollection();
 }
 
+function getIdentityCollection(chain) {
+  return idenDb(chain).getIdentityCollection();
+}
+
 module.exports = {
   initDb,
+
+  // Statescan db collections
   getStatusCollection,
   getBlockCollection,
   getExtrinsicCollection,
@@ -65,7 +79,12 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getTeleportCollection,
+
+  // Identity db collections
+  getIdentityCollection,
+
+  // Price db collections
   getDotUsdtDailyCollection,
   getKsmUsdtDailyCollection,
-  getTeleportCollection,
 };

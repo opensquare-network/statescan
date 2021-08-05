@@ -8,7 +8,7 @@ import { addToast } from "store/reducers/toastSlice";
 const Wrapper = styled.div`
   display: inline-block;
   position: relative;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 16px;
   color: rgba(17, 17, 17, 0.65);
   > svg {

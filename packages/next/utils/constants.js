@@ -181,7 +181,7 @@ export const teleportsHead = [
 
 export const addressHead = [
   "Address",
-  "Balance",
+  "Free",
   "Reserved",
   "Locked",
   "Nonce",

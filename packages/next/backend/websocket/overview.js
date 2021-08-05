@@ -85,7 +85,10 @@ async function calcOverview(chain) {
 
   // Calculate counts
   const assetsCount = await assetCol.countDocuments();
-  const holdersCount = await addressCol.countDocuments({ killed: null });
+  const holdersCount = await addressCol.countDocuments({
+    providers: { $ne: 0 },
+    sufficients: { $ne: 0 },
+  });
   const transfersCount = await trasnferCol.countDocuments();
 
   return {
@@ -93,7 +96,7 @@ async function calcOverview(chain) {
     latestTransfers,
     popularAssets,
     assetsCount,
-    holdersCount: holdersCount - 1, // excludes system account
+    holdersCount,
     transfersCount,
   };
 }

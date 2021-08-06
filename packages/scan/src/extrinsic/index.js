@@ -61,10 +61,7 @@ async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
  */
 async function handleExtrinsic(extrinsic, indexer, events) {
   const hash = extrinsic.hash.toHex();
-  const callIndex = u8aToHex(extrinsic.callIndex);
-  const { args } = extrinsic.method.toJSON();
-  const name = extrinsic.method.method;
-  const section = extrinsic.method.section;
+  const call = normalizeCall(extrinsic.method);
   let signer = extrinsic._raw.signature.get("signer").toString();
   //如果signer的解析长度不正确，则该交易是无签名交易
   if (signer.length < 47) {
@@ -91,11 +88,8 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     hash,
     indexer,
     signer,
-    section,
-    name,
-    callIndex,
+    ...call,
     version,
-    args,
     era,
     lifetime,
     tip,

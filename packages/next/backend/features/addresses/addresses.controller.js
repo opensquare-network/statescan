@@ -296,7 +296,20 @@ async function getAddressTeleports(ctx) {
   }
 
   const q = {
-    $or: [{ beneficiary: address }, { signer: address }],
+    $or: [
+      {
+        $and: [
+          { teleportDirection: "in" },
+          { beneficiary: address },
+        ]
+      },
+      {
+        $and: [
+          { teleportDirection: "out" },
+          { signer: address },
+        ]
+      },
+    ],
   };
 
   const teleportCol = await getTeleportCollection(chain);

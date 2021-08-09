@@ -186,7 +186,6 @@ export default function Address({
           item.teleportDirection === "in" ? (
             <AddressEllipsis
               address={item.beneficiary}
-              to={`/${node}/account/${item.beneficiary}`}
             />
           ) : (
             <ChainAddressEllipsis

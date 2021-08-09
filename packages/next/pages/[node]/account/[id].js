@@ -299,10 +299,8 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
     }),
-    //TODO , migrate this from mock to the right API
-    nextApi.fetch(`${node}/teleports`, {
+    nextApi.fetch(`${node}/addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
-      pageSize: 5,
     }),
   ]);
 

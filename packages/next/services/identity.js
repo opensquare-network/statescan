@@ -21,7 +21,7 @@ const delayQuery = debounce(() => {
     chainAddresses[chain].push(address);
   }
 
-  for (const chain of Object.keys(chainAddresses)) {
+  for (const chain in chainAddresses) {
     const addresses = chainAddresses[chain];
 
     axios

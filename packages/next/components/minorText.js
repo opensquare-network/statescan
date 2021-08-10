@@ -13,6 +13,7 @@ const Wrapper = styled.div`
       color: ${(p) => p.themecolor};
     }
   }
+  font-family: SF Mono;
 `;
 
 export default function MinorText({ children }) {

@@ -16,11 +16,16 @@ export default function IdentityIcon({ identity }) {
   const judgements = identity?.info?.judgements ?? [];
 
   const isAuthorized = judgements.some(
-    ([, judgement]) => judgement.isKnownGood || judgement.isReasonable
+    ([, judgement]) =>
+      typeof judgement === "object" &&
+      Object.keys(judgement).some((key) => key === "reasonable")
   );
 
   const isBad = judgements.some(
-    ([, judgement]) => judgement.isErroneous || judgement.isLowQuality
+    ([, judgement]) =>
+      typeof judgement === "object" &&
+      (Object.keys(judgement).some((key) => key === "erroneous") ||
+        Object.keys(judgement).some((key) => key === "lowQuality"))
   );
 
   let status = "unauthorized";
@@ -41,5 +46,5 @@ export default function IdentityIcon({ identity }) {
 
   const StatusIcon = statusIconMap.get(status) ?? ErrorIcon;
 
-  return <StatusIcon />
+  return <StatusIcon />;
 }

@@ -119,7 +119,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
           head={assetsHead}
           body={(overview?.popularAssets || []).map((item) => [
             <InLink
-              to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+              to={`/${node}/asset/${item.assetId}`}
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
             item.name,

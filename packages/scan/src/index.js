@@ -5,38 +5,44 @@ const { updateHeight, getLatestHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
 const { getBlocks } = require("./mongo/meta");
-const { hexToU8a } = require("@polkadot/util");
 const { GenericBlock } = require("@polkadot/types");
 const { handleBlock } = require("./block");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { handleExtrinsics } = require("./extrinsic");
 const { handleEvents } = require("./event");
 const { logger } = require("./logger");
-const { isHex } = require("./utils");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
+const last = require("lodash.last");
+const { updateSpecs, getSpecHeights } = require("./mongo/service/specs");
 
 let registry;
 
 async function main() {
   await updateHeight();
+  await updateSpecs();
 
   let scanHeight = await getNextScanHeight();
   while (true) {
+    await sleep(0);
     // chainHeight is the current on-chain last block height
     const chainHeight = getLatestHeight();
 
     if (scanHeight > chainHeight) {
       // Just wait if the to scan height greater than current chain height
-      await sleep(1000);
+      await sleep(3000);
       continue;
     }
 
     let targetHeight = chainHeight;
-
     // Retrieve & Scan no more than 100 blocks at a time
     if (scanHeight + 100 < chainHeight) {
       targetHeight = scanHeight + 100;
+    }
+
+    const specHeights = getSpecHeights();
+    if (targetHeight > last(specHeights)) {
+      await updateSpecs();
     }
 
     const blocks = await getBlocks(scanHeight, targetHeight);
@@ -55,15 +61,13 @@ async function main() {
           });
 
           await session.commitTransaction();
-
-          scanHeight = block.height + 1;
-          await sleep(1);
-
         } catch (e) {
           logger.error(`Error with block scan ${block.height}`, e);
           await session.abortTransaction();
           await sleep(3000);
         }
+
+        scanHeight = block.height + 1;
       });
     }
 
@@ -72,16 +76,17 @@ async function main() {
 }
 
 async function scanBlock(blockInDb) {
-  if (!registry || registry.specVersion.toNumber() !== blockInDb.specVersion) {
+  if (!registry) {
     registry = await getRegistryByHeight(blockInDb.height);
   }
 
-  let block;
-  if (isHex(blockInDb.block)) {
-    block = new GenericBlock(registry.registry, hexToU8a(blockInDb.block));
-  } else {
-    block = new GenericBlock(registry.registry, blockInDb.block.block);
+  const blockHeight = parseInt(blockInDb.block.block.header.number);
+  const specHeights = getSpecHeights();
+  if (specHeights.includes(blockHeight)) {
+    registry = await getRegistryByHeight(blockInDb.height);
   }
+
+  const block = new GenericBlock(registry.registry, blockInDb.block.block);
 
   const blockEvents = registry.registry.createType(
     "Vec<EventRecord>",

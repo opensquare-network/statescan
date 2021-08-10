@@ -50,10 +50,10 @@ export default function Address({ address, to }) {
 
   const identityDisplay = (
     <span>
-      {identity && <>
+      {identity && <b>
         {identity?.info?.display}
         <br/>
-      </>}
+      </b>}
       {address}
     </span>
   );

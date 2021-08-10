@@ -15,6 +15,8 @@ const Wrapper = styled.div`
   align-items: center;
   width: 100%;
   height: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   svg {
     margin-right: 8px;
@@ -50,7 +52,17 @@ const Source = styled.a`
   }
 `;
 
-export default function Identity({ identity }) {
+const Display = styled.span`
+  display: inline-block;
+  width: 86px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  color: #111111;
+`;
+
+export default function IdentityLink({ identity }) {
   const statusIconMap = new Map([
     ["authorized", AuthIcon],
     ["sub", SubIcon],
@@ -62,16 +74,16 @@ export default function Identity({ identity }) {
   return (
     <Wrapper>
       <Status />
-      {identity?.info?.display}&nbsp;
+      <Display>{identity?.info?.display}&nbsp;</Display>
       {/*{identity.source && (*/}
-      <Source href="" target="_blank" title="polkascan">
-        <PolkascanGrey className="hover-hide" />
-        <Polkascan className="hover-show" />
-      </Source>
-      <Source href="" target="_blank" title="subascan">
-        <SubscanGrey className="hover-hide" />
-        <Subscan className="hover-show" />
-      </Source>
+      {/*<Source href="" target="_blank" title="polkascan">*/}
+      {/*  <PolkascanGrey className="hover-hide"/>*/}
+      {/*  <Polkascan className="hover-show"/>*/}
+      {/*</Source>*/}
+      {/*<Source href="" target="_blank" title="subascan">*/}
+      {/*  <SubscanGrey className="hover-hide"/>*/}
+      {/*  <Subscan className="hover-show"/>*/}
+      {/*</Source>*/}
       {/*)}*/}
     </Wrapper>
   );

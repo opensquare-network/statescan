@@ -38,7 +38,7 @@ export default function Address({
   addressAssets,
   addressTransfers,
   addressExtrinsics,
-  identity,
+  identityMap,
 }) {
   if (!addressDetail) {
     return (
@@ -48,7 +48,7 @@ export default function Address({
     );
   }
 
-  console.log(identity);
+  // console.log(addressTransfers);
   const symbol = getSymbol(node);
 
   const tabTableData = [
@@ -96,17 +96,22 @@ export default function Address({
           <AddressEllipsis
             address={item.from}
             to={`/${node}/account/${item.from}`}
+            identity={identityMap[item.from]}
           />
         ) : (
-          <AddressEllipsis address={item.from} />
+          <AddressEllipsis
+            address={item.from}
+            identity={identityMap[item.from]}
+          />
         ),
         item.to !== id ? (
           <AddressEllipsis
             address={item.to}
             to={`/${node}/account/${item.to}`}
+            identity={identityMap[item.to]}
           />
         ) : (
-          <AddressEllipsis address={item.to} />
+          <AddressEllipsis address={item.to} identity={identityMap[item.to]} />
         ),
         item.assetSymbol
           ? `${bigNumber2Locale(
@@ -166,7 +171,7 @@ export default function Address({
             head={addressHead}
             body={[
               <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <Identity identity={identity} />
+                <Identity identity={identityMap[addressDetail?.address]} />
                 <CopyText text={addressDetail?.address}>
                   <BreakText>
                     <MinorText>{addressDetail?.address}</MinorText>
@@ -207,7 +212,7 @@ export async function getServerSideProps(context) {
     { result: addressAssets },
     { result: addressTransfers },
     { result: addressExtrinsics },
-    { result: identity },
+    // {result: identity},
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
     nextApi.fetch(`${node}/addresses/${id}/assets`, {
@@ -219,9 +224,33 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
     }),
-    nextApi.fetch(`${node}/identities/${id}`),
+    // nextApi.fetch(`${node}/identities/${id}`),
   ]);
 
+  const identity = {
+    status: "authorized",
+    _id: "61089f3e2836d01a09463d06",
+    address: "15QfKYagJ6ke3wmYY7KB7DXMQhwo2cRKcmbaBp8UAMdtRgtM",
+    info: {
+      display: "🍕 pizza fellowship 🍕",
+      displayParent: null,
+      email: "fiveseventwo@gmail.com",
+      image: null,
+      judgements: [],
+      legal: null,
+      other: {},
+      parent: null,
+      pgp: null,
+      riot: "ak1",
+      twitter: null,
+      web: null,
+    },
+    subs: [],
+  };
+
+  const identityMap = {
+    F3opxRUwkBj1LqjZ7DyiHCRh9Z4zVPLaVjoxfD5ddbip8mt: identity,
+  };
   return {
     props: {
       node,
@@ -231,11 +260,7 @@ export async function getServerSideProps(context) {
       addressAssets: addressAssets ?? EmptyQuery,
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
-      identity: {
-        status: "authorized",
-        name: "AlexPromoTeam",
-        source: "polkascan",
-      },
+      identityMap,
     },
   };
 }

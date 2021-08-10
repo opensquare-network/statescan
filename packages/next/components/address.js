@@ -38,21 +38,19 @@ export default function Address({ address, to }) {
 
   if (!identity) {
     return (
-      <Tooltip content={address} isCopy>
-        {to ? (
-          <Link href={to} passHref>
-            <MonoText>{styledLink}</MonoText>
-          </Link>
-        ) : (
+      to ? (
+        <Link href={to} passHref>
           <MonoText>{styledLink}</MonoText>
-        )}
-      </Tooltip>
+        </Link>
+      ) : (
+        <MonoText>{styledLink}</MonoText>
+      )
     );
   }
 
   const identityDisplay = identity ? `${identity?.info?.display} \n` : "";
 
-  const identityLink = <IdentityLink identity={identity} cursor={to ? "true" : "false"} />;
+  const identityLink = <IdentityLink identity={identity} width={"auto"} cursor={to ? "true" : "false"} />;
 
   return (
     <Tooltip content={identityDisplay + address} isCopy>

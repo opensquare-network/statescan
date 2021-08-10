@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import _ from "lodash";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
@@ -6,14 +5,9 @@ import { addressesHead, EmptyQuery } from "utils/constants";
 import Nav from "components/nav";
 import Table from "components/table";
 import Pagination from "components/pagination";
-import InLink from "components/inLink";
 import { getSymbol } from "utils/hooks";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
-import BreakText from "components/breakText";
-
-const AccountFont = styled.div`
-  font-family: "SF Mono";
-`;
+import Address from "components/address";
 
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
@@ -30,11 +24,7 @@ export default function Addresses({ node, addresses }) {
           head={customAddressesHead}
           body={(addresses?.items || []).map((item, index) => [
             `#${addresses.page * addresses.pageSize + index + 1}`,
-            <BreakText>
-              <InLink to={`/${node}/account/${item?.address}`}>
-                <AccountFont>{item?.address}</AccountFont>
-              </InLink>
-            </BreakText>,
+            <Address address={item?.address} to={`/${node}/account/${item?.address}`} />,
             `${bigNumber2Locale(
               fromSymbolUnit(item?.data?.reserved, symbol)
             )} ${symbol}`,

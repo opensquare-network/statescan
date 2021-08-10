@@ -330,7 +330,7 @@ export async function getServerSideProps(context) {
     }),
     axios.get(
       `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`
-    ),
+    ).catch(() => ({ data: null })),
   ]);
 
   return {
@@ -343,8 +343,7 @@ export async function getServerSideProps(context) {
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
       addressTeleports: addressTeleports ?? EmptyQuery,
-      addressIdentity:
-        Object.keys(addressIdentity).length > 0 ? addressIdentity : null,
+      addressIdentity: _.isEmpty(addressIdentity) ? null : addressIdentity,
     },
   };
 }

@@ -22,6 +22,7 @@ import TransfersList from "components/transfersList";
 import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
 import JsonAttributes from "components/jsonAttributes";
+import Address from "components/address";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -149,15 +150,9 @@ export default function Extrinsic({
               <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,
               <MinorText>{capitalize(extrinsicDetail?.name)}</MinorText>,
               extrinsicDetail?.signer
-              ? <BreakText>
-                  <CopyText text={extrinsicDetail?.signer}>
-                    <MonoText>
-                      <InLink to={`/${node}/account/${extrinsicDetail?.signer}`}>
-                        {extrinsicDetail?.signer}
-                      </InLink>
-                    </MonoText>
-                  </CopyText>
-                </BreakText>
+              ? <CopyText text={extrinsicDetail?.signer}>
+                  <Address address={extrinsicDetail?.signer} to={`/${node}/account/${extrinsicDetail?.signer}`} />
+                </CopyText>
               : "-",
               extrinsicTransfer?.length > 0 ? (
                 <TransfersList node={node} assetTransfers={extrinsicTransfer} />

@@ -14,6 +14,7 @@ import Result from "components/result";
 import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
 import MonoText from "components/monoText";
+import Address from "components/address";
 
 import { timeDuration, time, makeTablePairs } from "utils";
 import {
@@ -215,15 +216,9 @@ export default function Block({
                 </MinorText>
               </BreakText>,
               blockDetail?.author ? (
-                <BreakText>
-                  <CopyText text={blockDetail?.author}>
-                    <MonoText>
-                      <InLink to={`/${node}/account/${blockDetail?.author}`}>
-                        {blockDetail?.author}
-                      </InLink>
-                    </MonoText>
-                  </CopyText>
-                </BreakText>
+                <CopyText text={blockDetail?.author}>
+                  <Address address={blockDetail?.author} to={`/${node}/account/${blockDetail?.author}`} />
+                </CopyText>
               ) : (
                 "-"
               ),

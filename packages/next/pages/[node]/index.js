@@ -95,12 +95,10 @@ export default function Home({ node, overview: ssrOverview, price }) {
               <AddressEllipsis
                 address={item.from}
                 to={`/${node}/account/${item.from}`}
-                identity={ssrOverview?.identityMap[item.from]}
               />,
               <AddressEllipsis
                 address={item.to}
                 to={`/${node}/account/${item.to}`}
-                identity={ssrOverview?.identityMap[item.to]}
               />,
               item?.assetSymbol
                 ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
@@ -169,19 +167,6 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/prices/daily`),
   ]);
 
-  const identityAddresses = [];
-  latestTransfers?.forEach((t) => {
-    identityAddresses.push(t.from) && identityAddresses.push(t.to);
-  });
-  const { result: identities } = await nextApi.post(
-    `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/kusama/identities`,
-    { addresses: identityAddresses }
-  );
-  const identityMap = {};
-  identities.map((i) => {
-    identityMap[i.address] = i;
-  });
-
   return {
     props: {
       node,
@@ -192,7 +177,6 @@ export async function getServerSideProps(context) {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
-        identityMap: identityMap ?? {},
       },
       price: price ?? [],
     },

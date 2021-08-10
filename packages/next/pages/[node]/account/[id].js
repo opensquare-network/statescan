@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
@@ -64,6 +65,13 @@ export default function Address({
   const symbol = getSymbol(node);
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
+
+  const nodeInfo = nodes.find(i => i.value === node);
+  const customTeleportHead = _.cloneDeep(teleportsHead);
+  const sendAtCol = customTeleportHead.find(item => item.name === "Sent At");
+  if (sendAtCol) {
+    sendAtCol.name = <img src={nodeInfo.icon} />;
+  }
 
   const tabTableData = [
     {
@@ -170,7 +178,7 @@ export default function Address({
       name: "Teleports",
       page: addressTeleports?.page,
       total: addressTeleports?.total,
-      head: teleportsHead,
+      head: customTeleportHead,
       body: (addressTeleports?.items || []).map((item) => [
         <InLink
           to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}

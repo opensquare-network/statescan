@@ -70,7 +70,7 @@ export default function IdentityLink({ identity, cursor }) {
 
   return (
     <Wrapper cursor={cursor}>
-      <IdentityIcon />
+      <IdentityIcon identity={identity} />
       <Display>{displayName}</Display>
     </Wrapper>
   );

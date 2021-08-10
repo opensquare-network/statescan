@@ -59,7 +59,7 @@ export function fetchIdentity(chain, address) {
       new Promise((resolve, reject) => setTimeout(() => {
         const promise = pending.get(idName);
         promise.push(resolve, reject);
-        delayQuery(chain);
+        delayQuery();
       }, 0))
     ]);
   }

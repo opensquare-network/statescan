@@ -57,7 +57,7 @@ export default function Identity({ identity }) {
 
   return (
     <Wrapper>
-      <IdentityIcon />
+      <IdentityIcon identity={identity} />
       {displayName}
       <Source
         href={`https://polkascan.io/polkadot/account/${identity.address}`}

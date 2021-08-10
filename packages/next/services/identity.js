@@ -23,12 +23,9 @@ const delayQuery = debounce(() => {
 
   for (const chain of Object.keys(chainAddresses)) {
     const addresses = chainAddresses[chain];
-    if (addresses.size < 1) {
-      continue;
-    }
 
     axios
-      .post(`https://identity.statescan.io/${chain}/identities`, { addresses })
+      .post(`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${chain}/identities`, { addresses })
       .then(({ data }) => {
         const identities = new Map(data.map(item => [item.address, item]));
 

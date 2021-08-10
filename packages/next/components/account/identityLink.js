@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 import IdentityIcon from "./identityIcon";
 
 const Wrapper = styled.div`
-  margin-bottom: 8px;
   display: flex;
   align-items: center;
   width: 100%;

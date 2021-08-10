@@ -124,9 +124,7 @@ export default function Address({
             to={`/${node}/account/${item.from}`}
           />
         ) : (
-          <AddressEllipsis
-            address={item.from}
-          />
+          <AddressEllipsis address={item.from} />
         ),
         item.to !== id ? (
           <AddressEllipsis
@@ -259,7 +257,14 @@ export default function Address({
           <DetailTable
             head={addressHead}
             body={[
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  paddingTop: 8,
+                  paddingBottom: 8,
+                }}
+              >
                 <Identity identity={addressIdentity} />
                 <CopyText text={addressDetail?.address}>
                   <BreakText>
@@ -293,7 +298,8 @@ export async function getServerSideProps(context) {
   const { node, id } = context.params;
   const { tab, page } = context.query;
 
-  const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+  const relayChain =
+    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "assets";
@@ -319,7 +325,9 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
-    axios.get(`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`),
+    axios.get(
+      `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`
+    ),
   ]);
 
   return {
@@ -332,7 +340,8 @@ export async function getServerSideProps(context) {
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
       addressTeleports: addressTeleports ?? EmptyQuery,
-      addressIdentity: addressIdentity ?? null,
+      addressIdentity:
+        Object.keys(addressIdentity).length > 0 ? addressIdentity : null,
     },
   };
 }

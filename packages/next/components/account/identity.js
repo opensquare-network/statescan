@@ -46,6 +46,10 @@ const Source = styled.a`
   }
 `;
 
+const Display = styled.span`
+  margin-right: 8px;
+`;
+
 export default function Identity({ identity }) {
   if (!identity) {
     return null;
@@ -58,7 +62,7 @@ export default function Identity({ identity }) {
   return (
     <Wrapper>
       <IdentityIcon identity={identity} />
-      {displayName}
+      <Display>{displayName}</Display>
       <Source
         href={`https://polkascan.io/polkadot/account/${identity.address}`}
         target="_blank"

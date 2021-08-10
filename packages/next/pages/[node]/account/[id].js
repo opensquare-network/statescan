@@ -232,7 +232,7 @@ export async function getServerSideProps(context) {
   });
 
   const { result: identities } = await nextApi.post(
-    "https://dev-id.statescan.io/kusama/identities",
+    "https://identity.statescan.io/kusama/identities",
     { addresses: identityAddresses }
   );
 

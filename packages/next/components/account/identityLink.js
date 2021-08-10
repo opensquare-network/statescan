@@ -63,28 +63,53 @@ const Display = styled.span`
 `;
 
 export default function IdentityLink({ identity }) {
+  if (!identity) {
+    return null;
+  }
   const statusIconMap = new Map([
     ["authorized", AuthIcon],
-    ["sub", SubIcon],
+    ["authorized-sub", SubIcon],
     ["error", ErrorIcon],
     ["unauthorized", UnauthorizedIcon],
     ["unauthorized-sub", SubGreyIcon],
   ]);
-  const Status = statusIconMap.get(identity?.status) ?? ErrorIcon;
+
+  const judgements = identity?.info?.judgements ?? [];
+
+  const isAuthorized = judgements.some(
+    ([, judgement]) => judgement.isKnownGood || judgement.isReasonable
+  );
+
+  const isBad = judgements.some(
+    ([, judgement]) => judgement.isErroneous || judgement.isLowQuality
+  );
+
+  const displayName = identity?.info?.displayParent
+    ? `${identity?.info?.displayParent}/${identity?.info?.display}`
+    : identity?.info?.display;
+
+  let status = "unauthorized";
+
+  if (isAuthorized && !identity?.info?.displayParent) {
+    status = "authorized";
+    if (identity?.info?.displayParent) {
+      status += "-sub";
+    }
+  }
+
+  if (isBad) {
+    status = "error";
+    if (identity?.info?.displayParent) {
+      status += "-sub";
+    }
+  }
+
+  const StatusIcon = statusIconMap.get(status) ?? ErrorIcon;
+
   return (
     <Wrapper>
-      <Status />
-      <Display>{identity?.info?.display}&nbsp;</Display>
-      {/*{identity.source && (*/}
-      {/*<Source href="" target="_blank" title="polkascan">*/}
-      {/*  <PolkascanGrey className="hover-hide"/>*/}
-      {/*  <Polkascan className="hover-show"/>*/}
-      {/*</Source>*/}
-      {/*<Source href="" target="_blank" title="subascan">*/}
-      {/*  <SubscanGrey className="hover-hide"/>*/}
-      {/*  <Subscan className="hover-show"/>*/}
-      {/*</Source>*/}
-      {/*)}*/}
+      <StatusIcon />
+      <Display>{displayName}</Display>
     </Wrapper>
   );
 }

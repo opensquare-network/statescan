@@ -2,6 +2,7 @@ const {
   getAddressCollection,
   getAssetHolderCollection,
   getAssetTransferCollection,
+  getTeleportCollection,
 } = require("../../mongo");
 const { getExtrinsicCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
@@ -286,11 +287,58 @@ async function getAddressTransfers(ctx) {
   };
 }
 
+async function getAddressTeleports(ctx) {
+  const { chain, address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = {
+    $or: [
+      {
+        $and: [
+          { teleportDirection: "in" },
+          { beneficiary: address },
+        ]
+      },
+      {
+        $and: [
+          { teleportDirection: "out" },
+          { signer: address },
+        ]
+      },
+    ],
+  };
+
+  const teleportCol = await getTeleportCollection(chain);
+  const items = await teleportCol
+    .find(q)
+    .sort({
+      "indexer.blockHeight": -1,
+      "indexer.index": -1,
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  const total = await teleportCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
 module.exports = {
   getAddress,
   getAddressExtrinsics,
   getAddressAssets,
   getAddressCount,
   getAddressTransfers,
+  getAddressTeleports,
   getAddresses,
 };

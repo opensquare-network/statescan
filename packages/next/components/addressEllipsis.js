@@ -3,10 +3,11 @@ import { addressEllipsis } from "utils";
 import Tooltip from "components/tooltip";
 import MonoText from "./monoText";
 import Link from "next/link";
-import { useTheme } from "utils/hooks";
+import { useNode, useTheme } from "utils/hooks";
 import IdentityLink from "./account/identityLink";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
+import { nodes } from "utils/constants";
 
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
@@ -19,11 +20,14 @@ const StyledLink = styled.div`
 `;
 
 export default function AddressEllipsis({ address, to }) {
+  const node = useNode();
   const theme = useTheme();
   const [identity, setIdentity] = useState(null);
 
+  const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+
   useEffect(() => {
-    fetchIdentity("kusama", address).then(identity => setIdentity(identity));
+    fetchIdentity(relayChain, address).then(identity => setIdentity(identity));
   }, []);
 
   const styledLink = (

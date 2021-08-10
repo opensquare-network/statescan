@@ -293,6 +293,8 @@ export async function getServerSideProps(context) {
   const { node, id } = context.params;
   const { tab, page } = context.query;
 
+  const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "assets";
 
@@ -317,7 +319,7 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
-    axios.get(`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/kusama/identity/${id}`),
+    axios.get(`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`),
   ]);
 
   return {

@@ -2,7 +2,10 @@ const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
 const { getExtrinsicCollection, getAddressCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
-const { handleTeleportAssetDownwardMessage, handleTeleportAssets } = require("./xcm");
+const {
+  handleTeleportAssetDownwardMessage,
+  handleTeleportAssets,
+} = require("./xcm");
 const asyncLocalStorage = require("../asynclocalstorage");
 const { getApi } = require("../api");
 
@@ -11,7 +14,7 @@ async function updateOrCreateAddress(blockIndexer, address) {
   const col = await getAddressCollection();
   const exists = await col.findOne(
     { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
-    { session },
+    { session }
   );
   if (exists) {
     // Yes, we have the address info already up to date
@@ -61,10 +64,7 @@ async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
  */
 async function handleExtrinsic(extrinsic, indexer, events) {
   const hash = extrinsic.hash.toHex();
-  const callIndex = u8aToHex(extrinsic.callIndex);
-  const { args } = extrinsic.method.toJSON();
-  const name = extrinsic.method.method;
-  const section = extrinsic.method.section;
+  const call = normalizeCall(extrinsic.method);
   let signer = extrinsic._raw.signature.get("signer").toString();
   //如果signer的解析长度不正确，则该交易是无签名交易
   if (signer.length < 47) {
@@ -91,11 +91,9 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     hash,
     indexer,
     signer,
-    section,
-    name,
-    callIndex,
+    ...call,
+    name: call.method,
     version,
-    args,
     era,
     lifetime,
     tip,
@@ -125,10 +123,7 @@ function normalizeExtrinsic(extrinsic, events) {
   }
 
   const hash = extrinsic.hash.toHex();
-  const callIndex = u8aToHex(extrinsic.callIndex);
-  const { args } = extrinsic.method.toJSON();
-  const name = extrinsic.method.method;
-  const section = extrinsic.method.section;
+  const call = normalizeCall(extrinsic.method);
   const signer = getExtrinsicSigner(extrinsic);
 
   const isSuccess = isExtrinsicSuccess(events);
@@ -139,13 +134,43 @@ function normalizeExtrinsic(extrinsic, events) {
   return {
     hash,
     signer,
-    section,
-    name,
-    callIndex,
+    ...call,
+    name: call.method,
     version,
-    args,
     data,
     isSuccess,
+  };
+}
+
+function normalizeCall(call) {
+  const { section, method } = call;
+  const callIndex = u8aToHex(call.callIndex);
+
+  const args = [];
+  for (let index = 0; index < call.args.length; index++) {
+    let arg = call.args[index];
+
+    const argMeta = call.meta.args[index];
+    const name = argMeta.name.toString();
+    const type = argMeta.type.toString();
+    if (type === "Call" || type === "CallOf") {
+      args.push([name, normalizeCall(arg)]);
+      continue;
+    }
+
+    if (type === "Vec<Call>" || type === "Vec<CallOf>") {
+      args.push([name, arg.map(normalizeCall)]);
+      continue;
+    }
+
+    args.push([name, arg.toHuman()]);
+  }
+
+  return {
+    callIndex,
+    section,
+    method,
+    args: Object.fromEntries(args),
   };
 }
 

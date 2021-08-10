@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
@@ -16,6 +17,8 @@ import {
   addressHead,
   addressTransfersHead,
   EmptyQuery,
+  nodes,
+  teleportsHead,
 } from "utils/constants";
 import MinorText from "components/minorText";
 import BreakText from "components/breakText";
@@ -29,6 +32,18 @@ import Tooltip from "components/tooltip";
 import HashEllipsis from "components/hashEllipsis";
 import PageNotFound from "components/pageNotFound";
 import Identity from "../../../components/account/identity";
+import TeleportDirection from "../../../components/teleportDirection";
+import ChainAddressEllipsis from "../../../components/chainAddressEllipsis";
+import ExplorerLink from "../../../components/explorerLink";
+import BigNumber from "bignumber.js";
+function getTeleportSourceAndTarget(node, direction) {
+  const chain = nodes.find((item) => item.value === node);
+  if (direction === "in") {
+    return { source: chain.sub, target: chain.name };
+  } else {
+    return { source: chain.name, target: chain.sub };
+  }
+}
 
 export default function Address({
   node,
@@ -39,6 +54,7 @@ export default function Address({
   addressTransfers,
   addressExtrinsics,
   identityMap,
+  addressTeleports,
 }) {
   if (!addressDetail) {
     return (
@@ -49,6 +65,15 @@ export default function Address({
   }
 
   const symbol = getSymbol(node);
+  const teleportSourceAndTarget = (direction) =>
+    getTeleportSourceAndTarget(node, direction);
+
+  const nodeInfo = nodes.find((i) => i.value === node);
+  const customTeleportHead = _.cloneDeep(teleportsHead);
+  const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
+  if (sendAtCol) {
+    sendAtCol.name = <img src={nodeInfo.icon} />;
+  }
 
   const tabTableData = [
     {
@@ -156,6 +181,72 @@ export default function Address({
         />
       ),
     },
+    {
+      name: "Teleports",
+      page: addressTeleports?.page,
+      total: addressTeleports?.total,
+      head: customTeleportHead,
+      body: (addressTeleports?.items || []).map((item) => [
+        <InLink
+          to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
+        >
+          {`${item.indexer.blockHeight}-${item.indexer.index}`}
+        </InLink>,
+        item.indexer.blockTime,
+        <TeleportDirection
+          from={teleportSourceAndTarget(item.teleportDirection).source}
+          to={teleportSourceAndTarget(item.teleportDirection).target}
+        />,
+        item.beneficiary ? (
+          item.teleportDirection === "in" ? (
+            <AddressEllipsis address={item.beneficiary} />
+          ) : (
+            <ChainAddressEllipsis
+              chain={teleportSourceAndTarget(item.teleportDirection).target}
+              address={item.beneficiary}
+            />
+          )
+        ) : (
+          "-"
+        ),
+        item.teleportDirection === "in" ? (
+          <Result isSuccess={item.complete} noText={true} />
+        ) : (
+          <Result isSuccess={null} noText={true} />
+        ),
+        item.teleportDirection === "in" ? (
+          <ExplorerLink
+            chain={teleportSourceAndTarget(item.teleportDirection).source}
+            href={`/block/${item.pubSentAt}`}
+          >
+            {item.pubSentAt}
+          </ExplorerLink>
+        ) : (
+          "-"
+        ),
+        !item.complete || item.amount === null || item.amount === undefined
+          ? "-"
+          : `${bigNumber2Locale(
+              fromSymbolUnit(
+                new BigNumber(item.amount).minus(item.fee || 0).toString(),
+                symbol
+              )
+            )}`,
+        item.fee === null || item.fee === undefined
+          ? "-"
+          : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))}`,
+        item.amount === null || item.amount === undefined
+          ? "-"
+          : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))}`,
+      ]),
+      foot: (
+        <Pagination
+          page={addressTeleports?.page}
+          pageSize={addressTeleports?.pageSize}
+          total={addressTeleports?.total}
+        />
+      ),
+    },
   ];
 
   return (
@@ -212,6 +303,7 @@ export async function getServerSideProps(context) {
     { result: addressAssets },
     { result: addressTransfers },
     { result: addressExtrinsics },
+    { result: addressTeleports },
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
     nextApi.fetch(`${node}/addresses/${id}/assets`, {
@@ -222,6 +314,9 @@ export async function getServerSideProps(context) {
     }),
     nextApi.fetch(`${node}/addresses/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/addresses/${id}/teleports`, {
+      page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
   ]);
 
@@ -252,6 +347,7 @@ export async function getServerSideProps(context) {
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
       identityMap,
+      addressTeleports: addressTeleports ?? EmptyQuery,
     },
   };
 }

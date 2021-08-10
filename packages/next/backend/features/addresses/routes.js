@@ -15,5 +15,9 @@ router.get(
   "/addresses/:address/transfers",
   addressesController.getAddressTransfers
 );
+router.get(
+  "/addresses/:address/teleports",
+  addressesController.getAddressTeleports
+);
 
 module.exports = router;

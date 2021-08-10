@@ -57,6 +57,8 @@ function getTeleportCollection(chain) {
 
 module.exports = {
   initDb,
+
+  // Statescan db collections
   getStatusCollection,
   getBlockCollection,
   getExtrinsicCollection,
@@ -65,7 +67,9 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getTeleportCollection,
+
+  // Price db collections
   getDotUsdtDailyCollection,
   getKsmUsdtDailyCollection,
-  getTeleportCollection,
 };

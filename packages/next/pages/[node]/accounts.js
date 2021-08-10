@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import _ from "lodash";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";

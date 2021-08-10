@@ -51,6 +51,9 @@ const Source = styled.a`
 `;
 
 export default function Identity({ identity }) {
+  if (!identity) {
+    return null;
+  }
   const statusIconMap = new Map([
     ["authorized", AuthIcon],
     ["sub", SubIcon],

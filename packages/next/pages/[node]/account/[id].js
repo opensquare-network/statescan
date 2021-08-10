@@ -48,7 +48,6 @@ export default function Address({
     );
   }
 
-  // console.log(addressTransfers);
   const symbol = getSymbol(node);
 
   const tabTableData = [
@@ -206,13 +205,13 @@ export async function getServerSideProps(context) {
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "assets";
+  const identityAddresses = [];
 
   const [
     { result: addressDetail },
     { result: addressAssets },
     { result: addressTransfers },
     { result: addressExtrinsics },
-    // {result: identity},
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
     nextApi.fetch(`${node}/addresses/${id}/assets`, {
@@ -224,33 +223,25 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
     }),
-    // nextApi.fetch(`${node}/identities/${id}`),
   ]);
 
-  const identity = {
-    status: "authorized",
-    _id: "61089f3e2836d01a09463d06",
-    address: "15QfKYagJ6ke3wmYY7KB7DXMQhwo2cRKcmbaBp8UAMdtRgtM",
-    info: {
-      display: "🍕 pizza fellowship 🍕",
-      displayParent: null,
-      email: "fiveseventwo@gmail.com",
-      image: null,
-      judgements: [],
-      legal: null,
-      other: {},
-      parent: null,
-      pgp: null,
-      riot: "ak1",
-      twitter: null,
-      web: null,
-    },
-    subs: [],
-  };
+  identityAddresses.push(addressDetail.address);
 
-  const identityMap = {
-    F3opxRUwkBj1LqjZ7DyiHCRh9Z4zVPLaVjoxfD5ddbip8mt: identity,
-  };
+  addressTransfers.items.forEach((t) => {
+    identityAddresses.push(t.from) && identityAddresses.push(t.to);
+  });
+
+  const { result: identities } = await nextApi.post(
+    "https://dev-id.statescan.io/kusama/identities",
+    { addresses: identityAddresses }
+  );
+
+  const identityMap = {};
+
+  identities.map((i) => {
+    identityMap[i.address] = i;
+  });
+
   return {
     props: {
       node,

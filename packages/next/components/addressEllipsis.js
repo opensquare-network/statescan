@@ -28,7 +28,7 @@ export default function AddressEllipsis({ address, to }) {
 
   useEffect(() => {
     fetchIdentity(relayChain, address).then(identity => setIdentity(identity));
-  }, []);
+  }, [relayChain, address]);
 
   const styledLink = (
     <StyledLink themecolor={theme.color} cursor={to ? "true" : "false"}>

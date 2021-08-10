@@ -63,7 +63,7 @@ export default function AddressEllipsis({ address, to }) {
   const identityLink = <IdentityLink identity={identity} cursor={to ? "true" : "false"} />;
 
   return (
-    <Tooltip content={identityDisplay} isCopy>
+    <Tooltip content={identityDisplay} isCopy copyText={address}>
       {to ? (
         <Link href={to} passHref>
           <MonoText>{identityLink}</MonoText>

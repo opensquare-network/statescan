@@ -84,11 +84,11 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-export default function Tooltip({ label, bg, content, children, isCopy }) {
+export default function Tooltip({ label, bg, content, children, isCopy, copyText }) {
   const dispatch = useDispatch();
 
   const onCopy = () => {
-    if (isCopy && content && copy(content)) {
+    if (isCopy && content && copy(copyText || content)) {
       dispatch(addToast({ type: "success", message: "Copied" }));
     }
   };

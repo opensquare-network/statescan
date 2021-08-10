@@ -21,6 +21,7 @@ import {
   teleportsHead,
 } from "utils/constants";
 import MinorText from "components/minorText";
+import MonoText from "components/monoText";
 import BreakText from "components/breakText";
 import CopyText from "components/copyText";
 import TabTable from "components/tabTable";
@@ -268,7 +269,9 @@ export default function Address({
                 <Identity identity={addressIdentity} />
                 <CopyText text={addressDetail?.address}>
                   <BreakText>
-                    <MinorText>{addressDetail?.address}</MinorText>
+                    <MinorText>
+                      <MonoText>{addressDetail?.address}</MonoText>
+                    </MinorText>
                   </BreakText>
                 </CopyText>
               </div>,

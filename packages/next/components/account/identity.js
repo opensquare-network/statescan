@@ -4,6 +4,7 @@ import Polkascan from "../../public/imgs/icons/identity/polkascan.svg";
 import PolkascanGrey from "../../public/imgs/icons/identity/polkascan-grey.svg";
 import Subscan from "../../public/imgs/icons/identity/subscan.svg";
 import SubscanGrey from "../../public/imgs/icons/identity/subscan-grey.svg";
+import MonoText from "../monoText";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
@@ -62,7 +63,10 @@ export default function Identity({ identity }) {
   return (
     <Wrapper>
       <IdentityIcon identity={identity} />
-      <Display>{displayName}</Display>
+      <Display>
+        {" "}
+        <MonoText>{displayName}</MonoText>{" "}
+      </Display>
       <Source
         href={`https://polkascan.io/polkadot/account/${identity.address}`}
         target="_blank"

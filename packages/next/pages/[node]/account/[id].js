@@ -86,7 +86,11 @@ export default function Address({
       head: addressAssetsHead,
       body: (addressAssets?.items || []).map((item) => [
         <InLink
-          to={`/${node}/asset/${item.assetId}_${item.assetCreatedAt?.blockHeight}`}
+          to={
+            `/${node}/asset/${item.assetId}` + (item.destroyedAt
+              ? `_${item.createdAt.blockHeight}`
+              : "")
+          }
         >{`#${item.assetId}`}</InLink>,
         item.assetSymbol,
         item.assetName,

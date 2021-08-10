@@ -79,9 +79,10 @@ export default function TabTable({ data, activeTab, collapse }) {
   const [currentTab, setCurrentTab] = useState(activeTabIndex);
 
   useEffect(() => {
-    setCurrentTab(data
+    const currTabIndex = data
       .map((item) => item.name.toLowerCase())
-      .indexOf(router.query.tab));
+      .indexOf(router.query.tab);
+    setCurrentTab(currTabIndex >= 0 ? currTabIndex : 0);
   }, [data, router]);
 
   return (

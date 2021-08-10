@@ -10,10 +10,6 @@ import { getSymbol } from "utils/hooks";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
 import Address from "components/address";
 
-const AccountFont = styled.div`
-  font-family: "SF Mono";
-`;
-
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
 

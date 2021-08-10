@@ -10,7 +10,7 @@ import { bigNumber2Locale, fromSymbolUnit, fromAssetUnit } from "utils";
 import { getSymbol } from "utils/hooks";
 import Tooltip from "components/tooltip";
 
-export default function Transfers({ node, transfers }) {
+export default function Transfers({ node, transfers, identityMap }) {
   const symbol = getSymbol(node);
 
   return (
@@ -33,10 +33,12 @@ export default function Transfers({ node, transfers }) {
             <AddressEllipsis
               address={item?.from}
               to={`/${node}/account/${item?.from}`}
+              identity={identityMap[item?.from]}
             />,
             <AddressEllipsis
               address={item?.to}
               to={`/${node}/account/${item?.to}`}
+              identity={identityMap[item?.to]}
             />,
             item.assetSymbol
               ? `${bigNumber2Locale(
@@ -70,10 +72,24 @@ export async function getServerSideProps(context) {
     pageSize: 25,
   });
 
+  const identityAddresses = [];
+  transfers?.items?.forEach((t) => {
+    identityAddresses.push(t.from) && identityAddresses.push(t.to);
+  });
+  const { result: identities } = await nextApi.post(
+    `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/kusama/identities`,
+    { addresses: identityAddresses }
+  );
+  const identityMap = {};
+  identities.map((i) => {
+    identityMap[i.address] = i;
+  });
+
   return {
     props: {
       node,
       transfers: transfers ?? EmptyQuery,
+      identityMap: identityMap ?? {},
     },
   };
 }

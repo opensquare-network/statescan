@@ -72,7 +72,7 @@ export default function Address({
   const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img src={nodeInfo.icon} />;
+    sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
   }
 
   const tabTableData = [
@@ -327,7 +327,7 @@ export async function getServerSideProps(context) {
   });
 
   const { result: identities } = await nextApi.post(
-    "https://identity.statescan.io/kusama/identities",
+    `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/kusama/identities`,
     { addresses: identityAddresses }
   );
 

@@ -13,14 +13,12 @@ import MinorText from "components/minorText";
 import AddressEllipsis from "components/addressEllipsis";
 import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
 import InLink from "components/inLink";
-import CopyText from "components/copyText";
+import Address from "components/address";
 import TabTable from "components/tabTable";
-import BreakText from "components/breakText";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import Timeline from "components/timeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
 
 export default function Asset({
@@ -90,13 +88,7 @@ export default function Asset({
       head: assetHoldersHead,
       body: (assetHolders?.items || []).map((item, index) => [
         index + 1,
-        <BreakText>
-          <MonoText>
-            <InLink to={`/${node}/account/${item?.address}`}>
-              {item?.address}
-            </InLink>
-          </MonoText>
-        </BreakText>,
+        <Address address={item?.address} to={`/${node}/account/${item?.address}`} />,
         bigNumber2Locale(fromAssetUnit(item?.balance, item?.assetDecimals)),
       ]),
       foot: (
@@ -131,24 +123,8 @@ export default function Asset({
               <MinorText>{asset?.symbol}</MinorText>,
               <MinorText>{asset?.name}</MinorText>,
               <MinorText>{`#${asset?.assetId}`}</MinorText>,
-              <BreakText>
-                <CopyText text={asset?.owner}>
-                  <MonoText>
-                    <InLink to={`/${node}/account/${asset?.owner}`}>
-                      {asset?.owner}
-                    </InLink>
-                  </MonoText>
-                </CopyText>
-              </BreakText>,
-              <BreakText>
-                <CopyText text={asset?.issuer}>
-                  <MonoText>
-                    <InLink to={`/${node}/account/${asset?.issuer}`}>
-                      {asset?.issuer}
-                    </InLink>
-                  </MonoText>
-                </CopyText>
-              </BreakText>,
+              <Address address={asset?.owner} to={`/${node}/account/${asset?.owner}`} />,
+              <Address address={asset?.issuer} to={`/${node}/account/${asset?.issuer}`} />,
               `${bigNumber2Locale(
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,

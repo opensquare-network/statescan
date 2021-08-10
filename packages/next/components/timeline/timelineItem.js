@@ -4,9 +4,9 @@ import Time from "./time";
 import InLink from "components/inLink";
 import CopyText from "components/copyText";
 import BreakText from "components/breakText";
-import MonoText from "components/monoText";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import BigNumber from "bignumber.js";
+import Address from "components/address";
 
 const Wrapper = styled.div`
   display: flex;
@@ -108,7 +108,7 @@ const FieldBody = styled.div`
   flex-grow: 1;
   padding: 8px 0 8px 24px;
   font-size: 14px;
-  word-break: break-all;
+  /* word-break: break-all; */
   @media screen and (max-width: 900px) {
     padding-left: 0px;
   }
@@ -179,7 +179,7 @@ const Titles = {
 function formatBalance(balance, asset) {
   const balanceStr = new BigNumber(balance).toString();
   return (
-    <>
+    <BreakText>
       {bigNumber2Locale(balanceStr)}
       {Number.isInteger(asset.decimals) && asset.symbol ? (
         <span style={{ marginLeft: 8 }}>
@@ -189,7 +189,7 @@ function formatBalance(balance, asset) {
       ) : (
         <></>
       )}
-    </>
+    </BreakText>
   );
 }
 
@@ -206,13 +206,9 @@ export default function TimelineItem({ data, node, asset }) {
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
-            <BreakText>
-              <CopyText text={admin}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${admin}`}>{admin}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={admin}>
+              <Address address={admin} to={`/${node}/account/${admin}`} />
+            </CopyText>
           ),
           "Min Balance": formatBalance(timelineItem.asset.minBalance, asset),
         };
@@ -222,13 +218,9 @@ export default function TimelineItem({ data, node, asset }) {
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
-            <BreakText>
-              <CopyText text={admin}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${admin}`}>{admin}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={admin}>
+              <Address address={admin} to={`/${node}/account/${admin}`} />
+            </CopyText>
           ),
           Sufficient: <FieldText>{timelineItem.asset.isSufficient}</FieldText>,
           "Min Balance": formatBalance(timelineItem.asset.minBalance, asset),
@@ -254,48 +246,24 @@ export default function TimelineItem({ data, node, asset }) {
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
-            <BreakText>
-              <CopyText text={timelineItem.asset.admin}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${timelineItem.asset.admin}`}>
-                    {timelineItem.asset.admin}
-                  </InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={timelineItem.asset.admin}>
+              <Address address={timelineItem.asset.admin} to={`/${node}/account/${timelineItem.asset.admin}`} />
+            </CopyText>
           ),
           Owner: (
-            <BreakText>
-              <CopyText text={timelineItem.asset.owner}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${timelineItem.asset.owner}`}>
-                    {timelineItem.asset.owner}
-                  </InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={timelineItem.asset.owner}>
+              <Address address={timelineItem.asset.owner} to={`/${node}/account/${timelineItem.asset.owner}`} />
+            </CopyText>
           ),
           Issuer: (
-            <BreakText>
-              <CopyText text={timelineItem.asset.issuer}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${timelineItem.asset.issuer}`}>
-                    {timelineItem.asset.issuer}
-                  </InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={timelineItem.asset.issuer}>
+              <Address address={timelineItem.asset.issuer} to={`/${node}/account/${timelineItem.asset.issuer}`} />
+            </CopyText>
           ),
           Freezer: (
-            <BreakText>
-              <CopyText text={timelineItem.asset.freezer}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${timelineItem.asset.freezer}`}>
-                    {timelineItem.asset.freezer}
-                  </InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={timelineItem.asset.freezer}>
+              <Address address={timelineItem.asset.freezer} to={`/${node}/account/${timelineItem.asset.freezer}`} />
+            </CopyText>
           ),
           "Min Balance": formatBalance(timelineItem.asset.minBalance, asset),
           Sufficient: <BoldText>{timelineItem.asset.isSufficient}</BoldText>,
@@ -306,32 +274,20 @@ export default function TimelineItem({ data, node, asset }) {
         const [assetId, issuer, admin, freezer] = timelineItem.eventData;
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
-          Admin: admin(
-            <BreakText>
-              <CopyText text={admin}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${admin}`}>{admin}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+          Admin: (
+            <CopyText text={admin}>
+              <Address address={admin} to={`/${node}/account/${admin}`} />
+            </CopyText>
           ),
           Issuer: (
-            <BreakText>
-              <CopyText text={issuer}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${issuer}`}>{issuer}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={issuer}>
+              <Address address={issuer} to={`/${node}/account/${issuer}`} />
+            </CopyText>
           ),
           Freezer: (
-            <BreakText>
-              <CopyText text={freezer}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${freezer}`}>{freezer}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={freezer}>
+              <Address address={freezer} to={`/${node}/account/${freezer}`} />
+            </CopyText>
           ),
         };
       }
@@ -340,13 +296,9 @@ export default function TimelineItem({ data, node, asset }) {
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
-            <BreakText>
-              <CopyText text={owner}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${owner}`}>{owner}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={owner}>
+              <Address address={owner} to={`/${node}/account/${owner}`} />
+            </CopyText>
           ),
         };
       }
@@ -373,15 +325,9 @@ export default function TimelineItem({ data, node, asset }) {
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Beneficiary: (
-            <BreakText>
-              <CopyText text={beneficiary}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${beneficiary}`}>
-                    {beneficiary}
-                  </InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={beneficiary}>
+              <Address address={beneficiary} to={`/${node}/account/${beneficiary}`} />
+            </CopyText>
           ),
           Amount: formatBalance(amount, asset),
         };
@@ -391,13 +337,9 @@ export default function TimelineItem({ data, node, asset }) {
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Who: (
-            <BreakText>
-              <CopyText text={who}>
-                <MonoText>
-                  <InLink to={`/${node}/account/${who}`}>{who}</InLink>
-                </MonoText>
-              </CopyText>
-            </BreakText>
+            <CopyText text={who}>
+              <Address address={who} to={`/${node}/account/${who}`} />
+            </CopyText>
           ),
           Amount: formatBalance(amount, asset),
         };

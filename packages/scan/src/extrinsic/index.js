@@ -2,7 +2,10 @@ const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
 const { getExtrinsicCollection, getAddressCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
-const { handleTeleportAssetDownwardMessage, handleTeleportAssets } = require("./xcm");
+const {
+  handleTeleportAssetDownwardMessage,
+  handleTeleportAssets,
+} = require("./xcm");
 const asyncLocalStorage = require("../asynclocalstorage");
 const { getApi } = require("../api");
 
@@ -11,7 +14,7 @@ async function updateOrCreateAddress(blockIndexer, address) {
   const col = await getAddressCollection();
   const exists = await col.findOne(
     { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
-    { session },
+    { session }
   );
   if (exists) {
     // Yes, we have the address info already up to date
@@ -151,7 +154,7 @@ function normalizeCall(call) {
     const name = argMeta.name.toString();
     const type = argMeta.type.toString();
     if (type === "Call" || type === "CallOf") {
-      args.push([name, normalizeCall(arg)])
+      args.push([name, normalizeCall(arg)]);
       continue;
     }
 

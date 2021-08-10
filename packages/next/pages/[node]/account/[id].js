@@ -31,10 +31,13 @@ import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import HashEllipsis from "components/hashEllipsis";
 import PageNotFound from "components/pageNotFound";
+import Identity from "../../../components/account/identity";
 import TeleportDirection from "../../../components/teleportDirection";
 import ChainAddressEllipsis from "../../../components/chainAddressEllipsis";
 import ExplorerLink from "../../../components/explorerLink";
 import BigNumber from "bignumber.js";
+import axios from "axios";
+
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
   if (direction === "in") {
@@ -53,6 +56,7 @@ export default function Address({
   addressTransfers,
   addressExtrinsics,
   addressTeleports,
+  addressIdentity,
 }) {
   if (!addressDetail) {
     return (
@@ -66,11 +70,11 @@ export default function Address({
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
 
-  const nodeInfo = nodes.find(i => i.value === node);
+  const nodeInfo = nodes.find((i) => i.value === node);
   const customTeleportHead = _.cloneDeep(teleportsHead);
-  const sendAtCol = customTeleportHead.find(item => item.name === "Sent At");
+  const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img src={nodeInfo.icon} />;
+    sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
   }
 
   const tabTableData = [
@@ -120,7 +124,9 @@ export default function Address({
             to={`/${node}/account/${item.from}`}
           />
         ) : (
-          <AddressEllipsis address={item.from} />
+          <AddressEllipsis
+            address={item.from}
+          />
         ),
         item.to !== id ? (
           <AddressEllipsis
@@ -192,9 +198,7 @@ export default function Address({
         />,
         item.beneficiary ? (
           item.teleportDirection === "in" ? (
-            <AddressEllipsis
-              address={item.beneficiary}
-            />
+            <AddressEllipsis address={item.beneficiary} />
           ) : (
             <ChainAddressEllipsis
               chain={teleportSourceAndTarget(item.teleportDirection).target}
@@ -255,11 +259,14 @@ export default function Address({
           <DetailTable
             head={addressHead}
             body={[
-              <CopyText text={addressDetail?.address}>
-                <BreakText>
-                  <MinorText>{addressDetail?.address}</MinorText>
-                </BreakText>
-              </CopyText>,
+              <div style={{ display: "flex", flexWrap: "wrap" }}>
+                <Identity identity={addressIdentity} />
+                <CopyText text={addressDetail?.address}>
+                  <BreakText>
+                    <MinorText>{addressDetail?.address}</MinorText>
+                  </BreakText>
+                </CopyText>
+              </div>,
               `${fromSymbolUnit(
                 addressDetail?.data?.free || 0,
                 symbol
@@ -286,6 +293,8 @@ export async function getServerSideProps(context) {
   const { node, id } = context.params;
   const { tab, page } = context.query;
 
+  const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "assets";
 
@@ -295,6 +304,7 @@ export async function getServerSideProps(context) {
     { result: addressTransfers },
     { result: addressExtrinsics },
     { result: addressTeleports },
+    { data: addressIdentity },
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
     nextApi.fetch(`${node}/addresses/${id}/assets`, {
@@ -309,6 +319,7 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
+    axios.get(`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`),
   ]);
 
   return {
@@ -321,6 +332,7 @@ export async function getServerSideProps(context) {
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
       addressTeleports: addressTeleports ?? EmptyQuery,
+      addressIdentity: addressIdentity ?? null,
     },
   };
 }

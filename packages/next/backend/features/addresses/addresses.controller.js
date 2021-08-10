@@ -16,10 +16,7 @@ async function getAddresses(ctx) {
   }
 
   const q = {
-    $or: [
-      { providers: { $ne: 0 } },
-      { sufficients: { $ne: 0 } },
-    ]
+    $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   };
 
   const col = await getAddressCollection(chain);
@@ -197,10 +194,7 @@ async function getAddressCount(ctx) {
 
   const col = await getAddressCollection(chain);
   const count = await col.countDocuments({
-    $or: [
-      { providers: { $ne: 0 } },
-      { sufficients: { $ne: 0 } },
-    ]
+    $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   });
 
   ctx.body = count;
@@ -298,16 +292,10 @@ async function getAddressTeleports(ctx) {
   const q = {
     $or: [
       {
-        $and: [
-          { teleportDirection: "in" },
-          { beneficiary: address },
-        ]
+        $and: [{ teleportDirection: "in" }, { beneficiary: address }],
       },
       {
-        $and: [
-          { teleportDirection: "out" },
-          { signer: address },
-        ]
+        $and: [{ teleportDirection: "out" }, { signer: address }],
       },
     ],
   };

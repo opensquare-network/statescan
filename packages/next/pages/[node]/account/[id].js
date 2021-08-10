@@ -36,6 +36,8 @@ import TeleportDirection from "../../../components/teleportDirection";
 import ChainAddressEllipsis from "../../../components/chainAddressEllipsis";
 import ExplorerLink from "../../../components/explorerLink";
 import BigNumber from "bignumber.js";
+import axios from "axios";
+
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
   if (direction === "in") {
@@ -53,8 +55,8 @@ export default function Address({
   addressAssets,
   addressTransfers,
   addressExtrinsics,
-  identityMap,
   addressTeleports,
+  addressIdentity,
 }) {
   if (!addressDetail) {
     return (
@@ -120,22 +122,19 @@ export default function Address({
           <AddressEllipsis
             address={item.from}
             to={`/${node}/account/${item.from}`}
-            identity={identityMap[item.from]}
           />
         ) : (
           <AddressEllipsis
             address={item.from}
-            identity={identityMap[item.from]}
           />
         ),
         item.to !== id ? (
           <AddressEllipsis
             address={item.to}
             to={`/${node}/account/${item.to}`}
-            identity={identityMap[item.to]}
           />
         ) : (
-          <AddressEllipsis address={item.to} identity={identityMap[item.to]} />
+          <AddressEllipsis address={item.to} />
         ),
         item.assetSymbol
           ? `${bigNumber2Locale(
@@ -261,7 +260,7 @@ export default function Address({
             head={addressHead}
             body={[
               <div style={{ display: "flex", flexWrap: "wrap" }}>
-                <Identity identity={identityMap[addressDetail?.address]} />
+                <Identity identity={addressIdentity} />
                 <CopyText text={addressDetail?.address}>
                   <BreakText>
                     <MinorText>{addressDetail?.address}</MinorText>
@@ -296,7 +295,6 @@ export async function getServerSideProps(context) {
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "assets";
-  const identityAddresses = [];
 
   const [
     { result: addressDetail },
@@ -304,6 +302,7 @@ export async function getServerSideProps(context) {
     { result: addressTransfers },
     { result: addressExtrinsics },
     { result: addressTeleports },
+    { data: addressIdentity },
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
     nextApi.fetch(`${node}/addresses/${id}/assets`, {
@@ -318,24 +317,8 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
+    axios.get(`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/kusama/identity/${id}`),
   ]);
-
-  addressDetail?.address && identityAddresses.push(addressDetail.address);
-
-  addressTransfers?.items?.forEach((t) => {
-    identityAddresses.push(t.from) && identityAddresses.push(t.to);
-  });
-
-  const { result: identities } = await nextApi.post(
-    `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/kusama/identities`,
-    { addresses: identityAddresses }
-  );
-
-  const identityMap = {};
-
-  identities.map((i) => {
-    identityMap[i.address] = i;
-  });
 
   return {
     props: {
@@ -346,8 +329,8 @@ export async function getServerSideProps(context) {
       addressAssets: addressAssets ?? EmptyQuery,
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
-      identityMap,
       addressTeleports: addressTeleports ?? EmptyQuery,
+      addressIdentity: addressIdentity ?? null,
     },
   };
 }

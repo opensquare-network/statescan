@@ -97,11 +97,19 @@ export default function Identity({ identity }) {
     <Wrapper>
       <StatusIcon />
       {displayName}
-      <Source href="" target="_blank" title="polkascan">
+      <Source
+        href={`https://polkascan.io/polkadot/account/${identity.address}`}
+        target="_blank"
+        title="polkascan"
+      >
         <PolkascanGrey className="hover-hide" />
         <Polkascan className="hover-show" />
       </Source>
-      <Source href="" target="_blank" title="subascan">
+      <Source
+        href={`https://polkadot.subscan.io/account/${identity.address}`}
+        target="_blank"
+        title="subascan"
+      >
         <SubscanGrey className="hover-hide" />
         <Subscan className="hover-show" />
       </Source>

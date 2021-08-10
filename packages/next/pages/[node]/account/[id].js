@@ -225,9 +225,9 @@ export async function getServerSideProps(context) {
     }),
   ]);
 
-  identityAddresses.push(addressDetail.address);
+  addressDetail?.address && identityAddresses.push(addressDetail.address);
 
-  addressTransfers.items.forEach((t) => {
+  addressTransfers?.items?.forEach((t) => {
     identityAddresses.push(t.from) && identityAddresses.push(t.to);
   });
 

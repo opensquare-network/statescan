@@ -5,6 +5,8 @@ import PolkascanGrey from "../../public/imgs/icons/identity/polkascan-grey.svg";
 import Subscan from "../../public/imgs/icons/identity/subscan.svg";
 import SubscanGrey from "../../public/imgs/icons/identity/subscan-grey.svg";
 import MonoText from "../monoText";
+import { useNode } from "../../utils/hooks";
+import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
@@ -55,6 +57,9 @@ export default function Identity({ identity }) {
   if (!identity) {
     return null;
   }
+  const node = useNode();
+  const relayChain =
+    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   const displayName = identity?.info?.displayParent
     ? `${identity?.info?.displayParent}/${identity?.info?.display}`
@@ -68,7 +73,7 @@ export default function Identity({ identity }) {
         <MonoText>{displayName}</MonoText>{" "}
       </Display>
       <Source
-        href={`https://polkascan.io/polkadot/account/${identity.address}`}
+        href={`https://polkascan.io/${relayChain}/account/${identity.address}`}
         target="_blank"
         title="polkascan"
       >
@@ -76,7 +81,7 @@ export default function Identity({ identity }) {
         <Polkascan className="hover-show" />
       </Source>
       <Source
-        href={`https://polkadot.subscan.io/account/${identity.address}`}
+        href={`https://${relayChain}.subscan.io/account/${identity.address}`}
         target="_blank"
         title="subascan"
       >

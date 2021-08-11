@@ -1,4 +1,6 @@
+import React from "react";
 import styled, { css } from "styled-components";
+import BreakText from "components/breakText";
 
 const StyledTable = styled.table`
   width: 100%;
@@ -64,6 +66,11 @@ const StyledTd = styled.td`
 `;
 
 export default function InnerDataTable({ data, nested = false }) {
+
+  if (React.isValidElement(data)) {
+    return data;
+  }
+
   const formatValue = (fieldValue) =>
     Array.isArray(fieldValue) ? (
       <StyledTd style={{ padding: 0 }}>
@@ -74,6 +81,10 @@ export default function InnerDataTable({ data, nested = false }) {
         <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
           null
         </StyledTd>
+      ) : React.isValidElement(fieldValue) ? (
+        <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
+          {fieldValue}
+        </StyledTd>
       ) : (
         <StyledTd style={{ padding: 0 }}>
           <InnerDataTable data={fieldValue} nested />
@@ -81,7 +92,7 @@ export default function InnerDataTable({ data, nested = false }) {
       )
     ) : (
       <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
-        {fieldValue.toString()}
+        <BreakText>{fieldValue.toString()}</BreakText>
       </StyledTd>
     );
 

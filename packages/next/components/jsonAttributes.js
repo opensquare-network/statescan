@@ -23,7 +23,6 @@ const TableDataItem = styled.pre`
   padding: 32px;
   font-size: 14px;
   line-height: 20px;
-  word-break: break-all;
   word-wrap: break-word;
   white-space: pre-wrap;
   font-family: "Inter";

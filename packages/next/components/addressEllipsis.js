@@ -27,6 +27,7 @@ export default function AddressEllipsis({ address, to }) {
   const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   useEffect(() => {
+    setIdentity(null);
     fetchIdentity(relayChain, address).then(identity => setIdentity(identity));
   }, [relayChain, address]);
 

@@ -1,9 +1,8 @@
-const {
-  getAddressCollection,
-  getAssetTransferCollection,
-} = require("../../mongo");
-const { getApi } = require("../../api");
+const { getAssetTransferCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { addAddresses } = require("../../utils/blockAddresses");
+const { addAddress } = require("../../utils/blockAddresses");
+const { updateOrCreateAddress } = require("../../utils/updateOrCreateAddress");
 
 const Modules = Object.freeze({
   Balances: "balances",
@@ -28,47 +27,18 @@ async function saveNewTransfer(
 ) {
   const session = asyncLocalStorage.getStore();
   const col = await getAssetTransferCollection();
-  const result = await col.insertOne({
-    indexer: blockIndexer,
-    eventSort,
-    extrinsicIndex,
-    extrinsicHash,
-    from,
-    to,
-    balance,
-  }, { session });
-}
-
-async function updateOrCreateAddress(blockIndexer, address) {
-  const session = asyncLocalStorage.getStore();
-  const col = await getAddressCollection();
-  const exists = await col.findOne(
-    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
-    { session },
+  const result = await col.insertOne(
+    {
+      indexer: blockIndexer,
+      eventSort,
+      extrinsicIndex,
+      extrinsicHash,
+      from,
+      to,
+      balance,
+    },
+    { session }
   );
-  if (exists) {
-    // Yes, we have the address info already up to date
-    return;
-  }
-
-  const api = await getApi();
-
-  const account = await api.query.system.account.at(
-    blockIndexer.blockHash,
-    address
-  );
-  if (account) {
-    await col.updateOne(
-      { address },
-      {
-        $set: {
-          ...account.toJSON(),
-          lastUpdatedAt: blockIndexer,
-        },
-      },
-      { upsert: true, session }
-    );
-  }
 }
 
 function isBalancesEvent(section) {
@@ -92,8 +62,7 @@ async function handleBalancesEvent(
 
   if ([BalancesEvents.Transfer].includes(method)) {
     const [from, to, value] = eventData;
-    await updateOrCreateAddress(blockIndexer, from);
-    await updateOrCreateAddress(blockIndexer, to);
+    addAddresses([from, to]);
     await saveNewTransfer(
       blockIndexer,
       eventSort,
@@ -107,8 +76,7 @@ async function handleBalancesEvent(
 
   if ([BalancesEvents.ReserveRepatriated].includes(method)) {
     const [from, to, balance] = eventData;
-    await updateOrCreateAddress(blockIndexer, from);
-    await updateOrCreateAddress(blockIndexer, to);
+    addAddresses([from, to]);
   }
 
   if (
@@ -119,7 +87,7 @@ async function handleBalancesEvent(
     ].includes(method)
   ) {
     const [address] = eventData;
-    await updateOrCreateAddress(blockIndexer, address);
+    addAddress(address);
   }
 
   return true;

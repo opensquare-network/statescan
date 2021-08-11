@@ -3,11 +3,12 @@ const {
   getAssetTransferCollection,
   getAssetCollection,
   getAssetHolderCollection,
-  getAddressCollection,
   getAssetApprovalCollection,
 } = require("../../mongo");
 const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { addAddresses } = require("../../utils/blockAddresses");
+const { addAddress } = require("../../utils/blockAddresses");
 
 const Modules = Object.freeze({
   Assets: "assets",
@@ -60,16 +61,19 @@ async function saveNewAssetTransfer(
   }
 
   const col = await getAssetTransferCollection();
-  const result = await col.insertOne({
-    indexer: blockIndexer,
-    eventSort,
-    extrinsicIndex,
-    extrinsicHash,
-    asset: asset._id,
-    from,
-    to,
-    balance,
-  }, { session });
+  const result = await col.insertOne(
+    {
+      indexer: blockIndexer,
+      eventSort,
+      extrinsicIndex,
+      extrinsicHash,
+      asset: asset._id,
+      from,
+      to,
+      balance,
+    },
+    { session }
+  );
 }
 
 async function updateOrCreateAsset(blockIndexer, assetId) {
@@ -158,29 +162,6 @@ async function destroyAsset(blockIndexer, assetId) {
     },
     { session }
   );
-}
-
-async function updateOrCreateAddress(blockIndexer, address) {
-  const api = await getApi();
-
-  const account = await api.query.system.account.at(
-    blockIndexer.blockHash,
-    address
-  );
-  if (account) {
-    const session = asyncLocalStorage.getStore();
-    const col = await getAddressCollection();
-    await col.updateOne(
-      { address },
-      {
-        $set: {
-          ...account.toJSON(),
-          lastUpdatedAt: blockIndexer,
-        },
-      },
-      { upsert: true, session }
-    );
-  }
 }
 
 async function updateOrCreateAssetHolder(blockIndexer, assetId, address) {
@@ -347,15 +328,14 @@ async function handleAssetsEvent(
     ].includes(method)
   ) {
     const [assetId, accountId] = eventData;
-    await updateOrCreateAddress(blockIndexer, accountId);
+    addAddress(accountId);
     await updateOrCreateAssetHolder(blockIndexer, assetId, accountId);
   }
 
   if (method === AssetsEvents.Transferred) {
     const [assetId, from, to] = eventData;
-    await updateOrCreateAddress(blockIndexer, from);
+    addAddresses([from, to]);
     await updateOrCreateAssetHolder(blockIndexer, assetId, from);
-    await updateOrCreateAddress(blockIndexer, to);
     await updateOrCreateAssetHolder(blockIndexer, assetId, to);
   }
 

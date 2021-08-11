@@ -1,5 +1,6 @@
 const { getAllVersionChangeHeights } = require("../meta");
 const { getRegistryByHeight } = require("../../utils/registry");
+const findLast = require("lodash.findlast");
 
 let versionChangedHeights = [];
 let registryMap = {};
@@ -20,7 +21,10 @@ function getSpecHeights() {
 }
 
 async function findRegistry(height) {
-  const mostRecentChangeHeight = versionChangedHeights.find((h) => h <= height);
+  const mostRecentChangeHeight = findLast(
+    versionChangedHeights,
+    (h) => h <= height
+  );
   if (!mostRecentChangeHeight) {
     throw new Error(`Can not find registry for height ${height}`);
   }

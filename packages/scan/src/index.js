@@ -14,11 +14,14 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { clearAddresses } = require("./utils/blockAddresses");
 const {
   updateSpecs,
   getSpecHeights,
   findRegistry,
 } = require("./mongo/service/specs");
+const { getAddresses } = require("./utils/blockAddresses");
+const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 
 async function main() {
   await updateHeight();
@@ -94,6 +97,9 @@ async function scanBlock(blockInDb) {
   const blockIndexer = getBlockIndexer(block);
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
+
+  await handleMultiAddress(blockIndexer, getAddresses());
+  clearAddresses();
 }
 
 main()

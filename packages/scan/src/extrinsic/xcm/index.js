@@ -1,7 +1,7 @@
 const { blake2AsHex } = require("@polkadot/util-crypto");
-const { getTeleportCollection, getAddressCollection } = require("../../mongo");
-const { getApi } = require("../../api");
+const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { addAddress } = require("../../utils/blockAddresses");
 const { getRegistryByHeight } = require("../../utils/registry");
 
 async function saveNewTeleportAssetIn(
@@ -56,38 +56,6 @@ async function saveNewTeleportAssetOut(
     },
     { session }
   );
-}
-
-async function updateOrCreateAddress(blockIndexer, address) {
-  const session = asyncLocalStorage.getStore();
-  const col = await getAddressCollection();
-  const exists = await col.findOne(
-    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
-    { session }
-  );
-  if (exists) {
-    // Yes, we have the address info already up to date
-    return;
-  }
-
-  const api = await getApi();
-
-  const account = await api.query.system.account.at(
-    blockIndexer.blockHash,
-    address
-  );
-  if (account) {
-    await col.updateOne(
-      { address },
-      {
-        $set: {
-          ...account.toJSON(),
-          lastUpdatedAt: blockIndexer,
-        },
-      },
-      { upsert: true, session }
-    );
-  }
 }
 
 async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
@@ -159,7 +127,7 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
       fee,
       teleportAssetJson
     );
-    await updateOrCreateAddress(extrinsicIndexer, beneficiary);
+    addAddress(beneficiary);
   }
 }
 

@@ -1,5 +1,5 @@
 const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
-const { getExtrinsicCollection, getAddressCollection } = require("../mongo");
+const { getExtrinsicCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
 const {
@@ -7,39 +7,7 @@ const {
   handleTeleportAssets,
 } = require("./xcm");
 const asyncLocalStorage = require("../asynclocalstorage");
-const { getApi } = require("../api");
-
-async function updateOrCreateAddress(blockIndexer, address) {
-  const session = asyncLocalStorage.getStore();
-  const col = await getAddressCollection();
-  const exists = await col.findOne(
-    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
-    { session }
-  );
-  if (exists) {
-    // Yes, we have the address info already up to date
-    return;
-  }
-
-  const api = await getApi();
-
-  const account = await api.query.system.account.at(
-    blockIndexer.blockHash,
-    address
-  );
-  if (account) {
-    await col.updateOne(
-      { address },
-      {
-        $set: {
-          ...account.toJSON(),
-          lastUpdatedAt: blockIndexer,
-        },
-      },
-      { upsert: true, session }
-    );
-  }
-}
+const { addAddress } = require("../utils/blockAddresses");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
   let index = 0;
@@ -114,12 +82,13 @@ async function handleExtrinsic(extrinsic, indexer, events) {
 
   if (
     !(
-      call.section === "parachainSystem" && call.method === "setValidationData" ||
-      call.section === "timestamp" && call.method === "set"
+      (call.section === "parachainSystem" &&
+        call.method === "setValidationData") ||
+      (call.section === "timestamp" && call.method === "set")
     )
   ) {
     if (signer) {
-      await updateOrCreateAddress(indexer, signer);
+      addAddress(signer);
     }
   }
 }

@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { getApi, disconnect } = require("./api");
+const { disconnect } = require("./api");
 const { updateHeight, getLatestHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
@@ -15,6 +15,7 @@ const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
 const { updateSpecs, getSpecHeights } = require("./mongo/service/specs");
+const { getRegistryByHeight } = require("./utils/registry");
 
 let registry;
 
@@ -101,13 +102,6 @@ async function scanBlock(blockInDb) {
   const blockIndexer = getBlockIndexer(block);
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
-}
-
-async function getRegistryByHeight(height) {
-  const api = await getApi();
-  const blockHash = await api.rpc.chain.getBlockHash(height);
-
-  return await api.getBlockRegistry(blockHash);
 }
 
 main()

@@ -108,7 +108,6 @@ const FieldBody = styled.div`
   flex-grow: 1;
   padding: 8px 0 8px 24px;
   font-size: 14px;
-  /* word-break: break-all; */
   @media screen and (max-width: 900px) {
     padding-left: 0px;
   }

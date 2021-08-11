@@ -127,7 +127,6 @@ const TableDataItem = styled.pre`
   font-size: 14px;
   line-height: 20px;
   margin: 0;
-  word-break: break-all;
   word-wrap: break-word;
   white-space: pre-wrap;
   font-family: "SF Mono";

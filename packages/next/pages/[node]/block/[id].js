@@ -15,6 +15,7 @@ import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
 import MonoText from "components/monoText";
 import Address from "components/address";
+import { makeEventArgs } from "utils/eventArgs";
 
 import { timeDuration, time, makeTablePairs } from "utils";
 import {
@@ -109,10 +110,7 @@ export default function Block({
           "-"
         ),
         <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
-        makeTablePairs(
-          ["Docs", ...item.meta.args],
-          [item.meta.documentation?.join("").trim() || "", ...item.data]
-        ),
+        makeEventArgs(node, item),
       ]),
       expand,
       foot: (

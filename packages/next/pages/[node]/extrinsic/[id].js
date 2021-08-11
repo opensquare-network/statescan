@@ -14,7 +14,7 @@ import InLink from "components/inLink";
 import CopyText from "components/copyText";
 import Result from "components/result";
 import MinorText from "components/minorText";
-import { capitalize, time, timeDuration, makeTablePairs } from "utils";
+import { capitalize, time, timeDuration } from "utils";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import BreakText from "components/breakText";
@@ -23,6 +23,7 @@ import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
 import JsonAttributes from "components/jsonAttributes";
 import Address from "components/address";
+import { makeEventArgs } from "utils/eventArgs";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -69,10 +70,7 @@ export default function Extrinsic({
           {`${item?.indexer?.blockHeight}-${item?.sort}`}
         </InLink>,
         `${item?.section}(${item?.method})`,
-        makeTablePairs(
-          ["Docs", ...item.meta.args],
-          [item.meta.documentation?.join("").trim() || "", ...item.data]
-        ),
+        makeEventArgs(node, item),
       ]),
       expand,
       foot: (

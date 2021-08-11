@@ -90,7 +90,7 @@ export default function Block({ node, id, eventDetail }) {
             foot={
               <JsonAttributes
                 title={"Attributes"}
-                data={makeEventArgs(node, item)}
+                data={makeEventArgs(node, eventDetail)}
               />
             }
           />

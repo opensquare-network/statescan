@@ -49,8 +49,8 @@ const Tab = styled.a`
 const TabText = styled.div`
   text-align: center;
   font-weight: bold;
-  font-size: 20px;
-  line-height: 20px;
+  font-size: 18px;
+  line-height: 18px;
   color: rgba(17, 17, 17, 0.65);
   ${(p) =>
     p.active &&

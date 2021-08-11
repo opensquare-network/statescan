@@ -94,7 +94,11 @@ export default function TransfersList({ node, assetTransfers }) {
             </MajorText>
             {item.assetSymbol ? (
               <InLink
-                to={`/${node}/asset/${item.assetId}_${item.assetCreatedAt.blockHeight}`}
+                to={
+                  `/${node}/asset/${item.assetId}` + (item.destroyedAt
+                    ? `_${item.createdAt.blockHeight}`
+                    : "")
+                }
               >
                 {item.assetSymbol}
               </InLink>

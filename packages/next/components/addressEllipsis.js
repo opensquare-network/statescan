@@ -27,6 +27,7 @@ export default function AddressEllipsis({ address, to }) {
   const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   useEffect(() => {
+    setIdentity(null);
     fetchIdentity(relayChain, address).then(identity => setIdentity(identity));
   }, [relayChain, address]);
 
@@ -52,10 +53,10 @@ export default function AddressEllipsis({ address, to }) {
 
   const identityDisplay = (
     <span>
-      {identity && <>
+      {identity && <b>
         {identity?.info?.display}
         <br/>
-      </>}
+      </b>}
       {address}
     </span>
   );
@@ -63,7 +64,7 @@ export default function AddressEllipsis({ address, to }) {
   const identityLink = <IdentityLink identity={identity} cursor={to ? "true" : "false"} />;
 
   return (
-    <Tooltip content={identityDisplay} isCopy>
+    <Tooltip content={identityDisplay} isCopy copyText={address}>
       {to ? (
         <Link href={to} passHref>
           <MonoText>{identityLink}</MonoText>

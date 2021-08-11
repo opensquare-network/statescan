@@ -1389,7 +1389,7 @@
     "@polkadot/x-ws" "^7.1.1"
     eventemitter3 "^4.0.7"
 
-"@polkadot/types-known@5.4.1":
+"@polkadot/types-known@5.4.1", "@polkadot/types-known@^5.4.1":
   version "5.4.1"
   resolved "https://registry.nlark.com/@polkadot/types-known/download/@polkadot/types-known-5.4.1.tgz#4200f1c780876f1ee1a573c7cea017d12291ec32"
   integrity sha1-QgDxx4CHbx7hpXPHzqAX0SKR7DI=

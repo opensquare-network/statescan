@@ -7,16 +7,7 @@ import { addToast } from "store/reducers/toastSlice";
 import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
-  display: inline;
-  align-items: center;
-  line-height: 20px;
-  @media screen and (max-width: 580px) {
-    display: block;
-  }
-  * {
-    display: inline;
-    vertical-align: top;
-  }
+  display: flex;
   > :first-child {
     margin-right: 8px;
   }
@@ -38,7 +29,7 @@ export default function CopyText({ children, text }) {
 
   return (
     <Wrapper>
-      <span>{children}</span>
+      <div>{children}</div>
       <StyledIcon onClick={onCopy} />
     </Wrapper>
   );

@@ -112,8 +112,15 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   await handleTeleportAssetDownwardMessage(extrinsic, indexer);
   await handleTeleportAssets(extrinsic, indexer, signer);
 
-  if (signer) {
-    await updateOrCreateAddress(indexer, signer);
+  if (
+    !(
+      call.section === "parachainSystem" && call.method === "setValidationData" ||
+      call.section === "timestamp" && call.method === "set"
+    )
+  ) {
+    if (signer) {
+      await updateOrCreateAddress(indexer, signer);
+    }
   }
 }
 

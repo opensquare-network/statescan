@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import Table from "components/table";
 import { useTheme } from "utils/hooks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -78,6 +78,13 @@ export default function TabTable({ data, activeTab, collapse }) {
     .indexOf(activeTab);
   const [currentTab, setCurrentTab] = useState(activeTabIndex);
 
+  useEffect(() => {
+    const currTabIndex = data
+      .map((item) => item.name.toLowerCase())
+      .indexOf(router.query.tab);
+    setCurrentTab(currTabIndex >= 0 ? currTabIndex : 0);
+  }, [data, router]);
+
   return (
     <div>
       <TabWrapper>
@@ -101,7 +108,6 @@ export default function TabTable({ data, activeTab, collapse }) {
                   undefined,
                   { shallow: true }
                 );
-                setCurrentTab(index);
               }}
             >
               <TabText active={currentTab === index}>

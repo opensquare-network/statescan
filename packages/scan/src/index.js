@@ -53,7 +53,7 @@ async function main() {
 
     for (const block of blocks) {
       await withSession(async (session) => {
-        await session.startTransaction();
+        session.startTransaction();
         try {
           await asyncLocalStorage.run(session, async () => {
             await scanBlock(block);

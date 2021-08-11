@@ -240,7 +240,7 @@ export const timeTypes = {
 
 export const EmptyQuery = {
   total: 0,
-  page: 1,
+  page: 0,
   pageSize: 10,
   items: [],
 };

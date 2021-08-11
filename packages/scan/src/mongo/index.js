@@ -136,7 +136,7 @@ async function getTeleportCollection() {
   return teleportCol;
 }
 
-async function withSession(fn) {
+function withSession(fn) {
   return client.withSession(fn);
 }
 

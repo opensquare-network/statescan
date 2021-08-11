@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import { addressEllipsis } from "utils";
 import Tooltip from "components/tooltip";
 import MonoText from "./monoText";
 import Link from "next/link";
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react";
 import { nodes } from "utils/constants";
 
 const StyledLink = styled.div`
+  word-break: break-all;
   color: ${(p) => p.themecolor};
   cursor: default;
   ${(p) =>
@@ -19,7 +19,7 @@ const StyledLink = styled.div`
     `}
 `;
 
-export default function AddressEllipsis({ address, to }) {
+export default function Address({ address, to }) {
   const node = useNode();
   const theme = useTheme();
   const [identity, setIdentity] = useState(null);
@@ -33,21 +33,19 @@ export default function AddressEllipsis({ address, to }) {
 
   const styledLink = (
     <StyledLink themecolor={theme.color} cursor={to ? "true" : "false"}>
-      {addressEllipsis(address)}
+      {address}
     </StyledLink>
   );
 
   if (!identity) {
     return (
-      <Tooltip content={address} isCopy>
-        {to ? (
-          <Link href={to} passHref>
-            <MonoText>{styledLink}</MonoText>
-          </Link>
-        ) : (
+      to ? (
+        <Link href={to} passHref>
           <MonoText>{styledLink}</MonoText>
-        )}
-      </Tooltip>
+        </Link>
+      ) : (
+        <MonoText>{styledLink}</MonoText>
+      )
     );
   }
 
@@ -61,7 +59,7 @@ export default function AddressEllipsis({ address, to }) {
     </span>
   );
 
-  const identityLink = <IdentityLink identity={identity} cursor={to ? "true" : "false"} />;
+  const identityLink = <IdentityLink identity={identity} width={"auto"} cursor={to ? "true" : "false"} />;
 
   return (
     <Tooltip content={identityDisplay} isCopy copyText={address}>

@@ -50,7 +50,10 @@ const Source = styled.a`
 
 const Display = styled.span`
   display: inline-block;
-  width: 86px;
+  ${p => p.width
+    ? css`width: ${p.width};`
+    : css`width: 86px;`
+  }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -58,7 +61,7 @@ const Display = styled.span`
   color: #111111;
 `;
 
-export default function IdentityLink({ identity, cursor }) {
+export default function IdentityLink({ identity, cursor, width }) {
   if (!identity) {
     return null;
   }
@@ -70,7 +73,7 @@ export default function IdentityLink({ identity, cursor }) {
   return (
     <Wrapper cursor={cursor}>
       <IdentityIcon identity={identity} />
-      <Display>{displayName}</Display>
+      <Display width={width}>{displayName}</Display>
     </Wrapper>
   );
 }

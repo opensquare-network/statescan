@@ -18,7 +18,11 @@ export default function Assets({ node, assets }) {
           head={assetsHead}
           body={(assets?.items || []).map((item) => [
             <InLink
-              to={`/${node}/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+              to={
+                `/${node}/asset/${item.assetId}` + (item.destroyedAt
+                  ? `_${item.createdAt.blockHeight}`
+                  : "")
+              }
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
             item.name,

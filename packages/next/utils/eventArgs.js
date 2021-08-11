@@ -4,7 +4,7 @@ import { makeTablePairs } from "utils";
 export function makeEventArgs(node, event) {
   const eventData = makeTablePairs(
     ["Docs", ...event.meta.args],
-    [event.meta.documentation?.join("").trim() || "", ...event.data]
+    [(event?.meta?.docs || event?.meta?.documentation)?.join("").trim() || "", ...event.data]
   )
 
   return {

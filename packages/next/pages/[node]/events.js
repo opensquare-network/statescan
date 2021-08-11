@@ -7,7 +7,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import Filter from "components/filter";
-import { makeTablePairs } from "utils";
+import { makeEventArgs } from "utils/eventArgs";
 
 export default function Events({ node, events, filter }) {
   return (
@@ -36,10 +36,7 @@ export default function Events({ node, events, filter }) {
               "-"
             ),
             `${item?.section}(${item?.meta?.name})`,
-            makeTablePairs(
-              ["Docs", ...item.meta.args],
-              [item.meta.documentation?.join("").trim() || "", ...item.data]
-            ),
+            makeEventArgs(node, item),
           ])}
           foot={
             <Pagination

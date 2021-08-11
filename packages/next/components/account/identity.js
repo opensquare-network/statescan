@@ -73,7 +73,7 @@ export default function Identity({ identity }) {
         <MonoText>{displayName}</MonoText>{" "}
       </Display>
       <Source
-        href={`https://polkascan.io/kusama/account/${identity.address}`}
+        href={`https://polkascan.io/${relayChain}/account/${identity.address}`}
         target="_blank"
         title="polkascan"
       >
@@ -81,7 +81,7 @@ export default function Identity({ identity }) {
         <Polkascan className="hover-show" />
       </Source>
       <Source
-        href={`https://westend.subscan.io/account/${identity.address}`}
+        href={`https://${relayChain}.subscan.io/account/${identity.address}`}
         target="_blank"
         title="subascan"
       >

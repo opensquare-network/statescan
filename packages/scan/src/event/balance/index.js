@@ -62,7 +62,7 @@ async function handleBalancesEvent(
 
   if ([BalancesEvents.Transfer].includes(method)) {
     const [from, to, value] = eventData;
-    addAddresses([from, to]);
+    addAddresses(blockIndexer.blockHeight, [from, to]);
     await saveNewTransfer(
       blockIndexer,
       eventSort,
@@ -76,7 +76,7 @@ async function handleBalancesEvent(
 
   if ([BalancesEvents.ReserveRepatriated].includes(method)) {
     const [from, to, balance] = eventData;
-    addAddresses([from, to]);
+    addAddresses(blockIndexer.blockHeight, [from, to]);
   }
 
   if (
@@ -87,7 +87,7 @@ async function handleBalancesEvent(
     ].includes(method)
   ) {
     const [address] = eventData;
-    addAddress(address);
+    addAddress(blockIndexer.blockHeight, address);
   }
 
   return true;

@@ -98,8 +98,8 @@ async function scanBlock(blockInDb) {
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
 
-  await handleMultiAddress(blockIndexer, getAddresses());
-  clearAddresses();
+  await handleMultiAddress(blockIndexer, getAddresses(blockInDb.height));
+  clearAddresses(blockInDb.height);
 }
 
 main()

@@ -127,7 +127,7 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
       fee,
       teleportAssetJson
     );
-    addAddress(beneficiary);
+    addAddress(extrinsicIndexer.blockHeight, beneficiary);
   }
 }
 

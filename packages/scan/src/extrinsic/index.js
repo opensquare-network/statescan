@@ -88,7 +88,7 @@ async function handleExtrinsic(extrinsic, indexer, events) {
     )
   ) {
     if (signer) {
-      addAddress(signer);
+      addAddress(indexer.blockHeight, signer);
     }
   }
 }

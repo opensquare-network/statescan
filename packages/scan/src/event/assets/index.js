@@ -328,13 +328,13 @@ async function handleAssetsEvent(
     ].includes(method)
   ) {
     const [assetId, accountId] = eventData;
-    addAddress(accountId);
+    addAddress(blockIndexer.blockHeight, accountId);
     await updateOrCreateAssetHolder(blockIndexer, assetId, accountId);
   }
 
   if (method === AssetsEvents.Transferred) {
     const [assetId, from, to] = eventData;
-    addAddresses([from, to]);
+    addAddresses(blockIndexer.blockHeight, [from, to]);
     await updateOrCreateAssetHolder(blockIndexer, assetId, from);
     await updateOrCreateAssetHolder(blockIndexer, assetId, to);
   }

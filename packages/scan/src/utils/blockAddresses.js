@@ -1,20 +1,28 @@
 // record the addresses which may change in one scanning block
-const addresses = [];
+const addressesMap = {};
 
-function addAddress(addr) {
-  addresses.push(addr);
+function addAddress(height, addr) {
+  if (!addressesMap[height]) {
+    addressesMap[height] = [addr];
+  } else {
+    addressesMap[height].push(addr);
+  }
 }
 
-function addAddresses(addrs = []) {
-  addresses.push(...addrs);
+function addAddresses(height, addrs = []) {
+  if (!addressesMap[height]) {
+    addressesMap[height] = addrs;
+  } else {
+    addressesMap[height].push(...addrs);
+  }
 }
 
-function getAddresses() {
-  return addresses;
+function getAddresses(height) {
+  return addressesMap[height] || [];
 }
 
-function clearAddresses() {
-  addresses.slice(0, addresses.length);
+function clearAddresses(height) {
+  delete addressesMap[height];
 }
 
 module.exports = {

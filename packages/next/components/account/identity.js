@@ -5,6 +5,8 @@ import PolkascanGrey from "../../public/imgs/icons/identity/polkascan-grey.svg";
 import Subscan from "../../public/imgs/icons/identity/subscan.svg";
 import SubscanGrey from "../../public/imgs/icons/identity/subscan-grey.svg";
 import MonoText from "../monoText";
+import { useNode } from "../../utils/hooks";
+import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
@@ -55,6 +57,9 @@ export default function Identity({ identity }) {
   if (!identity) {
     return null;
   }
+  const node = useNode();
+  const relayChain =
+    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   const displayName = identity?.info?.displayParent
     ? `${identity?.info?.displayParent}/${identity?.info?.display}`
@@ -67,22 +72,26 @@ export default function Identity({ identity }) {
         {" "}
         <MonoText>{displayName}</MonoText>{" "}
       </Display>
-      <Source
-        href={`https://polkascan.io/polkadot/account/${identity.address}`}
-        target="_blank"
-        title="polkascan"
-      >
-        <PolkascanGrey className="hover-hide" />
-        <Polkascan className="hover-show" />
-      </Source>
-      <Source
-        href={`https://polkadot.subscan.io/account/${identity.address}`}
-        target="_blank"
-        title="subascan"
-      >
-        <SubscanGrey className="hover-hide" />
-        <Subscan className="hover-show" />
-      </Source>
+      {relayChain === "kusama" && (
+        <Source
+          href={`https://polkascan.io/kusama/account/${identity.address}`}
+          target="_blank"
+          title="polkascan"
+        >
+          <PolkascanGrey className="hover-hide" />
+          <Polkascan className="hover-show" />
+        </Source>
+      )}
+      {relayChain === "westend" && (
+        <Source
+          href={`https://westend.subscan.io/account/${identity.address}`}
+          target="_blank"
+          title="subascan"
+        >
+          <SubscanGrey className="hover-hide" />
+          <Subscan className="hover-show" />
+        </Source>
+      )}
     </Wrapper>
   );
 }

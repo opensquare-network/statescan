@@ -16,7 +16,7 @@ const TabWrapper = styled.div`
     display: none;
   }
   > :not(:first-child) {
-    margin-left: 40px;
+    margin-left: 32px;
   }
 `;
 
@@ -89,49 +89,47 @@ export default function TabTable({ data, activeTab, collapse }) {
     <div>
       <TabWrapper>
         {(data || []).map((item, index) => (
-            <Tab
-              key={index}
-              active={currentTab === index}
-              themecolor={theme.color}
-              onClick={() => {
-                router.push(
-                  {
-                    query: {
-                      node: router.query.node,
-                      id: router.query.id,
-                      tab: item.name.toLowerCase(),
-                      ...(
-                        item.page > 0 ? { page: item.page + 1 } : {}
-                      )
-                    }
+          <Tab
+            key={index}
+            active={currentTab === index}
+            themecolor={theme.color}
+            onClick={() => {
+              router.push(
+                {
+                  query: {
+                    node: router.query.node,
+                    id: router.query.id,
+                    tab: item.name.toLowerCase(),
+                    ...(item.page > 0 ? { page: item.page + 1 } : {}),
                   },
-                  undefined,
-                  { shallow: true }
-                );
-              }}
-            >
-              <TabText active={currentTab === index}>
-                {item.name}
-                <br />
-                <svg
-                  width="49"
-                  height="3"
-                  viewBox="0 0 49 3"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect x="0.5" width="48" height="3" fill={theme.color} />
-                </svg>
-              </TabText>
-              {item.total !== undefined && item.total !== null && (
-                <TabTag
-                  themecolor={theme.color}
-                  themecolorSecondary={theme.colorSecondary}
-                >
-                  {item.total}
-                </TabTag>
-              )}
-            </Tab>
+                },
+                undefined,
+                { shallow: true }
+              );
+            }}
+          >
+            <TabText active={currentTab === index}>
+              {item.name}
+              <br />
+              <svg
+                width="49"
+                height="3"
+                viewBox="0 0 49 3"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect x="0.5" width="48" height="3" fill={theme.color} />
+              </svg>
+            </TabText>
+            {item.total !== undefined && item.total !== null && (
+              <TabTag
+                themecolor={theme.color}
+                themecolorSecondary={theme.colorSecondary}
+              >
+                {item.total}
+              </TabTag>
+            )}
+          </Tab>
         ))}
       </TabWrapper>
       {data?.[currentTab]?.component ? (

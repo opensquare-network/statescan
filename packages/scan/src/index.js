@@ -14,10 +14,11 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
-const { updateSpecs, getSpecHeights } = require("./mongo/service/specs");
-const { getRegistryByHeight } = require("./utils/registry");
-
-let registry;
+const {
+  updateSpecs,
+  getSpecHeights,
+  findRegistry,
+} = require("./mongo/service/specs");
 
 async function main() {
   await updateHeight();
@@ -77,19 +78,7 @@ async function main() {
 }
 
 async function scanBlock(blockInDb) {
-  if (!registry) {
-    registry = await getRegistryByHeight(blockInDb.height);
-  }
-
-  const specHeights = getSpecHeights();
-  if (specHeights.some((h) => parseInt(h) === parseInt(blockInDb.height))) {
-    registry = await getRegistryByHeight(blockInDb.height);
-    logger.info(
-      `registry updated at ${blockInDb.height}, specHeights:`,
-      specHeights
-    );
-  }
-
+  const registry = await findRegistry(blockInDb.height);
   const block = new GenericBlock(registry.registry, blockInDb.block.block);
 
   const blockEvents = registry.registry.createType(

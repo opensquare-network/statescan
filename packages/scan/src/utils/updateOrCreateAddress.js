@@ -1,19 +1,11 @@
 const { getAddressCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
 const { getApi } = require("../api");
+const { logger } = require("../logger");
 
 async function updateOrCreateAddress(blockIndexer, address) {
   const session = asyncLocalStorage.getStore();
   const col = await getAddressCollection();
-  const exists = await col.findOne(
-    { address, "lastUpdatedAt.blockHeight": blockIndexer.blockHeight },
-    { session }
-  );
-  if (exists) {
-    // Yes, we have the address info already up to date
-    return;
-  }
-
   const api = await getApi();
 
   const account = await api.query.system.account.at(
@@ -41,12 +33,14 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
 
   const uniqueAddrs = [...new Set(addrs)];
 
+  // TODO: query in batch, insert in batch
   const promises = [];
   for (const addr of uniqueAddrs) {
     promises.push(updateOrCreateAddress(blockIndexer, addr));
   }
 
   await Promise.all(promises);
+  logger.info(`${uniqueAddrs.length} addresses have been updated`);
 }
 
 module.exports = {

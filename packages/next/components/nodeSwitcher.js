@@ -41,7 +41,7 @@ const Icon = styled.img`
 
 const Text = styled.p`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 15px;
   line-height: 20px;
   color: #111111;
 `;

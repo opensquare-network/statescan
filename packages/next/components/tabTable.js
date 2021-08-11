@@ -112,13 +112,13 @@ export default function TabTable({ data, activeTab, collapse }) {
               {item.name}
               <br />
               <svg
-                width="49"
+                width="40"
                 height="3"
                 viewBox="0 0 49 3"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <rect x="0.5" width="48" height="3" fill={theme.color} />
+                <rect x="0.5" width="40" height="3" fill={theme.color} />
               </svg>
             </TabText>
             {item.total !== undefined && item.total !== null && (

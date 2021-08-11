@@ -79,16 +79,16 @@ async function main() {
 
 async function scanBlock(blockInDb) {
   const registry = await findRegistry(blockInDb.height);
-  const block = new GenericBlock(registry.registry, blockInDb.block.block);
+  const block = new GenericBlock(registry, blockInDb.block.block);
 
-  const blockEvents = registry.registry.createType(
+  const blockEvents = registry.createType(
     "Vec<EventRecord>",
     blockInDb.events,
     true
   );
   const author =
     blockInDb.author &&
-    registry.registry.createType("AccountId", blockInDb.author, true);
+    registry.createType("AccountId", blockInDb.author, true);
 
   await handleBlock(block, blockEvents, author);
   const blockIndexer = getBlockIndexer(block);

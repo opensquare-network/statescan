@@ -72,26 +72,22 @@ export default function Identity({ identity }) {
         {" "}
         <MonoText>{displayName}</MonoText>{" "}
       </Display>
-      {relayChain === "kusama" && (
-        <Source
-          href={`https://polkascan.io/kusama/account/${identity.address}`}
-          target="_blank"
-          title="polkascan"
-        >
-          <PolkascanGrey className="hover-hide" />
-          <Polkascan className="hover-show" />
-        </Source>
-      )}
-      {relayChain === "westend" && (
-        <Source
-          href={`https://westend.subscan.io/account/${identity.address}`}
-          target="_blank"
-          title="subascan"
-        >
-          <SubscanGrey className="hover-hide" />
-          <Subscan className="hover-show" />
-        </Source>
-      )}
+      <Source
+        href={`https://polkascan.io/kusama/account/${identity.address}`}
+        target="_blank"
+        title="polkascan"
+      >
+        <PolkascanGrey className="hover-hide" />
+        <Polkascan className="hover-show" />
+      </Source>
+      <Source
+        href={`https://westend.subscan.io/account/${identity.address}`}
+        target="_blank"
+        title="subascan"
+      >
+        <SubscanGrey className="hover-hide" />
+        <Subscan className="hover-show" />
+      </Source>
     </Wrapper>
   );
 }

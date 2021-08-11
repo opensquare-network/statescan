@@ -81,10 +81,13 @@ async function scanBlock(blockInDb) {
     registry = await getRegistryByHeight(blockInDb.height);
   }
 
-  const blockHeight = parseInt(blockInDb.block.block.header.number);
   const specHeights = getSpecHeights();
-  if (specHeights.includes(blockHeight)) {
+  if (specHeights.some((h) => parseInt(h) === parseInt(blockInDb.height))) {
     registry = await getRegistryByHeight(blockInDb.height);
+    logger.info(
+      `registry updated at ${blockInDb.height}, specHeights:`,
+      specHeights
+    );
   }
 
   const block = new GenericBlock(registry.registry, blockInDb.block.block);

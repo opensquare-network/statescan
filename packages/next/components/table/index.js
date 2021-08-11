@@ -47,7 +47,7 @@ const StyledTable = styled.table`
       -webkit-border-top-right-radius: 8px;
     }
 
-    padding: 14px 24px;
+    padding: 16px 24px;
     font-weight: normal;
     font-size: 14px;
     line-height: 16px;
@@ -358,7 +358,7 @@ export default function Table({
                   <tr>
                     <td
                       colSpan="100%"
-                      style={{ paddingTop: 16, paddingBottom: 16 }}
+                      style={{ paddingTop: 14, paddingBottom: 14 }}
                     >
                       {foot}
                     </td>

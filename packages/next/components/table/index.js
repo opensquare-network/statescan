@@ -13,8 +13,8 @@ const Wrapper = styled.div``;
 
 const Title = styled.h4`
   font-weight: bold;
-  font-size: 20px;
-  line-height: 20px;
+  font-size: 18px;
+  line-height: 18px;
   color: #111111;
   margin: 0 0 24px;
 `;

@@ -40,7 +40,7 @@ const TableWrapper = styled.div`
   column-gap: 24px;
   row-gap: 32px;
   grid-template-columns: repeat(auto-fill, minmax(588px, 1fr));
-  @media screen and (max-width: collapseSizepx) {
+  @media screen and (max-width: 900px) {
     grid-template-columns: 1fr;
   }
 `;
@@ -48,6 +48,10 @@ const TableWrapper = styled.div`
 const FootWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
+`;
+const FlexWrapper = styled.div`
+  display: flex;
+  align-items: center;
 `;
 
 export default function Home({ node, overview: ssrOverview, price }) {
@@ -67,28 +71,40 @@ export default function Home({ node, overview: ssrOverview, price }) {
   const size = useWindowSize();
   const collapseSize = 900;
 
-  const pcViewBlockTableData = (overview?.latestBlocks || []).map((item) => [
-    <HeightAge node={node} height={item.header.number} age={item.blockTime} />,
-    <AddressCounts
-      node={node}
-      validator={item.author}
-      extrinsicCount={item.extrinsicsCount}
-      eventsCount={item.eventsCount}
-    />,
-  ]);
-  const mobileViewBlockTableData = (overview?.latestBlocks || []).map(
-    (item) => [
+  const pcViewBlockTableData = () =>
+    (overview?.latestBlocks || []).map((item) => [
+      <HeightAge
+        node={node}
+        height={item.header.number}
+        age={item.blockTime}
+      />,
+      <AddressCounts
+        node={node}
+        validator={item.author}
+        extrinsicCount={item.extrinsicsCount}
+        eventsCount={item.eventsCount}
+      />,
+    ]);
+
+  const mobileViewBlockTableData = () =>
+    (overview?.latestBlocks || []).map((item) => [
       <InLink to={`/${node}/block/${item.header.number}`}>
         {item.header.number.toLocaleString()}
       </InLink>,
-      <MinorText>{timeDuration(item.blockTime)}</MinorText>,
+      <FlexWrapper>
+        <img
+          src="/imgs/icons/check-green.svg"
+          alt=""
+          style={{ marginRight: 8 }}
+        />
+        <MinorText>{timeDuration(item.blockTime)}</MinorText>
+      </FlexWrapper>,
       item.extrinsicsCount,
       item.eventsCount,
-    ]
-  );
+    ]);
 
-  const pcViewTransferTableData = (overview?.latestTransfers || []).map(
-    (item) => [
+  const pcViewTransferTableData = () =>
+    (overview?.latestTransfers || []).map((item) => [
       <TransferHeightAge
         node={node}
         height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
@@ -105,10 +121,9 @@ export default function Home({ node, overview: ssrOverview, price }) {
         }
         symbol={item.assetSymbol ?? symbol}
       />,
-    ]
-  );
-  const mobileViewTransferTableData = (overview?.latestTransfers || []).map(
-    (item) => [
+    ]);
+  const mobileViewTransferTableData = () =>
+    (overview?.latestTransfers || []).map((item) => [
       <InLink
         to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
       >
@@ -124,8 +139,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
             item.assetSymbol
           }`
         : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
-    ]
-  );
+    ]);
 
   const [blockTableHead, setBlockTableHead] = useState([]);
   const [blockTableData, setBlockTableData] = useState(null);
@@ -137,16 +151,16 @@ export default function Home({ node, overview: ssrOverview, price }) {
     if (!size.width) return;
     if (collapseSize > size.width) {
       setBlockTableHead(blocksLatestHead);
-      setBlockTableData(mobileViewBlockTableData);
+      setBlockTableData(mobileViewBlockTableData());
       setTransferTableHead(transfersLatestHead);
-      setTransferTableData(mobileViewTransferTableData);
+      setTransferTableData(mobileViewTransferTableData());
     } else {
       setBlockTableHead([]);
-      setBlockTableData(pcViewBlockTableData);
+      setBlockTableData(pcViewBlockTableData());
       setTransferTableHead([]);
-      setTransferTableData(pcViewTransferTableData);
+      setTransferTableData(pcViewTransferTableData());
     }
-  }, [size]);
+  }, [size, overview]);
 
   return (
     <Layout node={node}>

@@ -25,6 +25,7 @@ import { ssrNextApi as nextApi } from "services/nextApi";
 import { useEffect, useState } from "react";
 import { connect } from "services/websocket";
 import HeightAge from "../../components/block/heightAge";
+import TransferHeightAge from "../../components/transfer/heightAge";
 import AddressCounts from "../../components/block/addressCounts";
 import AmountFromTo from "../../components/transfer/amountFromTo";
 
@@ -88,7 +89,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
 
   const pcViewTransferTableData = (overview?.latestTransfers || []).map(
     (item) => [
-      <HeightAge
+      <TransferHeightAge
         node={node}
         height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         age={item?.indexer?.blockTime}

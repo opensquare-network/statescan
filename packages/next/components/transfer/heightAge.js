@@ -25,7 +25,7 @@ export default function HeightAge({ node, height, age }) {
     <Wrapper>
       <img src="/imgs/icons/block.svg" alt="" />
       <FlexWrapper style={{ width: 150, marginLeft: 16 }}>
-        <InLink to={`/${node}/block/${height}`}>
+        <InLink to={`/${node}/extrinsic/${height}`}>
           <Link>{height.toLocaleString()}</Link>
         </InLink>
         <FlexWrapper style={{ width: 150, marginTop: 4 }}>

@@ -18,12 +18,15 @@ import {
   transfersLatestHead,
   assetsHead,
 } from "utils/constants";
-import { getSymbol } from "utils/hooks";
+import { getSymbol, useWindowSize } from "utils/hooks";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import { useEffect, useState } from "react";
 import { connect } from "services/websocket";
+import HeightAge from "../../components/block/heightAge";
+import AddressCounts from "../../components/block/addressCounts";
+import AmountFromTo from "../../components/transfer/amountFromTo";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -36,7 +39,7 @@ const TableWrapper = styled.div`
   column-gap: 24px;
   row-gap: 32px;
   grid-template-columns: repeat(auto-fill, minmax(588px, 1fr));
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: collapseSizepx) {
     grid-template-columns: 1fr;
   }
 `;
@@ -60,6 +63,90 @@ export default function Home({ node, overview: ssrOverview, price }) {
 
   const overview = pushedOverview || ssrOverview;
 
+  const size = useWindowSize();
+  const collapseSize = 900;
+
+  const pcViewBlockTableData = (overview?.latestBlocks || []).map((item) => [
+    <HeightAge node={node} height={item.header.number} age={item.blockTime} />,
+    <AddressCounts
+      node={node}
+      validator={item.author}
+      extrinsicCount={item.extrinsicsCount}
+      eventsCount={item.eventsCount}
+    />,
+  ]);
+  const mobileViewBlockTableData = (overview?.latestBlocks || []).map(
+    (item) => [
+      <InLink to={`/${node}/block/${item.header.number}`}>
+        {item.header.number.toLocaleString()}
+      </InLink>,
+      <MinorText>{timeDuration(item.blockTime)}</MinorText>,
+      item.extrinsicsCount,
+      item.eventsCount,
+    ]
+  );
+
+  const pcViewTransferTableData = (overview?.latestTransfers || []).map(
+    (item) => [
+      <HeightAge
+        node={node}
+        height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+        age={item?.indexer?.blockTime}
+      />,
+      <AmountFromTo
+        node={node}
+        from={item.from}
+        to={item.to}
+        amount={
+          item?.assetSymbol
+            ? fromAssetUnit(item.balance, item.assetDecimals)
+            : fromSymbolUnit(item.balance, symbol)
+        }
+        symbol={item.assetSymbol ?? symbol}
+      />,
+    ]
+  );
+  const mobileViewTransferTableData = (overview?.latestTransfers || []).map(
+    (item) => [
+      <InLink
+        to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+      >
+        {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+      </InLink>,
+      <AddressEllipsis
+        address={item.from}
+        to={`/${node}/account/${item.from}`}
+      />,
+      <AddressEllipsis address={item.to} to={`/${node}/account/${item.to}`} />,
+      item?.assetSymbol
+        ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
+            item.assetSymbol
+          }`
+        : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+    ]
+  );
+
+  const [blockTableHead, setBlockTableHead] = useState([]);
+  const [blockTableData, setBlockTableData] = useState(null);
+
+  const [transferTableHead, setTransferTableHead] = useState([]);
+  const [transferTableData, setTransferTableData] = useState(null);
+
+  useEffect(() => {
+    if (!size.width) return;
+    if (collapseSize > size.width) {
+      setBlockTableHead(blocksLatestHead);
+      setBlockTableData(mobileViewBlockTableData);
+      setTransferTableHead(transfersLatestHead);
+      setTransferTableData(mobileViewTransferTableData);
+    } else {
+      setBlockTableHead([]);
+      setBlockTableData(pcViewBlockTableData);
+      setTransferTableHead([]);
+      setTransferTableData(pcViewTransferTableData);
+    }
+  }, [size]);
+
   return (
     <Layout node={node}>
       <Wrapper>
@@ -67,16 +154,9 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <TableWrapper>
           <Table
             title="Latest Blocks"
-            head={blocksLatestHead}
-            body={(overview?.latestBlocks || []).map((item) => [
-              <InLink to={`/${node}/block/${item.header.number}`}>
-                {item.header.number.toLocaleString()}
-              </InLink>,
-              <MinorText>{timeDuration(item.blockTime)}</MinorText>,
-              item.extrinsicsCount,
-              item.eventsCount,
-            ])}
-            collapse={900}
+            head={blockTableHead}
+            body={blockTableData}
+            collapse={collapseSize}
             foot={
               <FootWrapper>
                 <InLink to={`/${node}/blocks`}>View all</InLink>
@@ -85,28 +165,9 @@ export default function Home({ node, overview: ssrOverview, price }) {
           />
           <Table
             title="Latest Transfers"
-            head={transfersLatestHead}
-            body={(overview?.latestTransfers || []).map((item) => [
-              <InLink
-                to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-              >
-                {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-              </InLink>,
-              <AddressEllipsis
-                address={item.from}
-                to={`/${node}/account/${item.from}`}
-              />,
-              <AddressEllipsis
-                address={item.to}
-                to={`/${node}/account/${item.to}`}
-              />,
-              item?.assetSymbol
-                ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-                    item.assetSymbol
-                  }`
-                : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
-            ])}
-            collapse={900}
+            head={transferTableHead}
+            body={transferTableData}
+            collapse={collapseSize}
             foot={
               <FootWrapper>
                 <InLink to={`/${node}/transfers`}>View all</InLink>
@@ -120,9 +181,8 @@ export default function Home({ node, overview: ssrOverview, price }) {
           body={(overview?.popularAssets || []).map((item) => [
             <InLink
               to={
-                `/${node}/asset/${item.assetId}` + (item.destroyedAt
-                  ? `_${item.createdAt.blockHeight}`
-                  : "")
+                `/${node}/asset/${item.assetId}` +
+                (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
               }
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
@@ -143,7 +203,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
               <InLink to={`/${node}/assets`}>View all</InLink>
             </FootWrapper>
           }
-          collapse={900}
+          collapse={collapseSize}
         />
       </Wrapper>
     </Layout>

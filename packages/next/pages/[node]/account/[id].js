@@ -333,7 +333,7 @@ export async function getServerSideProps(context) {
     }),
     fetch(
       `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`
-    ).then(res => res.json()).catch(() => ({data: null})),
+    ).then(res => res.json()).catch(() => null),
   ]);
 
   return {

@@ -176,7 +176,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
       setTransferTableHead([]);
       setTransferTableData(pcViewTransferTableData());
     }
-  }, [size, overview]);
+  }, [size, overview, time]);
 
   return (
     <Layout node={node}>

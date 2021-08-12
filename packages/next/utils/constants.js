@@ -27,12 +27,14 @@ export const nodes = [
 export const blocksLatestHead = [
   { name: "Height", width: 136 },
   { name: "Time" },
+  { name: "Validator" },
   { name: "Extrinsics", align: "right", width: 136 },
   { name: "Events", align: "right", width: 136 },
 ];
 
 export const transfersLatestHead = [
   { name: "Extrinsic ID", width: 136 },
+  { name: "Time" },
   { name: "From", width: 136 },
   { name: "To", width: 136 },
   { name: "Quantity", align: "right" },

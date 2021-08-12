@@ -99,6 +99,14 @@ export default function Home({ node, overview: ssrOverview, price }) {
         />
         <MinorText>{timeDuration(item.blockTime)}</MinorText>
       </FlexWrapper>,
+      item.author ? (
+          <AddressEllipsis
+            address={item.author}
+            to={`/${node}/account/${item.author}`}
+          />
+        ) : (
+          "Unknown validator"
+        ),
       item.extrinsicsCount,
       item.eventsCount,
     ]);
@@ -129,6 +137,14 @@ export default function Home({ node, overview: ssrOverview, price }) {
       >
         {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
       </InLink>,
+      <FlexWrapper>
+        <img
+          src="/imgs/icons/check-green.svg"
+          alt=""
+          style={{ marginRight: 8 }}
+        />
+        <MinorText>{timeDuration(item?.indexer?.blockTime)}</MinorText>
+      </FlexWrapper>,
       <AddressEllipsis
         address={item.from}
         to={`/${node}/account/${item.from}`}
@@ -160,7 +176,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
       setTransferTableHead([]);
       setTransferTableData(pcViewTransferTableData());
     }
-  }, [size, overview]);
+  }, [size, overview, time]);
 
   return (
     <Layout node={node}>

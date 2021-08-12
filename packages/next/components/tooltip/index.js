@@ -43,6 +43,7 @@ const PopupWrapper = styled.div`
   left: 50%;
   bottom: 100%;
   transform: translateX(-50%);
+  z-index: 1;
   ${(p) =>
     p.isCopy &&
     css`
@@ -84,7 +85,14 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-export default function Tooltip({ label, bg, content, children, isCopy, copyText }) {
+export default function Tooltip({
+  label,
+  bg,
+  content,
+  children,
+  isCopy,
+  copyText,
+}) {
   const dispatch = useDispatch();
 
   const onCopy = () => {

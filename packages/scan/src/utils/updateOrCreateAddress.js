@@ -2,48 +2,60 @@ const { getAddressCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
 const { getApi } = require("../api");
 const { logger } = require("../logger");
+const { getAccountStorageKey } = require("./accountStorageKey");
 
-async function updateOrCreateAddress(blockIndexer, address) {
-  const session = asyncLocalStorage.getStore();
-  const col = await getAddressCollection();
-  const api = await getApi();
-
-  const account = await api.query.system.account.at(
-    blockIndexer.blockHash,
-    address
-  );
-  if (account) {
-    await col.updateOne(
-      { address },
-      {
-        $set: {
-          ...account.toJSON(),
-          lastUpdatedAt: blockIndexer,
-        },
-      },
-      { upsert: true, session }
-    );
-  }
-}
-
-async function handleMultiAddress(blockIndexer, addrs = []) {
+async function handleMultiAddress(blockIndexer, addrs = [], registry) {
   if (addrs.length <= 0) {
     return;
   }
 
   const uniqueAddrs = [...new Set(addrs)];
+  const api = await getApi();
+  const keys = uniqueAddrs.map(getAccountStorageKey);
+  const result = await api.rpc.state.queryStorageAt(
+    keys,
+    blockIndexer.blockHash
+  );
+  const accountInfoHexArr = (result || []).map((i) => i.toHex());
 
-  // TODO: query in batch, insert in batch
-  const promises = [];
-  for (const addr of uniqueAddrs) {
-    promises.push(updateOrCreateAddress(blockIndexer, addr));
+  const accounts = uniqueAddrs.reduce((result, address, idx) => {
+    const accountInfoHex = accountInfoHexArr[idx];
+    if (!accountInfoHex) {
+      return result;
+    }
+
+    const accountInfo = registry.createType(
+      "AccountInfo",
+      accountInfoHex,
+      true
+    );
+    result.push({ address, info: accountInfo.toJSON() });
+    return result;
+  }, []);
+
+  if (accounts.length <= 0) {
+    return;
   }
 
-  await Promise.all(promises);
+  const session = asyncLocalStorage.getStore();
+  const col = await getAddressCollection();
+  const bulk = col.initializeUnorderedBulkOp();
+  for (const account of accounts) {
+    bulk
+      .find({ address: account.address })
+      .upsert()
+      .updateOne({
+        $set: {
+          ...account.info,
+          lastUpdatedAt: blockIndexer,
+        },
+      });
+  }
+  await bulk.execute(null, { session });
+
   logger.info(`${uniqueAddrs.length} addresses have been updated`);
 }
 
 module.exports = {
-  updateOrCreateAddress,
   handleMultiAddress,
 };

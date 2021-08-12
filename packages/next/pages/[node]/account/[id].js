@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { ssrNextApi as nextApi } from "services/nextApi";
+import {ssrNextApi as nextApi} from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
 import AddressEllipsis from "components/addressEllipsis";
@@ -9,7 +9,7 @@ import {
   fromAssetUnit,
   fromSymbolUnit,
 } from "utils";
-import { getSymbol } from "utils/hooks";
+import {getSymbol} from "utils/hooks";
 import DetailTable from "components/detailTable";
 import {
   addressAssetsHead,
@@ -37,32 +37,31 @@ import TeleportDirection from "../../../components/teleportDirection";
 import ChainAddressEllipsis from "../../../components/chainAddressEllipsis";
 import ExplorerLink from "../../../components/explorerLink";
 import BigNumber from "bignumber.js";
-import axios from "axios";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
   if (direction === "in") {
-    return { source: chain.sub, target: chain.name };
+    return {source: chain.sub, target: chain.name};
   } else {
-    return { source: chain.name, target: chain.sub };
+    return {source: chain.name, target: chain.sub};
   }
 }
 
 export default function Address({
-  node,
-  id,
-  tab,
-  addressDetail,
-  addressAssets,
-  addressTransfers,
-  addressExtrinsics,
-  addressTeleports,
-  addressIdentity,
-}) {
+                                  node,
+                                  id,
+                                  tab,
+                                  addressDetail,
+                                  addressAssets,
+                                  addressTransfers,
+                                  addressExtrinsics,
+                                  addressTeleports,
+                                  addressIdentity,
+                                }) {
   if (!addressDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound />
+        <PageNotFound/>
       </Layout>
     );
   }
@@ -75,7 +74,7 @@ export default function Address({
   const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
+    sendAtCol.name = <img src={nodeInfo.icon} alt=""/>;
   }
 
   const tabTableData = [
@@ -121,7 +120,7 @@ export default function Address({
         <InLink
           to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
-        <Tooltip label={item.method} bg />,
+        <Tooltip label={item.method} bg/>,
         item.indexer.blockTime,
         item.from !== id ? (
           <AddressEllipsis
@@ -129,7 +128,7 @@ export default function Address({
             to={`/${node}/account/${item.from}`}
           />
         ) : (
-          <AddressEllipsis address={item.from} />
+          <AddressEllipsis address={item.from}/>
         ),
         item.to !== id ? (
           <AddressEllipsis
@@ -137,15 +136,15 @@ export default function Address({
             to={`/${node}/account/${item.to}`}
           />
         ) : (
-          <AddressEllipsis address={item.to} />
+          <AddressEllipsis address={item.to}/>
         ),
         item.assetSymbol
           ? `${bigNumber2Locale(
-              fromAssetUnit(item.balance, item.assetDecimals)
-            )} ${item.assetSymbol}`
+          fromAssetUnit(item.balance, item.assetDecimals)
+          )} ${item.assetSymbol}`
           : `${bigNumber2Locale(
-              fromSymbolUnit(item.balance, symbol)
-            )} ${symbol}`,
+          fromSymbolUnit(item.balance, symbol)
+          )} ${symbol}`,
       ]),
       foot: (
         <Pagination
@@ -171,7 +170,7 @@ export default function Address({
           to={`/${node}/extrinsic/${item?.hash}`}
         />,
         item?.indexer?.blockTime,
-        <Result isSuccess={item?.isSuccess} />,
+        <Result isSuccess={item?.isSuccess}/>,
         `${item.section}(${item.name})`,
         item.args,
       ]),
@@ -201,7 +200,7 @@ export default function Address({
         />,
         item.beneficiary ? (
           item.teleportDirection === "in" ? (
-            <AddressEllipsis address={item.beneficiary} />
+            <AddressEllipsis address={item.beneficiary}/>
           ) : (
             <ChainAddressEllipsis
               chain={teleportSourceAndTarget(item.teleportDirection).target}
@@ -212,9 +211,9 @@ export default function Address({
           "-"
         ),
         item.teleportDirection === "in" ? (
-          <Result isSuccess={item.complete} noText={true} />
+          <Result isSuccess={item.complete} noText={true}/>
         ) : (
-          <Result isSuccess={null} noText={true} />
+          <Result isSuccess={null} noText={true}/>
         ),
         item.teleportDirection === "in" ? (
           <ExplorerLink
@@ -229,11 +228,11 @@ export default function Address({
         !item.complete || item.amount === null || item.amount === undefined
           ? "-"
           : `${bigNumber2Locale(
-              fromSymbolUnit(
-                new BigNumber(item.amount).minus(item.fee || 0).toString(),
-                symbol
-              )
-            )}`,
+          fromSymbolUnit(
+            new BigNumber(item.amount).minus(item.fee || 0).toString(),
+            symbol
+          )
+          )}`,
         item.fee === null || item.fee === undefined
           ? "-"
           : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))}`,
@@ -256,7 +255,7 @@ export default function Address({
       <Section>
         <div>
           <Nav
-            data={[{ name: "Account" }, { name: addressEllipsis(id) }]}
+            data={[{name: "Account"}, {name: addressEllipsis(id)}]}
             node={node}
           />
           <DetailTable
@@ -270,7 +269,7 @@ export default function Address({
                   paddingBottom: 8,
                 }}
               >
-                <Identity identity={addressIdentity} />
+                <Identity identity={addressIdentity}/>
                 <CopyText text={addressDetail?.address}>
                   <BreakText>
                     <MinorText>
@@ -295,15 +294,15 @@ export default function Address({
             ]}
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} />
+        <TabTable data={tabTableData} activeTab={tab} collapse={900}/>
       </Section>
     </Layout>
   );
 }
 
 export async function getServerSideProps(context) {
-  const { node, id } = context.params;
-  const { tab, page } = context.query;
+  const {node, id} = context.params;
+  const {tab, page} = context.query;
 
   const relayChain =
     nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
@@ -312,12 +311,12 @@ export async function getServerSideProps(context) {
   const activeTab = tab ?? "assets";
 
   const [
-    { result: addressDetail },
-    { result: addressAssets },
-    { result: addressTransfers },
-    { result: addressExtrinsics },
-    { result: addressTeleports },
-    { data: addressIdentity },
+    {result: addressDetail},
+    {result: addressAssets},
+    {result: addressTransfers},
+    {result: addressExtrinsics},
+    {result: addressTeleports},
+    addressIdentity,
   ] = await Promise.all([
     nextApi.fetch(`${node}/addresses/${id}`),
     nextApi.fetch(`${node}/addresses/${id}/assets`, {
@@ -332,9 +331,9 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`${node}/addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
-    axios.get(
+    fetch(
       `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`
-    ).catch(() => ({ data: null })),
+    ).then(res => res.json()).catch(() => ({data: null})),
   ]);
 
   return {

@@ -52,7 +52,7 @@ const Display = styled.span`
   display: inline-block;
   ${p => p.width
     ? css`width: ${p.width};`
-    : css`width: 86px;`
+    : css`max-width: 86px;`
   }
   overflow: hidden;
   text-overflow: ellipsis;

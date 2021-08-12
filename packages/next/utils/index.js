@@ -36,7 +36,7 @@ export function hashEllipsis(hash = "", start = 6, end = 6) {
 
 export function timeDuration(time) {
   if (!time) {
-    return "Unknown";
+    return "Unknown time";
   }
   moment.updateLocale("en", {
     relativeTime: {

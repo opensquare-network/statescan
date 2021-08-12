@@ -30,10 +30,15 @@ export default function AddressCounts({
 }) {
   return (
     <Wrapper>
-      <AddressEllipsis
-        address={validator}
-        to={`/${node}/account/${validator}`}
-      />
+      {validator ? (
+        <AddressEllipsis
+          address={validator}
+          to={`/${node}/account/${validator}`}
+        />
+      ) : (
+        "Unknown validator"
+      )}
+
       <FlexWrapper style={{ width: "100%", marginTop: 4 }}>
         <Label>Extrinsics</Label> {extrinsicCount}
         <Label style={{ marginLeft: 16 }}>Events</Label> {eventsCount}

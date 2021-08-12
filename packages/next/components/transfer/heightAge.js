@@ -23,7 +23,7 @@ const Link = styled.span`
 export default function HeightAge({ node, height, age }) {
   return (
     <Wrapper>
-      <img src="/imgs/icons/block.svg" alt="" />
+      <img src="/imgs/icons/transfer.svg" alt="" />
       <FlexWrapper style={{ width: 150, marginLeft: 16 }}>
         <InLink to={`/${node}/extrinsic/${height}`}>
           <Link>{height.toLocaleString()}</Link>

@@ -18,8 +18,9 @@ const Wrapper = styled.div`
 const FlexWrapper = styled.div`
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: flex-end;
+  align-items: center;
 `;
 
 const Amount = styled.span`
@@ -37,23 +38,25 @@ export default function AmountFromTo({ node, amount, symbol, from, to }) {
           {amount} {symbol}
         </Amount>
       </FlexWrapper>
-      <AddressEllipsis address={from} to={`/${node}/account/${from}`} />
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M2.66663 8.6665H14L9.99996 4.6665"
-          stroke="#52CC8A"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      <AddressEllipsis address={to} to={`/${node}/account/${to}`} />
+      <FlexWrapper>
+        <AddressEllipsis address={from} to={`/${node}/account/${from}`} />
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M2.66663 8.6665H14L9.99996 4.6665"
+            stroke="#52CC8A"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <AddressEllipsis address={to} to={`/${node}/account/${to}`} />
+      </FlexWrapper>
     </Wrapper>
   );
 }

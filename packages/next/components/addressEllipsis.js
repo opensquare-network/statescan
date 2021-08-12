@@ -54,7 +54,7 @@ export default function AddressEllipsis({ address, to }) {
   const identityDisplay = (
     <span>
       {identity && <b>
-        {identity?.info?.display}
+        {identity?.info?.displayParent ? `${identity?.info?.displayParent}/`:''}{identity?.info?.display}
         <br/>
       </b>}
       {address}

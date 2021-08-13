@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { disconnect } = require("./api");
-const { updateHeight, getLatestHeight } = require("./chain");
+const { updateHeight, getLatestFinalizedHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
 const { getBlocks } = require("./mongo/meta");
@@ -36,7 +36,7 @@ async function main() {
   while (true) {
     await sleep(0);
     // chainHeight is the current on-chain last block height
-    const chainHeight = getLatestHeight();
+    const chainHeight = getLatestFinalizedHeight();
 
     if (scanHeight > chainHeight) {
       // Just wait if the to scan height greater than current chain height

@@ -26,6 +26,11 @@ const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 async function main() {
   await updateHeight();
   await updateSpecs();
+  const specHeights = getSpecHeights();
+  if (specHeights.length <= 0 || specHeights[0] > 1) {
+    logger.error("No specHeights or invalid");
+    return;
+  }
 
   let scanHeight = await getNextScanHeight();
   while (true) {

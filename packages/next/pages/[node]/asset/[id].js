@@ -87,7 +87,7 @@ export default function Asset({
       total: assetHolders?.total,
       head: assetHoldersHead,
       body: (assetHolders?.items || []).map((item, index) => [
-        index + 1,
+        (index + assetHolders.page * assetHolders.pageSize) + 1,
         <Address address={item?.address} to={`/${node}/account/${item?.address}`} />,
         bigNumber2Locale(fromAssetUnit(item?.balance, item?.assetDecimals)),
       ]),

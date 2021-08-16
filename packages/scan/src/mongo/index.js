@@ -23,6 +23,9 @@ const addressCollectionName = "address";
 const approvalCollectionName = "approval";
 const teleportCollectionMame = "teleport";
 
+// unFinalized collections
+const unFinalizedCollectionName = "unFinalizedBlock";
+
 let client = null;
 let db = null;
 
@@ -37,6 +40,7 @@ let assetHolderCol = null;
 let addressCol = null;
 let approvalCol = null;
 let teleportCol = null;
+let unFinalizedBlockCol = null;
 
 async function getCollection(colName) {
   try {
@@ -67,6 +71,7 @@ async function initDb() {
   addressCol = getCollection(addressCollectionName);
   approvalCol = getCollection(approvalCollectionName);
   teleportCol = getCollection(teleportCollectionMame);
+  unFinalizedBlockCol = getCollection(unFinalizedCollectionName);
 
   await _createIndexes();
 }
@@ -84,6 +89,11 @@ async function tryInit(col) {
   if (!col) {
     await initDb();
   }
+}
+
+async function getUnFinalizedBlockCollection() {
+  await tryInit(unFinalizedBlockCol);
+  return unFinalizedBlockCol;
 }
 
 async function getStatusCollection() {
@@ -151,5 +161,6 @@ module.exports = {
   getAddressCollection,
   getAssetApprovalCollection,
   getTeleportCollection,
+  getUnFinalizedBlockCollection,
   withSession,
 };

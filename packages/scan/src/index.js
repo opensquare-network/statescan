@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { disconnect } = require("./api");
-const { updateHeight, getLatestHeight } = require("./chain");
+const { updateHeight, getLatestFinalizedHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
 const { getBlocks } = require("./mongo/meta");
@@ -22,6 +22,7 @@ const {
 } = require("./mongo/service/specs");
 const { getAddresses } = require("./utils/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
+const { updateUnFinalized } = require("./unFinalized");
 
 async function main() {
   await updateHeight();
@@ -32,22 +33,23 @@ async function main() {
     return;
   }
 
-  let scanHeight = await getNextScanHeight();
+  let scanFinalizedHeight = await getNextScanHeight();
   while (true) {
     await sleep(0);
     // chainHeight is the current on-chain last block height
-    const chainHeight = getLatestHeight();
+    const finalizedHeight = getLatestFinalizedHeight();
 
-    if (scanHeight > chainHeight) {
+    if (scanFinalizedHeight > finalizedHeight) {
       // Just wait if the to scan height greater than current chain height
+      await updateUnFinalized();
       await sleep(3000);
       continue;
     }
 
-    let targetHeight = chainHeight;
+    let targetHeight = finalizedHeight;
     // Retrieve & Scan no more than 100 blocks at a time
-    if (scanHeight + 100 < chainHeight) {
-      targetHeight = scanHeight + 100;
+    if (scanFinalizedHeight + 100 < finalizedHeight) {
+      targetHeight = scanFinalizedHeight + 100;
     }
 
     const specHeights = getSpecHeights();
@@ -55,7 +57,7 @@ async function main() {
       await updateSpecs();
     }
 
-    const blocks = await getBlocks(scanHeight, targetHeight);
+    const blocks = await getBlocks(scanFinalizedHeight, targetHeight);
     if ((blocks || []).length <= 0) {
       await sleep(1000);
       continue;
@@ -77,11 +79,11 @@ async function main() {
           await sleep(3000);
         }
 
-        scanHeight = block.height + 1;
+        scanFinalizedHeight = block.height + 1;
       });
     }
 
-    logger.info(`block ${scanHeight - 1} done`);
+    logger.info(`block ${scanFinalizedHeight - 1} done`);
   }
 }
 

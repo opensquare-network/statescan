@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 
 import Github from "../../public/imgs/icons/sns/github.svg";
 import Twitter from "../../public/imgs/icons/sns/twitter.svg";
@@ -28,22 +28,32 @@ const Link = styled.a`
   }
 `;
 
-
 export default function SocialMedia() {
-
   return (
     <Wrapper>
-      <Link href="https://github.com/opensquare-network/" target="_blank" referrerPolicy="no-referrer">
-        <Github/>
+      <Link
+        href="https://github.com/opensquare-network/"
+        target="_blank"
+        referrerPolicy="no-referrer"
+      >
+        <Github />
       </Link>
-      <Link href="https://twitter.com/OpensquareN" target="_blank" referrerPolicy="no-referrer">
-        <Twitter/>
+      <Link
+        href="https://twitter.com/OpensquareN"
+        target="_blank"
+        referrerPolicy="no-referrer"
+      >
+        <Twitter />
       </Link>
-      <Link href="mailto:hi@opensquare.network">
-        <Mail/>
+      <Link href="mailto:hi@opensquare.network" target="_blank">
+        <Mail />
       </Link>
-      <Link href="https://app.element.io/#/room/#opensquare:matrix.org" target="_blank" referrerPolicy="no-referrer">
-        <Element/>
+      <Link
+        href="https://app.element.io/#/room/#opensquare:matrix.org"
+        target="_blank"
+        referrerPolicy="no-referrer"
+      >
+        <Element />
       </Link>
     </Wrapper>
   );

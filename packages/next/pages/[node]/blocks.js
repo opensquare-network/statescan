@@ -29,7 +29,13 @@ export default function Blocks({ node, blocks }) {
               {item?.header?.number}
             </InLink>,
             item?.blockTime,
-            "Finalized",
+            <img
+              src={`/imgs/icons/${
+                !item?.isFinalized ? "circle-pending" : "check-green"
+              }.svg`}
+              alt=""
+              style={{ marginRight: 6 }}
+            />,
             <ThemeText>
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,

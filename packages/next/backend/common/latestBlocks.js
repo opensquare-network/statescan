@@ -4,7 +4,8 @@ const {
 } = require("../mongo");
 
 async function getLatestBlocks(chain, n = 5) {
-  return await getPagedBlocks(chain, 0, n);
+  const blocks = await getPagedBlocks(chain, 0, n);
+  return blocks.slice(0, n);
 }
 
 async function getPagedBlocks(chain, page, pageSize) {

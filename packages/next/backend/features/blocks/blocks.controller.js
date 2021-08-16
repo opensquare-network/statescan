@@ -8,7 +8,10 @@ const {
   getUnFinalizedEventCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
-const { getPagedBlocks } = require("../../common/latestBlocks");
+const {
+  getPagedBlocks,
+  getLatestBlocks: getLatestBlocksFromDb,
+} = require("../../common/latestBlocks");
 
 async function getBlocks(ctx) {
   const { chain } = ctx.params;
@@ -32,7 +35,7 @@ async function getBlocks(ctx) {
 
 async function getLatestBlocks(ctx) {
   const { chain } = ctx.params;
-  ctx.body = await getPagedBlocks(chain, 0, 5);
+  ctx.body = await getLatestBlocksFromDb(chain, 5);
 }
 
 async function getBlockHeight(ctx) {

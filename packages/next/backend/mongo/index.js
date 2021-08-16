@@ -59,6 +59,14 @@ function getUnFinalizedBlockCollection(chain) {
   return db(chain).getUnFinalizedBlockCollection();
 }
 
+function getUnFinalizedEventCollection(chain) {
+  return db(chain).getUnFinalizedEventCollection();
+}
+
+function getUnFinalizedExrinsicCollection(chain) {
+  return db(chain).getUnFinalizedExrinsicCollection();
+}
+
 module.exports = {
   initDb,
 
@@ -73,6 +81,8 @@ module.exports = {
   getAddressCollection,
   getTeleportCollection,
   getUnFinalizedBlockCollection,
+  getUnFinalizedEventCollection,
+  getUnFinalizedExrinsicCollection,
 
   // Price db collections
   getDotUsdtDailyCollection,

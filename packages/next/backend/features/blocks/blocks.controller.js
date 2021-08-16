@@ -3,6 +3,9 @@ const {
   getStatusCollection,
   getExtrinsicCollection,
   getEventCollection,
+  getUnFinalizedBlockCollection,
+  getUnFinalizedExrinsicCollection,
+  getUnFinalizedEventCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
@@ -66,8 +69,22 @@ async function getBlock(ctx) {
     $match["header.number"] = parseInt(heightOrHash);
   }
 
-  ctx.body = await col.findOne($match, {
+  let isFinalized = true;
+  let block = await col.findOne($match, {
     projection: { data: 0, extrinsics: 0 },
+  });
+
+  if (!block) {
+    const unFinalizedCol = await getUnFinalizedBlockCollection(chain);
+    block = await unFinalizedCol.findOne($match, {
+      projection: { data: 0, extrinsics: 0 },
+    });
+
+    isFinalized = false;
+  }
+  return (ctx.body = {
+    ...block,
+    isFinalized,
   });
 }
 
@@ -80,7 +97,6 @@ async function getBlockExtrinsics(ctx) {
   }
 
   const $match = {};
-  const col = await getExtrinsicCollection(chain);
 
   if (heightOrHash.startsWith("0x")) {
     $match["indexer.blockHash"] = heightOrHash;
@@ -88,6 +104,21 @@ async function getBlockExtrinsics(ctx) {
     $match["indexer.blockHeight"] = parseInt(heightOrHash);
   }
 
+  const col = await getExtrinsicCollection(chain);
+  let data = await getExtrinsicsFromCollection(col, $match, page, pageSize);
+  if (data.total <= 0) {
+    const col = await getUnFinalizedExrinsicCollection(chain);
+    data = await getExtrinsicsFromCollection(col, $match, page, pageSize);
+  }
+
+  ctx.body = {
+    ...data,
+    page,
+    pageSize,
+  };
+}
+
+async function getExtrinsicsFromCollection(col, $match, page, pageSize) {
   const items = await col
     .find($match, { projection: { data: 0 } })
     .sort({
@@ -98,10 +129,8 @@ async function getBlockExtrinsics(ctx) {
     .toArray();
   const total = await col.countDocuments($match);
 
-  ctx.body = {
+  return {
     items,
-    page,
-    pageSize,
     total,
   };
 }
@@ -115,7 +144,6 @@ async function getBlockEvents(ctx) {
   }
 
   const $match = {};
-  const col = await getEventCollection(chain);
 
   if (heightOrHash.startsWith("0x")) {
     $match["indexer.blockHash"] = heightOrHash;
@@ -123,6 +151,21 @@ async function getBlockEvents(ctx) {
     $match["indexer.blockHeight"] = parseInt(heightOrHash);
   }
 
+  const col = await getEventCollection(chain);
+  let data = await getEventsFromCollection(col, $match, page, pageSize);
+  if (data.total <= 0) {
+    const col = await getUnFinalizedEventCollection(chain);
+    data = await getEventsFromCollection(col, $match, page, pageSize);
+  }
+
+  ctx.body = {
+    ...data,
+    page,
+    pageSize,
+  };
+}
+
+async function getEventsFromCollection(col, $match, page, pageSize) {
   const items = await col
     .find($match)
     .sort({
@@ -133,10 +176,8 @@ async function getBlockEvents(ctx) {
     .toArray();
   const total = await col.countDocuments($match);
 
-  ctx.body = {
+  return {
     items,
-    page,
-    pageSize,
     total,
   };
 }

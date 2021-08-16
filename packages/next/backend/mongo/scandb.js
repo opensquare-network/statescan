@@ -45,6 +45,7 @@ function DB(dbName) {
     assetHolderCol = db.collection(assetHolderCollectionName);
     addressCol = db.collection(addressCollectionName);
     teleportCol = db.collection(teleportCollectionName);
+    unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
 
     await _createIndexes();
   }

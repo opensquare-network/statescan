@@ -26,7 +26,7 @@ function getLatestFinalizedHeight() {
 }
 
 function getLatestUnFinalizedHeight() {
-  return latestFinalizedHeight;
+  return latestUnFinalizedHeight;
 }
 
 module.exports = {

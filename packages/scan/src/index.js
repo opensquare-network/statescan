@@ -22,6 +22,7 @@ const {
 } = require("./mongo/service/specs");
 const { getAddresses } = require("./utils/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
+const { updateUnFinalized } = require("./unFinalized");
 
 async function main() {
   await updateHeight();
@@ -40,6 +41,7 @@ async function main() {
 
     if (scanFinalizedHeight > finalizedHeight) {
       // Just wait if the to scan height greater than current chain height
+      await updateUnFinalized();
       await sleep(3000);
       continue;
     }

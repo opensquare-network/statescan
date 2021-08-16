@@ -17,7 +17,7 @@ async function getPagedBlocks(chain, page, pageSize) {
 
   const col = await getUnFinalizedBlockCollection(chain);
   const unFinalizedBlocks = await getColBlocks(col, 0, 1000, false);
-  return [...unFinalizedBlocks, finalizedBlocks];
+  return [...unFinalizedBlocks, ...finalizedBlocks];
 }
 
 async function getColBlocks(col, page, pageSize, isFinalized = true) {

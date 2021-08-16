@@ -7,6 +7,7 @@ const { extractAuthor } = require("@polkadot/api-derive/type/util");
 const extractBlockTime = require("../block/extractBlockTime");
 const { getUnFinalizedBlockCollection } = require("../mongo");
 const omit = require("lodash.omit");
+const { saveBlocksEventData } = require("./events");
 
 let preScanFinalizedHeight = null;
 let preScanUnFinalizedHeight = null;
@@ -38,7 +39,14 @@ async function updateUnFinalized() {
   const blockDataArr = await Promise.all(promises);
 
   const normalizedBlocks = blockDataArr.map(normalizeBlock);
+  await saveBlocks(normalizedBlocks);
+  await saveBlocksEventData(blockDataArr);
 
+  preScanFinalizedHeight = finalizedHeight;
+  preScanUnFinalizedHeight = unFinalizedHeight;
+}
+
+async function saveBlocks(normalizedBlocks) {
   const unFinalizedBlockCol = await getUnFinalizedBlockCollection();
   const bulk = unFinalizedBlockCol.initializeOrderedBulkOp();
 
@@ -48,9 +56,6 @@ async function updateUnFinalized() {
   }
 
   await bulk.execute();
-
-  preScanFinalizedHeight = finalizedHeight;
-  preScanUnFinalizedHeight = unFinalizedHeight;
 }
 
 async function getBlockFromNode(height) {

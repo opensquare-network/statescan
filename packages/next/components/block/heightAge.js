@@ -20,7 +20,11 @@ const Link = styled.span`
   font-weight: 600;
 `;
 
-export default function HeightAge({ node, height, age }) {
+export default function HeightAge({ node, height, age, isFinalized = true }) {
+  const imgUrl = `/imgs/icons/${
+    isFinalized ? "check-green" : "circle-pending"
+  }.svg`;
+
   return (
     <Wrapper>
       <img src="/imgs/icons/block.svg" alt="" />
@@ -29,11 +33,7 @@ export default function HeightAge({ node, height, age }) {
           <Link>{height}</Link>
         </InLink>
         <FlexWrapper style={{ width: 160, marginTop: 4 }}>
-          <img
-            src="/imgs/icons/check-green.svg"
-            alt=""
-            style={{ marginRight: 6 }}
-          />
+          <img src={imgUrl} alt="" style={{ marginRight: 6 }} />
           <MinorText>{timeDuration(age)}</MinorText>
         </FlexWrapper>
       </FlexWrapper>

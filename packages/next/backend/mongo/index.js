@@ -55,6 +55,10 @@ function getTeleportCollection(chain) {
   return db(chain).getTeleportCollection();
 }
 
+function getUnFinalizedBlockCollection(chain) {
+  return db(chain).getUnFinalizedBlockCollection();
+}
+
 module.exports = {
   initDb,
 
@@ -68,6 +72,7 @@ module.exports = {
   getAssetHolderCollection,
   getAddressCollection,
   getTeleportCollection,
+  getUnFinalizedBlockCollection,
 
   // Price db collections
   getDotUsdtDailyCollection,

@@ -78,6 +78,7 @@ export default function Home({node, overview: ssrOverview, price}) {
         node={node}
         height={item.header.number}
         age={item.blockTime}
+        isFinalized={item.isFinalized}
       />,
       <AddressCounts
         node={node}

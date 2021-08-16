@@ -6,6 +6,7 @@ const {
   getAssetTransferCollection,
   getAssetCollection,
   getAddressCollection,
+  getUnFinalizedBlockCollection,
 } = require("../mongo");
 
 async function feedOverview(chain, io) {
@@ -26,20 +27,44 @@ async function feedOverview(chain, io) {
   }
 }
 
-async function calcOverview(chain) {
+async function getLatestBlocks() {
   const blockCol = await getBlockCollection(chain);
+  const unFinalizedBlockCol = await getUnFinalizedBlockCollection(chain);
+
+  // Load latest 5 blocks
+  const latestUnFinalizedBlocks = await unFinalizedBlockCol
+    .find({})
+    .sort({ "header.number": -1 })
+    .limit(5)
+    .toArray()
+    .map((block) => ({
+      isFinalized: false,
+      ...block,
+    }));
+
+  // Load latest 5 blocks
+  const latestBlocks = await blockCol
+    .find({})
+    .sort({
+      "header.number": -1,
+    })
+    .limit(5)
+    .toArray()
+    .map((block) => ({
+      isFinalized: true,
+      ...block,
+    }));
+
+  return [...latestUnFinalizedBlocks, ...latestBlocks].slice(0, 5);
+}
+
+async function calcOverview(chain) {
   const transferCol = await getAssetTransferCollection(chain);
   const addressCol = await getAddressCollection(chain);
   const assetCol = await getAssetCollection(chain);
 
   // Load latest 5 blocks
-  const latestBlocks = await blockCol
-    .find({}, { projection: { extrinsics: 0 } })
-    .sort({
-      "header.number": -1,
-    })
-    .limit(5)
-    .toArray();
+  const latestBlocks = await getLatestBlocks();
 
   // Load latest 5 transfers
   const latestTransfers = await transferCol

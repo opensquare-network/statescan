@@ -11,6 +11,9 @@ function DB(dbName) {
   const addressCollectionName = "address";
   const teleportCollectionName = "teleport";
 
+  // unFinalized collections
+  const unFinalizedCollectionName = "unFinalizedBlock";
+
   let client = null;
   let db = null;
 
@@ -24,6 +27,8 @@ function DB(dbName) {
   let assetHolderCol = null;
   let addressCol = null;
   let teleportCol = null;
+
+  let unFinalizedBlockCol = null;
 
   async function initDb() {
     client = await MongoClient.connect(mongoUrl, {
@@ -68,7 +73,8 @@ function DB(dbName) {
       section: 1,
       name: 1,
       "indexer.blockHeight": -1,
-      "indexer.index": -1, });
+      "indexer.index": -1,
+    });
 
     eventCol.createIndex({ "indexer.blockHash": 1, sort: -1 });
     eventCol.createIndex({ "indexer.blockHeight": -1, sort: -1 });
@@ -82,7 +88,7 @@ function DB(dbName) {
       section: 1,
       method: 1,
       "indexer.blockHeight": -1,
-      sort: -1
+      sort: -1,
     });
 
     addressCol.createIndex({ address: 1 });
@@ -151,6 +157,11 @@ function DB(dbName) {
     return teleportCol;
   }
 
+  async function getUnFinalizedBlockCollection() {
+    await tryInit(unFinalizedBlockCol);
+    return unFinalizedBlockCol;
+  }
+
   return {
     initDb,
     getStatusCollection,
@@ -162,6 +173,7 @@ function DB(dbName) {
     getAssetHolderCollection,
     getAddressCollection,
     getTeleportCollection,
+    getUnFinalizedBlockCollection,
   };
 }
 

@@ -13,6 +13,8 @@ function DB(dbName) {
 
   // unFinalized collections
   const unFinalizedCollectionName = "unFinalizedBlock";
+  const unFinalizedExtrinsicCollectionName = "unFinalizedExtrinsic";
+  const unFinalizedEventCollectionName = "unFinalizedEvent";
 
   let client = null;
   let db = null;
@@ -29,6 +31,8 @@ function DB(dbName) {
   let teleportCol = null;
 
   let unFinalizedBlockCol = null;
+  let unFinalizedExtrinsicCol = null;
+  let unFinalizedEventCol = null;
 
   async function initDb() {
     client = await MongoClient.connect(mongoUrl, {
@@ -46,6 +50,8 @@ function DB(dbName) {
     addressCol = db.collection(addressCollectionName);
     teleportCol = db.collection(teleportCollectionName);
     unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
+    unFinalizedExtrinsicCol = db.collection(unFinalizedExtrinsicCollectionName);
+    unFinalizedEventCol = db.collection(unFinalizedEventCollectionName);
 
     await _createIndexes();
   }
@@ -163,6 +169,16 @@ function DB(dbName) {
     return unFinalizedBlockCol;
   }
 
+  async function getUnFinalizedEventCollection() {
+    await tryInit(unFinalizedEventCol);
+    return unFinalizedEventCol;
+  }
+
+  async function getUnFinalizedExrinsicCollection() {
+    await tryInit(unFinalizedExtrinsicCol);
+    return unFinalizedExtrinsicCol;
+  }
+
   return {
     initDb,
     getStatusCollection,
@@ -175,6 +191,8 @@ function DB(dbName) {
     getAddressCollection,
     getTeleportCollection,
     getUnFinalizedBlockCollection,
+    getUnFinalizedEventCollection,
+    getUnFinalizedExrinsicCollection,
   };
 }
 

@@ -34,7 +34,6 @@ export default function Blocks({ node, blocks }) {
                 !item?.isFinalized ? "circle-pending" : "check-green"
               }.svg`}
               alt=""
-              style={{ marginRight: 6 }}
             />,
             <ThemeText>
               <HashEllipsis hash={item?.hash} />

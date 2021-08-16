@@ -23,7 +23,14 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
   }, []);
 
   useEffect(() => {
-    listenFirstPageBlocks(node, setFirstPageBlocks);
+    if (ssrBlocks?.page > 0) {
+      return;
+    }
+
+    const unsubscribe = listenFirstPageBlocks(node, setFirstPageBlocks);
+    return () => {
+      unsubscribe();
+    };
   }, [node]);
 
   const blocks = firstPageBlocks || ssrBlocks;

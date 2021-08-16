@@ -47,4 +47,11 @@ export function listenFirstPageBlocks(chain, callback) {
       callback(firstPageBlocks);
     });
   });
+
+  return () => {
+    if (socket) {
+      socket.emit("unsubscribe", firstPageBlocksRoom);
+      socket.disconnect();
+    }
+  };
 }

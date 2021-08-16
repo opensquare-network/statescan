@@ -1,12 +1,6 @@
 import styled from "styled-components";
 import IdentityIcon from "./identityIcon";
-import Polkascan from "../../public/imgs/icons/identity/polkascan.svg";
-import PolkascanGrey from "../../public/imgs/icons/identity/polkascan-grey.svg";
-import Subscan from "../../public/imgs/icons/identity/subscan.svg";
-import SubscanGrey from "../../public/imgs/icons/identity/subscan-grey.svg";
 import MonoText from "../monoText";
-import { useNode } from "../../utils/hooks";
-import { nodes } from "utils/constants";
 
 const Wrapper = styled.div`
   margin-bottom: 8px;
@@ -29,25 +23,6 @@ const Wrapper = styled.div`
   font-weight: 500;
 `;
 
-const Source = styled.a`
-  svg {
-    margin: 0 !important;
-  }
-
-  .hover-show {
-    display: none;
-  }
-
-  &:hover {
-    .hover-hide {
-      display: none;
-    }
-
-    .hover-show {
-      display: initial;
-    }
-  }
-`;
 
 const Display = styled.span`
   margin-right: 8px;
@@ -57,9 +32,6 @@ export default function Identity({ identity }) {
   if (!identity) {
     return null;
   }
-  const node = useNode();
-  const relayChain =
-    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   const displayName = identity?.info?.displayParent
     ? `${identity?.info?.displayParent}/${identity?.info?.display}`
@@ -72,22 +44,6 @@ export default function Identity({ identity }) {
         {" "}
         <MonoText>{displayName}</MonoText>{" "}
       </Display>
-      <Source
-        href={`https://polkascan.io/${relayChain}/account/${identity.address}`}
-        target="_blank"
-        title="polkascan"
-      >
-        <PolkascanGrey className="hover-hide" />
-        <Polkascan className="hover-show" />
-      </Source>
-      <Source
-        href={`https://${relayChain}.subscan.io/account/${identity.address}`}
-        target="_blank"
-        title="subascan"
-      >
-        <SubscanGrey className="hover-hide" />
-        <Subscan className="hover-show" />
-      </Source>
     </Wrapper>
   );
 }

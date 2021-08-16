@@ -18,16 +18,17 @@ import {
   transfersLatestHead,
   assetsHead,
 } from "utils/constants";
-import { getSymbol, useWindowSize } from "utils/hooks";
-import { useSelector } from "react-redux";
-import { overviewSelector } from "store/reducers/chainSlice";
-import { ssrNextApi as nextApi } from "services/nextApi";
-import { useEffect, useState } from "react";
-import { connect } from "services/websocket";
+import {getSymbol, useWindowSize} from "utils/hooks";
+import {useSelector} from "react-redux";
+import {overviewSelector} from "store/reducers/chainSlice";
+import {ssrNextApi as nextApi} from "services/nextApi";
+import {useEffect, useState} from "react";
+import {connect} from "services/websocket";
 import HeightAge from "../../components/block/heightAge";
 import TransferHeightAge from "../../components/transfer/heightAge";
 import AddressCounts from "../../components/block/addressCounts";
 import AmountFromTo from "../../components/transfer/amountFromTo";
+import Name from "../../components/account/name";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -54,7 +55,7 @@ const FlexWrapper = styled.div`
   align-items: center;
 `;
 
-export default function Home({ node, overview: ssrOverview, price }) {
+export default function Home({node, overview: ssrOverview, price}) {
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
   const [time, setTime] = useState(Date.now());
@@ -95,18 +96,18 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <img
           src="/imgs/icons/check-green.svg"
           alt=""
-          style={{ marginRight: 8 }}
+          style={{marginRight: 8}}
         />
         <MinorText>{timeDuration(item.blockTime)}</MinorText>
       </FlexWrapper>,
       item.author ? (
-          <AddressEllipsis
-            address={item.author}
-            to={`/${node}/account/${item.author}`}
-          />
-        ) : (
-          "Unknown validator"
-        ),
+        <AddressEllipsis
+          address={item.author}
+          to={`/${node}/account/${item.author}`}
+        />
+      ) : (
+        "Unknown validator"
+      ),
       item.extrinsicsCount,
       item.eventsCount,
     ]);
@@ -141,7 +142,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <img
           src="/imgs/icons/check-green.svg"
           alt=""
-          style={{ marginRight: 8 }}
+          style={{marginRight: 8}}
         />
         <MinorText>{timeDuration(item?.indexer?.blockTime)}</MinorText>
       </FlexWrapper>,
@@ -149,11 +150,11 @@ export default function Home({ node, overview: ssrOverview, price }) {
         address={item.from}
         to={`/${node}/account/${item.from}`}
       />,
-      <AddressEllipsis address={item.to} to={`/${node}/account/${item.to}`} />,
+      <AddressEllipsis address={item.to} to={`/${node}/account/${item.to}`}/>,
       item?.assetSymbol
         ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-            item.assetSymbol
-          }`
+          item.assetSymbol
+        }`
         : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
     ]);
 
@@ -181,7 +182,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
   return (
     <Layout node={node}>
       <Wrapper>
-        <Overview node={node} overviewData={overview} price={price} />
+        <Overview node={node} overviewData={overview} price={price}/>
         <TableWrapper>
           <Table
             title="Latest Blocks"
@@ -216,8 +217,8 @@ export default function Home({ node, overview: ssrOverview, price }) {
                 (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
               }
             >{`#${item.assetId}`}</InLink>,
-            <Symbol symbol={item.symbol} />,
-            item.name,
+            <Symbol symbol={item.symbol}/>,
+            <Name name={item.name}/>,
             <AddressEllipsis
               address={item.owner}
               to={`/${node}/account/${item.owner}`}
@@ -242,16 +243,16 @@ export default function Home({ node, overview: ssrOverview, price }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
+  const {node} = context.params;
 
   const [
-    { result: latestBlocks },
-    { result: popularAssets },
-    { result: latestTransfers },
-    { result: assetsCount },
-    { result: transfersCount },
-    { result: holdersCount },
-    { result: price },
+    {result: latestBlocks},
+    {result: popularAssets},
+    {result: latestTransfers},
+    {result: assetsCount},
+    {result: transfersCount},
+    {result: holdersCount},
+    {result: price},
   ] = await Promise.all([
     nextApi.fetch(`${node}/blocks/latest`),
     nextApi.fetch(`${node}/assets/popular`),

@@ -8,6 +8,7 @@ import { assetsHead, EmptyQuery } from "utils/constants";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
+import Name from "../../components/account/name";
 
 export default function Assets({ node, assets }) {
   return (
@@ -25,7 +26,7 @@ export default function Assets({ node, assets }) {
               }
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
-            item.name,
+            <Name name={item.name}/>,
             <AddressEllipsis
               address={item.owner}
               to={`/${node}/account/${item.owner}`}

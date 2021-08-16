@@ -1,6 +1,6 @@
 const chainStatusRoom = "CHAIN_STATUS_ROOM";
 const overviewRoom = "OVERVIEW_ROOM";
-const firstPageBlocksRoom = "FIRST_PAGE_BLOCKS";
+const firstPageBlocksRoom = "FIRST_PAGE_BLOCKS_ROOM";
 
 module.exports = {
   chainStatusRoom,

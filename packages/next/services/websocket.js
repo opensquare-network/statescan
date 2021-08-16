@@ -4,8 +4,9 @@ import { setOverview, setScanHeight } from "../store/reducers/chainSlice";
 
 const chainStatusRoom = "CHAIN_STATUS_ROOM";
 const overviewRoom = "OVERVIEW_ROOM";
+export const firstPageBlocksRoom = "FIRST_PAGE_BLOCKS_ROOM";
 
-let socket = null;
+export let socket = null;
 
 export function connect(chain) {
   if (socket) {

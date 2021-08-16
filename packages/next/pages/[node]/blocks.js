@@ -9,9 +9,11 @@ import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
 import AddressEllipsis from "components/addressEllipsis";
+import { socket, firstPageBlocksRoom } from "services/websocket";
 
-export default function Blocks({ node, blocks }) {
+export default function Blocks({ node, blocks: ssrBlocks }) {
   const [time, setTime] = useState(Date.now());
+  const [firstPageBlocks, setFirstPageBlocks] = useState(null);
 
   useEffect(() => {
     const interval = setInterval(() => setTime(Date.now()), 1000);
@@ -19,6 +21,17 @@ export default function Blocks({ node, blocks }) {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    if (socket) {
+      socket.emit("subscribe", firstPageBlocksRoom);
+      socket.on("firstPageBlocks", (firstPageBlocks) => {
+        setFirstPageBlocks(firstPageBlocks);
+      });
+    }
+  }, [socket]);
+
+  const blocks = firstPageBlocks || ssrBlocks;
 
   return (
     <Layout node={node}>

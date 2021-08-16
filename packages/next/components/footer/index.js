@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 import Container from "components/container";
 import Producer from "./producer";
-import Donation from "./donation";
+import SocialMedia from "./socialMedia";
 
 const Wrapper = styled.div`
   height: 84px;
@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     white-space: nowrap;
   }
   @media screen and (max-width: 900px) {
-    height: 116px;
+    height: 132px;
     flex-direction: column;
     justify-content: center;
     > :not(:first-child) {
@@ -28,7 +28,7 @@ export default function Footer() {
       <Container>
         <Wrapper>
           <Producer />
-          <Donation />
+          <SocialMedia />
         </Wrapper>
       </Container>
     </footer>

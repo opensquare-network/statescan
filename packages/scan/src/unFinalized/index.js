@@ -8,6 +8,7 @@ const extractBlockTime = require("../block/extractBlockTime");
 const { getUnFinalizedBlockCollection } = require("../mongo");
 const omit = require("lodash.omit");
 const { saveBlocksEventData } = require("./events");
+const { saveBlocksExtrinsicData } = require("./extrinsics");
 
 let preScanFinalizedHeight = null;
 let preScanUnFinalizedHeight = null;
@@ -41,6 +42,7 @@ async function updateUnFinalized() {
   const normalizedBlocks = blockDataArr.map(normalizeBlock);
   await saveBlocks(normalizedBlocks);
   await saveBlocksEventData(blockDataArr);
+  await saveBlocksExtrinsicData(blockDataArr);
 
   preScanFinalizedHeight = finalizedHeight;
   preScanUnFinalizedHeight = unFinalizedHeight;

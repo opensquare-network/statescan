@@ -27,7 +27,7 @@ async function feedOverview(chain, io) {
   }
 }
 
-async function getLatestBlocks() {
+async function getLatestBlocks(chain) {
   const blockCol = await getBlockCollection(chain);
   const unFinalizedBlockCol = await getUnFinalizedBlockCollection(chain);
 
@@ -66,7 +66,7 @@ async function calcOverview(chain) {
   const assetCol = await getAssetCollection(chain);
 
   // Load latest 5 blocks
-  const latestBlocks = await getLatestBlocks();
+  const latestBlocks = await getLatestBlocks(chain);
 
   // Load latest 5 transfers
   const latestTransfers = await transferCol

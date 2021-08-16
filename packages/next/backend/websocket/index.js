@@ -1,7 +1,12 @@
-const { chainStatusRoom, overviewRoom } = require("./constants");
-const { getScanHeight, getOverview } = require("./store");
+const {
+  chainStatusRoom,
+  overviewRoom,
+  firstPageBlocksRoom,
+} = require("./constants");
+const { getScanHeight, getOverview, getFirstPageBlocks } = require("./store");
 const { feedScanStatus } = require("./status");
 const { feedOverview } = require("./overview");
+const { feedFirstPageBlocks } = require("./firstPageBlocks");
 
 async function listenAndEmitInfo(io, chain) {
   io.on("connection", (socket) => {
@@ -14,6 +19,9 @@ async function listenAndEmitInfo(io, chain) {
       } else if (room === overviewRoom) {
         const overview = getOverview(chain);
         io.to(room).emit("overview", overview);
+      } else if (room === firstPageBlocksRoom) {
+        const firstPageBlocks = getFirstPageBlocks(chain);
+        io.to(firstPageBlocksRoom).emit("firstPageBlocks", firstPageBlocks);
       }
     });
 
@@ -24,6 +32,7 @@ async function listenAndEmitInfo(io, chain) {
 
   await feedScanStatus(chain, io);
   await feedOverview(chain, io);
+  await feedFirstPageBlocks(chain, io);
 }
 
 function ioHandler(io) {

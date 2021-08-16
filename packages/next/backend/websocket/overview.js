@@ -36,11 +36,13 @@ async function getLatestBlocks() {
     .find({})
     .sort({ "header.number": -1 })
     .limit(5)
-    .toArray()
-    .map((block) => ({
+    .toArray();
+  const normalizedUnFinalized = (latestUnFinalizedBlocks || []).map(
+    (block) => ({
       isFinalized: false,
       ...block,
-    }));
+    })
+  );
 
   // Load latest 5 blocks
   const latestBlocks = await blockCol
@@ -49,13 +51,13 @@ async function getLatestBlocks() {
       "header.number": -1,
     })
     .limit(5)
-    .toArray()
-    .map((block) => ({
-      isFinalized: true,
-      ...block,
-    }));
+    .toArray();
+  const normalizedFinalized = (latestBlocks || []).map((block) => ({
+    isFinalized: true,
+    ...block,
+  }));
 
-  return [...latestUnFinalizedBlocks, ...latestBlocks].slice(0, 5);
+  return [...normalizedUnFinalized, ...normalizedFinalized].slice(0, 5);
 }
 
 async function calcOverview(chain) {

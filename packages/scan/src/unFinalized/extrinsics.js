@@ -14,7 +14,7 @@ async function saveBlocksExtrinsicData(blockDataArr = []) {
   }, []);
 
   const col = await getUnFinalizedExrinsicCollection();
-  const bulk = col.initializeUnorderedBulkOp();
+  const bulk = col.initializeOrderedBulkOp();
 
   bulk.find({}).delete();
   for (const extrinsic of extrinsics) {

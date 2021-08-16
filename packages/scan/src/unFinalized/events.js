@@ -22,7 +22,7 @@ async function saveBlocksEventData(blockDataArr = []) {
   const events = getEventsFromBlockDataArr(blockDataArr);
 
   const col = await getUnFinalizedEventCollection();
-  const bulk = col.initializeUnorderedBulkOp();
+  const bulk = col.initializeOrderedBulkOp();
 
   bulk.find({}).delete();
   for (const event of events) {

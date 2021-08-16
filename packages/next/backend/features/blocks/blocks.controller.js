@@ -8,6 +8,10 @@ const {
   getUnFinalizedEventCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
+const {
+  getPagedBlocks,
+  getLatestBlocks: getLatestBlocksFromDb,
+} = require("../../common/latestBlocks");
 
 async function getBlocks(ctx) {
   const { chain } = ctx.params;
@@ -17,15 +21,8 @@ async function getBlocks(ctx) {
     return;
   }
 
+  const items = await getPagedBlocks(chain, page, pageSize);
   const col = await getBlockCollection(chain);
-  const items = await col
-    .find({})
-    .sort({
-      "header.number": -1,
-    })
-    .skip(page * pageSize)
-    .limit(pageSize)
-    .toArray();
   const total = await col.estimatedDocumentCount();
 
   ctx.body = {
@@ -38,17 +35,7 @@ async function getBlocks(ctx) {
 
 async function getLatestBlocks(ctx) {
   const { chain } = ctx.params;
-
-  const col = await getBlockCollection(chain);
-  const items = await col
-    .find({}, { projection: { extrinsics: 0 } })
-    .sort({
-      "header.number": -1,
-    })
-    .limit(5)
-    .toArray();
-
-  ctx.body = items;
+  ctx.body = await getLatestBlocksFromDb(chain, 5);
 }
 
 async function getBlockHeight(ctx) {

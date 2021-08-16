@@ -2,10 +2,12 @@ const data = {
   westmint: {
     scanHeight: 0,
     overview: null,
+    firstPageBlocks: [],
   },
   statemine: {
     scanHeight: 0,
     overview: null,
+    firstPageBlocks: [],
   },
 };
 
@@ -17,6 +19,16 @@ function setScanHeight(chain, height) {
 
 function getScanHeight(chain) {
   return data[chain]?.scanHeight;
+}
+
+function getFirstPageBlocks(chain) {
+  return data[chain]?.firstPageBlocks;
+}
+
+function setFirstPageBlocks(chain, blocks) {
+  if (data[chain]) {
+    data[chain].firstPageBlocks = blocks;
+  }
 }
 
 function setOverview(chain, arg) {
@@ -34,4 +46,6 @@ module.exports = {
   getScanHeight,
   setOverview,
   getOverview,
+  getFirstPageBlocks,
+  setFirstPageBlocks,
 };

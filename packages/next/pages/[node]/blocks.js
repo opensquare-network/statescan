@@ -9,15 +9,25 @@ import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
 import AddressEllipsis from "components/addressEllipsis";
+import { listenFirstPageBlocks } from "services/websocket";
 
-export default function Blocks({ node, blocks }) {
+export default function Blocks({ node, blocks: ssrBlocks }) {
   const [time, setTime] = useState(Date.now());
+  const [firstPageBlocks, setFirstPageBlocks] = useState(null);
+
   useEffect(() => {
     const interval = setInterval(() => setTime(Date.now()), 1000);
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    listenFirstPageBlocks(node, setFirstPageBlocks);
+  }, [node]);
+
+  const blocks = firstPageBlocks || ssrBlocks;
+
   return (
     <Layout node={node}>
       <section>
@@ -29,7 +39,12 @@ export default function Blocks({ node, blocks }) {
               {item?.header?.number}
             </InLink>,
             item?.blockTime,
-            "Finalized",
+            <img
+              src={`/imgs/icons/${
+                !item?.isFinalized ? "circle-pending" : "check-green"
+              }.svg`}
+              alt=""
+            />,
             <ThemeText>
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,

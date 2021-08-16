@@ -46,7 +46,7 @@ export const assetsHead = [
   { name: "Name", width: 200 },
   { name: "Owner", width: 152 },
   { name: "Issuer", width: 152 },
-  { name: "Holders", width: 152 },
+  { name: "Holders", width: 152 , align: "right" },
   { name: "Total Supply", align: "right" },
 ];
 
@@ -63,10 +63,10 @@ export const addressAssetsHead = [
   { name: "Asset ID", width: 136 },
   { name: "Symbol", width: 152 },
   { name: "Name", width: 200 },
-  { name: "Balance" },
-  { name: "Approved" },
-  { name: "Frozen" },
-  { name: "Transfer Count" },
+  { name: "Balance" , align: "right" },
+  { name: "Approved" , align: "right" },
+  { name: "Frozen" , align: "right" },
+  { name: "Transfer Count" , align: "right" },
 ];
 
 export const addressTransfersHead = [

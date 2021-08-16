@@ -37,6 +37,7 @@ import TeleportDirection from "../../../components/teleportDirection";
 import ChainAddressEllipsis from "../../../components/chainAddressEllipsis";
 import ExplorerLink from "../../../components/explorerLink";
 import BigNumber from "bignumber.js";
+import Source from "../../../components/account/source";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -65,7 +66,8 @@ export default function Address({
       </Layout>
     );
   }
-
+  const relayChain =
+    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
   const symbol = getSymbol(node);
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
@@ -277,6 +279,7 @@ export default function Address({
                     </MinorText>
                   </BreakText>
                 </CopyText>
+                <Source relayChain={relayChain} address={addressDetail?.address}/>
               </div>,
               `${fromSymbolUnit(
                 addressDetail?.data?.free || 0,

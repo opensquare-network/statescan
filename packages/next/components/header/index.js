@@ -35,7 +35,7 @@ const Container = styled.header`
 `;
 
 const Wrapper = styled.div`
-  height: 86px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;

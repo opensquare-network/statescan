@@ -28,7 +28,7 @@ async function feedOverview(chain, io) {
 
 async function calcOverview(chain) {
   const blockCol = await getBlockCollection(chain);
-  const trasnferCol = await getAssetTransferCollection(chain);
+  const transferCol = await getAssetTransferCollection(chain);
   const addressCol = await getAddressCollection(chain);
   const assetCol = await getAssetCollection(chain);
 
@@ -42,7 +42,7 @@ async function calcOverview(chain) {
     .toArray();
 
   // Load latest 5 transfers
-  const latestTransfers = await trasnferCol
+  const latestTransfers = await transferCol
     .aggregate([
       { $sort: { "indexer.blockHeight": -1 } },
       { $limit: 5 },
@@ -86,12 +86,9 @@ async function calcOverview(chain) {
   // Calculate counts
   const assetsCount = await assetCol.countDocuments();
   const holdersCount = await addressCol.countDocuments({
-    $or: [
-      { providers: { $ne: 0 } },
-      { sufficients: { $ne: 0 } },
-    ]
+    $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   });
-  const transfersCount = await trasnferCol.countDocuments();
+  const transfersCount = await transferCol.countDocuments();
 
   return {
     latestBlocks,

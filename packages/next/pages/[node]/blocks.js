@@ -9,7 +9,10 @@ import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import ThemeText from "components/themeText";
 import AddressEllipsis from "components/addressEllipsis";
-import { listenFirstPageBlocks } from "services/websocket";
+import {
+  listenFirstPageBlocks,
+  unSubscribeFirstBlocks,
+} from "services/websocket";
 
 export default function Blocks({ node, blocks: ssrBlocks }) {
   const [time, setTime] = useState(Date.now());
@@ -22,8 +25,11 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
     };
   }, []);
 
+  const page = ssrBlocks?.page;
+
   useEffect(() => {
-    if (ssrBlocks?.page > 0) {
+    if (page > 0) {
+      unSubscribeFirstBlocks();
       return;
     }
 
@@ -31,7 +37,7 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
     return () => {
       unsubscribe();
     };
-  }, [node]);
+  }, [node, page]);
 
   const blocks = firstPageBlocks || ssrBlocks;
 

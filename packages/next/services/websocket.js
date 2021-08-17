@@ -55,3 +55,10 @@ export function listenFirstPageBlocks(chain, callback) {
     }
   };
 }
+
+export function unSubscribeFirstBlocks() {
+  if (socket) {
+    socket.emit("unsubscribe", firstPageBlocksRoom);
+    socket.disconnect();
+  }
+}

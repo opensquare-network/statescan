@@ -1,7 +1,7 @@
-const extractBlockTime = require("./extractBlockTime");
 const { getBlockCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
 const omit = require("lodash.omit");
+const { extractBlockTime } = require("./extractBlockTime");
 
 async function handleBlock(block, blockEvents, author) {
   const hash = block.hash.toHex();

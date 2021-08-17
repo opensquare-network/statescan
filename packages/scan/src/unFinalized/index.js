@@ -1,12 +1,10 @@
+const { normalizeBlock } = require("../utils/normalize/block");
 const {
   getLatestFinalizedHeight,
   getLatestUnFinalizedHeight,
 } = require("../chain");
-const { getApi } = require("../api");
-const { extractAuthor } = require("@polkadot/api-derive/type/util");
-const extractBlockTime = require("../block/extractBlockTime");
 const { getUnFinalizedBlockCollection } = require("../mongo");
-const omit = require("lodash.omit");
+const { getBlockFromNode } = require("../block/fetchBlock");
 const { saveBlocksEventData } = require("./events");
 const { saveBlocksExtrinsicData } = require("./extrinsics");
 
@@ -58,46 +56,6 @@ async function saveBlocks(normalizedBlocks) {
   }
 
   await bulk.execute();
-}
-
-async function getBlockFromNode(height) {
-  const api = await getApi();
-  const blockHash = await api.rpc.chain.getBlockHash(height);
-
-  const [block, events, validators] = await Promise.all([
-    api.rpc.chain.getBlock(blockHash),
-    api.query.system.events.at(blockHash),
-    api.query.session.validators.at(blockHash),
-  ]);
-
-  const digest = api.registry.createType(
-    "Digest",
-    block.block.header.digest,
-    true
-  );
-  const author = extractAuthor(digest, validators);
-
-  return {
-    block,
-    events,
-    author,
-  };
-}
-
-function normalizeBlock({ block, events, author }) {
-  const hash = block.block.hash.toHex();
-  const blockJson = block.block.toJSON();
-  const authorJson = author?.toJSON();
-  const blockTime = extractBlockTime(block.block.extrinsics);
-
-  return {
-    hash,
-    blockTime,
-    author: authorJson,
-    eventsCount: (events || []).length,
-    extrinsicsCount: (block.block.extrinsics || []).length,
-    ...omit(blockJson, ["extrinsics"]),
-  };
 }
 
 module.exports = {

@@ -1,5 +1,55 @@
+require("dotenv").config();
+
+const { normalizeEvents } = require("../utils/normalize/event");
+const { normalizeExtrinsics } = require("../utils/normalize/extrinsic");
+const { getBlockIndexer } = require("../block/getBlockIndexer");
+const { normalizeBlock } = require("../utils/normalize/block");
+const { getBlockFromNode } = require("../block/fetchBlock");
 const { getApi } = require("../api");
 const { updateHeight, getLatestFinalizedHeight } = require("../chain");
+const {
+  getBlockCollection,
+  getExtrinsicCollection,
+  getEventCollection,
+} = require("../mongo");
+
+async function fetchAndSave(height) {
+  const blockData = await getBlockFromNode(height);
+  const normalizedBlock = normalizeBlock(blockData);
+
+  const col = await getBlockCollection();
+  const bulk = col.initializeOrderedBulkOp();
+  bulk.find({ "header.number": height }).delete();
+  bulk.insert(normalizedBlock);
+  await bulk.execute();
+
+  const blockIndexer = getBlockIndexer(blockData.block.block);
+  const normalizedExtrinsics = normalizeExtrinsics(
+    blockData.block.block.extrinsics,
+    blockData.events,
+    blockIndexer
+  );
+  const extrinsicCol = await getExtrinsicCollection();
+  const extrinsicBulk = extrinsicCol.initializeOrderedBulkOp();
+  extrinsicBulk.find({ "indexer.blockHeight": height }).delete();
+  for (const extrinsic of normalizedExtrinsics) {
+    extrinsicBulk.insert(extrinsic);
+  }
+  await extrinsicBulk.execute();
+
+  const normalizedEvents = normalizeEvents(
+    blockData.events,
+    blockIndexer,
+    blockData.block.block.extrinsics
+  );
+  const eventCol = await getEventCollection();
+  const eventBulk = eventCol.initializeOrderedBulkOp();
+  eventBulk.find({ "indexer.blockHeight": height }).delete();
+  for (const event of normalizedEvents) {
+    eventBulk.insert(event);
+  }
+  await eventBulk.execute();
+}
 
 async function main() {
   const myArgs = process.argv.slice(2);
@@ -23,6 +73,10 @@ async function main() {
     await api.provider.disconnect();
     process.exit(1);
   }
+
+  await fetchAndSave(height);
+  await api.provider.disconnect();
+  process.exit(0);
 }
 
 main().catch(console.error);

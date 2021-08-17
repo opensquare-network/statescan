@@ -5,13 +5,6 @@ export const DEFAULT_THEME_LOGO = "logo-img-1.svg";
 
 export const nodes = [
   {
-    name: "Westmint",
-    sub: "Westend",
-    value: "westmint",
-    symbol: "WND",
-    icon: "/imgs/icons/westend.svg",
-  },
-  {
     name: "Statemine",
     sub: "Kusama",
     value: "statemine",
@@ -21,6 +14,13 @@ export const nodes = [
     colorSecondary: "#EAF0FF",
     buttonColor: "#000000",
     logo: "logo-img-2.svg",
+  },
+  {
+    name: "Westmint",
+    sub: "Westend",
+    value: "westmint",
+    symbol: "WND",
+    icon: "/imgs/icons/westend.svg",
   },
 ];
 

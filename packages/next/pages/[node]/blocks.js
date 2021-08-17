@@ -39,7 +39,7 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
     };
   }, [node, page]);
 
-  const blocks = firstPageBlocks || ssrBlocks;
+  const blocks = page > 0 ? ssrBlocks : firstPageBlocks || ssrBlocks;
 
   return (
     <Layout node={node}>

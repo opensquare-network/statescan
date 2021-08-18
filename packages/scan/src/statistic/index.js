@@ -14,6 +14,9 @@ async function makeAssetStatistics(blockIndexer) {
   }
 
   const assets = await getAllAssets();
+  if ((assets || []).length <= 0) {
+    return;
+  }
 
   const promises = [];
   for (const asset of assets) {

@@ -104,7 +104,7 @@ async function scanBlock(blockInDb) {
 
   const blockIndexer = getBlockIndexer(block);
   if (isNewDay(blockIndexer.blockTime)) {
-    await makeAssetStatistics();
+    await makeAssetStatistics(blockIndexer);
   }
 
   await handleBlock(block, blockEvents, author);

@@ -6,8 +6,13 @@ const {
 } = require("../mongo");
 const moment = require("moment-timezone");
 const BigNumber = require("bignumber.js");
+const { statisticLogger } = require("../logger");
 
 async function makeAssetStatistics(blockIndexer) {
+  if (!blockIndexer.blockTime) {
+    return;
+  }
+
   const assets = await getAllAssets();
 
   const promises = [];
@@ -27,6 +32,8 @@ async function makeAssetStatistics(blockIndexer) {
     bulk.insert(data);
   }
   await bulk.execute();
+
+  statisticLogger.info(`Statistic updated at ${JSON.stringify(blockIndexer)}`);
 }
 
 async function getAllAssets() {

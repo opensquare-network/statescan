@@ -5,7 +5,7 @@ let lastBlockIndexer = null;
 
 function setLastBlockIndexer(blockIndexer) {
   lastBlockIndexer = blockIndexer;
-  lastBlockDate = moment(blockIndexer.timestamp).utc().format("YYYYMMDD");
+  lastBlockDate = moment(blockIndexer.blockTime).utc().format("YYYYMMDD");
 }
 
 function getLastBlockIndexer() {

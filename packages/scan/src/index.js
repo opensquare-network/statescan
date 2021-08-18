@@ -15,7 +15,11 @@ const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
 const { makeAssetStatistics } = require("./statistic");
-const { setLastBlockDate, isNewDay } = require("./statistic/date");
+const {
+  setLastBlockIndexer,
+  getLastBlockIndexer,
+  isNewDay,
+} = require("./statistic/date");
 const { clearAddresses } = require("./utils/blockAddresses");
 const {
   updateSpecs,
@@ -104,7 +108,7 @@ async function scanBlock(blockInDb) {
 
   const blockIndexer = getBlockIndexer(block);
   if (isNewDay(blockIndexer.blockTime)) {
-    await makeAssetStatistics(blockIndexer);
+    await makeAssetStatistics(getLastBlockIndexer());
   }
 
   await handleBlock(block, blockEvents, author);
@@ -118,7 +122,7 @@ async function scanBlock(blockInDb) {
   );
   clearAddresses(blockInDb.height);
 
-  setLastBlockDate(blockIndexer.blockTime);
+  setLastBlockIndexer(blockIndexer);
 }
 
 main()

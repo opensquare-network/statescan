@@ -1,11 +1,15 @@
 const moment = require("moment-timezone");
 
 let lastBlockDate = null;
-let lastTimestamp = null;
+let lastBlockIndexer = null;
 
-function setLastBlockDate(timestamp) {
-  lastTimestamp = timestamp;
-  lastBlockDate = moment(timestamp).utc().format("YYYYMMDD");
+function setLastBlockIndexer(blockIndexer) {
+  lastBlockIndexer = blockIndexer;
+  lastBlockDate = moment(blockIndexer.timestamp).utc().format("YYYYMMDD");
+}
+
+function getLastBlockIndexer() {
+  return lastBlockIndexer;
 }
 
 function isNewDay(timestamp) {
@@ -18,6 +22,7 @@ function isNewDay(timestamp) {
 }
 
 module.exports = {
-  setLastBlockDate,
+  setLastBlockIndexer,
+  getLastBlockIndexer,
   isNewDay,
 };

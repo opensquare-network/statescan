@@ -67,6 +67,10 @@ function getUnFinalizedExrinsicCollection(chain) {
   return db(chain).getUnFinalizedExrinsicCollection();
 }
 
+async function getDailyAssetStatisticCollection(chain) {
+  return db(chain).getDailyAssetStatisticCollection();
+}
+
 module.exports = {
   initDb,
 
@@ -83,6 +87,8 @@ module.exports = {
   getUnFinalizedBlockCollection,
   getUnFinalizedEventCollection,
   getUnFinalizedExrinsicCollection,
+
+  getDailyAssetStatisticCollection,
 
   // Price db collections
   getDotUsdtDailyCollection,

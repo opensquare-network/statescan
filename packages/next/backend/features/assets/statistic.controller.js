@@ -59,7 +59,7 @@ async function getStatistic(ctx) {
   const col = await getDailyAssetStatisticCollection(chain);
   const items = await col.find(q).sort({ "indexer.blockHeight": 1 }).toArray();
 
-  return (items || []).map((item) => omit(item, ["_id", "asset"]));
+  ctx.body = (items || []).map((item) => omit(item, ["_id", "asset"]));
 }
 
 module.exports = {

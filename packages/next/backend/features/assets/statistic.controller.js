@@ -6,18 +6,17 @@ const {
 const omit = require("lodash.omit");
 
 function getQuery(from, to) {
-  let q = {};
   if (!from && !to) {
-    return q;
+    return {};
   }
 
   let startTime = parseInt(from) * 1000;
   let endTime = parseInt(to) * 1000;
-  if (isNaN(startTime) || isNaN(endTime)) {
+  if (isNaN(startTime) && isNaN(endTime)) {
     throw new HttpError(400, "Invalid from or to query param");
   }
 
-  if (typeof startTime === "number" && typeof endTime === "number") {
+  if (!isNaN(startTime) && !isNaN(endTime)) {
     return {
       $and: [
         { "indexer.blockTime": { $gte: startTime } },
@@ -26,13 +25,13 @@ function getQuery(from, to) {
     };
   }
 
-  if (typeof startTime === "number") {
+  if (!isNaN(startTime)) {
     return {
       "indexer.blockTime": { $gte: startTime },
     };
   }
 
-  if (typeof endTime === "number") {
+  if (!isNaN(endTime)) {
     return {
       "indexer.blockTime": { $lte: endTime },
     };

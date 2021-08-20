@@ -3274,6 +3274,11 @@ helmet@^4.4.1:
   resolved "https://registry.yarnpkg.com/helmet/-/helmet-4.6.0.tgz#579971196ba93c5978eb019e4e8ec0e50076b4df"
   integrity sha512-HVqALKZlR95ROkrnesdhbbZJFi/rIVSoNq6f3jA/9u6MIbTsPh3xZwihjeI5+DO/2sOV6HMHooXcEOuwskHpTg==
 
+highcharts@^9.2.1:
+  version "9.2.1"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-9.2.1.tgz#d44e16c0b9c9a372d5aca1707649cb2b61781cdb"
+  integrity sha512-MVovbnlD0+QsBSjVd1kgJNjq7xkzJ6dTebOQ+15pBYuYiEfTJpJZdVXeWSjMzbNmhDXN5rHC5uCGWGwK8YcSYQ==
+
 hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"

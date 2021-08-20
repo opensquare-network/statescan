@@ -5,9 +5,9 @@ const {
 } = require("../../mongo");
 const omit = require("lodash.omit");
 
-function getQuery(from, to) {
+function getQuery(assetId, from, to) {
   if (!from && !to) {
-    return {};
+    return { asset: assetId };
   }
 
   let startTime = parseInt(from) * 1000;
@@ -19,6 +19,7 @@ function getQuery(from, to) {
   if (!isNaN(startTime) && !isNaN(endTime)) {
     return {
       $and: [
+        { asset: assetId },
         { "indexer.blockTime": { $gte: startTime } },
         { "indexer.blockTime": { $lte: endTime } },
       ],
@@ -27,17 +28,17 @@ function getQuery(from, to) {
 
   if (!isNaN(startTime)) {
     return {
-      "indexer.blockTime": { $gte: startTime },
+      $and: [{ asset: assetId }, { "indexer.blockTime": { $gte: startTime } }],
     };
   }
 
   if (!isNaN(endTime)) {
     return {
-      "indexer.blockTime": { $lte: endTime },
+      $and: [{ asset: assetId }, { "indexer.blockTime": { $lte: endTime } }],
     };
   }
 
-  return {};
+  return { asset: assetId };
 }
 
 async function getStatistic(ctx) {
@@ -53,7 +54,7 @@ async function getStatistic(ctx) {
   }
 
   const { from, to } = ctx.query;
-  const q = getQuery(from, to);
+  const q = getQuery(asset._id, from, to);
 
   const col = await getDailyAssetStatisticCollection(chain);
   const items = await col.find(q).sort({ "indexer.blockHeight": 1 }).toArray();

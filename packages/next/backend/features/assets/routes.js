@@ -1,5 +1,6 @@
 const Router = require("koa-router");
 const assetsController = require("./assets.controller");
+const statisticController = require("./statistic.controller");
 
 const router = new Router();
 
@@ -19,6 +20,12 @@ router.get(
 router.get(
   "/assets/:assetId(\\d+)_:blockHeight(\\d+)/holders",
   assetsController.getAssetHolders
+);
+
+// statistic
+router.get(
+  "/assets/:assetId(\\d+)_:blockHeight(\\d+)/statistic",
+  statisticController.getStatistic
 );
 
 module.exports = router;

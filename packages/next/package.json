@@ -24,6 +24,7 @@
     "koa-logger": "^3.2.1",
     "koa-router": "^10.0.0",
     "lodash": "^4.17.21",
+    "lodash.omit": "^4.5.0",
     "moment": "^2.29.1",
     "mongodb": "^3.6.6",
     "next": "^11.1.0",

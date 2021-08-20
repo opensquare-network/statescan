@@ -16,6 +16,9 @@ function DB(dbName) {
   const unFinalizedExtrinsicCollectionName = "unFinalizedExtrinsic";
   const unFinalizedEventCollectionName = "unFinalizedEvent";
 
+  // Statistic
+  const dailyAssetStatisticCollectionName = "dailyAssetStatistic";
+
   let client = null;
   let db = null;
 
@@ -34,6 +37,8 @@ function DB(dbName) {
   let unFinalizedExtrinsicCol = null;
   let unFinalizedEventCol = null;
 
+  let dailyAssetStatisticCol = null;
+
   async function initDb() {
     client = await MongoClient.connect(mongoUrl, {
       useUnifiedTopology: true,
@@ -49,9 +54,12 @@ function DB(dbName) {
     assetHolderCol = db.collection(assetHolderCollectionName);
     addressCol = db.collection(addressCollectionName);
     teleportCol = db.collection(teleportCollectionName);
+
     unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
     unFinalizedExtrinsicCol = db.collection(unFinalizedExtrinsicCollectionName);
     unFinalizedEventCol = db.collection(unFinalizedEventCollectionName);
+
+    dailyAssetStatisticCol = db.collection(dailyAssetStatisticCollectionName);
 
     await _createIndexes();
   }
@@ -179,6 +187,11 @@ function DB(dbName) {
     return unFinalizedExtrinsicCol;
   }
 
+  async function getDailyAssetStatisticCollection() {
+    await tryInit(dailyAssetStatisticCol);
+    return dailyAssetStatisticCol;
+  }
+
   return {
     initDb,
     getStatusCollection,
@@ -193,6 +206,7 @@ function DB(dbName) {
     getUnFinalizedBlockCollection,
     getUnFinalizedEventCollection,
     getUnFinalizedExrinsicCollection,
+    getDailyAssetStatisticCollection,
   };
 }
 

@@ -23,10 +23,13 @@ const addressCollectionName = "address";
 const approvalCollectionName = "approval";
 const teleportCollectionMame = "teleport";
 
-// unFinalized collections
+// unFinalized collection names
 const unFinalizedCollectionName = "unFinalizedBlock";
 const unFinalizedExtrinsicCollectionName = "unFinalizedExtrinsic";
 const unFinalizedEventCollectionName = "unFinalizedEvent";
+
+// Statistic
+const dailyAssetStatisticCollectionName = "dailyAssetStatistic";
 
 let client = null;
 let db = null;
@@ -42,9 +45,13 @@ let assetHolderCol = null;
 let addressCol = null;
 let approvalCol = null;
 let teleportCol = null;
+
+// unFinalized collections
 let unFinalizedBlockCol = null;
 let unFinalizedExtrinsicCol = null;
 let unFinalizedEventCol = null;
+
+let dailyAssetStatisticCol = null;
 
 async function getCollection(colName) {
   try {
@@ -78,6 +85,7 @@ async function initDb() {
   unFinalizedBlockCol = getCollection(unFinalizedCollectionName);
   unFinalizedExtrinsicCol = getCollection(unFinalizedExtrinsicCollectionName);
   unFinalizedEventCol = getCollection(unFinalizedEventCollectionName);
+  dailyAssetStatisticCol = getCollection(dailyAssetStatisticCollectionName);
 
   await _createIndexes();
 }
@@ -95,6 +103,11 @@ async function tryInit(col) {
   if (!col) {
     await initDb();
   }
+}
+
+async function getDailyAssetStatisticCollection() {
+  await tryInit(dailyAssetStatisticCol);
+  return dailyAssetStatisticCol;
 }
 
 async function getUnFinalizedEventCollection() {
@@ -180,5 +193,6 @@ module.exports = {
   getUnFinalizedBlockCollection,
   getUnFinalizedExrinsicCollection,
   getUnFinalizedEventCollection,
+  getDailyAssetStatisticCollection,
   withSession,
 };

@@ -14,6 +14,12 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { makeAssetStatistics } = require("./statistic");
+const {
+  setLastBlockIndexer,
+  getLastBlockIndexer,
+  isNewDay,
+} = require("./statistic/date");
 const { clearAddresses } = require("./utils/blockAddresses");
 const {
   updateSpecs,
@@ -100,8 +106,12 @@ async function scanBlock(blockInDb) {
     blockInDb.author &&
     registry.createType("AccountId", blockInDb.author, true);
 
-  await handleBlock(block, blockEvents, author);
   const blockIndexer = getBlockIndexer(block);
+  if (isNewDay(blockIndexer.blockTime)) {
+    await makeAssetStatistics(getLastBlockIndexer());
+  }
+
+  await handleBlock(block, blockEvents, author);
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
 
@@ -111,6 +121,8 @@ async function scanBlock(blockInDb) {
     registry
   );
   clearAddresses(blockInDb.height);
+
+  setLastBlockIndexer(blockIndexer);
 }
 
 main()

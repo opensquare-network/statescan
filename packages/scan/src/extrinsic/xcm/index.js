@@ -3,6 +3,7 @@ const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
 const { addAddress } = require("../../utils/blockAddresses");
 const { getRegistryByHeight } = require("../../utils/registry");
+const { logger } = require("../../logger");
 
 async function saveNewTeleportAssetIn(
   extrinsicIndexer,
@@ -114,7 +115,7 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
     const fee = buyExecution?.debt;
 
     if (amount === undefined || beneficiary === undefined) {
-      console.log(`Downward message parse failed:`, extrinsicIndexer);
+      logger.error(`Downward message parse failed:`, extrinsicIndexer);
     }
 
     await saveNewTeleportAssetIn(

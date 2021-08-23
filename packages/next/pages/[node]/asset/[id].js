@@ -38,8 +38,6 @@ export default function Asset({
     );
   }
 
-  console.log({ asset });
-
   const assetSymbol = asset?.symbol;
 
   const symbol = getSymbol(node);

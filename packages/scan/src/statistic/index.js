@@ -70,7 +70,7 @@ async function getAssetDayTransferData(assetId, timestamp) {
         $and: [
           { "indexer.blockTime": { $gte: startTime } },
           { "indexer.blockTime": { $lte: timestamp } },
-          // { asset: assetId },
+          { asset: assetId },
         ],
       },
       {

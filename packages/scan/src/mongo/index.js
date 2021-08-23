@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 
 function getDbName() {
-  const dbName = process.env.MONGO_DB_NAME;
+  const dbName = process.env.MONGO_DB_SCAN_NAME;
   if (!dbName) {
     throw new Error("MONGO_DB_NAME not set");
   }
@@ -31,7 +31,7 @@ const dailyAssetStatisticCollectionName = "dailyAssetStatistic";
 let client = null;
 let db = null;
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost:27017";
+const mongoUrl = process.env.MONGO_SCAN_URL || "mongodb://localhost:27017";
 let statusCol = null;
 let blockCol = null;
 let eventCol = null;

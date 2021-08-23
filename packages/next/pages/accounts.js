@@ -24,7 +24,10 @@ export default function Addresses({ node, addresses }) {
           head={customAddressesHead}
           body={(addresses?.items || []).map((item, index) => [
             `#${addresses.page * addresses.pageSize + index + 1}`,
-            <Address address={item?.address} to={`/${node}/account/${item?.address}`} />,
+            <Address
+              address={item?.address}
+              to={`/account/${item?.address}`}
+            />,
             `${bigNumber2Locale(
               fromSymbolUnit(item?.data?.reserved, symbol)
             )} ${symbol}`,
@@ -47,11 +50,11 @@ export default function Addresses({ node, addresses }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
   const { page } = context.query;
   const nPage = parseInt(page) || 1;
 
-  const { result: addresses } = await nextApi.fetch(`${node}/addresses`, {
+  const { result: addresses } = await nextApi.fetch(`addresses`, {
     page: nPage - 1,
     pageSize: 25,
   });

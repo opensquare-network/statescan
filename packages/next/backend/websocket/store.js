@@ -1,44 +1,31 @@
 const data = {
-  westmint: {
-    scanHeight: 0,
-    overview: null,
-    firstPageBlocks: [],
-  },
-  statemine: {
-    scanHeight: 0,
-    overview: null,
-    firstPageBlocks: [],
-  },
+  scanHeight: 0,
+  overview: null,
+  firstPageBlocks: [],
 };
 
-function setScanHeight(chain, height) {
-  if (data[chain]) {
-    data[chain].scanHeight = height;
-  }
+function setScanHeight(height) {
+  data.scanHeight = height;
 }
 
-function getScanHeight(chain) {
-  return data[chain]?.scanHeight;
+function getScanHeight() {
+  return data.scanHeight;
 }
 
-function getFirstPageBlocks(chain) {
-  return data[chain]?.firstPageBlocks;
+function getFirstPageBlocks() {
+  return data.firstPageBlocks;
 }
 
-function setFirstPageBlocks(chain, blocks) {
-  if (data[chain]) {
-    data[chain].firstPageBlocks = blocks;
-  }
+function setFirstPageBlocks(blocks) {
+  data.firstPageBlocks = blocks;
 }
 
-function setOverview(chain, arg) {
-  if (data[chain]) {
-    data[chain].overview = arg;
-  }
+function setOverview(arg) {
+  data.overview = arg;
 }
 
-function getOverview(chain) {
-  return data[chain]?.overview;
+function getOverview() {
+  return data.overview;
 }
 
 module.exports = {

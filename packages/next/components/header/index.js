@@ -86,9 +86,7 @@ const IconWrapper = styled.div`
       > svg {
         stroke: #111111;
       }
-    `}
-
-  @media screen and (max-width: 900px) {
+    `} @media screen and(max-width: 900 px) {
     display: block;
   }
 `;
@@ -173,7 +171,7 @@ export default function Header({ node }) {
           >
             {isActive ? <IconActive /> : <Icon />}
           </IconWrapper>
-          <Link href={`/${node}`}>
+          <Link href={`/`}>
             <img
               className="logo-full"
               src="/imgs/logo.svg"
@@ -181,7 +179,7 @@ export default function Header({ node }) {
               style={{ cursor: "pointer" }}
             />
           </Link>
-          <Link href={`/${node}`}>
+          <Link href={`/`}>
             <img
               className="logo-s"
               src="/imgs/logo-s.svg"
@@ -191,7 +189,7 @@ export default function Header({ node }) {
           </Link>
           {(isActive || width > 900) && (
             <MenuWrapper ref={ref}>
-              <Link href={`/${node}`}>
+              <Link href={`/`}>
                 <MenuItem
                   themecolor={theme.color}
                   onClick={() => setIsActive(false)}
@@ -201,11 +199,11 @@ export default function Header({ node }) {
                 </MenuItem>
               </Link>
               <SubMenu closeMenu={() => setIsActive(false)} />
-              <Link href={`/${node}/assets`}>
+              <Link href={`/assets`}>
                 <MenuItem
                   themecolor={theme.color}
                   onClick={() => setIsActive(false)}
-                  selected={router.pathname === "/[node]/assets"}
+                  selected={router.pathname === "/assets"}
                 >
                   Assets
                 </MenuItem>
@@ -214,7 +212,7 @@ export default function Header({ node }) {
           )}
         </FlexWrapper>
         <FlexWrapper>
-          <SearchS node={node} />
+          <SearchS />
           <NodeSwitcher node={node} />
         </FlexWrapper>
       </Wrapper>

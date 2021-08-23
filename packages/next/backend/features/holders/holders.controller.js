@@ -7,9 +7,7 @@ const {
 const { extractPage } = require("../../utils");
 
 async function getHoldersCount(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getAssetCollection(chain);
+  const col = await getAssetCollection();
   const [result] = await col
     .aggregate([
       { $match: { destoryedAt: null } },
@@ -26,9 +24,9 @@ async function getHoldersCount(ctx) {
 }
 
 async function getHolderAssets(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
 
-  const holderCol = await getAssetHolderCollection(chain);
+  const holderCol = await getAssetHolderCollection();
   const holders = await holderCol
     .aggregate([
       { $match: { address } },
@@ -64,7 +62,7 @@ async function getHolderAssets(ctx) {
 }
 
 async function getHolderExtrinsics(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -73,7 +71,7 @@ async function getHolderExtrinsics(ctx) {
 
   const q = { signer: address };
 
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const items = await col
     .find(q, { projection: { data: 0 } })
     .sort({ "indexer.blockHeight": -1, "indexer.index": -1 })
@@ -91,7 +89,7 @@ async function getHolderExtrinsics(ctx) {
 }
 
 async function getHolderTransfers(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -102,7 +100,7 @@ async function getHolderTransfers(ctx) {
     $or: [{ from: address }, { to: address }],
   };
 
-  const col = await getAssetTransferCollection(chain);
+  const col = await getAssetTransferCollection();
   const items = await col
     .find(q)
     .sort({ "indexer.blockHeight": -1, "indexer.index": -1 })

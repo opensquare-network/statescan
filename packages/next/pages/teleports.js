@@ -17,7 +17,7 @@ import Result from "components/result";
 import ExplorerLink from "components/explorerLink";
 
 function getTeleportSourceAndTarget(node, direction) {
-  const chain = nodes.find(item => item.value === node);
+  const chain = nodes.find((item) => item.value === node);
   if (direction === "in") {
     return { source: chain.sub, target: chain.name };
   } else {
@@ -27,11 +27,12 @@ function getTeleportSourceAndTarget(node, direction) {
 
 export default function Events({ node, teleports, filter }) {
   const symbol = getSymbol(node);
-  const teleportSourceAndTarget = (direction) => getTeleportSourceAndTarget(node, direction);
+  const teleportSourceAndTarget = (direction) =>
+    getTeleportSourceAndTarget(node, direction);
 
-  const nodeInfo = nodes.find(i => i.value === node);
+  const nodeInfo = nodes.find((i) => i.value === node);
   const customTeleportHead = _.cloneDeep(teleportsHead);
-  const sendAtCol = customTeleportHead.find(item => item.name === "Sent At");
+  const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
     sendAtCol.name = <img src={nodeInfo.icon} />;
   }
@@ -44,7 +45,9 @@ export default function Events({ node, teleports, filter }) {
         <Table
           head={customTeleportHead}
           body={(teleports?.items || []).map((item) => [
-            <InLink to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}>
+            <InLink
+              to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
+            >
               {`${item.indexer.blockHeight}-${item.indexer.index}`}
             </InLink>,
             item.indexer.blockTime,
@@ -52,34 +55,44 @@ export default function Events({ node, teleports, filter }) {
               from={teleportSourceAndTarget(item.teleportDirection).source}
               to={teleportSourceAndTarget(item.teleportDirection).target}
             />,
-            item.beneficiary
-              ? item.teleportDirection === "in"
-              ? <AddressEllipsis
+            item.beneficiary ? (
+              item.teleportDirection === "in" ? (
+                <AddressEllipsis
                   address={item.beneficiary}
-                  to={`/${node}/account/${item.beneficiary}`}
+                  to={`/account/${item.beneficiary}`}
                 />
-              : <ChainAddressEllipsis
+              ) : (
+                <ChainAddressEllipsis
                   chain={teleportSourceAndTarget(item.teleportDirection).target}
                   address={item.beneficiary}
                 />
-              : "-",
-            item.teleportDirection === "in"
-              ? <Result isSuccess={item.complete} noText={true} />
-              : <Result isSuccess={null} noText={true} />,
-            item.teleportDirection === "in"
-              ? <ExplorerLink
-                  chain={teleportSourceAndTarget(item.teleportDirection).source}
-                  href={`/block/${item.pubSentAt}`}
-                >
-                  {item.pubSentAt}
-                </ExplorerLink>
-              : "-",
+              )
+            ) : (
+              "-"
+            ),
+            item.teleportDirection === "in" ? (
+              <Result isSuccess={item.complete} noText={true} />
+            ) : (
+              <Result isSuccess={null} noText={true} />
+            ),
+            item.teleportDirection === "in" ? (
+              <ExplorerLink
+                chain={teleportSourceAndTarget(item.teleportDirection).source}
+                href={`/block/${item.pubSentAt}`}
+              >
+                {item.pubSentAt}
+              </ExplorerLink>
+            ) : (
+              "-"
+            ),
             !item.complete || item.amount === null || item.amount === undefined
               ? "-"
-              : `${bigNumber2Locale(fromSymbolUnit(
+              : `${bigNumber2Locale(
+                  fromSymbolUnit(
                     new BigNumber(item.amount).minus(item.fee || 0).toString(),
                     symbol
-                  ))}`,
+                  )
+                )}`,
             item.fee === null || item.fee === undefined
               ? "-"
               : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))}`,
@@ -102,12 +115,12 @@ export default function Events({ node, teleports, filter }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
   const { page } = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const { result: teleports } = await nextApi.fetch(`${node}/teleports`, {
+  const { result: teleports } = await nextApi.fetch(`teleports`, {
     page: nPage - 1,
     pageSize: 25,
   });

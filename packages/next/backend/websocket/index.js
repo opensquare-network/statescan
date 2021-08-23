@@ -8,19 +8,19 @@ const { feedScanStatus } = require("./status");
 const { feedOverview } = require("./overview");
 const { feedFirstPageBlocks } = require("./firstPageBlocks");
 
-async function listenAndEmitInfo(io, chain) {
+async function listenAndEmitInfo(io) {
   io.on("connection", (socket) => {
     socket.on("subscribe", (room) => {
       socket.join(room);
 
       if (room === chainStatusRoom) {
-        const scanHeight = getScanHeight(chain);
+        const scanHeight = getScanHeight();
         io.to(room).emit("scanStatus", { height: scanHeight });
       } else if (room === overviewRoom) {
-        const overview = getOverview(chain);
+        const overview = getOverview();
         io.to(room).emit("overview", overview);
       } else if (room === firstPageBlocksRoom) {
-        const firstPageBlocks = getFirstPageBlocks(chain);
+        const firstPageBlocks = getFirstPageBlocks();
         io.to(firstPageBlocksRoom).emit("firstPageBlocks", firstPageBlocks);
       }
     });
@@ -30,17 +30,11 @@ async function listenAndEmitInfo(io, chain) {
     });
   });
 
-  await feedScanStatus(chain, io);
-  await feedOverview(chain, io);
-  await feedFirstPageBlocks(chain, io);
-}
-
-function ioHandler(io) {
-  ["westmint", "statemine"].forEach((chain) => {
-    listenAndEmitInfo(io.of(`/${chain}`), chain);
-  });
+  await feedScanStatus(io);
+  await feedOverview(io);
+  await feedFirstPageBlocks(io);
 }
 
 module.exports = {
-  ioHandler,
+  listenAndEmitInfo,
 };

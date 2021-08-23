@@ -31,10 +31,7 @@ export default function AddressCounts({
   return (
     <Wrapper>
       {validator ? (
-        <AddressEllipsis
-          address={validator}
-          to={`/${node}/account/${validator}`}
-        />
+        <AddressEllipsis address={validator} to={`/account/${validator}`} />
       ) : (
         "Unknown validator"
       )}

@@ -8,31 +8,31 @@ const {
 } = require("../mongo");
 const { getLatestBlocks } = require("../common/latestBlocks");
 
-async function feedOverview(chain, io) {
+async function feedOverview(io) {
   try {
-    const oldStoreOverview = getOverview(chain);
-    const overview = await calcOverview(chain);
+    const oldStoreOverview = getOverview();
+    const overview = await calcOverview();
 
     if (util.isDeepStrictEqual(overview, oldStoreOverview)) {
       return;
     }
 
-    setOverview(chain, overview);
+    setOverview(overview);
     io.to(overviewRoom).emit("overview", overview);
   } catch (e) {
     console.error("feed overview error:", e);
   } finally {
-    setTimeout(feedOverview.bind(null, chain, io), OVERVIEW_FEED_INTERVAL);
+    setTimeout(feedOverview.bind(null, io), OVERVIEW_FEED_INTERVAL);
   }
 }
 
-async function calcOverview(chain) {
-  const transferCol = await getAssetTransferCollection(chain);
-  const addressCol = await getAddressCollection(chain);
-  const assetCol = await getAssetCollection(chain);
+async function calcOverview() {
+  const transferCol = await getAssetTransferCollection();
+  const addressCol = await getAddressCollection();
+  const assetCol = await getAssetCollection();
 
   // Load latest 5 blocks
-  const latestBlocks = await getLatestBlocks(chain, 5);
+  const latestBlocks = await getLatestBlocks(5);
 
   // Load latest 5 transfers
   const latestTransfers = await transferCol

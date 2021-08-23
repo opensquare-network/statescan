@@ -21,23 +21,20 @@ export default function Transfers({ node, transfers }) {
           head={transfersHead}
           body={(transfers?.items || []).map((item) => [
             <InLink
-              to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.eventSort}`}
+              to={`/event/${item?.indexer?.blockHeight}-${item?.eventSort}`}
             >
               {item?.indexer?.blockHeight}-{item?.eventSort}
             </InLink>,
-            <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
+            <InLink to={`/block/${item?.indexer?.blockHeight}`}>
               {item?.indexer?.blockHeight}
             </InLink>,
             <Tooltip bg label={item?.method} />,
             item?.indexer?.blockTime,
             <AddressEllipsis
               address={item?.from}
-              to={`/${node}/account/${item?.from}`}
+              to={`/account/${item?.from}`}
             />,
-            <AddressEllipsis
-              address={item?.to}
-              to={`/${node}/account/${item?.to}`}
-            />,
+            <AddressEllipsis address={item?.to} to={`/account/${item?.to}`} />,
             item.assetSymbol
               ? `${bigNumber2Locale(
                   fromAssetUnit(item.balance, item.assetDecimals)
@@ -61,11 +58,11 @@ export default function Transfers({ node, transfers }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
   const { page } = context.query;
   const nPage = parseInt(page) || 1;
 
-  const { result: transfers } = await nextApi.fetch(`${node}/transfers`, {
+  const { result: transfers } = await nextApi.fetch(`transfers`, {
     page: nPage - 1,
     pageSize: 25,
   });

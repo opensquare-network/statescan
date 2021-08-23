@@ -6,15 +6,15 @@ const { HttpError } = require("../../exc");
 const { extractPage } = require("../../utils");
 
 async function getTransfer(ctx) {
-  const { chain, extrinsicHash } = ctx.params;
+  const { extrinsicHash } = ctx.params;
 
-  const col = await getAssetTransferCollection(chain);
+  const col = await getAssetTransferCollection();
   const transfer = await col.findOne({ extrinsicHash });
   if (!transfer) {
     throw new HttpError(404, "Transfer not found");
   }
 
-  const assetCol = await getAssetCollection(chain);
+  const assetCol = await getAssetCollection();
   const asset = transfer.asset
     ? await assetCol.findOne({ _id: transfer.asset })
     : null;
@@ -30,9 +30,7 @@ async function getTransfer(ctx) {
 }
 
 async function getLatestTransfers(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getAssetTransferCollection(chain);
+  const col = await getAssetTransferCollection();
   const items = await col
     .aggregate([
       { $sort: { "indexer.blockHeight": -1 } },
@@ -69,14 +67,12 @@ async function getLatestTransfers(ctx) {
 }
 
 async function getTransfersCount(ctx) {
-  const { chain } = ctx.params;
-  const col = await getAssetTransferCollection(chain);
+  const col = await getAssetTransferCollection();
   const count = await col.countDocuments();
   ctx.body = count;
 }
 
 async function getTransfers(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -85,7 +81,7 @@ async function getTransfers(ctx) {
 
   const q = {};
 
-  const col = await getAssetTransferCollection(chain);
+  const col = await getAssetTransferCollection();
   const items = await col
     .aggregate([
       { $match: q },

@@ -1,46 +1,46 @@
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import { extrinsicsHead, EmptyQuery } from "utils/constants";
+import { eventsHead, EmptyQuery } from "utils/constants";
 import Nav from "components/nav";
 import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
-import Result from "components/result";
-import BreakText from "components/breakText";
 import Filter from "components/filter";
+import { makeEventArgs } from "utils/eventArgs";
 
-export default function Extrinsics({ node, extrinsics, filter }) {
+export default function Events({ node, events, filter }) {
   return (
     <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Extrinsics" }]} node={node} />
-        <Filter total={`All ${extrinsics?.total} extrinsics`} data={filter} />
+        <Nav data={[{ name: "Events" }]} node={node} />
+        <Filter total={`All ${events?.total} events`} data={filter} />
         <Table
-          head={extrinsicsHead}
-          body={(extrinsics?.items || []).map((item) => [
-            <InLink
-              to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
-            >
-              {item?.indexer?.blockHeight}-{item?.indexer?.index}
+          head={eventsHead}
+          body={(events?.items || []).map((item) => [
+            <InLink to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}>
+              {item?.indexer?.blockHeight}-{item?.sort}
             </InLink>,
-            <InLink to={`/${node}/block/${item?.indexer?.blockHeight}`}>
+            <InLink to={`/block/${item?.indexer?.blockHeight}`}>
               {item?.indexer?.blockHeight}
             </InLink>,
             item?.indexer?.blockTime,
-            <HashEllipsis
-              hash={item?.hash}
-              to={`/${node}/extrinsic/${item?.hash}`}
-            />,
-            <Result isSuccess={item?.isSuccess} />,
-            <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
-            item?.args,
+            item?.extrinsicHash ? (
+              <HashEllipsis
+                hash={item?.extrinsicHash}
+                to={`/extrinsic/${item?.extrinsicHash}`}
+              />
+            ) : (
+              "-"
+            ),
+            `${item?.section}(${item?.meta?.name})`,
+            makeEventArgs(node, item),
           ])}
           foot={
             <Pagination
-              page={extrinsics?.page}
-              pageSize={extrinsics?.pageSize}
-              total={extrinsics?.total}
+              page={events?.page}
+              pageSize={events?.pageSize}
+              total={events?.total}
             />
           }
           collapse={900}
@@ -51,11 +51,11 @@ export default function Extrinsics({ node, extrinsics, filter }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
-  const { page, module, method } = context.query;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
+  let { page, module, method } = context.query;
   const nPage = parseInt(page) || 1;
 
-  const { result: extrinsics } = await nextApi.fetch(`${node}/extrinsics`, {
+  const { result: events } = await nextApi.fetch(`events`, {
     page: nPage - 1,
     pageSize: 25,
     ...(module ? { module } : {}),
@@ -63,7 +63,7 @@ export async function getServerSideProps(context) {
   });
 
   const filter = [];
-  const { result: modules } = await nextApi.fetch(`${node}/extrinsics/modules`);
+  const { result: modules } = await nextApi.fetch(`events/modules`);
   filter.push({
     value: module && (modules || []).indexOf(module) > -1 ? module : "",
     name: "Module",
@@ -79,7 +79,7 @@ export async function getServerSideProps(context) {
   });
   if (module) {
     const { result: methods } = await nextApi.fetch(
-      `${node}/extrinsics/modules/${module}/methods`
+      `events/modules/${module}/methods`
     );
     filter.push({
       value: method && (methods || []).indexOf(method) > -1 ? method : "",
@@ -105,7 +105,7 @@ export async function getServerSideProps(context) {
   return {
     props: {
       node,
-      extrinsics: extrinsics ?? EmptyQuery,
+      events: events ?? EmptyQuery,
       filter,
     },
   };

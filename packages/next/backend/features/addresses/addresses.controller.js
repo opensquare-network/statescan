@@ -8,7 +8,6 @@ const { getExtrinsicCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getAddresses(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -19,7 +18,7 @@ async function getAddresses(ctx) {
     $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   };
 
-  const col = await getAddressCollection(chain);
+  const col = await getAddressCollection();
   const items = await col
     .find(q)
     .sort({ "data.free": -1 })
@@ -37,16 +36,16 @@ async function getAddresses(ctx) {
 }
 
 async function getAddress(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
 
-  const col = await getAddressCollection(chain);
+  const col = await getAddressCollection();
   const item = await col.findOne({ address });
 
   ctx.body = item;
 }
 
 async function getAddressExtrinsics(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -55,7 +54,7 @@ async function getAddressExtrinsics(ctx) {
 
   const q = { signer: address };
 
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const items = await col
     .find(q, { projection: { data: 0 } })
     .sort({ "indexer.blockHeight": -1, "indexer.index": -1 })
@@ -73,7 +72,7 @@ async function getAddressExtrinsics(ctx) {
 }
 
 async function getAddressAssets(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -82,7 +81,7 @@ async function getAddressAssets(ctx) {
 
   const q = { address };
 
-  const col = await getAssetHolderCollection(chain);
+  const col = await getAssetHolderCollection();
   const items = await col
     .aggregate([
       { $match: q },
@@ -190,9 +189,7 @@ async function getAddressAssets(ctx) {
 }
 
 async function getAddressCount(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getAddressCollection(chain);
+  const col = await getAddressCollection();
   const count = await col.countDocuments({
     $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   });
@@ -201,7 +198,7 @@ async function getAddressCount(ctx) {
 }
 
 async function getAddressTransfers(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -212,7 +209,7 @@ async function getAddressTransfers(ctx) {
     $or: [{ from: address }, { to: address }],
   };
 
-  const transferCol = await getAssetTransferCollection(chain);
+  const transferCol = await getAssetTransferCollection();
   const items = await transferCol
     .aggregate([
       { $match: q },
@@ -282,7 +279,7 @@ async function getAddressTransfers(ctx) {
 }
 
 async function getAddressTeleports(ctx) {
-  const { chain, address } = ctx.params;
+  const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -300,7 +297,7 @@ async function getAddressTeleports(ctx) {
     ],
   };
 
-  const teleportCol = await getTeleportCollection(chain);
+  const teleportCol = await getTeleportCollection();
   const items = await teleportCol
     .find(q)
     .sort({

@@ -116,7 +116,7 @@ const Height = styled.span`
   color: rgba(17, 17, 17, 0.65);
 `;
 
-export default function SearchS({ node }) {
+export default function SearchS() {
   const dispatch = useDispatch();
   const router = useRouter();
   const isHomePage = useHomePage();
@@ -133,11 +133,9 @@ export default function SearchS({ node }) {
 
   const delayedQuery = useCallback(
     debounce((value) => {
-      nextApi
-        .fetch(`${node}/search/autocomplete?prefix=${value}`)
-        .then((res) => {
-          setHintAssets(res.result?.assets || []);
-        });
+      nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
+        setHintAssets(res.result?.assets || []);
+      });
     }, 500),
     []
   );
@@ -159,7 +157,7 @@ export default function SearchS({ node }) {
       }
       const hint = assets[selected];
       return router.push(
-        `/${node}/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
+        `/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
       );
     }
 
@@ -172,22 +170,22 @@ export default function SearchS({ node }) {
     }
   };
   const onSearch = () => {
-    nextApi.fetch(`${node}/search?q=${searchKeyword}`).then((res) => {
+    nextApi.fetch(`search?q=${searchKeyword}`).then((res) => {
       const { asset, extrinsic, block, address } = res.result || {};
       if (asset) {
         const { blockHeight } = asset.createdAt;
-        return router.push(`/${node}/asset/${asset.assetId}_${blockHeight}`);
+        return router.push(`/asset/${asset.assetId}_${blockHeight}`);
       }
       if (extrinsic) {
         const { blockHeight, index } = extrinsic.indexer;
-        return router.push(`/${node}/extrinsic/${blockHeight}-${index}`);
+        return router.push(`/extrinsic/${blockHeight}-${index}`);
       }
       if (block) {
         const height = block.header?.number;
-        return height && router.push(`/${node}/block/${height}`);
+        return height && router.push(`/block/${height}`);
       }
       if (address) {
-        return router.push(`/${node}/account/${address.address}`);
+        return router.push(`/account/${address.address}`);
       }
       dispatch(addToast({ type: "error", message: "No result found" }));
     });
@@ -212,7 +210,7 @@ export default function SearchS({ node }) {
             return (
               <InLink
                 key={index}
-                to={`/${node}/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
+                to={`/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
               >
                 <ExploreHint className={selected === index && "selected"}>
                   <img src={`/imgs/token-icons/${icon}.svg`} alt="" />

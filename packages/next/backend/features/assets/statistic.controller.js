@@ -42,9 +42,9 @@ function getQuery(assetId, from, to) {
 }
 
 async function getStatistic(ctx) {
-  const { chain, blockHeight, assetId } = ctx.params;
+  const { blockHeight, assetId } = ctx.params;
 
-  const assetCol = await getAssetCollection(chain);
+  const assetCol = await getAssetCollection();
   const asset = await assetCol.findOne({
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
@@ -56,7 +56,7 @@ async function getStatistic(ctx) {
   const { from, to } = ctx.query;
   const q = getQuery(asset._id, from, to);
 
-  const col = await getDailyAssetStatisticCollection(chain);
+  const col = await getDailyAssetStatisticCollection();
   const items = await col.find(q).sort({ "indexer.blockHeight": 1 }).toArray();
 
   ctx.body = (items || []).map((item) => omit(item, ["_id", "asset"]));

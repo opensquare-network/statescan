@@ -7,9 +7,7 @@ const {
 const { extractPage } = require("../../utils");
 
 async function getLatestAssets(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getAssetCollection(chain);
+  const col = await getAssetCollection();
   const items = await col
     .find({})
     .sort({
@@ -22,9 +20,7 @@ async function getLatestAssets(ctx) {
 }
 
 async function getPopularAssets(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getAssetCollection(chain);
+  const col = await getAssetCollection();
   const items = await col
     .find({})
     .sort({
@@ -37,21 +33,19 @@ async function getPopularAssets(ctx) {
 }
 
 async function getAssetsCount(ctx) {
-  const { chain } = ctx.params;
-  const col = await getAssetCollection(chain);
+  const col = await getAssetCollection();
   const count = await col.countDocuments();
   ctx.body = count;
 }
 
 async function getAssets(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
     return;
   }
 
-  const col = await getAssetCollection(chain);
+  const col = await getAssetCollection();
 
   const items = await col
     .find({})
@@ -72,8 +66,8 @@ async function getAssets(ctx) {
 }
 
 async function getAsset(ctx) {
-  const { chain, blockHeight, assetId } = ctx.params;
-  const col = await getAssetCollection(chain);
+  const { blockHeight, assetId } = ctx.params;
+  const col = await getAssetCollection();
   const item = await col.findOne({
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
@@ -83,8 +77,8 @@ async function getAsset(ctx) {
 }
 
 async function getAssetById(ctx) {
-  const { chain, assetId } = ctx.params;
-  const col = await getAssetCollection(chain);
+  const { assetId } = ctx.params;
+  const col = await getAssetCollection();
   const option = { sort: { "createdAt.blockHeight": -1 } };
   const item = await col.findOne({ assetId: parseInt(assetId) }, option);
 
@@ -92,14 +86,14 @@ async function getAssetById(ctx) {
 }
 
 async function getAssetTransfers(ctx) {
-  const { chain, blockHeight, assetId } = ctx.params;
+  const { blockHeight, assetId } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
     return;
   }
 
-  const assetCol = await getAssetCollection(chain);
+  const assetCol = await getAssetCollection();
   const asset = await assetCol.findOne({
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
@@ -111,7 +105,7 @@ async function getAssetTransfers(ctx) {
 
   const q = { asset: asset._id };
 
-  const transferCol = await getAssetTransferCollection(chain);
+  const transferCol = await getAssetTransferCollection();
   const items = await transferCol
     .aggregate([
       { $match: q },
@@ -182,14 +176,14 @@ async function getAssetTransfers(ctx) {
 }
 
 async function getAssetHolders(ctx) {
-  const { chain, blockHeight, assetId } = ctx.params;
+  const { blockHeight, assetId } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
     return;
   }
 
-  const assetCol = await getAssetCollection(chain);
+  const assetCol = await getAssetCollection();
   const asset = await assetCol.findOne({
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
@@ -204,7 +198,7 @@ async function getAssetHolders(ctx) {
     balance: { $gt: 0 },
   };
 
-  const col = await getAssetHolderCollection(chain);
+  const col = await getAssetHolderCollection();
   const items = await col
     .aggregate([
       { $match: q },

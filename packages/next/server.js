@@ -1,6 +1,7 @@
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
+const { listenAndEmitInfo } = require("./backend/websocket");
 const { loadEnvConfig } = require("@next/env");
 
 // Load next env
@@ -8,7 +9,7 @@ const projectDir = process.cwd();
 loadEnvConfig(projectDir);
 
 const { initDb } = require("./backend/mongo");
-const { koaHandler, ioHandler } = require("./backend");
+const { koaHandler } = require("./backend");
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
@@ -44,7 +45,7 @@ app
       },
     });
 
-    ioHandler(io);
+    listenAndEmitInfo(io);
 
     httpServer.listen(PORT, (err) => {
       if (err) throw err;

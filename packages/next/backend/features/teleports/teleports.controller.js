@@ -1,10 +1,8 @@
-const {
-  getTeleportCollection,
-} = require("../../mongo");
+const { getTeleportCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getTeleport(ctx) {
-  const { chain, indexOrHash } = ctx.params;
+  const { indexOrHash } = ctx.params;
 
   const match = indexOrHash.match(/(\d+)-(\d+)/);
   if (match) {
@@ -17,14 +15,13 @@ async function getTeleport(ctx) {
     q = { extrinsicHash: indexOrHash };
   }
 
-  const col = await getTeleportCollection(chain);
+  const col = await getTeleportCollection();
   const item = await col.findOne(q);
 
   ctx.body = item;
 }
 
 async function getTeleports(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -33,7 +30,7 @@ async function getTeleports(ctx) {
 
   const q = {};
 
-  const col = await getTeleportCollection(chain);
+  const col = await getTeleportCollection();
   const items = await col
     .find(q)
     .sort({

@@ -11,7 +11,6 @@ function escapeRegex(string) {
 }
 
 async function search(ctx) {
-  const { chain } = ctx.params;
   const { q } = ctx.query;
 
   if (!q) {
@@ -29,10 +28,10 @@ async function search(ctx) {
   const isNum = q.match(/^[0-9]+$/);
   const isAddr = q.match(/^[0-9a-zA-Z]{47,48}$/);
 
-  const assetCol = await getAssetCollection(chain);
-  const addressCol = await getAddressCollection(chain);
-  const blockCol = await getBlockCollection(chain);
-  const extrinsicCol = await getExtrinsicCollection(chain);
+  const assetCol = await getAssetCollection();
+  const addressCol = await getAddressCollection();
+  const blockCol = await getBlockCollection();
+  const extrinsicCol = await getExtrinsicCollection();
 
   const icaseQ = new RegExp(`^${escapeRegex(q)}$`, "i");
 
@@ -41,11 +40,7 @@ async function search(ctx) {
       $or: [
         { name: icaseQ },
         { symbol: icaseQ },
-        ...(
-          isNum
-            ? [{ assetId: Number(q) }]
-            : []
-          )
+        ...(isNum ? [{ assetId: Number(q) }] : []),
       ],
     }),
     isAddr ? addressCol.findOne({ address: icaseQ }) : null,
@@ -71,7 +66,6 @@ async function search(ctx) {
 }
 
 async function searchAutoComplete(ctx) {
-  const { chain } = ctx.params;
   const { prefix } = ctx.query;
 
   if (!prefix) {
@@ -83,8 +77,8 @@ async function searchAutoComplete(ctx) {
   }
 
   const prefixPattern = new RegExp(`^${escapeRegex(prefix)}`, "i");
-  const assetCol = await getAssetCollection(chain);
-  const addressCol = await getAddressCollection(chain);
+  const assetCol = await getAssetCollection();
+  const addressCol = await getAddressCollection();
 
   const [assets, addresses] = await Promise.all([
     prefix.length >= 2

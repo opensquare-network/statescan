@@ -48,7 +48,7 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
         <Table
           head={blocksHead}
           body={(blocks?.items || []).map((item) => [
-            <InLink to={`/${node}/block/${item?.header?.number}`}>
+            <InLink to={`/block/${item?.header?.number}`}>
               {item?.header?.number}
             </InLink>,
             item?.blockTime,
@@ -64,7 +64,7 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
             item?.author ? (
               <AddressEllipsis
                 address={item?.author}
-                to={`/${node}/account/${item?.author}`}
+                to={`/account/${item?.author}`}
               />
             ) : (
               "-"
@@ -87,11 +87,11 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
   const { page } = context.query;
   const nPage = parseInt(page) || 1;
 
-  const { result: blocks } = await nextApi.fetch(`${node}/blocks`, {
+  const { result: blocks } = await nextApi.fetch(`blocks`, {
     page: nPage - 1,
     pageSize: 25,
   });

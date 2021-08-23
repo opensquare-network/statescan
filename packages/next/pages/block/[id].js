@@ -40,7 +40,7 @@ const AccessoryText = styled.div`
   color: rgba(17, 17, 17, 0.35);
 `;
 
-const toArray = (obj) => Array.isArray(obj) ? obj : [obj];
+const toArray = (obj) => (Array.isArray(obj) ? obj : [obj]);
 
 export default function Block({
   node,
@@ -73,12 +73,9 @@ export default function Block({
       head: blockExtrinsicsHead,
       body: (blockExtrinsics?.items || []).map((item) => [
         <InLink
-          to={`/${node}/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
+          to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
-        <HashEllipsis
-          hash={item?.hash}
-          to={`/${node}/extrinsic/${item?.hash}`}
-        />,
+        <HashEllipsis hash={item?.hash} to={`/extrinsic/${item?.hash}`} />,
         <MinorText>
           <Result isSuccess={item?.isSuccess} />
         </MinorText>,
@@ -100,11 +97,11 @@ export default function Block({
       head: blockEventsHead,
       body: (blockEvents?.items || []).map((item) => [
         <InLink
-          to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
+          to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
         >{`${item?.indexer?.blockHeight}-${item?.sort}`}</InLink>,
         Number.isInteger(item?.phase?.value) ? (
           <InLink
-            to={`/${node}/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
+            to={`/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
           >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>
         ) : (
           "-"
@@ -129,12 +126,14 @@ export default function Block({
         const [itemName] = Object.keys(item);
 
         let itemFields = [];
-        switch(itemName) {
+        switch (itemName) {
           case "changesTrieRoot": {
             itemFields = ["Hash"];
             break;
           }
-          case "preRuntime": case "consensus": case "seal": {
+          case "preRuntime":
+          case "consensus":
+          case "seal": {
             itemFields = ["Engine", "Data"];
             break;
           }
@@ -151,13 +150,8 @@ export default function Block({
         return [
           `${blockDetail?.header?.number}-${i}`,
           blockDetail?.header?.number,
-          <span style={{ textTransform: "capitalize" }}>
-            {itemName}
-          </span>,
-          makeTablePairs(
-            itemFields,
-            toArray(item[itemName]),
-          ),
+          <span style={{ textTransform: "capitalize" }}>{itemName}</span>,
+          makeTablePairs(itemFields, toArray(item[itemName])),
         ];
       }),
       expand,
@@ -194,9 +188,7 @@ export default function Block({
                 <MinorText>
                   <MonoText>
                     <InLink
-                      to={`/${node}/block/${(
-                        Number.parseInt(id) - 1
-                      ).toString()}`}
+                      to={`/block/${(Number.parseInt(id) - 1).toString()}`}
                     >
                       {blockDetail?.header?.parentHash}
                     </InLink>
@@ -215,7 +207,10 @@ export default function Block({
               </BreakText>,
               blockDetail?.author ? (
                 <CopyText text={blockDetail?.author}>
-                  <Address address={blockDetail?.author} to={`/${node}/account/${blockDetail?.author}`} />
+                  <Address
+                    address={blockDetail?.author}
+                    to={`/account/${blockDetail?.author}`}
+                  />
                 </CopyText>
               ) : (
                 "-"
@@ -230,7 +225,8 @@ export default function Block({
 }
 
 export async function getServerSideProps(context) {
-  const { node, id } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
+  const { id } = context.params;
   const { tab, page, event } = context.query;
 
   const nPage = parseInt(page) || 1;
@@ -241,11 +237,11 @@ export async function getServerSideProps(context) {
     { result: blockEvents },
     { result: blockExtrinsics },
   ] = await Promise.all([
-    nextApi.fetch(`${node}/blocks/${id}`),
-    nextApi.fetch(`${node}/blocks/${id}/events`, {
+    nextApi.fetch(`blocks/${id}`),
+    nextApi.fetch(`blocks/${id}/events`, {
       page: activeTab === "events" ? nPage - 1 : 0,
     }),
-    nextApi.fetch(`${node}/blocks/${id}/extrinsics`, {
+    nextApi.fetch(`blocks/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
     }),
   ]);

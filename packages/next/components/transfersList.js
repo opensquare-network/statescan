@@ -77,13 +77,10 @@ export default function TransfersList({ node, assetTransfers }) {
             <MinorText>From</MinorText>
             <AddressEllipsis
               address={item.from}
-              to={`/${node}/account/${item?.from}`}
+              to={`/account/${item?.from}`}
             />
             <MinorText>To</MinorText>
-            <AddressEllipsis
-              address={item.to}
-              to={`/${node}/account/${item?.to}`}
-            />
+            <AddressEllipsis address={item.to} to={`/account/${item?.to}`} />
             <MinorText>For</MinorText>
             <MajorText>
               {item.assetSymbol
@@ -95,9 +92,8 @@ export default function TransfersList({ node, assetTransfers }) {
             {item.assetSymbol ? (
               <InLink
                 to={
-                  `/${node}/asset/${item.assetId}` + (item.destroyedAt
-                    ? `_${item.createdAt.blockHeight}`
-                    : "")
+                  `/asset/${item.assetId}` +
+                  (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
                 }
               >
                 {item.assetSymbol}

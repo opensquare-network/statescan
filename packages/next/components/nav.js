@@ -55,7 +55,7 @@ export default function Nav({ data, node }) {
   return (
     <Wrapper>
       <NavWrapper node={node} themecolor={theme.color}>
-        <Link href={`/${node}`}>
+        <Link href={`/`}>
           <StyledLink node={node} themecolor={theme.color}>
             {nodeName}
           </StyledLink>

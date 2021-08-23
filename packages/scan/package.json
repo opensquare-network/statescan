@@ -7,7 +7,8 @@
     "westmint": "pm2 start ecosystem.config.js --only statescan-scan-westmint --env production",
     "statemine": "pm2 start ecosystem.config.js --only statescan-scan-statemine --env production",
     "westmintStaging": "pm2 start ecosystem.config.js --only statescan-scan-westmint-staging --env production",
-    "statemineStaging": "pm2 start ecosystem.config.js --only statescan-scan-statemine-staging --env production"
+    "statemineStaging": "pm2 start ecosystem.config.js --only statescan-scan-statemine-staging --env production",
+    "scan": "node src/index.js"
   },
   "dependencies": {
     "@polkadot/api": "^5.4.1",

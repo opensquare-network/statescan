@@ -10,8 +10,9 @@
     "node": ">=15.0.0"
   },
   "scripts": {
+    "build": "yarn workspace @statescan/server build",
     "scan": "yarn workspace @statescan/scan scan",
-    "server": "yarn workspace @statescan/server start",
+    "server": "yarn workspace @statescan/server server",
     "start": "yarn run scan & yarn run server"
   },
   "devDependencies": {

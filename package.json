@@ -11,7 +11,7 @@
   },
   "scripts": {
     "scan": "yarn workspace @statescan/scan scan",
-    "server": "yarn workspace @statescan/site start",
+    "server": "yarn workspace @statescan/server start",
     "start": "yarn run scan & yarn run server"
   },
   "devDependencies": {

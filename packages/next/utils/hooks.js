@@ -43,7 +43,7 @@ export function useIsMounted() {
 
 export function useHomePage() {
   const router = useRouter();
-  return router.pathname === "/[node]" && router.asPath !== "/404";
+  return router.pathname === "/" && router.asPath !== "/404";
 }
 
 export function useWindowSize() {
@@ -60,6 +60,7 @@ export function useWindowSize() {
         height: window.innerHeight,
       });
     }
+
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
@@ -68,13 +69,9 @@ export function useWindowSize() {
 }
 
 export function useNode() {
-  const router = useRouter();
-  const match = router.asPath.match(/\/([^\/]+)(\/|)/);
-  if (match) {
-    const node = match[1];
-    if (nodes.findIndex((item) => item.value === node) >= 0) {
-      return node;
-    }
+  const node = process.env.NEXT_PUBLIC_CHAIN;
+  if (nodes.findIndex((item) => item.value === node) >= 0) {
+    return node;
   }
   return null;
 }
@@ -93,7 +90,7 @@ export function useTheme() {
     buttonColor,
     logo,
   };
-};
+}
 
 export function getSymbol(node) {
   return nodes.find((item) => item.value === node)?.symbol;

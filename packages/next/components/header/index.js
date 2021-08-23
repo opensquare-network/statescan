@@ -193,7 +193,7 @@ export default function Header({ node }) {
                 <MenuItem
                   themecolor={theme.color}
                   onClick={() => setIsActive(false)}
-                  selected={router.pathname === "/[node]"}
+                  selected={router.pathname === "/"}
                 >
                   Home
                 </MenuItem>

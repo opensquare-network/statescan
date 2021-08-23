@@ -38,7 +38,7 @@ export default function Asset({
     );
   }
 
-  console.log({ assetAnalytics });
+  console.log({ asset });
 
   const assetSymbol = asset?.symbol;
 
@@ -113,7 +113,13 @@ export default function Asset({
     },
     {
       name: "Analytics",
-      component: <AnalyticsChart />,
+      component: (
+        <AnalyticsChart
+          data={assetAnalytics}
+          symbol={asset.symbol}
+          name={asset.name}
+        />
+      ),
     },
   ];
 

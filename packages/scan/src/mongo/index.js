@@ -1,15 +1,12 @@
 const { MongoClient } = require("mongodb");
-const { currentChain, CHAINS } = require("../envvars");
 
 function getDbName() {
-  const chain = currentChain();
-  if (CHAINS.STATEMINE === chain) {
-    return process.env.MONGO_DB_KSM_NAME || "statescan-ksm";
-  } else if (CHAINS.WESTMINT === chain) {
-    return process.env.MONGO_DB_WND_NAME || "statescan-wnd";
-  } else {
-    return process.env.MONGO_DB_ROC_NAME || "statescan-roc";
+  const dbName = process.env.MONGO_DB_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_NAME not set");
   }
+
+  return dbName;
 }
 
 const statusCollectionName = "status";

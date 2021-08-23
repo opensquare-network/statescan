@@ -20,6 +20,7 @@ import Tooltip from "components/tooltip";
 import Timeline from "components/timeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import PageNotFound from "components/pageNotFound";
+import AnalyticsChart from "components/analyticsChart";
 
 export default function Asset({
   node,
@@ -27,6 +28,7 @@ export default function Asset({
   asset,
   assetTransfers,
   assetHolders,
+  assetAnalytics,
 }) {
   if (!asset) {
     return (
@@ -87,8 +89,11 @@ export default function Asset({
       total: assetHolders?.total,
       head: assetHoldersHead,
       body: (assetHolders?.items || []).map((item, index) => [
-        (index + assetHolders.page * assetHolders.pageSize) + 1,
-        <Address address={item?.address} to={`/${node}/account/${item?.address}`} />,
+        index + assetHolders.page * assetHolders.pageSize + 1,
+        <Address
+          address={item?.address}
+          to={`/${node}/account/${item?.address}`}
+        />,
         bigNumber2Locale(fromAssetUnit(item?.balance, item?.assetDecimals)),
       ]),
       foot: (
@@ -103,6 +108,16 @@ export default function Asset({
       name: "Timeline",
       total: asset?.timeline?.length,
       component: <Timeline data={asset?.timeline} node={node} asset={asset} />,
+    },
+    {
+      name: "Analytics",
+      component: (
+        <AnalyticsChart
+          data={assetAnalytics}
+          symbol={asset.symbol}
+          name={asset.name}
+        />
+      ),
     },
   ];
 
@@ -123,8 +138,14 @@ export default function Asset({
               <MinorText>{asset?.symbol}</MinorText>,
               <MinorText>{asset?.name}</MinorText>,
               <MinorText>{`#${asset?.assetId}`}</MinorText>,
-              <Address address={asset?.owner} to={`/${node}/account/${asset?.owner}`} />,
-              <Address address={asset?.issuer} to={`/${node}/account/${asset?.issuer}`} />,
+              <Address
+                address={asset?.owner}
+                to={`/${node}/account/${asset?.owner}`}
+              />,
+              <Address
+                address={asset?.issuer}
+                to={`/${node}/account/${asset?.issuer}`}
+              />,
               `${bigNumber2Locale(
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
@@ -153,15 +174,19 @@ export async function getServerSideProps(context) {
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "transfers";
 
-  const [{ result: assetTransfers }, { result: assetHolders }] =
-    await Promise.all([
-      nextApi.fetch(`${node}/assets/${assetKey}/transfers`, {
-        page: activeTab === "transfers" ? nPage - 1 : 0,
-      }),
-      nextApi.fetch(`${node}/assets/${assetKey}/holders`, {
-        page: activeTab === "holders" ? nPage - 1 : 0,
-      }),
-    ]);
+  const [
+    { result: assetTransfers },
+    { result: assetHolders },
+    { result: assetAnalytics },
+  ] = await Promise.all([
+    nextApi.fetch(`${node}/assets/${assetKey}/transfers`, {
+      page: activeTab === "transfers" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/assets/${assetKey}/holders`, {
+      page: activeTab === "holders" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`${node}/assets/${assetKey}/statistic`),
+  ]);
 
   return {
     props: {
@@ -171,6 +196,7 @@ export async function getServerSideProps(context) {
       asset: asset ?? null,
       assetTransfers: assetTransfers ?? EmptyQuery,
       assetHolders: assetHolders ?? EmptyQuery,
+      assetAnalytics: assetAnalytics ?? EmptyQuery,
     },
   };
 }

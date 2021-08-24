@@ -137,6 +137,7 @@ async function main() {
   }
 
   await fetchAndSave(height);
+  console.log(`block ${height} have been saved!`);
   await api.disconnect();
   process.exit(0);
 }

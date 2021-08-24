@@ -1,8 +1,11 @@
-const { getEventCollection, getAssetTransferCollection, getAssetCollection } = require("../../mongo");
+const {
+  getEventCollection,
+  getAssetTransferCollection,
+  getAssetCollection,
+} = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getEvents(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -19,7 +22,7 @@ async function getEvents(ctx) {
     q.method = method;
   }
 
-  const col = await getEventCollection(chain);
+  const col = await getEventCollection();
   const items = await col
     .find(q)
     .sort({
@@ -40,25 +43,23 @@ async function getEvents(ctx) {
 }
 
 async function getEvent(ctx) {
-  const { chain, blockHeight, eventSort } = ctx.params;
+  const { blockHeight, eventSort } = ctx.params;
 
-  const col = await getEventCollection(chain);
-  const event = await col
-    .findOne({
-      "indexer.blockHeight": Number(blockHeight),
-      "sort": Number(eventSort),
-    });
+  const col = await getEventCollection();
+  const event = await col.findOne({
+    "indexer.blockHeight": Number(blockHeight),
+    sort: Number(eventSort),
+  });
 
   if (event) {
-    const transferCol = await getAssetTransferCollection(chain);
-    const transfer = await transferCol
-      .findOne({
-        "indexer.blockHeight": Number(blockHeight),
-        "eventSort": Number(eventSort),
-      });
+    const transferCol = await getAssetTransferCollection();
+    const transfer = await transferCol.findOne({
+      "indexer.blockHeight": Number(blockHeight),
+      eventSort: Number(eventSort),
+    });
 
     if (transfer) {
-      const assetCol = await getAssetCollection(chain);
+      const assetCol = await getAssetCollection();
       const asset = transfer.asset
         ? await assetCol.findOne({ _id: transfer.asset })
         : null;
@@ -72,7 +73,7 @@ async function getEvent(ctx) {
           assetName: asset?.name,
           assetSymbol: asset?.symbol,
           assetDecimals: asset?.decimals,
-        }
+        },
       };
 
       return;
@@ -83,18 +84,16 @@ async function getEvent(ctx) {
 }
 
 async function getEventModules(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getEventCollection(chain);
+  const col = await getEventCollection();
   const items = await col.distinct("section");
 
   ctx.body = items;
 }
 
 async function getEventModuleMethods(ctx) {
-  const { chain, moduleName } = ctx.params;
+  const { moduleName } = ctx.params;
 
-  const col = await getEventCollection(chain);
+  const col = await getEventCollection();
   const items = await col.distinct("method", { section: moduleName });
 
   ctx.body = items;

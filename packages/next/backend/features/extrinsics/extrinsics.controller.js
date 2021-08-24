@@ -6,7 +6,6 @@ const {
 const { extractPage } = require("../../utils");
 
 async function getExtrinsics(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -23,7 +22,7 @@ async function getExtrinsics(ctx) {
     q.name = method;
   }
 
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const items = await col
     .find(q)
     .sort({
@@ -44,9 +43,7 @@ async function getExtrinsics(ctx) {
 }
 
 async function getLatestExtrinsics(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const items = await col
     .find({}, { projection: { data: 0 } })
     .sort({
@@ -60,14 +57,13 @@ async function getLatestExtrinsics(ctx) {
 }
 
 async function getExtrinsicsCount(ctx) {
-  const { chain } = ctx.params;
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const total = await col.countDocuments({});
   ctx.body = total;
 }
 
 async function getExtrinsic(ctx) {
-  const { chain, indexOrHash } = ctx.params;
+  const { indexOrHash } = ctx.params;
 
   let q;
 
@@ -82,14 +78,14 @@ async function getExtrinsic(ctx) {
     q = { hash: indexOrHash };
   }
 
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const item = await col.findOne(q, { projection: { data: 0 } });
 
   ctx.body = item;
 }
 
 async function getExtrinsicEvents(ctx) {
-  const { chain, indexOrHash } = ctx.params;
+  const { indexOrHash } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -109,7 +105,7 @@ async function getExtrinsicEvents(ctx) {
     q = { extrinsicHash: indexOrHash };
   }
 
-  const col = await getEventCollection(chain);
+  const col = await getEventCollection();
   const items = await col
     .find(q)
     .sort({ sort: 1 })
@@ -127,7 +123,7 @@ async function getExtrinsicEvents(ctx) {
 }
 
 async function getExtrinsicTransfers(ctx) {
-  const { chain, indexOrHash } = ctx.params;
+  const { indexOrHash } = ctx.params;
 
   let q;
 
@@ -142,7 +138,7 @@ async function getExtrinsicTransfers(ctx) {
     q = { extrinsicHash: indexOrHash };
   }
 
-  const col = await getAssetTransferCollection(chain);
+  const col = await getAssetTransferCollection();
   const items = await col
     .aggregate([
       { $match: q },
@@ -181,18 +177,16 @@ async function getExtrinsicTransfers(ctx) {
 }
 
 async function getExtrinsicModules(ctx) {
-  const { chain } = ctx.params;
-
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const items = await col.distinct("section");
 
   ctx.body = items;
 }
 
 async function getExtrinsicModuleMethods(ctx) {
-  const { chain, moduleName } = ctx.params;
+  const { moduleName } = ctx.params;
 
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   const items = await col.distinct("name", { section: moduleName });
 
   ctx.body = items;

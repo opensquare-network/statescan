@@ -54,7 +54,7 @@ export default function PageNotFound() {
       </TextWrapper>
       <Button
         onClick={() => {
-          router.replace(`/${node}`);
+          router.replace(`/`);
         }}
       >
         Back home

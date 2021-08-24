@@ -57,7 +57,6 @@ export default function AnalyticsChart({ data, symbol, name, decimals }) {
         fill: false,
         borderColor: "#F33484",
         pointBackgroundColor: "#F33484",
-        hidden: false,
         pointHoverBorderWidth: 1,
         pointRadius: 0,
         pointHitRadius: 10,

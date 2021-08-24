@@ -14,15 +14,14 @@ const {
 } = require("../../common/latestBlocks");
 
 async function getBlocks(ctx) {
-  const { chain } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
     return;
   }
 
-  const items = await getPagedBlocks(chain, page, pageSize);
-  const col = await getBlockCollection(chain);
+  const items = await getPagedBlocks(page, pageSize);
+  const col = await getBlockCollection();
   const total = await col.estimatedDocumentCount();
 
   ctx.body = {
@@ -34,22 +33,20 @@ async function getBlocks(ctx) {
 }
 
 async function getLatestBlocks(ctx) {
-  const { chain } = ctx.params;
-  ctx.body = await getLatestBlocksFromDb(chain, 5);
+  ctx.body = await getLatestBlocksFromDb(5);
 }
 
 async function getBlockHeight(ctx) {
-  const { chain } = ctx.params;
-  const col = await getStatusCollection(chain);
+  const col = await getStatusCollection();
   const heightInfo = await col.findOne({ name: "main-scan-height" });
   ctx.body = heightInfo?.value || 0;
 }
 
 async function getBlock(ctx) {
-  const { chain, heightOrHash } = ctx.params;
+  const { heightOrHash } = ctx.params;
 
   const $match = {};
-  const col = await getBlockCollection(chain);
+  const col = await getBlockCollection();
   if (heightOrHash.startsWith("0x")) {
     $match["hash"] = heightOrHash;
   } else {
@@ -62,7 +59,7 @@ async function getBlock(ctx) {
   });
 
   if (!block) {
-    const unFinalizedCol = await getUnFinalizedBlockCollection(chain);
+    const unFinalizedCol = await getUnFinalizedBlockCollection();
     block = await unFinalizedCol.findOne($match, {
       projection: { data: 0, extrinsics: 0 },
     });
@@ -76,7 +73,7 @@ async function getBlock(ctx) {
 }
 
 async function getBlockExtrinsics(ctx) {
-  const { chain, heightOrHash } = ctx.params;
+  const { heightOrHash } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -91,10 +88,10 @@ async function getBlockExtrinsics(ctx) {
     $match["indexer.blockHeight"] = parseInt(heightOrHash);
   }
 
-  const col = await getExtrinsicCollection(chain);
+  const col = await getExtrinsicCollection();
   let data = await getExtrinsicsFromCollection(col, $match, page, pageSize);
   if (data.total <= 0) {
-    const col = await getUnFinalizedExrinsicCollection(chain);
+    const col = await getUnFinalizedExrinsicCollection();
     data = await getExtrinsicsFromCollection(col, $match, page, pageSize);
   }
 
@@ -123,7 +120,7 @@ async function getExtrinsicsFromCollection(col, $match, page, pageSize) {
 }
 
 async function getBlockEvents(ctx) {
-  const { chain, heightOrHash } = ctx.params;
+  const { heightOrHash } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
     ctx.status = 400;
@@ -138,10 +135,10 @@ async function getBlockEvents(ctx) {
     $match["indexer.blockHeight"] = parseInt(heightOrHash);
   }
 
-  const col = await getEventCollection(chain);
+  const col = await getEventCollection();
   let data = await getEventsFromCollection(col, $match, page, pageSize);
   if (data.total <= 0) {
-    const col = await getUnFinalizedEventCollection(chain);
+    const col = await getUnFinalizedEventCollection();
     data = await getEventsFromCollection(col, $match, page, pageSize);
   }
 

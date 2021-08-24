@@ -4,30 +4,30 @@ const util = require("util");
 const { getBlockCollection } = require("../mongo");
 const { firstPageBlocksRoom, FEED_INTERVAL } = require("./constants");
 
-async function feedFirstPageBlocks(chain, io) {
+async function feedFirstPageBlocks(io) {
   try {
-    const oldData = getFirstPageBlocks(chain);
-    const newData = await getBlocks(chain);
+    const oldData = getFirstPageBlocks();
+    const newData = await getBlocks();
 
     if (util.isDeepStrictEqual(oldData, newData)) {
       return;
     }
 
-    setFirstPageBlocks(chain, newData);
+    setFirstPageBlocks(newData);
     io.to(firstPageBlocksRoom).emit("firstPageBlocks", newData);
   } catch (e) {
     console.error("feed overview error:", e);
   } finally {
-    setTimeout(feedFirstPageBlocks.bind(null, chain, io), FEED_INTERVAL);
+    setTimeout(feedFirstPageBlocks.bind(null, io), FEED_INTERVAL);
   }
 }
 
-async function getBlocks(chain) {
+async function getBlocks() {
   const page = 0;
   const pageSize = 25;
 
-  const blocks = await getPagedBlocks(chain, page, pageSize);
-  const col = await getBlockCollection(chain);
+  const blocks = await getPagedBlocks(page, pageSize);
+  const col = await getBlockCollection();
   const total = await col.estimatedDocumentCount();
 
   return {

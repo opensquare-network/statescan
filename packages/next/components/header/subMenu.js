@@ -166,13 +166,13 @@ export default function SubMenu({ closeMenu }) {
         <MenuWrapper ref={ref}>
           {menus.map((item, index) => (
             <Fragment key={index}>
-              <Link href={`/${node}/${item.value}`}>
+              <Link href={`/${item.value}`}>
                 <MenuItem
                   onClick={() => {
                     closeMenu();
                     setIsActive(false);
                   }}
-                  selected={router.pathname === `/[node]/${item.value}`}
+                  selected={router.pathname === `/${item.value}`}
                 >
                   {item.name}
                 </MenuItem>

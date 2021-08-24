@@ -64,9 +64,7 @@ export default function Extrinsic({
       total: extrinsicEvents?.total,
       head: extrinsicEventsHead,
       body: (extrinsicEvents?.items || []).map((item) => [
-        <InLink
-          to={`/${node}/event/${item?.indexer?.blockHeight}-${item?.sort}`}
-        >
+        <InLink to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}>
           {`${item?.indexer?.blockHeight}-${item?.sort}`}
         </InLink>,
         `${item?.section}(${item?.method})`,
@@ -118,22 +116,16 @@ export default function Extrinsic({
                   {timeDuration(extrinsicDetail?.indexer?.blockTime)}
                 </AccessoryText>
               </FlexWrapper>,
-              <InLink
-                to={`/${node}/block/${extrinsicDetail?.indexer?.blockHeight}`}
-              >
+              <InLink to={`/block/${extrinsicDetail?.indexer?.blockHeight}`}>
                 {extrinsicDetail?.indexer?.blockHeight}
               </InLink>,
               extrinsicDetail?.lifetime ? (
                 <MinorText>
-                  <InLink
-                    to={`/${node}/block/${extrinsicDetail?.lifetime?.[0]}`}
-                  >
+                  <InLink to={`/lifetime?.[0]}`}>
                     {extrinsicDetail?.lifetime?.[0]}
                   </InLink>
                   {" - "}
-                  <InLink
-                    to={`/${node}/block/${extrinsicDetail?.lifetime?.[1]}`}
-                  >
+                  <InLink to={`/block/${extrinsicDetail?.lifetime?.[1]}`}>
                     {extrinsicDetail?.lifetime?.[1]}
                   </InLink>
                 </MinorText>
@@ -147,11 +139,16 @@ export default function Extrinsic({
               </BreakText>,
               <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,
               <MinorText>{capitalize(extrinsicDetail?.name)}</MinorText>,
-              extrinsicDetail?.signer
-              ? <CopyText text={extrinsicDetail?.signer}>
-                  <Address address={extrinsicDetail?.signer} to={`/${node}/account/${extrinsicDetail?.signer}`} />
+              extrinsicDetail?.signer ? (
+                <CopyText text={extrinsicDetail?.signer}>
+                  <Address
+                    address={extrinsicDetail?.signer}
+                    to={`/account/${extrinsicDetail?.signer}`}
+                  />
                 </CopyText>
-              : "-",
+              ) : (
+                "-"
+              ),
               extrinsicTransfer?.length > 0 ? (
                 <TransfersList node={node} assetTransfers={extrinsicTransfer} />
               ) : undefined,
@@ -177,7 +174,8 @@ export default function Extrinsic({
 }
 
 export async function getServerSideProps(context) {
-  const { node, id } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
+  const { id } = context.params;
   const { tab, page, event } = context.query;
 
   const nPage = parseInt(page) || 1;
@@ -188,9 +186,13 @@ export async function getServerSideProps(context) {
     { result: extrinsicTransfer },
     { result: extrinsicEvents },
   ] = await Promise.all([
-    nextApi.fetch(`${node}/extrinsics/${id}`),
-    nextApi.fetch(`${node}/extrinsics/${id}/transfers`, { page: activeTab === "transfers" ? nPage - 1 : 0 }),
-    nextApi.fetch(`${node}/extrinsics/${id}/events`, { page: activeTab === "events" ? nPage - 1 : 0 }),
+    nextApi.fetch(`extrinsics/${id}`),
+    nextApi.fetch(`extrinsics/${id}/transfers`, {
+      page: activeTab === "transfers" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`extrinsics/${id}/events`, {
+      page: activeTab === "events" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {

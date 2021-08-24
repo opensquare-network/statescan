@@ -49,24 +49,16 @@ export default function Asset({
       total: assetTransfers?.total,
       head: assetTransfersHead,
       body: (assetTransfers?.items || []).map((item) => [
-        <InLink
-          to={`/${node}/event/${item.indexer.blockHeight}-${item.eventSort}`}
-        >
+        <InLink to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}>
           {`${item.indexer.blockHeight}-${item.eventSort}`}
         </InLink>,
         <InLink
-          to={`/${node}/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
         <Tooltip label={item.method} bg />,
         item.indexer.blockTime,
-        <AddressEllipsis
-          address={item?.from}
-          to={`/${node}/account/${item?.from}`}
-        />,
-        <AddressEllipsis
-          address={item?.to}
-          to={`/${node}/account/${item?.to}`}
-        />,
+        <AddressEllipsis address={item?.from} to={`/account/${item?.from}`} />,
+        <AddressEllipsis address={item?.to} to={`/account/${item?.to}`} />,
         item.assetSymbol
           ? `${bigNumber2Locale(
               fromAssetUnit(item.balance, item.assetDecimals)
@@ -90,10 +82,7 @@ export default function Asset({
       head: assetHoldersHead,
       body: (assetHolders?.items || []).map((item, index) => [
         index + assetHolders.page * assetHolders.pageSize + 1,
-        <Address
-          address={item?.address}
-          to={`/${node}/account/${item?.address}`}
-        />,
+        <Address address={item?.address} to={`/account/${item?.address}`} />,
         bigNumber2Locale(fromAssetUnit(item?.balance, item?.assetDecimals)),
       ]),
       foot: (
@@ -128,7 +117,7 @@ export default function Asset({
         <div>
           <Nav
             data={[
-              { name: "Asset Tracker", path: `/${node}/assets` },
+              { name: "Asset Tracker", path: `/assets` },
               { name: assetSymbol },
             ]}
             node={node}
@@ -141,11 +130,11 @@ export default function Asset({
               <MinorText>{`#${asset?.assetId}`}</MinorText>,
               <Address
                 address={asset?.owner}
-                to={`/${node}/account/${asset?.owner}`}
+                to={`/account/${asset?.owner}`}
               />,
               <Address
                 address={asset?.issuer}
-                to={`/${node}/account/${asset?.issuer}`}
+                to={`/account/${asset?.issuer}`}
               />,
               `${bigNumber2Locale(
                 fromAssetUnit(asset?.supply, asset?.decimals)
@@ -163,10 +152,11 @@ export default function Asset({
 }
 
 export async function getServerSideProps(context) {
-  const { node, id } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
+  const { id } = context.params;
   const { tab, page } = context.query;
 
-  const { result: asset } = await nextApi.fetch(`${node}/assets/${id}`);
+  const { result: asset } = await nextApi.fetch(`assets/${id}`);
 
   if (!asset) return { props: { node } };
 
@@ -180,13 +170,13 @@ export async function getServerSideProps(context) {
     { result: assetHolders },
     { result: assetAnalytics },
   ] = await Promise.all([
-    nextApi.fetch(`${node}/assets/${assetKey}/transfers`, {
+    nextApi.fetch(`assets/${assetKey}/transfers`, {
       page: activeTab === "transfers" ? nPage - 1 : 0,
     }),
-    nextApi.fetch(`${node}/assets/${assetKey}/holders`, {
+    nextApi.fetch(`assets/${assetKey}/holders`, {
       page: activeTab === "holders" ? nPage - 1 : 0,
     }),
-    nextApi.fetch(`${node}/assets/${assetKey}/statistic`),
+    nextApi.fetch(`assets/${assetKey}/statistic`),
   ]);
 
   return {

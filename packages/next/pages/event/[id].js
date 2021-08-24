@@ -58,22 +58,24 @@ export default function Block({ node, id, eventDetail }) {
                     timeDuration(eventDetail?.indexer?.blockTime)}
                 </AccessoryText>
               </FlexWrapper>,
-              <InLink
-                to={`/${node}/block/${eventDetail?.indexer?.blockHeight}`}
-              >
+              <InLink to={`/block/${eventDetail?.indexer?.blockHeight}`}>
                 {eventDetail?.indexer?.blockHeight}
               </InLink>,
-              eventDetail?.phase?.value
-                ? <InLink
-                    to={`/${node}/extrinsic/${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
-                  >
-                    {`${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
-                  </InLink>
-                : "-",
+              eventDetail?.phase?.value ? (
+                <InLink
+                  to={`/extrinsic/${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
+                >
+                  {`${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
+                </InLink>
+              ) : (
+                "-"
+              ),
               eventDetail?.sort,
               eventDetail?.section,
               eventDetail?.method,
-              (eventDetail?.meta?.docs || eventDetail?.meta?.documentation)?.join("").trim() || "",
+              (eventDetail?.meta?.docs || eventDetail?.meta?.documentation)
+                ?.join("")
+                .trim() || "",
               eventDetail?.transfer
                 ? eventDetail.transfer.assetSymbol
                   ? `${bigNumber2Locale(
@@ -101,8 +103,9 @@ export default function Block({ node, id, eventDetail }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node, id } = context.params;
-  const { result: eventDetail } = await nextApi.fetch(`${node}/events/${id}`);
+  const node = process.env.NEXT_PUBLIC_CHAIN;
+  const { id } = context.params;
+  const { result: eventDetail } = await nextApi.fetch(`events/${id}`);
 
   return {
     props: {

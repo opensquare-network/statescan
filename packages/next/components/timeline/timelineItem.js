@@ -192,7 +192,7 @@ function formatBalance(balance, asset) {
   );
 }
 
-export default function TimelineItem({ data, node, asset }) {
+export default function TimelineItem({ data, asset }) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.method] || timelineItem.method;
 
@@ -206,7 +206,7 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <CopyText text={admin}>
-              <Address address={admin} to={`/${node}/account/${admin}`} />
+              <Address address={admin} to={`/account/${admin}`} />
             </CopyText>
           ),
           "Min Balance": formatBalance(timelineItem.asset.minBalance, asset),
@@ -218,7 +218,7 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <CopyText text={admin}>
-              <Address address={admin} to={`/${node}/account/${admin}`} />
+              <Address address={admin} to={`/account/${admin}`} />
             </CopyText>
           ),
           Sufficient: <FieldText>{timelineItem.asset.isSufficient}</FieldText>,
@@ -246,22 +246,34 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <CopyText text={timelineItem.asset.admin}>
-              <Address address={timelineItem.asset.admin} to={`/${node}/account/${timelineItem.asset.admin}`} />
+              <Address
+                address={timelineItem.asset.admin}
+                to={`/account/${timelineItem.asset.admin}`}
+              />
             </CopyText>
           ),
           Owner: (
             <CopyText text={timelineItem.asset.owner}>
-              <Address address={timelineItem.asset.owner} to={`/${node}/account/${timelineItem.asset.owner}`} />
+              <Address
+                address={timelineItem.asset.owner}
+                to={`/account/${timelineItem.asset.owner}`}
+              />
             </CopyText>
           ),
           Issuer: (
             <CopyText text={timelineItem.asset.issuer}>
-              <Address address={timelineItem.asset.issuer} to={`/${node}/account/${timelineItem.asset.issuer}`} />
+              <Address
+                address={timelineItem.asset.issuer}
+                to={`/account/${timelineItem.asset.issuer}`}
+              />
             </CopyText>
           ),
           Freezer: (
             <CopyText text={timelineItem.asset.freezer}>
-              <Address address={timelineItem.asset.freezer} to={`/${node}/account/${timelineItem.asset.freezer}`} />
+              <Address
+                address={timelineItem.asset.freezer}
+                to={`/account/${timelineItem.asset.freezer}`}
+              />
             </CopyText>
           ),
           "Min Balance": formatBalance(timelineItem.asset.minBalance, asset),
@@ -275,17 +287,17 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <CopyText text={admin}>
-              <Address address={admin} to={`/${node}/account/${admin}`} />
+              <Address address={admin} to={`/account/${admin}`} />
             </CopyText>
           ),
           Issuer: (
             <CopyText text={issuer}>
-              <Address address={issuer} to={`/${node}/account/${issuer}`} />
+              <Address address={issuer} to={`/account/${issuer}`} />
             </CopyText>
           ),
           Freezer: (
             <CopyText text={freezer}>
-              <Address address={freezer} to={`/${node}/account/${freezer}`} />
+              <Address address={freezer} to={`/account/${freezer}`} />
             </CopyText>
           ),
         };
@@ -296,7 +308,7 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Admin: (
             <CopyText text={owner}>
-              <Address address={owner} to={`/${node}/account/${owner}`} />
+              <Address address={owner} to={`/account/${owner}`} />
             </CopyText>
           ),
         };
@@ -325,7 +337,7 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Beneficiary: (
             <CopyText text={beneficiary}>
-              <Address address={beneficiary} to={`/${node}/account/${beneficiary}`} />
+              <Address address={beneficiary} to={`/account/${beneficiary}`} />
             </CopyText>
           ),
           Amount: formatBalance(amount, asset),
@@ -337,7 +349,7 @@ export default function TimelineItem({ data, node, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
           Who: (
             <CopyText text={who}>
-              <Address address={who} to={`/${node}/account/${who}`} />
+              <Address address={who} to={`/account/${who}`} />
             </CopyText>
           ),
           Amount: formatBalance(amount, asset),
@@ -361,7 +373,7 @@ export default function TimelineItem({ data, node, asset }) {
           <Time ts={data.eventIndexer.blockTime} />
           <Links>
             <InLink
-              to={`/${node}/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}`}
+              to={`/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}`}
             >
               <LinkItem>
                 <span>{"Extrinsic"}</span>
@@ -369,7 +381,7 @@ export default function TimelineItem({ data, node, asset }) {
               </LinkItem>
             </InLink>
             <InLink
-              to={`/${node}/event/${data.eventIndexer.blockHeight}-${data.eventSort}`}
+              to={`/event/${data.eventIndexer.blockHeight}-${data.eventSort}`}
             >
               <LinkItem>
                 <span>{"Event"}</span>

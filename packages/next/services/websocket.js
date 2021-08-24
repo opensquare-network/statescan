@@ -8,14 +8,14 @@ const firstPageBlocksRoom = "FIRST_PAGE_BLOCKS_ROOM";
 
 export let socket = null;
 
-export function connect(chain) {
+export function connect() {
   if (socket) {
     socket.emit("unsubscribe", chainStatusRoom);
     socket.emit("unsubscribe", overviewRoom);
     socket.disconnect();
   }
 
-  socket = io(new URL(`/${chain}`, process.env.NEXT_PUBLIC_API_END_POINT).href);
+  socket = io(new URL(`/`, process.env.NEXT_PUBLIC_API_END_POINT).href);
   socket.connect();
 
   socket.on("connect", () => {

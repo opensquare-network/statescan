@@ -116,7 +116,11 @@ export default function NodeSwitcher({ node }) {
               key={index}
               active={item.value === currentNode?.value}
               onClick={() => {
-                location.href = `/${item.value}`;
+                if (item.value === currentNode?.value) {
+                  location.href = "/";
+                } else {
+                  window.open(`https://${item.value}.statescan.io`, "_blank");
+                }
               }}
             >
               <FlexWrapper>

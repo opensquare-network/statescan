@@ -1,16 +1,12 @@
 const { MongoClient } = require("mongodb");
-const { currentChain, CHAINS } = require("../envvars");
 
 function getDbName() {
-  const chain = currentChain();
-  if (CHAINS.WESTMINT === chain) {
-    return process.env.MONGO_DB_META_WND_NAME || "meta-westmint";
-  }
-  if (CHAINS.STATEMINE === chain) {
-    return process.env.MONGO_DB_META_KSM_NAME || "meta-statemine";
+  const dbName = process.env.MONGO_DB_META_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_META_NAME not set");
   }
 
-  throw new Error("Not find metadata database");
+  return dbName;
 }
 
 const blockCollectionName = "block";
@@ -93,6 +89,5 @@ module.exports = {
   getStatusCollection,
   getBlockCollection,
   getBlocks,
-  getVersionCollection,
   getAllVersionChangeHeights,
 };

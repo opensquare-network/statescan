@@ -3,7 +3,6 @@ const bodyParser = require("koa-bodyparser");
 const logger = require("koa-logger");
 const helmet = require("koa-helmet");
 const cors = require("@koa/cors");
-const { ioHandler } = require("./websocket");
 
 const app = new Koa();
 
@@ -30,5 +29,4 @@ const koaHandler = app.callback();
 
 module.exports = {
   koaHandler,
-  ioHandler,
 };

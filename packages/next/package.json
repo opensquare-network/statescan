@@ -1,10 +1,11 @@
 {
-  "name": "next",
+  "name": "@statescan/server",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
+    "server": "node server.js",
     "start": "next build && NODE_ENV=production node server.js",
     "deploy": "pm2 start ecosystem.config.js --only statescan-next --env production",
     "deploy:staging": "pm2 start ecosystem.config.js --only statescan-next-staging --env production"

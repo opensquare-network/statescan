@@ -1,4 +1,4 @@
-const { getKsmUsdtDailyCollection } = require("../../mongo");
+const { getKsmUsdtDailyCollection } = require("../../mongo/pricedb");
 
 async function getDailyPrices(ctx) {
   const { chain } = ctx.params;

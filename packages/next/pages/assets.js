@@ -8,7 +8,7 @@ import { assetsHead, EmptyQuery } from "utils/constants";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import Name from "../../components/account/name";
+import Name from "../components/account/name";
 
 export default function Assets({ node, assets }) {
   return (
@@ -20,20 +20,19 @@ export default function Assets({ node, assets }) {
           body={(assets?.items || []).map((item) => [
             <InLink
               to={
-                `/${node}/asset/${item.assetId}` + (item.destroyedAt
-                  ? `_${item.createdAt.blockHeight}`
-                  : "")
+                `/asset/${item.assetId}` +
+                (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
               }
             >{`#${item.assetId}`}</InLink>,
             <Symbol symbol={item.symbol} />,
-            <Name name={item.name}/>,
+            <Name name={item.name} />,
             <AddressEllipsis
               address={item.owner}
-              to={`/${node}/account/${item.owner}`}
+              to={`/account/${item.owner}`}
             />,
             <AddressEllipsis
               address={item.issuer}
-              to={`/${node}/account/${item.issuer}`}
+              to={`/account/${item.issuer}`}
             />,
             item.accounts,
             `${bigNumber2Locale(fromAssetUnit(item.supply, item.decimals))}`,
@@ -53,12 +52,12 @@ export default function Assets({ node, assets }) {
 }
 
 export async function getServerSideProps(context) {
-  const { node } = context.params;
+  const node = process.env.NEXT_PUBLIC_CHAIN;
   const { tab, page } = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const { result: assets } = await nextApi.fetch(`${node}/assets`, {
+  const { result: assets } = await nextApi.fetch(`assets`, {
     page: nPage - 1,
     pageSize: 25,
   });

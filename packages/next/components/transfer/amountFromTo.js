@@ -25,7 +25,7 @@ const Amount = styled.span`
   color: #111111;
 `;
 
-export default function AmountFromTo({node, amount, symbol, from, to}) {
+export default function AmountFromTo({ amount, symbol, from, to }) {
   return (
     <Wrapper>
       <FlexWrapper>
@@ -34,9 +34,9 @@ export default function AmountFromTo({node, amount, symbol, from, to}) {
         </Amount>
       </FlexWrapper>
       <FlexWrapper>
-        <AddressEllipsis address={from} to={`/${node}/account/${from}`}/>
+        <AddressEllipsis address={from} to={`/account/${from}`} />
         <svg
-          style={{marginRight: 12, marginLeft: 12}}
+          style={{ marginRight: 12, marginLeft: 12 }}
           width="16"
           height="16"
           viewBox="0 0 16 16"
@@ -51,7 +51,7 @@ export default function AmountFromTo({node, amount, symbol, from, to}) {
             strokeLinejoin="round"
           />
         </svg>
-        <AddressEllipsis address={to} to={`/${node}/account/${to}`}/>
+        <AddressEllipsis address={to} to={`/account/${to}`} />
       </FlexWrapper>
     </Wrapper>
   );

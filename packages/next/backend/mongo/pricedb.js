@@ -8,7 +8,7 @@ const dotUsdtDailyCollectionName = "dotUsdtDaily";
 let client = null;
 let db = null;
 
-const mongoUrl = process.env.MONGO_URL || "mongodb://localhost:27017";
+const mongoUrl = process.env.MONGO_PRICE_URL || "mongodb://localhost:27017";
 let ksmUsdtDailyCol = null;
 let dotUsdtDailyCol = null;
 

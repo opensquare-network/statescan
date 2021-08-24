@@ -21,7 +21,7 @@ const ChartWrapper = styled.div`
   height: 240px;
 `;
 
-export default function AnalyticsChart({ data, symbol, name, decimal }) {
+export default function AnalyticsChart({ data, symbol, name, decimals }) {
   const [range, setRange] = useState("all");
   const [showData, setShowData] = useState(data);
   const [amountHidden, setAmountHidden] = useState(false);
@@ -42,7 +42,7 @@ export default function AnalyticsChart({ data, symbol, name, decimal }) {
 
   const labels = (showData || []).map((item) => item.indexer.blockTime);
   const transferAmounts = (showData || []).map((item) =>
-    fromAssetUnit(item.transferAmount, decimal)
+    fromAssetUnit(item.transferAmount, decimals)
   );
   const transferCounts = (showData || []).map((item) => item.transferCount);
   const holderCounts = (showData || []).map((item) => item.holderCount);

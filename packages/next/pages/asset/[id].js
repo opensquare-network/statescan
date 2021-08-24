@@ -105,7 +105,7 @@ export default function Asset({
           data={assetAnalytics}
           symbol={asset.symbol}
           name={asset.name}
-          decimal={asset?.decimals}
+          decimals={asset.decimals}
         />
       ),
     },

@@ -93,7 +93,7 @@ export function useTheme() {
     buttonColor,
     logo,
   };
-};
+}
 
 export function getSymbol(node) {
   return nodes.find((item) => item.value === node)?.symbol;

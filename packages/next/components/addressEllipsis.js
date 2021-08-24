@@ -3,7 +3,7 @@ import { addressEllipsis } from "utils";
 import Tooltip from "components/tooltip";
 import MonoText from "./monoText";
 import Link from "next/link";
-import { useNode, useTheme } from "utils/hooks";
+import { useNode, useTheme, useIsMounted } from "utils/hooks";
 import IdentityLink from "./account/identityLink";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
@@ -22,13 +22,19 @@ const StyledLink = styled.div`
 export default function AddressEllipsis({ address, to }) {
   const node = useNode();
   const theme = useTheme();
+  const isMounted = useIsMounted();
   const [identity, setIdentity] = useState(null);
 
-  const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+  const relayChain =
+    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   useEffect(() => {
     setIdentity(null);
-    fetchIdentity(relayChain, address).then(identity => setIdentity(identity));
+    fetchIdentity(relayChain, address).then((identity) => {
+      if (isMounted()) {
+        setIdentity(identity);
+      }
+    });
   }, [relayChain, address]);
 
   const styledLink = (
@@ -53,15 +59,22 @@ export default function AddressEllipsis({ address, to }) {
 
   const identityDisplay = (
     <span>
-      {identity && <b>
-        {identity?.info?.displayParent ? `${identity?.info?.displayParent}/`:''}{identity?.info?.display}
-        <br/>
-      </b>}
+      {identity && (
+        <b>
+          {identity?.info?.displayParent
+            ? `${identity?.info?.displayParent}/`
+            : ""}
+          {identity?.info?.display}
+          <br />
+        </b>
+      )}
       {address}
     </span>
   );
 
-  const identityLink = <IdentityLink identity={identity} cursor={to ? "true" : "false"} />;
+  const identityLink = (
+    <IdentityLink identity={identity} cursor={to ? "true" : "false"} />
+  );
 
   return (
     <Tooltip content={identityDisplay} isCopy copyText={address}>

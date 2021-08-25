@@ -338,7 +338,11 @@ export async function getServerSideProps(context) {
       node,
       id,
       tab: activeTab,
-      addressDetail: addressDetail ?? null,
+      addressDetail: addressDetail ?? {
+        address: id,
+        data : { free: 0, reserved: 0, miscFrozen: 0, feeFrozen: 0 },
+        nonce: 0,
+      },
       addressAssets: addressAssets ?? EmptyQuery,
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,

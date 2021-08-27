@@ -30,7 +30,7 @@ export default function IdentityIcon({ identity }) {
 
   let status = "unauthorized";
 
-  if (isAuthorized && !identity?.info?.displayParent) {
+  if (isAuthorized) {
     status = "authorized";
     if (identity?.info?.displayParent) {
       status += "-sub";

@@ -95,9 +95,9 @@ export default function Address({
         item.assetSymbol,
         item.assetName,
         bigNumber2Locale(fromAssetUnit(item.balance, item.assetDecimals)),
-        item.approved || 0,
+        bigNumber2Locale(fromAssetUnit(item.approved || 0, item.assetDecimals)),
         item.isFrozen?.toString(),
-        item.transfers,
+        item.transfers || 0,
       ]),
       foot: (
         <Pagination
@@ -340,7 +340,7 @@ export async function getServerSideProps(context) {
       tab: activeTab,
       addressDetail: addressDetail ?? {
         address: id,
-        data : { free: 0, reserved: 0, miscFrozen: 0, feeFrozen: 0 },
+        data: { free: 0, reserved: 0, miscFrozen: 0, feeFrozen: 0 },
         nonce: 0,
       },
       addressAssets: addressAssets ?? EmptyQuery,

@@ -3,6 +3,7 @@ const asyncLocalStorage = require("../asynclocalstorage");
 const { getApi } = require("../api");
 const { logger } = require("../logger");
 const { getAccountStorageKey } = require("./accountStorageKey");
+const { toDecimal128 } = require(".");
 
 async function handleMultiAddress(blockIndexer, addrs = [], registry) {
   if (addrs.length <= 0) {

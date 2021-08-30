@@ -11,11 +11,11 @@
     "scan": "node src/index.js"
   },
   "dependencies": {
-    "@polkadot/api": "^5.4.1",
-    "@polkadot/types": "^5.4.1",
-    "@polkadot/types-known": "^5.4.1",
-    "@polkadot/util": "^7.1.1",
-    "@polkadot/util-crypto": "^7.1.1",
+    "@polkadot/api": "^5.7.1",
+    "@polkadot/types": "^5.7.1",
+    "@polkadot/types-known": "^5.7.1",
+    "@polkadot/util": "^7.3.1",
+    "@polkadot/util-crypto": "^7.3.1",
     "bignumber.js": "^9.0.1",
     "dotenv": "^10.0.0",
     "lodash.findlast": "^4.6.0",

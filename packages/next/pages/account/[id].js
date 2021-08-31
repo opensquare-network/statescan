@@ -94,7 +94,7 @@ export default function Address({
         >{`#${item.assetId}`}</InLink>,
         item.assetSymbol,
         item.assetName,
-        bigNumber2Locale(fromAssetUnit(item.balance, item.assetDecimals)),
+        bigNumber2Locale(fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)),
         bigNumber2Locale(fromAssetUnit(item.approved || 0, item.assetDecimals)),
         item.isFrozen?.toString(),
         item.transfers || 0,
@@ -273,15 +273,15 @@ export default function Address({
                 />
               </div>,
               `${fromSymbolUnit(
-                addressDetail?.data?.free || 0,
+                addressDetail?.data?.free?.$numberDecimal || 0,
                 symbol
               )} ${symbol}`,
               `${fromSymbolUnit(
-                addressDetail?.data?.reserved || 0,
+                addressDetail?.data?.reserved?.$numberDecimal || 0,
                 symbol
               )} ${symbol}`,
               `${fromSymbolUnit(
-                addressDetail?.data?.miscFrozen || 0,
+                addressDetail?.data?.miscFrozen?.$numberDecimal || 0,
                 symbol
               )} ${symbol}`,
               <MinorText>{addressDetail?.nonce}</MinorText>,

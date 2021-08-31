@@ -9,6 +9,7 @@ const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
 const { addAddresses } = require("../../utils/blockAddresses");
 const { addAddress } = require("../../utils/blockAddresses");
+const { toDecimal128 } = require("../../utils");
 
 const Modules = Object.freeze({
   Assets: "assets",
@@ -189,6 +190,7 @@ async function updateOrCreateAssetHolder(blockIndexer, assetId, address) {
     {
       $set: {
         ...account,
+        balance: toDecimal128(account.balance),
         dead: account.balance === 0 ? true : false,
         lastUpdatedAt: blockIndexer,
       },

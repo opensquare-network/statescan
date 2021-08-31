@@ -3,6 +3,7 @@ const asyncLocalStorage = require("../asynclocalstorage");
 const { getApi } = require("../api");
 const { logger } = require("../logger");
 const { getAccountStorageKey } = require("./accountStorageKey");
+const { toDecimal128 } = require(".");
 
 async function handleMultiAddress(blockIndexer, addrs = [], registry) {
   if (addrs.length <= 0) {
@@ -47,6 +48,12 @@ async function handleMultiAddress(blockIndexer, addrs = [], registry) {
       .updateOne({
         $set: {
           ...account.info,
+          data : {
+            free: toDecimal128(account.info.data.free),
+            reserved: toDecimal128(account.info.data.reserved),
+            miscFrozen: toDecimal128(account.info.data.miscFrozen),
+            feeFrozen: toDecimal128(account.info.data.feeFrozen),
+          },
           lastUpdatedAt: blockIndexer,
         },
       });

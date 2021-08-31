@@ -195,7 +195,7 @@ async function getAssetHolders(ctx) {
 
   const q = {
     asset: asset._id,
-    balance: { $gt: 0 },
+    balance: { $ne: 0 },
   };
 
   const col = await getAssetHolderCollection();

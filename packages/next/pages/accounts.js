@@ -29,10 +29,10 @@ export default function Addresses({ node, addresses }) {
               to={`/account/${item?.address}`}
             />,
             `${bigNumber2Locale(
-              fromSymbolUnit(item?.data?.reserved, symbol)
+              fromSymbolUnit(item?.data?.reserved?.$numberDecimal, symbol)
             )} ${symbol}`,
             `${bigNumber2Locale(
-              fromSymbolUnit(item?.data?.free, symbol)
+              fromSymbolUnit(item?.data?.free?.$numberDecimal, symbol)
             )} ${symbol}`,
           ])}
           foot={

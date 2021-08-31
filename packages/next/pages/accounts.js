@@ -16,8 +16,6 @@ export default function Addresses({ node, addresses }) {
   customAddressesHead[2].name = `${customAddressesHead[2].name} ${symbol}`;
   customAddressesHead[3].name = `${customAddressesHead[3].name} ${symbol}`;
 
-  console.log(addresses?.items);
-
   return (
     <Layout node={node}>
       <section>

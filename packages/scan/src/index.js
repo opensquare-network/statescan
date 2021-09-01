@@ -30,7 +30,7 @@ const { getAddresses } = require("./utils/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 const { updateUnFinalized } = require("./unFinalized");
 
-const scanStep = process.env.SCAN_STEP || 100;
+const scanStep = parseInt(process.env.SCAN_STEP) || 100;
 
 async function main() {
   await updateHeight();

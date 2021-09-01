@@ -30,6 +30,8 @@ const { getAddresses } = require("./utils/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 const { updateUnFinalized } = require("./unFinalized");
 
+const scanStep = process.env.SCAN_STEP || 100;
+
 async function main() {
   await updateHeight();
   await updateSpecs();
@@ -54,8 +56,8 @@ async function main() {
 
     let targetHeight = finalizedHeight;
     // Retrieve & Scan no more than 100 blocks at a time
-    if (scanFinalizedHeight + 100 < finalizedHeight) {
-      targetHeight = scanFinalizedHeight + 100;
+    if (scanFinalizedHeight + scanStep < finalizedHeight) {
+      targetHeight = scanFinalizedHeight + scanStep;
     }
 
     const specHeights = getSpecHeights();

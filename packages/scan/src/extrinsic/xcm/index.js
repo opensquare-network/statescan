@@ -91,11 +91,11 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
     }
 
     const v0Xcm = versionedXcm.asV0;
-    if (!v0Xcm.isTeleportAsset) {
+    if (!v0Xcm.isReceiveTeleportedAsset) {
       return;
     }
 
-    const teleportAsset = v0Xcm.asTeleportAsset;
+    const teleportAsset = v0Xcm.asReceiveTeleportedAsset;
     const teleportAssetJson = teleportAsset.toJSON();
 
     const concreteFungible = teleportAssetJson.assets.find(

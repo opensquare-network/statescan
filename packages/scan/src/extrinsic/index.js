@@ -1,4 +1,4 @@
-const { extractExtrinsicEvents, getExtrinsicSigner } = require("../utils");
+const { extractExtrinsicEvents } = require("../utils");
 const { getExtrinsicCollection } = require("../mongo");
 const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
@@ -93,31 +93,6 @@ async function handleExtrinsic(extrinsic, indexer, events) {
   }
 }
 
-function normalizeExtrinsic(extrinsic, events) {
-  if (!extrinsic) {
-    throw new Error("Invalid extrinsic object");
-  }
-
-  const hash = extrinsic.hash.toHex();
-  const call = normalizeCall(extrinsic.method);
-  const signer = getExtrinsicSigner(extrinsic);
-
-  const isSuccess = isExtrinsicSuccess(events);
-
-  const version = extrinsic.version;
-  const data = u8aToHex(extrinsic.data); // 原始数据
-
-  return {
-    hash,
-    signer,
-    ...call,
-    name: call.method,
-    version,
-    data,
-    isSuccess,
-  };
-}
-
 function normalizeCall(call) {
   const { section, method } = call;
   const callIndex = u8aToHex(call.callIndex);
@@ -152,5 +127,4 @@ function normalizeCall(call) {
 
 module.exports = {
   handleExtrinsics,
-  normalizeExtrinsic,
 };

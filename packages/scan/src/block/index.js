@@ -3,6 +3,21 @@ const asyncLocalStorage = require("../asynclocalstorage");
 const omit = require("lodash.omit");
 const { extractBlockTime } = require("./extractBlockTime");
 
+function extractBlock(block, events, author) {
+  const hash = block.hash.toHex();
+  const blockJson = block.toJSON();
+  const blockTime = extractBlockTime(block.extrinsics);
+
+  return {
+    hash,
+    blockTime,
+    author,
+    eventsCount: (events || []).length,
+    extrinsicsCount: (block.extrinsics || []).length,
+    ...omit(blockJson, ["extrinsics"]),
+  };
+}
+
 async function handleBlock(block, blockEvents, author) {
   const hash = block.hash.toHex();
   const blockJson = block.toJSON();
@@ -30,4 +45,5 @@ async function handleBlock(block, blockEvents, author) {
 
 module.exports = {
   handleBlock,
+  extractBlock,
 };

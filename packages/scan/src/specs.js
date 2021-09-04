@@ -13,6 +13,11 @@ function getSpecHeights() {
   return versionChangedHeights;
 }
 
+// For test
+function setSpecHeights(heights = []) {
+  versionChangedHeights = heights;
+}
+
 async function findRegistry(height) {
   const mostRecentChangeHeight = findLast(
     versionChangedHeights,
@@ -35,4 +40,5 @@ module.exports = {
   updateSpecs,
   getSpecHeights,
   findRegistry,
+  setSpecHeights,
 };

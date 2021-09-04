@@ -25,7 +25,13 @@ async function disconnect() {
   }
 }
 
+// For test
+function setApi(targetApi) {
+  api = targetApi;
+}
+
 module.exports = {
   getApi,
   disconnect,
+  setApi,
 };

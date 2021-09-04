@@ -1,5 +1,5 @@
-const { getAllVersionChangeHeights } = require("../meta");
-const { getRegistryByHeight } = require("../../utils/registry");
+const { getAllVersionChangeHeights } = require("./mongo/meta");
+const { getRegistryByHeight } = require("./utils/registry");
 const findLast = require("lodash.findlast");
 
 let versionChangedHeights = [];

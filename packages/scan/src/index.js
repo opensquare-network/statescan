@@ -21,11 +21,7 @@ const {
   isNewDay,
 } = require("./statistic/date");
 const { clearAddresses } = require("./utils/blockAddresses");
-const {
-  updateSpecs,
-  getSpecHeights,
-  findRegistry,
-} = require("./mongo/service/specs");
+const { updateSpecs, getSpecHeights, findRegistry } = require("./specs");
 const { getAddresses } = require("./utils/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 const { updateUnFinalized } = require("./unFinalized");

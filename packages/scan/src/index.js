@@ -111,11 +111,7 @@ async function scanBlock(blockInDb, session) {
     await makeAssetStatistics(getLastBlockIndexer());
   }
 
-  const extractedBlock = await extractBlock(
-    block,
-    blockEvents,
-    blockInDb.author
-  );
+  const extractedBlock = extractBlock(block, blockEvents, blockInDb.author);
   const extractedExtrinsics = normalizeExtrinsics(
     block.extrinsics,
     blockEvents,

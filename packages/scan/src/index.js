@@ -16,7 +16,7 @@ const { withSession } = require("./mongo");
 const last = require("lodash.last");
 const { normalizeEvents } = require("./utils/normalize/event");
 const { normalizeExtrinsics } = require("./utils/normalize/extrinsic");
-const { saveData } = require("./store");
+const { saveData } = require("./service");
 const { makeAssetStatistics } = require("./statistic");
 const {
   setLastBlockIndexer,

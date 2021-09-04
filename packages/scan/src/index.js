@@ -6,7 +6,7 @@ const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
 const { getBlocks } = require("./mongo/meta");
 const { GenericBlock } = require("@polkadot/types");
-const { handleBlock } = require("./block");
+const { extractBlock } = require("./block");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { handleExtrinsics } = require("./extrinsic");
 const { handleEvents } = require("./event");
@@ -14,6 +14,7 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { saveData } = require("./store");
 const { makeAssetStatistics } = require("./statistic");
 const {
   setLastBlockIndexer,
@@ -72,7 +73,7 @@ async function main() {
         session.startTransaction();
         try {
           await asyncLocalStorage.run(session, async () => {
-            await scanBlock(block);
+            await scanBlock(block, session);
             await updateScanHeight(block.height);
           });
 
@@ -91,7 +92,7 @@ async function main() {
   }
 }
 
-async function scanBlock(blockInDb) {
+async function scanBlock(blockInDb, session) {
   const registry = await findRegistry(blockInDb.height);
   const block = new GenericBlock(registry, blockInDb.block.block);
 
@@ -109,7 +110,11 @@ async function scanBlock(blockInDb) {
     await makeAssetStatistics(getLastBlockIndexer());
   }
 
-  await handleBlock(block, blockEvents, author);
+  const extractedBlock = await extractBlock(
+    block,
+    blockEvents,
+    blockInDb.author
+  );
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
 
@@ -119,6 +124,8 @@ async function scanBlock(blockInDb) {
     registry
   );
   clearAddresses(blockInDb.height);
+
+  await saveData(extractedBlock, session);
 
   setLastBlockIndexer(blockIndexer);
 }

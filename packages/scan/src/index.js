@@ -133,7 +133,13 @@ async function scanBlock(blockInDb, session) {
   );
   clearAddresses(blockInDb.height);
 
-  await saveData(extractedBlock, extractedExtrinsics, extractedEvents, session);
+  await saveData(
+    blockIndexer,
+    extractedBlock,
+    extractedExtrinsics,
+    extractedEvents,
+    session
+  );
 
   setLastBlockIndexer(blockIndexer);
 }

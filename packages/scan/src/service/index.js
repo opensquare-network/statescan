@@ -1,10 +1,15 @@
 const {
+  getBlockNativeTransfers,
+  clearNativeTransfers,
+} = require("../store/blockNativeTokenTransfers");
+const {
   getBlockCollection,
   getExtrinsicCollection,
   getEventCollection,
+  getAssetTransferCollection,
 } = require("../mongo");
 
-async function saveData(block, extrinsics, events, session) {
+async function saveData(indexer, block, extrinsics, events, session) {
   const blockCol = await getBlockCollection();
 
   const result = await blockCol.insertOne(block, { session });
@@ -14,6 +19,7 @@ async function saveData(block, extrinsics, events, session) {
 
   await saveExtrinsics(extrinsics, session);
   await saveEvents(events, session);
+  await saveNativeTokenTransfers(indexer.blockHeight, session);
 }
 
 async function saveExtrinsics(extrinsics = [], session) {
@@ -48,6 +54,25 @@ async function saveEvents(events = [], session) {
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }
+}
+
+async function saveNativeTokenTransfers(blockHeight, session) {
+  const transfers = getBlockNativeTransfers(blockHeight);
+  if (transfers.length <= 0) {
+    return;
+  }
+
+  const col = await getAssetTransferCollection();
+  const bulk = col.initializeOrderedBulkOp();
+  for (const transfer of transfers) {
+    bulk.insert(transfer);
+  }
+
+  const result = await bulk.execute(null, { session });
+  if (result.result && !result.result.ok) {
+    // TODO: handle failure
+  }
+  clearNativeTransfers(blockHeight);
 }
 
 module.exports = {

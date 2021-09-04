@@ -1,7 +1,7 @@
 const { getAssetTransferCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
-const { addAddresses } = require("../../utils/blockAddresses");
-const { addAddress } = require("../../utils/blockAddresses");
+const { addAddresses } = require("../../store/blockAddresses");
+const { addAddress } = require("../../store/blockAddresses");
 const { updateOrCreateAddress } = require("../../utils/updateOrCreateAddress");
 
 const Modules = Object.freeze({

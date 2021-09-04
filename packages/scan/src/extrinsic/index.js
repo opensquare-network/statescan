@@ -4,7 +4,7 @@ const {
   handleTeleportAssetDownwardMessage,
   handleTeleportAssets,
 } = require("./xcm");
-const { addAddress } = require("../utils/blockAddresses");
+const { addAddress } = require("../store/blockAddresses");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], blockIndexer) {
   let index = 0;

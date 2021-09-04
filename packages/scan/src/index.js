@@ -23,9 +23,9 @@ const {
   getLastBlockIndexer,
   isNewDay,
 } = require("./statistic/date");
-const { clearAddresses } = require("./utils/blockAddresses");
+const { clearAddresses } = require("./store/blockAddresses");
 const { updateSpecs, getSpecHeights, findRegistry } = require("./specs");
-const { getAddresses } = require("./utils/blockAddresses");
+const { getAddresses } = require("./store/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 const { updateUnFinalized } = require("./unFinalized");
 

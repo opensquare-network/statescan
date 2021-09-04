@@ -14,6 +14,9 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { initDb } = require("./mongo");
+const { getApi } = require("./api");
+const { setSpecHeights } = require("./specs");
 const { normalizeEvents } = require("./utils/normalize/event");
 const { normalizeExtrinsics } = require("./utils/normalize/extrinsic");
 const { saveData } = require("./service");
@@ -103,16 +106,31 @@ async function scanBlock(blockInDb, session) {
     blockInDb.events,
     true
   );
-  const author =
-    blockInDb.author &&
-    registry.createType("AccountId", blockInDb.author, true);
 
   const blockIndexer = getBlockIndexer(block);
   if (isNewDay(blockIndexer.blockTime)) {
     await makeAssetStatistics(getLastBlockIndexer());
   }
 
-  const extractedBlock = extractBlock(block, blockEvents, blockInDb.author);
+  await scanNormalizedBlock(
+    registry,
+    block,
+    blockEvents,
+    blockInDb.author,
+    blockIndexer,
+    session
+  );
+}
+
+async function scanNormalizedBlock(
+  registry,
+  block,
+  blockEvents,
+  author,
+  blockIndexer,
+  session
+) {
+  const extractedBlock = extractBlock(block, blockEvents, author);
   const extractedExtrinsics = normalizeExtrinsics(
     block.extrinsics,
     blockEvents,
@@ -128,10 +146,10 @@ async function scanBlock(blockInDb, session) {
 
   await handleMultiAddress(
     blockIndexer,
-    getAddresses(blockInDb.height),
+    getAddresses(blockIndexer.blockHeight),
     registry
   );
-  clearAddresses(blockInDb.height);
+  clearAddresses(blockIndexer.blockHeight);
 
   await saveData(
     blockIndexer,
@@ -143,6 +161,35 @@ async function scanBlock(blockInDb, session) {
 
   setLastBlockIndexer(blockIndexer);
 }
+
+async function test() {
+  await initDb();
+  const height = 1212;
+  setSpecHeights([height]);
+
+  const api = await getApi();
+  const registry = await findRegistry(height);
+  const blockHash = await api.rpc.chain.getBlockHash(height);
+  const block = await api.rpc.chain.getBlock(blockHash);
+  const allEvents = await api.query.system.events.at(blockHash);
+
+  const blockIndexer = getBlockIndexer(block.block);
+
+  await withSession(async (session) => {
+    session.startTransaction();
+    await scanNormalizedBlock(
+      registry,
+      block.block,
+      allEvents,
+      "",
+      blockIndexer,
+      session
+    );
+    await session.commitTransaction();
+  });
+}
+
+// test();
 
 main()
   .then(() => console.log("Scan finished"))

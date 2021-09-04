@@ -177,6 +177,7 @@ function withSession(fn) {
 }
 
 module.exports = {
+  initDb,
   getStatusCollection,
   getBlockCollection,
   getExtrinsicCollection,

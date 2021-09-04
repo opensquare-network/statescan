@@ -45,7 +45,7 @@ async function saveEvents(events = [], session) {
   }
 
   const eventCol = await getEventCollection();
-  const bulk = eventCol.initializeOrderedBulkOp();
+  const bulk = eventCol.initializeUnorderedBulkOp();
   for (const event of events) {
     bulk.insert(event);
   }
@@ -63,7 +63,7 @@ async function saveNativeTokenTransfers(blockHeight, session) {
   }
 
   const col = await getAssetTransferCollection();
-  const bulk = col.initializeOrderedBulkOp();
+  const bulk = col.initializeUnorderedBulkOp();
   for (const transfer of transfers) {
     bulk.insert(transfer);
   }

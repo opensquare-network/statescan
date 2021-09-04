@@ -14,6 +14,7 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { normalizeEvents } = require("./utils/normalize/event");
 const { normalizeExtrinsics } = require("./utils/normalize/extrinsic");
 const { saveData } = require("./store");
 const { makeAssetStatistics } = require("./statistic");
@@ -117,6 +118,11 @@ async function scanBlock(blockInDb, session) {
     blockEvents,
     blockIndexer
   );
+  const extractedEvents = normalizeEvents(
+    blockEvents,
+    blockIndexer,
+    block.extrinsics
+  );
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
 
@@ -127,7 +133,7 @@ async function scanBlock(blockInDb, session) {
   );
   clearAddresses(blockInDb.height);
 
-  await saveData(extractedBlock, extractedExtrinsics, session);
+  await saveData(extractedBlock, extractedExtrinsics, extractedEvents, session);
 
   setLastBlockIndexer(blockIndexer);
 }

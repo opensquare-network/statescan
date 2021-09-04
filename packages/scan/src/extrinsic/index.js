@@ -1,15 +1,12 @@
 const { extractExtrinsicEvents } = require("../utils");
-const { getExtrinsicCollection } = require("../mongo");
-const { isExtrinsicSuccess } = require("../utils");
 const { u8aToHex } = require("@polkadot/util");
 const {
   handleTeleportAssetDownwardMessage,
   handleTeleportAssets,
 } = require("./xcm");
-const asyncLocalStorage = require("../asynclocalstorage");
 const { addAddress } = require("../utils/blockAddresses");
 
-async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
+async function handleExtrinsics(extrinsics = [], allEvents = [], blockIndexer) {
   let index = 0;
   for (const extrinsic of extrinsics) {
     const events = extractExtrinsicEvents(allEvents, index);
@@ -17,7 +14,7 @@ async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
     await handleExtrinsic(
       extrinsic,
       {
-        ...indexer,
+        ...blockIndexer,
         index: index++,
       },
       events
@@ -25,56 +22,12 @@ async function handleExtrinsics(extrinsics = [], allEvents = [], indexer) {
   }
 }
 
-/**
- *
- * 解析并处理交易
- *
- */
-async function handleExtrinsic(extrinsic, indexer, events) {
-  const hash = extrinsic.hash.toHex();
+async function handleExtrinsic(extrinsic, indexer) {
   const call = normalizeCall(extrinsic.method);
   let signer = extrinsic._raw.signature.get("signer").toString();
   //如果signer的解析长度不正确，则该交易是无签名交易
   if (signer.length < 47) {
     signer = "";
-  }
-
-  const era = extrinsic.era?.toJSON();
-  let lifetime = undefined;
-  if (extrinsic.era?.isMortalEra) {
-    const mortalEra = extrinsic.era.asMortalEra;
-    lifetime = [
-      mortalEra.birth(indexer.blockHeight),
-      mortalEra.death(indexer.blockHeight),
-    ];
-  }
-  const tip = extrinsic.tip?.toJSON();
-  const nonce = extrinsic.nonce?.toJSON();
-  const isSuccess = isExtrinsicSuccess(events);
-
-  const version = extrinsic.version;
-  const data = u8aToHex(extrinsic.data); // 原始数据
-
-  const doc = {
-    hash,
-    indexer,
-    signer,
-    ...call,
-    name: call.method,
-    version,
-    era,
-    lifetime,
-    tip,
-    nonce,
-    data,
-    isSuccess,
-  };
-
-  const session = asyncLocalStorage.getStore();
-  const exCol = await getExtrinsicCollection();
-  const result = await exCol.insertOne(doc, { session });
-  if (result.result && !result.result.ok) {
-    // FIXME: 处理交易插入不成功的情况
   }
 
   await handleTeleportAssetDownwardMessage(extrinsic, indexer);

@@ -27,6 +27,12 @@
   },
   "devDependencies": {
     "@types/mongodb": "^3.6.18",
-    "@types/node": "^15.12.0"
+    "@types/node": "^15.12.0",
+    "jest": "^27.1.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@polkadot|@babel)/)"
+    ]
   }
 }

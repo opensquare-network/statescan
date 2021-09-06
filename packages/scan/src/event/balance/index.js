@@ -1,8 +1,6 @@
-const { getAssetTransferCollection } = require("../../mongo");
-const asyncLocalStorage = require("../../asynclocalstorage");
-const { addAddresses } = require("../../utils/blockAddresses");
-const { addAddress } = require("../../utils/blockAddresses");
-const { updateOrCreateAddress } = require("../../utils/updateOrCreateAddress");
+const { addNativeTransfer } = require("../../store/blockNativeTokenTransfers");
+const { addAddresses } = require("../../store/blockAddresses");
+const { addAddress } = require("../../store/blockAddresses");
 
 const Modules = Object.freeze({
   Balances: "balances",
@@ -15,31 +13,6 @@ const BalancesEvents = Object.freeze({
   ReserveRepatriated: "ReserveRepatriated",
   BalanceSet: "BalanceSet",
 });
-
-async function saveNewTransfer(
-  blockIndexer,
-  eventSort,
-  extrinsicIndex,
-  extrinsicHash,
-  from,
-  to,
-  balance
-) {
-  const session = asyncLocalStorage.getStore();
-  const col = await getAssetTransferCollection();
-  const result = await col.insertOne(
-    {
-      indexer: blockIndexer,
-      eventSort,
-      extrinsicIndex,
-      extrinsicHash,
-      from,
-      to,
-      balance,
-    },
-    { session }
-  );
-}
 
 function isBalancesEvent(section) {
   return section === Modules.Balances;
@@ -63,15 +36,15 @@ async function handleBalancesEvent(
   if ([BalancesEvents.Transfer].includes(method)) {
     const [from, to, value] = eventData;
     addAddresses(blockIndexer.blockHeight, [from, to]);
-    await saveNewTransfer(
-      blockIndexer,
+    addNativeTransfer(blockIndexer.blockHeight, {
+      indexer: blockIndexer,
       eventSort,
       extrinsicIndex,
       extrinsicHash,
       from,
       to,
-      value
-    );
+      balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)
+    });
   }
 
   if ([BalancesEvents.ReserveRepatriated].includes(method)) {
@@ -89,8 +62,6 @@ async function handleBalancesEvent(
     const [address] = eventData;
     addAddress(blockIndexer.blockHeight, address);
   }
-
-  return true;
 }
 
 module.exports = {

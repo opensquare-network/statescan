@@ -1,4 +1,4 @@
-const { addAddress } = require("../../utils/blockAddresses");
+const { addAddress } = require("../../store/blockAddresses");
 
 const Modules = Object.freeze({
   System: "system",

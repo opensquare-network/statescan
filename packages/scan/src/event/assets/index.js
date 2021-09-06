@@ -7,8 +7,8 @@ const {
 } = require("../../mongo");
 const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
-const { addAddresses } = require("../../utils/blockAddresses");
-const { addAddress } = require("../../utils/blockAddresses");
+const { addAddresses } = require("../../store/blockAddresses");
+const { addAddress } = require("../../store/blockAddresses");
 const { toDecimal128 } = require("../../utils");
 
 const Modules = Object.freeze({

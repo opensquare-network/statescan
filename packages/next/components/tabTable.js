@@ -97,7 +97,6 @@ export default function TabTable({ data, activeTab, collapse }) {
               router.push(
                 {
                   query: {
-                    node: router.query.node,
                     id: router.query.id,
                     tab: item.name.toLowerCase(),
                     ...(item.page > 0 ? { page: item.page + 1 } : {}),

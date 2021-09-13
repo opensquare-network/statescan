@@ -116,7 +116,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
         node={node}
         height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         age={item?.indexer?.blockTime}
-        isEvent={!!item.extrinsicHash}
+        isEvent={!item.extrinsicHash}
         blockHeight={item.indexer.blockHeight}
       />,
       <AmountFromTo

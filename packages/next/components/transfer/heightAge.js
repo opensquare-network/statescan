@@ -20,14 +20,20 @@ const Link = styled.span`
   font-weight: 600;
 `;
 
-export default function HeightAge({ height, age }) {
+export default function HeightAge({ height, age, isEvent, blockHeight }) {
   return (
     <Wrapper>
       <img src="/imgs/icons/transfer.svg" alt="" />
       <FlexWrapper style={{ width: 160, marginLeft: 16 }}>
-        <InLink to={`/extrinsic/${height}`}>
-          <Link>{height.toLocaleString()}</Link>
-        </InLink>
+        {isEvent ? (
+          <InLink to={`/block/${blockHeight}`}>
+            <Link>{blockHeight.toLocaleString()}</Link>
+          </InLink>
+        ) : (
+          <InLink to={`/extrinsic/${height}`}>
+            <Link>{height.toLocaleString()}</Link>
+          </InLink>
+        )}
         <FlexWrapper style={{ width: 160, marginTop: 4 }}>
           <img
             src="/imgs/icons/check-green.svg"

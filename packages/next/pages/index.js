@@ -116,6 +116,8 @@ export default function Home({ node, overview: ssrOverview, price }) {
         node={node}
         height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         age={item?.indexer?.blockTime}
+        isEvent={!!item.extrinsicHash}
+        blockHeight={item.indexer.blockHeight}
       />,
       <AmountFromTo
         node={node}
@@ -131,11 +133,17 @@ export default function Home({ node, overview: ssrOverview, price }) {
     ]);
   const mobileViewTransferTableData = () =>
     (overview?.latestTransfers || []).map((item) => [
-      <InLink
-        to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-      >
-        {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-      </InLink>,
+      item.extrinsicHash ? (
+        <InLink
+          to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+        >
+          {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+        </InLink>
+      ) : (
+        <InLink to={`/block/${item.indexer.blockHeight}`}>
+          {`${item.indexer.blockHeight}`}
+        </InLink>
+      ),
       <FlexWrapper>
         <img
           src="/imgs/icons/check-green.svg"

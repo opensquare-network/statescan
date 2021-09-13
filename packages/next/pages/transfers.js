@@ -28,7 +28,7 @@ export default function Transfers({ node, transfers }) {
             <InLink to={`/block/${item?.indexer?.blockHeight}`}>
               {item?.indexer?.blockHeight}
             </InLink>,
-            <Tooltip bg label={item?.method} />,
+            item.extrinsicHash ? <Tooltip label={item.method} bg /> : "-",
             item?.indexer?.blockTime,
             <AddressEllipsis
               address={item?.from}

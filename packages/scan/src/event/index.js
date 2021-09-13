@@ -1,3 +1,6 @@
+const {
+  handleBalancesEventWithoutExtrinsic,
+} = require("./balance/noExtrinsic");
 const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
 const { handleExecutedDownwardEvent } = require("./dmpQueue");
@@ -53,8 +56,19 @@ async function handleEvents(events, blockIndexer, extrinsics) {
         extrinsicHash,
         blockIndexer
       );
+    } else {
+      await handleEventWithoutExtrinsic(event, sort, blockIndexer, events);
     }
   }
+}
+
+async function handleEventWithoutExtrinsic(
+  event,
+  eventSort,
+  blockIndexer,
+  blockEvents
+) {
+  await handleBalancesEventWithoutExtrinsic(...arguments);
 }
 
 module.exports = {

@@ -94,7 +94,9 @@ export default function Address({
         >{`#${item.assetId}`}</InLink>,
         item.assetSymbol,
         item.assetName,
-        bigNumber2Locale(fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)),
+        bigNumber2Locale(
+          fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)
+        ),
         bigNumber2Locale(fromAssetUnit(item.approved || 0, item.assetDecimals)),
         item.isFrozen?.toString(),
         item.transfers || 0,
@@ -116,9 +118,13 @@ export default function Address({
         <InLink to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}>
           {`${item.indexer.blockHeight}-${item.eventSort}`}
         </InLink>,
-        <InLink
-          to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-        >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
+        item.extrinsicHash ? (
+          <InLink
+            to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>
+        ) : (
+          "-"
+        ),
         <Tooltip label={item.method} bg />,
         item.indexer.blockTime,
         item.from !== id ? (

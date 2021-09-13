@@ -125,7 +125,8 @@ export default function Address({
         ) : (
           "-"
         ),
-        <Tooltip label={item.method} bg />,
+
+        item.extrinsicHash ? <Tooltip label={item.method} bg /> : "-",
         item.indexer.blockTime,
         item.from !== id ? (
           <AddressEllipsis address={item.from} to={`/account/${item.from}`} />

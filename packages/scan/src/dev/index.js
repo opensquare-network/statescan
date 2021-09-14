@@ -3,7 +3,7 @@ require("dotenv").config();
 const { scanNormalizedBlock } = require("../scan");
 const { getBlockIndexer } = require("../block/getBlockIndexer");
 const { getApi } = require("../api");
-const { findRegistry, setSpecHeights } = require("../specs");
+const { setSpecHeights } = require("../specs");
 const { initDb, withSession } = require("../mongo");
 
 async function test() {
@@ -12,7 +12,6 @@ async function test() {
   setSpecHeights([height]);
 
   const api = await getApi();
-  const registry = await findRegistry(height);
   const blockHash = await api.rpc.chain.getBlockHash(height);
   const block = await api.rpc.chain.getBlock(blockHash);
   const allEvents = await api.query.system.events.at(blockHash);
@@ -22,7 +21,6 @@ async function test() {
   await withSession(async (session) => {
     session.startTransaction();
     await scanNormalizedBlock(
-      registry,
       block.block,
       allEvents,
       "",

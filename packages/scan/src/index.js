@@ -98,7 +98,6 @@ async function scanBlock(blockInDb, session) {
   }
 
   await scanNormalizedBlock(
-    registry,
     block,
     blockEvents,
     blockInDb.author,

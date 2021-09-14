@@ -9,7 +9,6 @@ const { normalizeExtrinsics } = require("./utils/normalize/extrinsic");
 const { extractBlock } = require("./block");
 
 async function scanNormalizedBlock(
-  registry,
   block,
   blockEvents,
   author,
@@ -32,8 +31,7 @@ async function scanNormalizedBlock(
 
   await handleMultiAddress(
     blockIndexer,
-    getAddresses(blockIndexer.blockHeight),
-    registry
+    getAddresses(blockIndexer.blockHeight)
   );
   clearAddresses(blockIndexer.blockHeight);
 

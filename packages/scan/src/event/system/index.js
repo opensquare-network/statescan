@@ -1,13 +1,5 @@
+const { Modules, SystemEvents } = require("../../utils/constants");
 const { addAddress } = require("../../store/blockAddresses");
-
-const Modules = Object.freeze({
-  System: "system",
-});
-
-const SystemEvents = Object.freeze({
-  NewAccount: "NewAccount",
-  KilledAccount: "KilledAccount",
-});
 
 function isSystemEvent(section) {
   return section === Modules.System;

@@ -1,4 +1,4 @@
-const { isSystemCall } = require("../utils/checkSystem");
+const { ignoreInExtrinsicList } = require("../utils/checkSystem");
 const { extractExtrinsicEvents } = require("../utils");
 const {
   handleTeleportAssetDownwardMessage,
@@ -32,7 +32,7 @@ async function handleExtrinsic(extrinsic, indexer) {
   await handleTeleportAssetDownwardMessage(extrinsic, indexer);
   await handleTeleportAssets(extrinsic, indexer, signer);
 
-  if (!isSystemCall(extrinsic.method) && signer) {
+  if (!ignoreInExtrinsicList(extrinsic.method) && signer) {
     addAddress(indexer.blockHeight, signer);
   }
 }

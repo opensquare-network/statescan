@@ -1,4 +1,4 @@
-const { isSystemCall } = require("../checkSystem");
+const { ignoreInExtrinsicList } = require("../checkSystem");
 const { normalizeCall } = require("./call");
 const { isExtrinsicSuccess, extractExtrinsicEvents } = require("../index");
 const { u8aToHex } = require("@polkadot/util");
@@ -28,7 +28,7 @@ function normalizeExtrinsic(extrinsic, events, extrinsicIndexer) {
   const version = extrinsic.version;
   const data = u8aToHex(extrinsic.data); // 原始数据
 
-  const isSystem = isSystemCall(extrinsic.method);
+  const listIgnore = ignoreInExtrinsicList(extrinsic.method);
 
   return {
     hash,
@@ -43,7 +43,7 @@ function normalizeExtrinsic(extrinsic, events, extrinsicIndexer) {
     nonce,
     data,
     isSuccess,
-    isSystem,
+    listIgnore,
   };
 }
 

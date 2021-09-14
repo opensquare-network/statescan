@@ -1,4 +1,4 @@
-function isSystemCall(call) {
+function ignoreInExtrinsicList(call) {
   const { section, method } = call;
   return (
     (section === "parachainSystem" && method === "setValidationData") ||
@@ -7,5 +7,5 @@ function isSystemCall(call) {
 }
 
 module.exports = {
-  isSystemCall,
+  ignoreInExtrinsicList,
 };

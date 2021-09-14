@@ -13,6 +13,7 @@ async function handleTransfer(event, eventSort, blockIndexer) {
     from,
     to,
     balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)
+    listIgnore: true,
   });
 }
 

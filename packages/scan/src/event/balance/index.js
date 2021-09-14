@@ -30,6 +30,7 @@ async function handleBalancesEvent(
       from,
       to,
       balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)
+      listIgnore: false,
     });
   }
 

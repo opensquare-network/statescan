@@ -1,11 +1,12 @@
 const { getAddressCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
+const { findRegistry } = require("../specs");
 const { getApi } = require("../api");
 const { logger } = require("../logger");
 const { getAccountStorageKey } = require("./accountStorageKey");
 const { toDecimal128 } = require(".");
 
-async function handleMultiAddress(blockIndexer, addrs = [], registry) {
+async function handleMultiAddress(blockIndexer, addrs = []) {
   if (addrs.length <= 0) {
     return;
   }
@@ -25,6 +26,7 @@ async function handleMultiAddress(blockIndexer, addrs = [], registry) {
       return result;
     }
 
+    const registry = findRegistry(blockIndexer.blockHeight);
     const accountInfo = registry.createType(
       "AccountInfo",
       accountInfoHex,
@@ -48,7 +50,7 @@ async function handleMultiAddress(blockIndexer, addrs = [], registry) {
       .updateOne({
         $set: {
           ...account.info,
-          data : {
+          data: {
             free: toDecimal128(account.info.data.free),
             reserved: toDecimal128(account.info.data.reserved),
             miscFrozen: toDecimal128(account.info.data.miscFrozen),

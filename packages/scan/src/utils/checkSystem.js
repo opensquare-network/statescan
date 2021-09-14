@@ -1,3 +1,5 @@
+const { Modules, SystemEvents, BalancesEvents } = require("./constants");
+
 function ignoreInExtrinsicList(call) {
   const { section, method } = call;
   return (
@@ -6,6 +8,31 @@ function ignoreInExtrinsicList(call) {
   );
 }
 
+function ignoreInEventList(wrappedEvent) {
+  const { event, phase } = wrappedEvent;
+  const { section, method } = event;
+
+  if (
+    Modules.System === section &&
+    [SystemEvents.ExtrinsicSuccess, SystemEvents.ExtrinsicFailed].includes(
+      method
+    )
+  ) {
+    return true;
+  }
+
+  if (
+    phase.isNull &&
+    Modules.Balances === section &&
+    [BalancesEvents.Transfer].includes(method)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 module.exports = {
   ignoreInExtrinsicList,
+  ignoreInEventList,
 };

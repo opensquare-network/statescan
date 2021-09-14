@@ -1,3 +1,5 @@
+const { ignoreInEventList } = require("../checkSystem");
+
 function normalizeEvents(events, blockIndexer, extrinsics) {
   if (events.length <= 0) {
     return;
@@ -5,7 +7,10 @@ function normalizeEvents(events, blockIndexer, extrinsics) {
 
   let result = [];
   for (let sort = 0; sort < events.length; sort++) {
-    const { event, phase, topics } = events[sort];
+    const wrappedEvent = events[sort];
+    const listIgnore = ignoreInEventList(wrappedEvent);
+
+    const { event, phase, topics } = wrappedEvent;
     const phaseType = phase.type;
     let [phaseValue, extrinsicHash] = [null, null];
 
@@ -38,6 +43,7 @@ function normalizeEvents(events, blockIndexer, extrinsics) {
       data,
       topics,
       isExtrinsicEvent,
+      listIgnore,
     });
   }
 

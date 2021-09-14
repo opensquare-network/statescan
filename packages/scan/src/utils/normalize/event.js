@@ -21,6 +21,8 @@ function normalizeEvents(events, blockIndexer, extrinsics) {
     const method = event.method;
     const data = event.data.toJSON();
 
+    const isExtrinsicEvent = !phase.isNull;
+
     result.push({
       indexer: blockIndexer,
       extrinsicHash,
@@ -35,6 +37,7 @@ function normalizeEvents(events, blockIndexer, extrinsics) {
       meta,
       data,
       topics,
+      isExtrinsicEvent,
     });
   }
 

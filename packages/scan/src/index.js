@@ -6,30 +6,15 @@ const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
 const { getBlocks } = require("./mongo/meta");
 const { GenericBlock } = require("@polkadot/types");
-const { extractBlock } = require("./block");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
-const { handleExtrinsics } = require("./extrinsic");
-const { handleEvents } = require("./event");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
-const { initDb } = require("./mongo");
-const { getApi } = require("./api");
-const { setSpecHeights } = require("./specs");
-const { normalizeEvents } = require("./utils/normalize/event");
-const { normalizeExtrinsics } = require("./utils/normalize/extrinsic");
-const { saveData } = require("./service");
+const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
-const {
-  setLastBlockIndexer,
-  getLastBlockIndexer,
-  isNewDay,
-} = require("./statistic/date");
-const { clearAddresses } = require("./store/blockAddresses");
+const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
 const { updateSpecs, getSpecHeights, findRegistry } = require("./specs");
-const { getAddresses } = require("./store/blockAddresses");
-const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 const { updateUnFinalized } = require("./unFinalized");
 
 const scanStep = parseInt(process.env.SCAN_STEP) || 100;
@@ -121,75 +106,6 @@ async function scanBlock(blockInDb, session) {
     session
   );
 }
-
-async function scanNormalizedBlock(
-  registry,
-  block,
-  blockEvents,
-  author,
-  blockIndexer,
-  session
-) {
-  const extractedBlock = extractBlock(block, blockEvents, author);
-  const extractedExtrinsics = normalizeExtrinsics(
-    block.extrinsics,
-    blockEvents,
-    blockIndexer
-  );
-  const extractedEvents = normalizeEvents(
-    blockEvents,
-    blockIndexer,
-    block.extrinsics
-  );
-  await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
-  await handleEvents(blockEvents, blockIndexer, block.extrinsics);
-
-  await handleMultiAddress(
-    blockIndexer,
-    getAddresses(blockIndexer.blockHeight),
-    registry
-  );
-  clearAddresses(blockIndexer.blockHeight);
-
-  await saveData(
-    blockIndexer,
-    extractedBlock,
-    extractedExtrinsics,
-    extractedEvents,
-    session
-  );
-
-  setLastBlockIndexer(blockIndexer);
-}
-
-async function test() {
-  await initDb();
-  const height = 1212;
-  setSpecHeights([height]);
-
-  const api = await getApi();
-  const registry = await findRegistry(height);
-  const blockHash = await api.rpc.chain.getBlockHash(height);
-  const block = await api.rpc.chain.getBlock(blockHash);
-  const allEvents = await api.query.system.events.at(blockHash);
-
-  const blockIndexer = getBlockIndexer(block.block);
-
-  await withSession(async (session) => {
-    session.startTransaction();
-    await scanNormalizedBlock(
-      registry,
-      block.block,
-      allEvents,
-      "",
-      blockIndexer,
-      session
-    );
-    await session.commitTransaction();
-  });
-}
-
-// test();
 
 main()
   .then(() => console.log("Scan finished"))

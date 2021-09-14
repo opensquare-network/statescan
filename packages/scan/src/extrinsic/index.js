@@ -1,4 +1,4 @@
-const { normalizeCall } = require("../utils/normalize/call");
+const { ignoreInExtrinsicList } = require("../utils/checkSystem");
 const { extractExtrinsicEvents } = require("../utils");
 const {
   handleTeleportAssetDownwardMessage,
@@ -23,8 +23,7 @@ async function handleExtrinsics(extrinsics = [], allEvents = [], blockIndexer) {
 }
 
 async function handleExtrinsic(extrinsic, indexer) {
-  const call = normalizeCall(extrinsic.method);
-  let signer = extrinsic._raw.signature.get("signer").toString();
+  let signer = extrinsic.signer.toString();
   //如果signer的解析长度不正确，则该交易是无签名交易
   if (signer.length < 47) {
     signer = "";
@@ -33,16 +32,8 @@ async function handleExtrinsic(extrinsic, indexer) {
   await handleTeleportAssetDownwardMessage(extrinsic, indexer);
   await handleTeleportAssets(extrinsic, indexer, signer);
 
-  if (
-    !(
-      (call.section === "parachainSystem" &&
-        call.method === "setValidationData") ||
-      (call.section === "timestamp" && call.method === "set")
-    )
-  ) {
-    if (signer) {
-      addAddress(indexer.blockHeight, signer);
-    }
+  if (!ignoreInExtrinsicList(extrinsic.method) && signer) {
+    addAddress(indexer.blockHeight, signer);
   }
 }
 

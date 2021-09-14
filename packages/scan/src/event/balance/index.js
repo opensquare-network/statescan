@@ -1,4 +1,5 @@
-const { isBalancesEvent, BalancesEvents } = require("./utils");
+const { BalancesEvents } = require("../../utils/constants");
+const { isBalancesEvent } = require("./utils");
 const { addNativeTransfer } = require("../../store/blockNativeTokenTransfers");
 const { addAddresses } = require("../../store/blockAddresses");
 const { addAddress } = require("../../store/blockAddresses");
@@ -29,6 +30,7 @@ async function handleBalancesEvent(
       from,
       to,
       balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)
+      listIgnore: false,
     });
   }
 

@@ -1,5 +1,6 @@
+const { BalancesEvents } = require("../../../utils/constants");
 const { handleTransfer } = require("./transfer");
-const { isBalancesEvent, BalancesEvents } = require("../utils");
+const { isBalancesEvent } = require("../utils");
 
 async function handleBalancesEventWithoutExtrinsic(
   event,

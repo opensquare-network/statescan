@@ -19,7 +19,7 @@ describe("Block", () => {
   let provider;
 
   beforeAll(async () => {
-    provider = new WsProvider("wss://statemine.kusama.elara.patract.io/", 1000);
+    provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
     api = await ApiPromise.create({ provider });
     setApi(api);
   });

@@ -26,7 +26,7 @@ const delayQuery = debounce(() => {
     const headers = {"accept": "application/json, text/plain, */*", "content-type": "application/json;charset=UTF-8",};
 
     fetch
-    (`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${chain}/identities`, {
+    (`${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${chain}/short-ids`, {
       headers,
       method: "POST",
       body: JSON.stringify({addresses})

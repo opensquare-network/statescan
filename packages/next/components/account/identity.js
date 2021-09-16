@@ -29,7 +29,7 @@ const Display = styled.span`
 `;
 
 export default function Identity({ identity }) {
-  if (!identity) {
+  if (!identity || identity?.status === 'NO_ID') {
     return null;
   }
 

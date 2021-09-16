@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import IdentityIcon from "./identityIcon";
+import {isNoIdentity} from "utils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -62,7 +63,7 @@ const Display = styled.span`
 `;
 
 export default function IdentityLink({ identity, cursor, width }) {
-  if (!identity) {
+  if (isNoIdentity(identity)) {
     return null;
   }
 

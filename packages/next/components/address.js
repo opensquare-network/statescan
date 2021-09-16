@@ -7,6 +7,7 @@ import IdentityLink from "./account/identityLink";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { nodes } from "utils/constants";
+import {isNoIdentity} from "utils";
 
 const StyledLink = styled.div`
   word-break: break-all;
@@ -37,7 +38,7 @@ export default function Address({ address, to }) {
     </StyledLink>
   );
 
-  if (!identity) {
+  if (isNoIdentity(identity)) {
     return (
       to ? (
         <Link href={to} passHref>

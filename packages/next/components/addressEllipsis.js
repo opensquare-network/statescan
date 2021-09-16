@@ -8,6 +8,7 @@ import IdentityLink from "./account/identityLink";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { nodes } from "utils/constants";
+import {isNoIdentity} from "utils";
 
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
@@ -43,7 +44,7 @@ export default function AddressEllipsis({ address, to }) {
     </StyledLink>
   );
 
-  if (!identity) {
+  if (isNoIdentity(identity)) {
     return (
       <Tooltip content={address} isCopy>
         {to ? (

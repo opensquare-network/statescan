@@ -150,3 +150,7 @@ export function makeTablePairs(keys, vals) {
     object_data: zip(keys, vals),
   };
 }
+
+export function isNoIdentity(identity) {
+  return (!identity || identity?.info?.status === "NO_ID");
+}

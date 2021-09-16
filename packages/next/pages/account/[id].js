@@ -245,7 +245,7 @@ export default function Address({
         />
       ),
     },
-  ];
+  ]
 
   return (
     <Layout node={node}>
@@ -334,7 +334,8 @@ export async function getServerSideProps(context) {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
     fetch(
-      `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/identity/${id}`
+     `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
+      {method: "POST",   headers: {'Content-Type': 'application/json'}, body:  JSON.stringify({addresses: [id]})}
     )
       .then((res) => res.json())
       .catch(() => null),
@@ -354,7 +355,7 @@ export async function getServerSideProps(context) {
       addressTransfers: addressTransfers ?? EmptyQuery,
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
       addressTeleports: addressTeleports ?? EmptyQuery,
-      addressIdentity: _.isEmpty(addressIdentity) ? null : addressIdentity,
+      addressIdentity: _.isEmpty(addressIdentity) ? null : addressIdentity[0],
     },
   };
 }

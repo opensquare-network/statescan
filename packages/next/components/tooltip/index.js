@@ -2,7 +2,6 @@ import styled, { css } from "styled-components";
 import { useDispatch } from "react-redux";
 import copy from "copy-to-clipboard";
 
-import Icon from "./icon.svg";
 import { addToast } from "store/reducers/toastSlice";
 
 const Wrapper = styled.div`
@@ -86,11 +85,16 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
-const Title = styled.div`
+const TitleWrapper = styled.div`
   font-weight: bold;
   font-size: 12px;
   line-height: 16px;
   color: #ffffff;
+`;
+
+const TooltipIcon = styled.img`
+  width: 24px;
+  height: 24px;
 `;
 
 export default function Tooltip({
@@ -118,7 +122,7 @@ export default function Tooltip({
           {content && (
             <PopupWrapper onClick={onCopy} isCopy>
               <Popup>
-                {title && <Title>{title}</Title>}
+                {title && <TitleWrapper>{title}</TitleWrapper>}
                 {content}
                 <Triangle />
               </Popup>
@@ -128,11 +132,11 @@ export default function Tooltip({
       ) : (
         <Wrapper bg={bg}>
           {label && label}
-          {!label && <Icon />}
+          {!label && <TooltipIcon src="/imgs/icons/tooltip-icon.svg" />}
           {content && (
             <PopupWrapper onClick={onCopy} isCopy>
               <Popup>
-                {title && <Title>{title}</Title>}
+                {title && <TitleWrapper>{title}</TitleWrapper>}
                 {content}
                 <Triangle />
               </Popup>

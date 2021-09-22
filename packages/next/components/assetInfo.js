@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 import ExternalLink from "./externalLink";
-import Tooltip from "./Tooltip";
+import Tooltip from "./tooltip";
 
 const Wrapper = styled.div`
   margin-top: 8px 0;
@@ -83,11 +83,6 @@ const LinkIcon = styled.img`
 
 export default function AssetInfo({ data, symbol, name }) {
   if (!data) return null;
-  console.log({
-    data,
-    symbol,
-    name,
-  });
   return (
     <>
       <Wrapper>

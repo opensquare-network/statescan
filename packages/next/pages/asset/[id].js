@@ -21,7 +21,7 @@ import Timeline from "components/timeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import PageNotFound from "components/pageNotFound";
 import AnalyticsChart from "components/analyticsChart";
-import { getAssetInfo } from "utils/assetInfo";
+import { getAssetInfo } from "utils/assetInfoData";
 import AssetInfo from "components/assetInfo";
 
 export default function Asset({
@@ -115,7 +115,7 @@ export default function Asset({
     },
   ];
 
-  const assetInfo = getAssetInfo(node, asset?.assetId);
+  const assetInfoData = getAssetInfo(node, asset?.assetId);
 
   return (
     <Layout node={node}>
@@ -151,7 +151,7 @@ export default function Asset({
             ]}
             info={
               <AssetInfo
-                data={assetInfo}
+                data={assetInfoData}
                 symbol={asset.symbol}
                 name={asset.name}
               />
@@ -185,9 +185,11 @@ export async function getServerSideProps(context) {
   ] = await Promise.all([
     nextApi.fetch(`assets/${assetKey}/transfers`, {
       page: activeTab === "transfers" ? nPage - 1 : 0,
+      pageSize: 25,
     }),
     nextApi.fetch(`assets/${assetKey}/holders`, {
       page: activeTab === "holders" ? nPage - 1 : 0,
+      pageSize: 25,
     }),
     nextApi.fetch(`assets/${assetKey}/statistic`),
   ]);

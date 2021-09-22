@@ -59,8 +59,82 @@ async function saveNewTeleportAssetOut(
   );
 }
 
+function extractTeleportFromOneMsg(
+  registry,
+  downwardMessage,
+  extrinsicIndexer
+) {
+  const pubSentAt = downwardMessage.pubSentAt.toJSON();
+  const pubMsg = downwardMessage.pubMsg;
+  const messageId = blake2AsHex(pubMsg.toHex());
+
+  const versionedXcm = registry.createType("VersionedXcm", pubMsg, true);
+  if (!versionedXcm.isV0) {
+    return;
+  }
+
+  const v0Xcm = versionedXcm.asV0;
+  if (!v0Xcm.isReceiveTeleportedAsset) {
+    return;
+  }
+
+  const teleportAsset = v0Xcm.asReceiveTeleportedAsset;
+  const teleportAssetJson = teleportAsset.toJSON();
+
+  const concreteFungible = teleportAssetJson.assets.find(
+    (item) => item.concreteFungible
+  )?.concreteFungible;
+  const depositAsset = teleportAssetJson.effects.find(
+    (item) => item.depositAsset
+  )?.depositAsset;
+  const buyExecution = teleportAssetJson.effects.find(
+    (item) => item.buyExecution
+  ).buyExecution;
+
+  const amount = concreteFungible?.amount;
+  const beneficiary =
+    depositAsset?.dest.x1?.accountId32.id ||
+    depositAsset?.dest.x2?.[1].accountId32.id;
+  const fee = buyExecution?.debt;
+
+  if (amount === undefined || beneficiary === undefined) {
+    logger.error(`Downward message parse failed:`, extrinsicIndexer);
+  }
+
+  addAddress(extrinsicIndexer.blockHeight, beneficiary);
+
+  return {
+    indexer: extrinsicIndexer,
+    teleportDirection: "in",
+    messageId,
+    pubSentAt,
+    teleportAsset: teleportAssetJson,
+    beneficiary,
+    amount,
+    fee,
+  };
+}
+
+function extractTeleportAssets(
+  registry,
+  downwardMessages = [],
+  extrinsicIndexer
+) {
+  return downwardMessages.reduce((result, msg) => {
+    const extracted = extractTeleportFromOneMsg(
+      registry,
+      msg,
+      extrinsicIndexer
+    );
+    if (extracted) {
+      return [...result, extracted];
+    }
+
+    return result;
+  }, []);
+}
+
 async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
-  const hash = extrinsic.hash.toHex();
   const name = extrinsic.method.method;
   const section = extrinsic.method.section;
 
@@ -69,7 +143,6 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
   }
 
   const { args } = extrinsic.method;
-
   if (!args?.length) {
     return;
   }
@@ -79,57 +152,20 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
     return;
   }
 
-  for (const downwardMessage of downwardMessages) {
-    const pubSentAt = downwardMessage.pubSentAt.toJSON();
-    const pubMsg = downwardMessage.pubMsg;
-    const messageId = blake2AsHex(pubMsg.toHex());
+  const registry = await getRegistryByHeight(extrinsicIndexer.blockHeight);
+  const teleports = extractTeleportAssets(
+    registry,
+    downwardMessages,
+    extrinsicIndexer
+  );
 
-    const registry = await getRegistryByHeight(extrinsicIndexer.blockHeight);
-    const versionedXcm = registry.createType("VersionedXcm", pubMsg, true);
-    if (!versionedXcm.isV0) {
-      return;
-    }
-
-    const v0Xcm = versionedXcm.asV0;
-    if (!v0Xcm.isReceiveTeleportedAsset) {
-      return;
-    }
-
-    const teleportAsset = v0Xcm.asReceiveTeleportedAsset;
-    const teleportAssetJson = teleportAsset.toJSON();
-
-    const concreteFungible = teleportAssetJson.assets.find(
-      (item) => item.concreteFungible
-    )?.concreteFungible;
-    const depositAsset = teleportAssetJson.effects.find(
-      (item) => item.depositAsset
-    )?.depositAsset;
-    const buyExecution = teleportAssetJson.effects.find(
-      (item) => item.buyExecution
-    ).buyExecution;
-
-    const amount = concreteFungible?.amount;
-    const beneficiary =
-      depositAsset?.dest.x1?.accountId32.id ||
-      depositAsset?.dest.x2?.[1].accountId32.id;
-    const fee = buyExecution?.debt;
-
-    if (amount === undefined || beneficiary === undefined) {
-      logger.error(`Downward message parse failed:`, extrinsicIndexer);
-    }
-
-    await saveNewTeleportAssetIn(
-      extrinsicIndexer,
-      hash,
-      messageId,
-      pubSentAt,
-      beneficiary,
-      amount,
-      fee,
-      teleportAssetJson
-    );
-    addAddress(extrinsicIndexer.blockHeight, beneficiary);
+  const col = await getTeleportCollection();
+  const bulk = col.initializeUnorderedBulkOp();
+  for (const teleport of teleports) {
+    bulk.insert(teleport);
   }
+  const session = asyncLocalStorage.getStore();
+  await bulk.execute(null, { session });
 }
 
 async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
@@ -162,4 +198,5 @@ async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
 module.exports = {
   handleTeleportAssetDownwardMessage,
   handleTeleportAssets,
+  extractTeleportFromOneMsg,
 };

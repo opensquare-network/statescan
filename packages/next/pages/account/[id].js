@@ -1,4 +1,6 @@
 import _ from "lodash";
+import { useEffect } from "react";
+import { default as AddressComponent } from "components/account/address";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
@@ -79,6 +81,16 @@ export default function Address({
     sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
   }
 
+  useEffect(() => {
+    addressExtrinsics.items.forEach((item) => {
+      if (typeof item?.args?.target?.Id === "string") {
+        item.args.target.Id = (
+          <AddressComponent address={item.args.target.Id} />
+        );
+      }
+    });
+  }, []);
+
   const tabTableData = [
     {
       name: "Assets",
@@ -94,7 +106,9 @@ export default function Address({
         >{`#${item.assetId}`}</InLink>,
         item.assetSymbol,
         item.assetName,
-        bigNumber2Locale(fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)),
+        bigNumber2Locale(
+          fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)
+        ),
         bigNumber2Locale(fromAssetUnit(item.approved || 0, item.assetDecimals)),
         item.isFrozen?.toString(),
         item.transfers || 0,

@@ -18,39 +18,39 @@ const StyledTable = styled.table`
 
 const StyledTr = styled.tr`
   ${(p) =>
-          p.nested
-                  ? css`
-                    :first-child {
-                      > td {
-                        border-width: 0 0 0 1px;
+    p.nested
+      ? css`
+          :first-child {
+            > td {
+              border-width: 0 0 0 1px;
 
-                        :first-child {
-                          border-width: 0;
-                        }
-                      }
-                    }
+              :first-child {
+                border-width: 0;
+              }
+            }
+          }
 
-                    :not(:first-child) {
-                      > td {
-                        border-width: 1px 0 0 1px;
+          :not(:first-child) {
+            > td {
+              border-width: 1px 0 0 1px;
 
-                        :first-child {
-                          border-width: 1px 0 0 0;
-                        }
-                      }
-                    }
-                  `
-                  : css`
-                    :last-child {
-                      > td {
-                        border-width: 1px 0 1px 1px;
+              :first-child {
+                border-width: 1px 0 0 0;
+              }
+            }
+          }
+        `
+      : css`
+          :last-child {
+            > td {
+              border-width: 1px 0 1px 1px;
 
-                        :last-child {
-                          border-width: 1px 1px 1px 1px;
-                        }
-                      }
-                    }
-                  `}
+              :last-child {
+                border-width: 1px 1px 1px 1px;
+              }
+            }
+          }
+        `}
 `;
 
 const StyledTd = styled.td`
@@ -70,66 +70,66 @@ const StyledTd = styled.td`
   }
 `;
 
-export default function InnerDataTable({data, nested = false}) {
-
+export default function InnerDataTable({ data, nested = false }) {
   if (React.isValidElement(data)) {
     return data;
   }
 
   const formatValue = (fieldValue, fieldName) => {
     switch (typeof fieldValue) {
-
       case "string":
         switch (fieldName) {
-          case "Id":
-            return <StyledTd style={{minWidth: 320, padding: "10px 24px"}}>
-              <Address address={fieldValue}/>
-            </StyledTd>;
           default:
-            return <StyledTd style={{minWidth: 320, padding: "10px 24px"}}>
-              <BreakText>{fieldValue.toString()}</BreakText>
-            </StyledTd>;
+            return (
+              <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
+                <BreakText>{fieldValue.toString()}</BreakText>
+              </StyledTd>
+            );
         }
 
       case "object":
         switch (Array.isArray(fieldValue)) {
           case true:
-            return <StyledTd style={{padding: 0}}>
-              <InnerDataTable data={fieldValue} nested/>
-            </StyledTd>
+            return (
+              <StyledTd style={{ padding: 0 }}>
+                <InnerDataTable data={fieldValue} nested />
+              </StyledTd>
+            );
           case false:
-            return (fieldValue === null ? (
-              <StyledTd style={{minWidth: 320, padding: "10px 24px"}}>
+            return fieldValue === null ? (
+              <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
                 null
               </StyledTd>
             ) : React.isValidElement(fieldValue) ? (
-              <StyledTd style={{minWidth: 320, padding: "10px 24px"}}>
+              <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
                 {fieldValue}
               </StyledTd>
             ) : (
-              <StyledTd style={{padding: 0}}>
-                <InnerDataTable data={fieldValue} nested/>
+              <StyledTd style={{ padding: 0 }}>
+                <InnerDataTable data={fieldValue} nested />
               </StyledTd>
-            ));
+            );
         }
 
       default:
-        return <StyledTd style={{minWidth: 320, padding: "10px 24px"}}>
-          <BreakText>{fieldValue.toString()}</BreakText>
-        </StyledTd>
+        return (
+          <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
+            <BreakText>{fieldValue.toString()}</BreakText>
+          </StyledTd>
+        );
     }
-  }
+  };
 
   if (Array.isArray(data) && data.length < 2) {
     return (
       data.length > 0 && (
         <StyledTable>
           <tbody>
-          {data.map((item, index) => (
-            <StyledTr key={index} nested={nested}>
-              {formatValue(item)}
-            </StyledTr>
-          ))}
+            {data.map((item, index) => (
+              <StyledTr key={index} nested={nested}>
+                {formatValue(item)}
+              </StyledTr>
+            ))}
           </tbody>
         </StyledTable>
       )
@@ -150,23 +150,23 @@ export default function InnerDataTable({data, nested = false}) {
       entries.length > 0 && (
         <StyledTable>
           <tbody>
-          {entries.map(([fieldName, fieldValue], index) => {
-            return (
-              <StyledTr key={index} nested={nested}>
-                <StyledTd
-                  style={{
-                    whiteSpace: "nowrap",
-                    width,
-                    minWidth: width,
-                    padding: "10px 24px",
-                  }}
-                >
-                  {fieldName}
-                </StyledTd>
-                {formatValue(fieldValue, fieldName)}
-              </StyledTr>
-            );
-          })}
+            {entries.map(([fieldName, fieldValue], index) => {
+              return (
+                <StyledTr key={index} nested={nested}>
+                  <StyledTd
+                    style={{
+                      whiteSpace: "nowrap",
+                      width,
+                      minWidth: width,
+                      padding: "10px 24px",
+                    }}
+                  >
+                    {fieldName}
+                  </StyledTd>
+                  {formatValue(fieldValue, fieldName)}
+                </StyledTr>
+              );
+            })}
           </tbody>
         </StyledTable>
       )

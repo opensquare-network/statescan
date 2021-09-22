@@ -1,6 +1,7 @@
+// asset id => asset info
 const statemineInfo = new Map([
   [
-    8,
+    8, //asset id
     {
       icon: "/imgs/icons/asset/rmrk.svg",
       about:
@@ -9,7 +10,7 @@ const statemineInfo = new Map([
         {
           name: "Website",
           url: "https://rmrk.app",
-          icon: "/imgs/icons/link-links.svg",
+          icon: "/imgs/icons/link-default.svg",
         },
         {
           name: "Twitter: @rmrkapp",
@@ -41,6 +42,7 @@ const statemineInfo = new Map([
   ],
 ]);
 
+// node => assets info
 const assetInfo = new Map([["statemine", statemineInfo]]);
 
 export const getAssetInfo = (node, assetId) => {

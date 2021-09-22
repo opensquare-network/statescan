@@ -51,11 +51,12 @@ const Data = styled.div`
   align-items: center;
 `;
 
-export default function DetailTable({ head, badge, body, foot }) {
+export default function DetailTable({ head, badge, body, foot, info }) {
   const theme = useTheme();
 
   return (
     <Wrapper>
+      {info}
       {(head || []).map((item, index) =>
         body?.[index] === undefined ? (
           <Fragment key={index}></Fragment>

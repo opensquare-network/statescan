@@ -56,6 +56,7 @@ const Popup = styled.div`
   background: rgba(0, 0, 0, 0.65);
   border-radius: 4px;
   max-width: 257px;
+  min-width: 120px;
   padding: 6px 12px;
   font-size: 12px;
   line-height: 16px;
@@ -85,6 +86,13 @@ const ChildrenWrapper = styled.div`
   }
 `;
 
+const Title = styled.div`
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
+`;
+
 export default function Tooltip({
   label,
   bg,
@@ -92,6 +100,7 @@ export default function Tooltip({
   children,
   isCopy,
   copyText,
+  title,
 }) {
   const dispatch = useDispatch();
 
@@ -109,6 +118,7 @@ export default function Tooltip({
           {content && (
             <PopupWrapper onClick={onCopy} isCopy>
               <Popup>
+                {title && <Title>{title}</Title>}
                 {content}
                 <Triangle />
               </Popup>
@@ -122,6 +132,7 @@ export default function Tooltip({
           {content && (
             <PopupWrapper onClick={onCopy} isCopy>
               <Popup>
+                {title && <Title>{title}</Title>}
                 {content}
                 <Triangle />
               </Popup>

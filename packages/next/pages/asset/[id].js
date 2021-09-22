@@ -21,6 +21,8 @@ import Timeline from "components/timeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import PageNotFound from "components/pageNotFound";
 import AnalyticsChart from "components/analyticsChart";
+import { getAssetInfo } from "utils/assetInfo";
+import AssetInfo from "components/assetInfo";
 
 export default function Asset({
   node,
@@ -83,7 +85,9 @@ export default function Asset({
       body: (assetHolders?.items || []).map((item, index) => [
         index + assetHolders.page * assetHolders.pageSize + 1,
         <Address address={item?.address} to={`/account/${item?.address}`} />,
-        bigNumber2Locale(fromAssetUnit(item?.balance?.$numberDecimal, item?.assetDecimals)),
+        bigNumber2Locale(
+          fromAssetUnit(item?.balance?.$numberDecimal, item?.assetDecimals)
+        ),
       ]),
       foot: (
         <Pagination
@@ -110,6 +114,8 @@ export default function Asset({
       ),
     },
   ];
+
+  const assetInfo = getAssetInfo(node, asset?.assetId);
 
   return (
     <Layout node={node}>
@@ -143,6 +149,13 @@ export default function Asset({
               <MinorText>{assetHolders?.total}</MinorText>,
               <MinorText>{assetTransfers?.total}</MinorText>,
             ]}
+            info={
+              <AssetInfo
+                data={assetInfo}
+                symbol={asset.symbol}
+                name={asset.name}
+              />
+            }
           />
         </div>
         <TabTable data={tabTableData} activeTab={tab} collapse={900} />

@@ -23,26 +23,20 @@ const Wrapper = styled.div`
   font-weight: 500;
 `;
 
-
 const Display = styled.span`
   margin-right: 8px;
 `;
 
 export default function Identity({ identity }) {
-  if (!identity || identity?.info?.status === 'NO_ID') {
+  if (!identity || identity?.info?.status === "NO_ID") {
     return null;
   }
-
-  const displayName = identity?.info?.displayParent
-    ? `${identity?.info?.displayParent}/${identity?.info?.display}`
-    : identity?.info?.display;
 
   return (
     <Wrapper>
       <IdentityIcon identity={identity} />
       <Display>
-        {" "}
-        <MonoText>{displayName}</MonoText>{" "}
+        <MonoText>{identity?.info?.display}</MonoText>{" "}
       </Display>
     </Wrapper>
   );

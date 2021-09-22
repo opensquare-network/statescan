@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import IdentityIcon from "./identityIcon";
-import {isNoIdentity} from "utils";
+import { isNoIdentity } from "utils";
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,32 +29,16 @@ const Wrapper = styled.div`
   font-weight: 500;
 `;
 
-const Source = styled.a`
-  svg {
-    margin: 0 !important;
-  }
-
-  .hover-show {
-    display: none;
-  }
-
-  &:hover {
-    .hover-hide {
-      display: none;
-    }
-
-    .hover-show {
-      display: initial;
-    }
-  }
-`;
-
 const Display = styled.span`
   display: inline-block;
-  ${p => p.width
-    ? css`width: ${p.width};`
-    : css`max-width: 86px;`
-  }
+  ${(p) =>
+    p.width
+      ? css`
+          width: ${p.width};
+        `
+      : css`
+          max-width: 86px;
+        `}
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -67,14 +51,10 @@ export default function IdentityLink({ identity, cursor, width }) {
     return null;
   }
 
-  const displayName = identity?.info?.displayParent
-    ? `${identity?.info?.displayParent}/${identity?.info?.display}`
-    : identity?.info?.display;
-
   return (
     <Wrapper cursor={cursor}>
       <IdentityIcon identity={identity} />
-      <Display width={width}>{displayName}</Display>
+      <Display width={width}>{identity?.info?.display}</Display>
     </Wrapper>
   );
 }

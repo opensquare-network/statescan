@@ -5,35 +5,6 @@ const { addAddress } = require("../../store/blockAddresses");
 const { getRegistryByHeight } = require("../../utils/registry");
 const { logger } = require("../../logger");
 
-async function saveNewTeleportAssetIn(
-  extrinsicIndexer,
-  extrinsicHash,
-  messageId,
-  pubSentAt,
-  beneficiary,
-  amount,
-  fee,
-  teleportAssetJson
-) {
-  const session = asyncLocalStorage.getStore();
-  const col = await getTeleportCollection();
-
-  await col.insertOne(
-    {
-      indexer: extrinsicIndexer,
-      extrinsicHash,
-      teleportDirection: "in",
-      messageId,
-      pubSentAt,
-      teleportAsset: teleportAssetJson,
-      beneficiary,
-      amount,
-      fee,
-    },
-    { session }
-  );
-}
-
 async function saveNewTeleportAssetOut(
   extrinsicIndexer,
   extrinsicHash,
@@ -62,7 +33,8 @@ async function saveNewTeleportAssetOut(
 function extractTeleportFromOneMsg(
   registry,
   downwardMessage,
-  extrinsicIndexer
+  extrinsicIndexer,
+  extrinsicHash
 ) {
   const pubSentAt = downwardMessage.pubSentAt.toJSON();
   const pubMsg = downwardMessage.pubMsg;
@@ -105,6 +77,7 @@ function extractTeleportFromOneMsg(
 
   return {
     indexer: extrinsicIndexer,
+    extrinsicHash,
     teleportDirection: "in",
     messageId,
     pubSentAt,
@@ -118,13 +91,15 @@ function extractTeleportFromOneMsg(
 function extractTeleportAssets(
   registry,
   downwardMessages = [],
-  extrinsicIndexer
+  extrinsicIndexer,
+  extrinsicHash
 ) {
   return downwardMessages.reduce((result, msg) => {
     const extracted = extractTeleportFromOneMsg(
       registry,
       msg,
-      extrinsicIndexer
+      extrinsicIndexer,
+      extrinsicHash
     );
     if (extracted) {
       return [...result, extracted];
@@ -135,6 +110,7 @@ function extractTeleportAssets(
 }
 
 async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
+  const extrinsicHash = extrinsic.hash.toHex();
   const name = extrinsic.method.method;
   const section = extrinsic.method.section;
 
@@ -156,7 +132,8 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
   const teleports = extractTeleportAssets(
     registry,
     downwardMessages,
-    extrinsicIndexer
+    extrinsicIndexer,
+    extrinsicHash
   );
 
   const col = await getTeleportCollection();

@@ -36,6 +36,7 @@ describe("XCM", () => {
     expect(downwardMessages.length).toBe(1);
     const message = downwardMessages[0];
     const blockIndexer = getBlockIndexer(block);
+    const extrinsicHash = setValidationDataExtrinsic.hash.toHex();
     const extrinsicIndexer = {
       ...blockIndexer,
       index: 0,
@@ -43,7 +44,8 @@ describe("XCM", () => {
     const extracted = extractTeleportFromOneMsg(
       registry,
       message,
-      extrinsicIndexer
+      extrinsicIndexer,
+      extrinsicHash
     );
     expect(extracted).toEqual({
       indexer: {
@@ -53,6 +55,8 @@ describe("XCM", () => {
         blockTime: 1622737140406,
         index: 0,
       },
+      extrinsicHash:
+        "0x8b517897ada88924601e0c9121b7225921e3e3464b826548a2f62cb8d44f716b",
       teleportDirection: "in",
       messageId:
         "0x77986a85231854e46928791b4cea1bd8061eafb1383faca71245696266dfcd40",

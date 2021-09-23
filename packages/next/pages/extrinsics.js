@@ -9,6 +9,8 @@ import HashEllipsis from "components/hashEllipsis";
 import Result from "components/result";
 import BreakText from "components/breakText";
 import Filter from "components/filter";
+import { useEffect } from "react";
+import { showIdentityInJSON } from "utils/dataWrapper";
 
 export default function Extrinsics({ node, extrinsics, filter }) {
   return (
@@ -31,7 +33,7 @@ export default function Extrinsics({ node, extrinsics, filter }) {
             <HashEllipsis hash={item?.hash} to={`/extrinsic/${item?.hash}`} />,
             <Result isSuccess={item?.isSuccess} />,
             <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
-            item?.args,
+            showIdentityInJSON(item.args),
           ])}
           foot={
             <Pagination

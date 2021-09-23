@@ -66,7 +66,6 @@ const StyledTd = styled.td`
 `;
 
 export default function InnerDataTable({ data, nested = false }) {
-
   if (React.isValidElement(data)) {
     return data;
   }

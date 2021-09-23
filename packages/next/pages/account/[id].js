@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { useEffect } from "react";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
@@ -20,6 +21,7 @@ import {
   nodes,
   teleportsHead,
 } from "utils/constants";
+import { showIdentityInJSON } from "utils/dataWrapper";
 import MinorText from "components/minorText";
 import MonoText from "components/monoText";
 import BreakText from "components/breakText";
@@ -169,7 +171,7 @@ export default function Address({
         item?.indexer?.blockTime,
         <Result isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,
-        item.args,
+        showIdentityInJSON(item.args),
       ]),
       foot: (
         <Pagination

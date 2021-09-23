@@ -1,5 +1,6 @@
 import styled from "styled-components";
-
+import { useEffect } from "react";
+import { showIdentityInJSON } from "utils/dataWrapper";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Section from "components/section";
@@ -80,6 +81,10 @@ export default function Extrinsic({
       ),
     },
   ];
+
+  useEffect(() => {
+    extrinsicDetail.args = showIdentityInJSON(extrinsicDetail.args);
+  }, []);
 
   return (
     <Layout node={node}>

@@ -9,8 +9,16 @@ import HashEllipsis from "components/hashEllipsis";
 import Result from "components/result";
 import BreakText from "components/breakText";
 import Filter from "components/filter";
+import { useEffect } from "react";
+import { showIdentityInJSON } from "utils/dataWrapper";
 
 export default function Extrinsics({ node, extrinsics, filter }) {
+  useEffect(() => {
+    extrinsics.items.forEach((item) => {
+      item.args = showIdentityInJSON(item.args);
+    });
+  }, []);
+
   return (
     <Layout node={node}>
       <section>

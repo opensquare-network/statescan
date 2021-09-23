@@ -59,7 +59,10 @@ async function main() {
       continue;
     }
 
-    if (blocks[0].height + 100 > finalizedHeight) {
+    const minHeight = blocks[0].height;
+    const maxHeight = blocks[(blocks || []).length - 1].height;
+    const updateAddrHeight = finalizedHeight - 100;
+    if (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) {
       await updateAllRawAddrs(blocks[0]);
     }
 

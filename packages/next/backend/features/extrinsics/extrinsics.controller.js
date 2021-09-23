@@ -186,7 +186,7 @@ async function getAllExtrinsicModuleMethods(ctx) {
       $group: {
         _id: "$section",
         methods: {
-          $addToSet: "name"
+          $addToSet: "$name"
         }
       }
     },

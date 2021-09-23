@@ -93,7 +93,7 @@ async function getAllEventModuleMethods(ctx) {
       $group: {
         _id: "$section",
         methods: {
-          $addToSet: "method"
+          $addToSet: "$method"
         }
       }
     },

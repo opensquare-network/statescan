@@ -128,6 +128,10 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
     extrinsicIndexer
   );
 
+  if (teleports.length <= 0) {
+    return;
+  }
+
   const col = await getTeleportCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const teleport of teleports) {

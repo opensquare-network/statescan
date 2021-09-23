@@ -63,7 +63,8 @@ async function main() {
     const maxHeight = blocks[(blocks || []).length - 1].height;
     const updateAddrHeight = finalizedHeight - 100;
     if (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) {
-      await updateAllRawAddrs(blocks[0]);
+      const block = (blocks || []).find((b) => b.height === updateAddrHeight);
+      await updateAllRawAddrs(block);
     }
 
     for (const block of blocks) {

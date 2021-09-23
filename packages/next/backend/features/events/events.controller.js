@@ -12,7 +12,7 @@ async function getEvents(ctx) {
     return;
   }
 
-  const { module, method } = ctx.query;
+  const { module, method, signOnly } = ctx.query;
 
   const q = {};
   if (module) {
@@ -20,6 +20,9 @@ async function getEvents(ctx) {
   }
   if (method) {
     q.method = method;
+  }
+  if (signOnly === "true") {
+    q.listIgnore = true;
   }
 
   const col = await getEventCollection();
@@ -83,6 +86,43 @@ async function getEvent(ctx) {
   ctx.body = event;
 }
 
+async function getAllEventModuleMethods(ctx) {
+  const col = await getEventCollection();
+  const result = await col.aggregate([
+    {
+      $sort: {
+        section: 1,
+        method: 1,
+      }
+    },
+    {
+      $group: {
+        _id: {
+          section: "$section",
+          method: "$method",
+        },
+      }
+    },
+    {
+      $group: {
+        _id: "$_id.section",
+        methods: {
+          $push: "$_id.method"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        module: "$_id",
+        methods: 1,
+      }
+    }
+  ]).toArray();
+
+  ctx.body = result;
+}
+
 async function getEventModules(ctx) {
   const col = await getEventCollection();
   const items = await col.distinct("section");
@@ -104,4 +144,5 @@ module.exports = {
   getEvents,
   getEventModules,
   getEventModuleMethods,
+  getAllEventModuleMethods,
 };

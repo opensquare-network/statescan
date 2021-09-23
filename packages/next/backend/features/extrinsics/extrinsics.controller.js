@@ -12,7 +12,7 @@ async function getExtrinsics(ctx) {
     return;
   }
 
-  const { module, method } = ctx.query;
+  const { module, method, signOnly } = ctx.query;
 
   const q = {};
   if (module) {
@@ -20,6 +20,9 @@ async function getExtrinsics(ctx) {
   }
   if (method) {
     q.name = method;
+  }
+  if (signOnly === "true") {
+    q.listIgnore = true;
   }
 
   const col = await getExtrinsicCollection();
@@ -176,6 +179,43 @@ async function getExtrinsicTransfers(ctx) {
   ctx.body = items;
 }
 
+async function getAllExtrinsicModuleMethods(ctx) {
+  const col = await getExtrinsicCollection();
+  const result = await col.aggregate([
+    {
+      $sort: {
+        section: 1,
+        name: 1,
+      }
+    },
+    {
+      $group: {
+        _id: {
+          section: "$section",
+          method: "$name",
+        },
+      }
+    },
+    {
+      $group: {
+        _id: "$_id.section",
+        methods: {
+          $push: "$_id.method"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        module: "$_id",
+        methods: 1,
+      }
+    }
+  ]).toArray();
+
+  ctx.body = result;
+}
+
 async function getExtrinsicModules(ctx) {
   const col = await getExtrinsicCollection();
   const items = await col.distinct("section");
@@ -201,4 +241,5 @@ module.exports = {
   getExtrinsicTransfers,
   getExtrinsicModules,
   getExtrinsicModuleMethods,
+  getAllExtrinsicModuleMethods,
 };

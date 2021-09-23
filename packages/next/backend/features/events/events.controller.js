@@ -12,7 +12,7 @@ async function getEvents(ctx) {
     return;
   }
 
-  const { module, method } = ctx.query;
+  const { module, method, signOnly } = ctx.query;
 
   const q = {};
   if (module) {
@@ -20,6 +20,9 @@ async function getEvents(ctx) {
   }
   if (method) {
     q.method = method;
+  }
+  if (signOnly === "true") {
+    q.listIgnore = true;
   }
 
   const col = await getEventCollection();

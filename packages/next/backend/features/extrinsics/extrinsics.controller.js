@@ -12,7 +12,7 @@ async function getExtrinsics(ctx) {
     return;
   }
 
-  const { module, method } = ctx.query;
+  const { module, method, signOnly } = ctx.query;
 
   const q = {};
   if (module) {
@@ -20,6 +20,9 @@ async function getExtrinsics(ctx) {
   }
   if (method) {
     q.name = method;
+  }
+  if (signOnly === "true") {
+    q.listIgnore = true;
   }
 
   const col = await getExtrinsicCollection();

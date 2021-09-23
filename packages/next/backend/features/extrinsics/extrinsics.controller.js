@@ -179,6 +179,29 @@ async function getExtrinsicTransfers(ctx) {
   ctx.body = items;
 }
 
+async function getAllExtrinsicModuleMethods(ctx) {
+  const col = await getExtrinsicCollection();
+  const result = await col.aggregate([
+    {
+      $group: {
+        _id: "$section",
+        methods: {
+          $addToSet: "name"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        module: "$_id",
+        methods: 1,
+      }
+    }
+  ]).toArray();
+
+  ctx.body = result;
+}
+
 async function getExtrinsicModules(ctx) {
   const col = await getExtrinsicCollection();
   const items = await col.distinct("section");
@@ -204,4 +227,5 @@ module.exports = {
   getExtrinsicTransfers,
   getExtrinsicModules,
   getExtrinsicModuleMethods,
+  getAllExtrinsicModuleMethods,
 };

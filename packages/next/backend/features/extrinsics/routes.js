@@ -6,6 +6,10 @@ const router = new Router();
 router.get("/extrinsics", extrinsicsController.getExtrinsics);
 router.get("/extrinsics/latest", extrinsicsController.getLatestExtrinsics);
 router.get("/extrinsics/count", extrinsicsController.getExtrinsicsCount);
+router.get(
+  "/extrinsics/allmodulemethods",
+  extrinsicsController.getAllExtrinsicModuleMethods
+);
 router.get("/extrinsics/modules", extrinsicsController.getExtrinsicModules);
 router.get(
   "/extrinsics/modules/:moduleName/methods",

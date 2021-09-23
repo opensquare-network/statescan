@@ -102,6 +102,13 @@ async function _createIndexes() {
     "indexer.blockHeight": -1,
     "indexer.index": -1,
   });
+  extrinsicCol.createIndex({
+    listIgnore: 1,
+    section: 1,
+    name: 1,
+    "indexer.blockHeight": -1,
+    "indexer.index": -1,
+  });
 
   eventCol.createIndex({ "indexer.blockHash": 1, sort: -1 });
   eventCol.createIndex({ "indexer.blockHeight": -1, sort: -1 });
@@ -112,6 +119,13 @@ async function _createIndexes() {
     sort: -1,
   });
   eventCol.createIndex({
+    section: 1,
+    method: 1,
+    "indexer.blockHeight": -1,
+    sort: -1,
+  });
+  eventCol.createIndex({
+    listIgnore: 1,
     section: 1,
     method: 1,
     "indexer.blockHeight": -1,

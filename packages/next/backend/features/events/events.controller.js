@@ -86,6 +86,29 @@ async function getEvent(ctx) {
   ctx.body = event;
 }
 
+async function getAllEventModuleMethods(ctx) {
+  const col = await getEventCollection();
+  const result = await col.aggregate([
+    {
+      $group: {
+        _id: "$section",
+        methods: {
+          $addToSet: "method"
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        module: "$_id",
+        methods: 1,
+      }
+    }
+  ]).toArray();
+
+  ctx.body = result;
+}
+
 async function getEventModules(ctx) {
   const col = await getEventCollection();
   const items = await col.distinct("section");
@@ -107,4 +130,5 @@ module.exports = {
   getEvents,
   getEventModules,
   getEventModuleMethods,
+  getAllEventModuleMethods,
 };

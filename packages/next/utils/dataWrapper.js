@@ -1,6 +1,10 @@
 import Address from "components/account/address";
+import _ from "lodash";
 
 export function showIdentityInJSON(args) {
+  if (_.isEmpty(args)) {
+    return args;
+  }
   const keys = Object.keys(args);
   keys.forEach((key) => {
     if (typeof args[key] === "object") {

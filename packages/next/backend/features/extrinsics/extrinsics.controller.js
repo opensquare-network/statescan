@@ -184,9 +184,17 @@ async function getAllExtrinsicModuleMethods(ctx) {
   const result = await col.aggregate([
     {
       $group: {
-        _id: "$section",
+        _id: {
+          section: "$section",
+          method: "$name",
+        },
+      }
+    },
+    {
+      $group: {
+        _id: "$_id.section",
         methods: {
-          $addToSet: "$name"
+          $push: "$_id.method"
         }
       }
     },

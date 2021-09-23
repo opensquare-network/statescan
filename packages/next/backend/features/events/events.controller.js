@@ -90,10 +90,24 @@ async function getAllEventModuleMethods(ctx) {
   const col = await getEventCollection();
   const result = await col.aggregate([
     {
+      $sort: {
+        section: 1,
+        method: 1,
+      }
+    },
+    {
       $group: {
-        _id: "$section",
+        _id: {
+          section: "$section",
+          method: "$method",
+        },
+      }
+    },
+    {
+      $group: {
+        _id: "$_id.section",
         methods: {
-          $addToSet: "$method"
+          $push: "$_id.method"
         }
       }
     },

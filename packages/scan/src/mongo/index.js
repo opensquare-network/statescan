@@ -39,6 +39,7 @@ let extrinsicCol = null;
 let assetTransferCol = null;
 let assetCol = null;
 let assetHolderCol = null;
+let rawAddressCol = null;
 let addressCol = null;
 let approvalCol = null;
 let teleportCol = null;
@@ -76,6 +77,7 @@ async function initDb() {
   assetTransferCol = getCollection(assetTransferCollectionName);
   assetCol = getCollection(assetCollectionName);
   assetHolderCol = getCollection(assetHolderCollectionName);
+  rawAddressCol = getCollection("rawAddress");
   addressCol = getCollection(addressCollectionName);
   approvalCol = getCollection(approvalCollectionName);
   teleportCol = getCollection(teleportCollectionMame);
@@ -162,6 +164,11 @@ async function getAddressCollection() {
   return addressCol;
 }
 
+async function getRawAddressCollection() {
+  await tryInit(rawAddressCol);
+  return rawAddressCol;
+}
+
 async function getAssetApprovalCollection() {
   await tryInit(approvalCol);
   return approvalCol;
@@ -186,6 +193,7 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
+  getRawAddressCollection,
   getAssetApprovalCollection,
   getTeleportCollection,
   getUnFinalizedBlockCollection,

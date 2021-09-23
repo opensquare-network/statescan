@@ -159,7 +159,7 @@ export default function Filter({ total, data, allmodulemethods }) {
           <FilterIcon onClick={() => setShow(!show)} />
         </HiddenButton>
       </TotalWrapper>
-      {(show || width > 1100) && (
+      {(show || width > 1100) && selectData?.length > 0 && (
         <>
           <Divider />
           <FilterWrapper>
@@ -178,7 +178,6 @@ export default function Filter({ total, data, allmodulemethods }) {
             ))}
             <Button
               onClick={() => {
-                // console.log(getCurrentFilter());
                 router.push(
                   `${router.pathname}?${encodeURIQuery({
                     page: 1,

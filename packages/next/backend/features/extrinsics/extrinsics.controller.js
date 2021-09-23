@@ -183,6 +183,12 @@ async function getAllExtrinsicModuleMethods(ctx) {
   const col = await getExtrinsicCollection();
   const result = await col.aggregate([
     {
+      sort: {
+        section: 1,
+        name: 1,
+      }
+    },
+    {
       $group: {
         _id: {
           section: "$section",

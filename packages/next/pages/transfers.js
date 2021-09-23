@@ -9,14 +9,16 @@ import AddressEllipsis from "components/addressEllipsis";
 import { bigNumber2Locale, fromSymbolUnit, fromAssetUnit } from "utils";
 import { getSymbol } from "utils/hooks";
 import Tooltip from "components/tooltip";
+import Filter from "components/filter";
 
-export default function Transfers({ node, transfers }) {
+export default function Transfers({ node, transfers, filter }) {
   const symbol = getSymbol(node);
 
   return (
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Transfers" }]} node={node} />
+        <Filter total="" data={filter} />
         <Table
           head={transfersHead}
           body={(transfers?.items || []).map((item) => [
@@ -59,18 +61,35 @@ export default function Transfers({ node, transfers }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { page } = context.query;
+  const { page, sign } = context.query;
   const nPage = parseInt(page) || 1;
+
+  const filter = [
+    {
+      value: sign ?? "",
+      name: "Sign",
+      query: "sign",
+      options: [
+        {
+          text: "Signed only",
+          value: "",
+        },
+        { text: "All", value: "all" },
+      ],
+    },
+  ];
 
   const { result: transfers } = await nextApi.fetch(`transfers`, {
     page: nPage - 1,
     pageSize: 25,
+    signOnly: sign ? "false" : "true",
   });
 
   return {
     props: {
       node,
       transfers: transfers ?? EmptyQuery,
+      filter,
     },
   };
 }

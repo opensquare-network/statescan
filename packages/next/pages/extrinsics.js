@@ -9,15 +9,23 @@ import HashEllipsis from "components/hashEllipsis";
 import Result from "components/result";
 import BreakText from "components/breakText";
 import Filter from "components/filter";
-import { useEffect } from "react";
 import { showIdentityInJSON } from "utils/dataWrapper";
 
-export default function Extrinsics({ node, extrinsics, filter }) {
+export default function Extrinsics({
+  node,
+  extrinsics,
+  filter,
+  allmodulemethods,
+}) {
   return (
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Extrinsics" }]} node={node} />
-        <Filter total={`All ${extrinsics?.total} extrinsics`} data={filter} />
+        <Filter
+          total={`All ${extrinsics?.total} extrinsics`}
+          data={filter}
+          allmodulemethods={allmodulemethods}
+        />
         <Table
           head={extrinsicsHead}
           body={(extrinsics?.items || []).map((item) => [
@@ -51,7 +59,7 @@ export default function Extrinsics({ node, extrinsics, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { page, module, method } = context.query;
+  const { page, module, method, sign } = context.query;
   const nPage = parseInt(page) || 1;
 
   const { result: extrinsics } = await nextApi.fetch(`extrinsics`, {
@@ -59,9 +67,23 @@ export async function getServerSideProps(context) {
     pageSize: 25,
     ...(module ? { module } : {}),
     ...(method ? { method } : {}),
+    signOnly: sign ? "false" : "true",
   });
 
-  const filter = [];
+  const filter = [
+    {
+      value: sign ?? "",
+      name: "Sign",
+      query: "sign",
+      options: [
+        {
+          text: "Signed only",
+          value: "",
+        },
+        { text: "All", value: "all" },
+      ],
+    },
+  ];
   const { result: modules } = await nextApi.fetch(`extrinsics/modules`);
   filter.push({
     value: module && (modules || []).indexOf(module) > -1 ? module : "",
@@ -101,11 +123,16 @@ export async function getServerSideProps(context) {
     });
   }
 
+  const { result: allmodulemethods } = await nextApi.fetch(
+    `extrinsics/allmodulemethods`
+  );
+
   return {
     props: {
       node,
       extrinsics: extrinsics ?? EmptyQuery,
       filter,
+      allmodulemethods: allmodulemethods ?? EmptyQuery,
     },
   };
 }

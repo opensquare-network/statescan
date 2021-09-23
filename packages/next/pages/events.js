@@ -9,12 +9,16 @@ import HashEllipsis from "components/hashEllipsis";
 import Filter from "components/filter";
 import { makeEventArgs } from "utils/eventArgs";
 
-export default function Events({ node, events, filter }) {
+export default function Events({ node, events, filter, allmodulemethods }) {
   return (
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Events" }]} node={node} />
-        <Filter total={`All ${events?.total} events`} data={filter} />
+        <Filter
+          total={`All ${events?.total} events`}
+          data={filter}
+          allmodulemethods={allmodulemethods}
+        />
         <Table
           head={eventsHead}
           body={(events?.items || []).map((item) => [
@@ -52,7 +56,7 @@ export default function Events({ node, events, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  let { page, module, method } = context.query;
+  const { page, module, method, sign } = context.query;
   const nPage = parseInt(page) || 1;
 
   const { result: events } = await nextApi.fetch(`events`, {
@@ -60,9 +64,23 @@ export async function getServerSideProps(context) {
     pageSize: 25,
     ...(module ? { module } : {}),
     ...(method ? { method } : {}),
+    signOnly: sign ? "false" : "true",
   });
 
-  const filter = [];
+  const filter = [
+    {
+      value: sign ?? "",
+      name: "Sign",
+      query: "sign",
+      options: [
+        {
+          text: "Signed only",
+          value: "",
+        },
+        { text: "All", value: "all" },
+      ],
+    },
+  ];
   const { result: modules } = await nextApi.fetch(`events/modules`);
   filter.push({
     value: module && (modules || []).indexOf(module) > -1 ? module : "",
@@ -102,11 +120,16 @@ export async function getServerSideProps(context) {
     });
   }
 
+  const { result: allmodulemethods } = await nextApi.fetch(
+    `events/allmodulemethods`
+  );
+
   return {
     props: {
       node,
       events: events ?? EmptyQuery,
       filter,
+      allmodulemethods: allmodulemethods ?? EmptyQuery,
     },
   };
 }

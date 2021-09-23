@@ -1,7 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import BreakText from "components/breakText";
-import Address from "../account/address";
 
 const StyledTable = styled.table`
   width: 100%;
@@ -23,17 +22,14 @@ const StyledTr = styled.tr`
           :first-child {
             > td {
               border-width: 0 0 0 1px;
-
               :first-child {
                 border-width: 0;
               }
             }
           }
-
           :not(:first-child) {
             > td {
               border-width: 1px 0 0 1px;
-
               :first-child {
                 border-width: 1px 0 0 0;
               }
@@ -44,7 +40,6 @@ const StyledTr = styled.tr`
           :last-child {
             > td {
               border-width: 1px 0 1px 1px;
-
               :last-child {
                 border-width: 1px 1px 1px 1px;
               }
@@ -75,50 +70,30 @@ export default function InnerDataTable({ data, nested = false }) {
     return data;
   }
 
-  const formatValue = (fieldValue, fieldName) => {
-    switch (typeof fieldValue) {
-      case "string":
-        switch (fieldName) {
-          default:
-            return (
-              <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
-                <BreakText>{fieldValue.toString()}</BreakText>
-              </StyledTd>
-            );
-        }
-
-      case "object":
-        switch (Array.isArray(fieldValue)) {
-          case true:
-            return (
-              <StyledTd style={{ padding: 0 }}>
-                <InnerDataTable data={fieldValue} nested />
-              </StyledTd>
-            );
-          case false:
-            return fieldValue === null ? (
-              <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
-                null
-              </StyledTd>
-            ) : React.isValidElement(fieldValue) ? (
-              <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
-                {fieldValue}
-              </StyledTd>
-            ) : (
-              <StyledTd style={{ padding: 0 }}>
-                <InnerDataTable data={fieldValue} nested />
-              </StyledTd>
-            );
-        }
-
-      default:
-        return (
-          <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
-            <BreakText>{fieldValue.toString()}</BreakText>
-          </StyledTd>
-        );
-    }
-  };
+  const formatValue = (fieldValue) =>
+    Array.isArray(fieldValue) ? (
+      <StyledTd style={{ padding: 0 }}>
+        <InnerDataTable data={fieldValue} nested />
+      </StyledTd>
+    ) : typeof fieldValue === "object" ? (
+      fieldValue === null ? (
+        <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
+          null
+        </StyledTd>
+      ) : React.isValidElement(fieldValue) ? (
+        <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
+          {fieldValue}
+        </StyledTd>
+      ) : (
+        <StyledTd style={{ padding: 0 }}>
+          <InnerDataTable data={fieldValue} nested />
+        </StyledTd>
+      )
+    ) : (
+      <StyledTd style={{ minWidth: 320, padding: "10px 24px" }}>
+        <BreakText>{fieldValue.toString()}</BreakText>
+      </StyledTd>
+    );
 
   if (Array.isArray(data) && data.length < 2) {
     return (
@@ -163,7 +138,7 @@ export default function InnerDataTable({ data, nested = false }) {
                   >
                     {fieldName}
                   </StyledTd>
-                  {formatValue(fieldValue, fieldName)}
+                  {formatValue(fieldValue)}
                 </StyledTr>
               );
             })}

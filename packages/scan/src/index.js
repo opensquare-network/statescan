@@ -65,6 +65,7 @@ async function main() {
     if (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) {
       const block = (blocks || []).find((b) => b.height === updateAddrHeight);
       await updateAllRawAddrs(block);
+      logger.info(`Accounts updated at ${updateAddrHeight}`);
     }
 
     for (const block of blocks) {

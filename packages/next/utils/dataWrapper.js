@@ -3,18 +3,19 @@ import Address from "components/account/address";
 import _ from "lodash";
 
 export function showIdentityInJSON(args, doDeepCopy = false) {
-  const copy = doDeepCopy ? { ...args } : args;
-  if (_.isEmpty(copy)) {
-    return copy;
+  const result = {};
+  if (_.isEmpty(args)) {
+    return args;
   }
-  const keys = Object.keys(copy);
+  const keys = Object.keys(args);
   keys.forEach((key) => {
-    if (typeof copy[key] === "object" && !React.isValidElement(copy[key])) {
-      showIdentityInJSON(copy[key]);
+    result[key] = args[key];
+    if (typeof args[key] === "object" && !React.isValidElement(args[key])) {
+      result[key] = showIdentityInJSON(args[key]);
     }
-    if (key === "Id" && typeof copy[key] === "string") {
-      copy[key] = <Address address={copy[key]} />;
+    if (key === "Id" && typeof args[key] === "string") {
+      result[key] = <Address address={args[key]} />;
     }
   });
-  return copy;
+  return result;
 }

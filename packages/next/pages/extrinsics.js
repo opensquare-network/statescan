@@ -13,12 +13,6 @@ import { useEffect } from "react";
 import { showIdentityInJSON } from "utils/dataWrapper";
 
 export default function Extrinsics({ node, extrinsics, filter }) {
-  useEffect(() => {
-    extrinsics.items.forEach((item) => {
-      item.args = showIdentityInJSON(item.args, true);
-    });
-  }, []);
-
   return (
     <Layout node={node}>
       <section>
@@ -39,7 +33,7 @@ export default function Extrinsics({ node, extrinsics, filter }) {
             <HashEllipsis hash={item?.hash} to={`/extrinsic/${item?.hash}`} />,
             <Result isSuccess={item?.isSuccess} />,
             <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
-            item?.args,
+            showIdentityInJSON(item.args),
           ])}
           foot={
             <Pagination

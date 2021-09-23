@@ -81,12 +81,6 @@ export default function Address({
     sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
   }
 
-  useEffect(() => {
-    addressExtrinsics.items.forEach((item) => {
-      item.args = showIdentityInJSON(item.args, true);
-    });
-  }, []);
-
   const tabTableData = [
     {
       name: "Assets",
@@ -172,7 +166,7 @@ export default function Address({
         item?.indexer?.blockTime,
         <Result isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,
-        item.args,
+        showIdentityInJSON(item.args),
       ]),
       foot: (
         <Pagination

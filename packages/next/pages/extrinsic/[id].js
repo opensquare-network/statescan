@@ -82,10 +82,6 @@ export default function Extrinsic({
     },
   ];
 
-  useEffect(() => {
-    extrinsicDetail.args = showIdentityInJSON(extrinsicDetail.args, true);
-  }, []);
-
   return (
     <Layout node={node}>
       <Section>
@@ -167,7 +163,7 @@ export default function Extrinsic({
             foot={
               <JsonAttributes
                 title={"Parameters"}
-                data={extrinsicDetail.args}
+                data={showIdentityInJSON(extrinsicDetail?.args)}
               />
             }
           />

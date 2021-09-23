@@ -59,13 +59,8 @@ async function main() {
       continue;
     }
 
-    if (scanFinalizedHeight + 100 === finalizedHeight) {
-      const block = (blocks || []).find(
-        (b) => b.height === scanFinalizedHeight
-      );
-      if (block) {
-        await updateAllRawAddrs(block);
-      }
+    if (blocks[0].height + 100 > finalizedHeight) {
+      await updateAllRawAddrs(blocks[0]);
     }
 
     for (const block of blocks) {

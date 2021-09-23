@@ -83,7 +83,7 @@ export default function Extrinsic({
   ];
 
   useEffect(() => {
-    extrinsicDetail.args = showIdentityInJSON(extrinsicDetail.args);
+    extrinsicDetail.args = showIdentityInJSON(extrinsicDetail.args, true);
   }, []);
 
   return (

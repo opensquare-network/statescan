@@ -15,7 +15,7 @@ import { showIdentityInJSON } from "utils/dataWrapper";
 export default function Extrinsics({ node, extrinsics, filter }) {
   useEffect(() => {
     extrinsics.items.forEach((item) => {
-      item.args = showIdentityInJSON(item.args);
+      item.args = showIdentityInJSON(item.args, true);
     });
   }, []);
 

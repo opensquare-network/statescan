@@ -83,7 +83,7 @@ export default function Address({
 
   useEffect(() => {
     addressExtrinsics.items.forEach((item) => {
-      item.args = showIdentityInJSON(item.args);
+      item.args = showIdentityInJSON(item.args, true);
     });
   }, []);
 

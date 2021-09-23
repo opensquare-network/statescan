@@ -131,6 +131,8 @@ async function _createIndexes() {
   assetTransferCol.createIndex({ to: 1, "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ asset: 1, from: 1 });
   assetTransferCol.createIndex({ asset: 1, to: 1 });
+
+  teleportCol.createIndex({ "indexer.blockHeight": -1, "indexer.index": -1 });
 }
 
 async function tryInit(col) {

@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { useEffect } from "react";
-import { default as AddressComponent } from "components/account/address";
+// import { default as AddressComponent } from "components/account/address";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
@@ -22,6 +22,7 @@ import {
   nodes,
   teleportsHead,
 } from "utils/constants";
+import { showIdentityInJSON } from "utils/dataWrapper";
 import MinorText from "components/minorText";
 import MonoText from "components/monoText";
 import BreakText from "components/breakText";
@@ -83,11 +84,7 @@ export default function Address({
 
   useEffect(() => {
     addressExtrinsics.items.forEach((item) => {
-      if (typeof item?.args?.target?.Id === "string") {
-        item.args.target.Id = (
-          <AddressComponent address={item.args.target.Id} />
-        );
-      }
+      item.args = showIdentityInJSON(item.args);
     });
   }, []);
 

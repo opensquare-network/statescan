@@ -1,9 +1,11 @@
 import styled, { css } from "styled-components";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
 import Select from "./select";
 import FilterIcon from "public/imgs/icons/filter.svg";
 import { useWindowSize } from "utils/hooks";
+import { encodeURIQuery } from "utils";
 
 const Wrapper = styled.div`
   background: #fafafa;
@@ -109,22 +111,45 @@ const HiddenButton = styled.div`
   }
 `;
 
-export default function Filter({ total, data }) {
+export default function Filter({ total, data, allmodulemethods }) {
   const [selectData, setSelectData] = useState(data);
   const [show, setShow] = useState(false);
-  const onSelect = (name, value) => {
-    setSelectData(
-      (selectData || []).map((item) =>
-        item.name === name ? { ...item, value } : item
-      )
-    );
-  };
   const { width } = useWindowSize();
+  const router = useRouter();
   useEffect(() => {
     if (width > 1100) {
       setShow(false);
     }
   }, [width]);
+
+  const onSelect = (name, value) => {
+    let methods = [];
+    if (name === "Module") {
+      methods = (
+        allmodulemethods.find((item) => item.module === value)?.methods || []
+      ).map((item) => ({
+        value: item,
+        text: item,
+      }));
+      methods.unshift({ text: "All", value: "" });
+    }
+    setSelectData(
+      (selectData || []).map((item) => {
+        if (name === "Module" && item.name === "Method") {
+          return { ...item, value: "", options: methods };
+        } else {
+          return item.name === name ? { ...item, value } : item;
+        }
+      })
+    );
+  };
+  const getCurrentFilter = () => {
+    const filter = {};
+    (selectData || []).forEach((item) => {
+      Object.assign(filter, { [item.query]: item.value });
+    });
+    return filter;
+  };
 
   return (
     <Wrapper>
@@ -151,7 +176,19 @@ export default function Filter({ total, data }) {
                 />
               </SelectWrapper>
             ))}
-            <Button>Filter</Button>
+            <Button
+              onClick={() => {
+                // console.log(getCurrentFilter());
+                router.push(
+                  `${router.pathname}?${encodeURIQuery({
+                    page: 1,
+                    ...getCurrentFilter(),
+                  })}`
+                );
+              }}
+            >
+              Filter
+            </Button>
           </FilterWrapper>
         </>
       )}

@@ -9,12 +9,16 @@ import HashEllipsis from "components/hashEllipsis";
 import Filter from "components/filter";
 import { makeEventArgs } from "utils/eventArgs";
 
-export default function Events({ node, events, filter }) {
+export default function Events({ node, events, filter, allmodulemethods }) {
   return (
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Events" }]} node={node} />
-        <Filter total={`All ${events?.total} events`} data={filter} />
+        <Filter
+          total={`All ${events?.total} events`}
+          data={filter}
+          allmodulemethods={allmodulemethods}
+        />
         <Table
           head={eventsHead}
           body={(events?.items || []).map((item) => [
@@ -60,6 +64,7 @@ export async function getServerSideProps(context) {
     pageSize: 25,
     ...(module ? { module } : {}),
     ...(method ? { method } : {}),
+    signOnly: sign ? "false" : "true",
   });
 
   const filter = [
@@ -115,11 +120,16 @@ export async function getServerSideProps(context) {
     });
   }
 
+  const { result: allmodulemethods } = await nextApi.fetch(
+    `events/allmodulemethods`
+  );
+
   return {
     props: {
       node,
       events: events ?? EmptyQuery,
       filter,
+      allmodulemethods: allmodulemethods ?? EmptyQuery,
     },
   };
 }

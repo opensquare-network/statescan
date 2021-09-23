@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
 
-import { encodeURIQuery } from "utils";
 import { useOnClickOutside } from "utils/hooks";
 
 const Wrapper = styled.div`
@@ -82,23 +81,12 @@ const OptionItem = styled.div`
     `}
 `;
 
-export default function Select({
-  value,
-  options,
-  query,
-  subQuery,
-  name,
-  onSelect,
-}) {
+export default function Select({ value, options, name, onSelect }) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
   useOnClickOutside(ref, () => setIsActive(false));
 
   const showText = options.find((item) => item.value === value)?.text;
-  const subQeuryObj = {};
-  (subQuery || []).forEach((item) => {
-    subQeuryObj[item] = "";
-  });
 
   return (
     <Wrapper ref={ref}>
@@ -114,14 +102,7 @@ export default function Select({
               isActive={item.value === value}
               onClick={() => {
                 setIsActive(false);
-                // router.push(
-                //   `${router.pathname}?${encodeURIQuery({
-                //     ...router.query,
-                //     page: 1,
-                //     [query]: item.value,
-                //     ...subQeuryObj,
-                //   })}`
-                // );
+                if (item.value === value) return;
                 onSelect(name, item.value);
               }}
             >

@@ -2,7 +2,7 @@ import React from "react";
 import Address from "components/account/address";
 import _ from "lodash";
 
-export function showIdentityInJSON(args, doDeepCopy = false) {
+export function showIdentityInJSON(args) {
   const result = {};
   if (_.isEmpty(args)) {
     return args;

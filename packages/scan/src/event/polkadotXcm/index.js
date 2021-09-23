@@ -1,6 +1,4 @@
-const {
-  getTeleportCollection,
-} = require("../../mongo");
+const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
 
 const Modules = Object.freeze({
@@ -11,18 +9,15 @@ const PolkadotXcmEvents = Object.freeze({
   Attempted: "Attempted",
 });
 
-async function updateTeleportCompletion(
-  extrinsicHash,
-  complete,
-) {
+async function updateTeleportCompletion(blockHeight, extrinsicIndex, complete) {
   const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
-  const result = await col.updateOne(
-    { extrinsicHash },
+  await col.updateOne(
+    { "indexer.blockHeight": blockHeight, "indexer.index": extrinsicIndex },
     {
       $set: {
-        complete
-      }
+        complete,
+      },
     },
     { session }
   );
@@ -51,11 +46,19 @@ async function handleXcmAttemptedEvent(
     const [result] = eventData;
 
     if (result.incomplete) {
-      await updateTeleportCompletion(extrinsicHash, false);
+      await updateTeleportCompletion(
+        blockIndexer.blockHeight,
+        extrinsicIndex,
+        false
+      );
     }
 
     if (result.complete) {
-      await updateTeleportCompletion(extrinsicHash, true);
+      await updateTeleportCompletion(
+        blockIndexer.blockHeight,
+        extrinsicIndex,
+        true
+      );
     }
   }
 

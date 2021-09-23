@@ -55,58 +55,10 @@ describe("XCM", () => {
         blockTime: 1622737140406,
         index: 0,
       },
-      extrinsicHash:
-        "0x8b517897ada88924601e0c9121b7225921e3e3464b826548a2f62cb8d44f716b",
       teleportDirection: "in",
       messageId:
         "0x77986a85231854e46928791b4cea1bd8061eafb1383faca71245696266dfcd40",
       pubSentAt: 7755562,
-      teleportAsset: {
-        assets: [
-          {
-            concreteFungible: {
-              id: {
-                x1: {
-                  parent: null,
-                },
-              },
-              amount: 100000000000,
-            },
-          },
-        ],
-        effects: [
-          {
-            buyExecution: {
-              fees: {
-                all: null,
-              },
-              weight: 0,
-              debt: 30000000,
-              haltOnError: false,
-              xcm: [],
-            },
-          },
-          {
-            depositAsset: {
-              assets: [
-                {
-                  all: null,
-                },
-              ],
-              dest: {
-                x1: {
-                  accountId32: {
-                    network: {
-                      any: null,
-                    },
-                    id: "GcDZZCVPwkPqoWxx8vfLb4Yfpz9yQ1f4XEyqngSH8ygsL9p",
-                  },
-                },
-              },
-            },
-          },
-        ],
-      },
       beneficiary: "GcDZZCVPwkPqoWxx8vfLb4Yfpz9yQ1f4XEyqngSH8ygsL9p",
       amount: 100000000000,
       fee: 30000000,

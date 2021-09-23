@@ -19,7 +19,6 @@ async function saveNewTeleportAssetOut(
   await col.insertOne(
     {
       indexer: extrinsicIndexer,
-      extrinsicHash,
       teleportDirection: "out",
       teleportAsset: teleportAssetJson,
       signer,
@@ -33,8 +32,7 @@ async function saveNewTeleportAssetOut(
 function extractTeleportFromOneMsg(
   registry,
   downwardMessage,
-  extrinsicIndexer,
-  extrinsicHash
+  extrinsicIndexer
 ) {
   const pubSentAt = downwardMessage.pubSentAt.toJSON();
   const pubMsg = downwardMessage.pubMsg;
@@ -77,11 +75,9 @@ function extractTeleportFromOneMsg(
 
   return {
     indexer: extrinsicIndexer,
-    extrinsicHash,
     teleportDirection: "in",
     messageId,
     pubSentAt,
-    teleportAsset: teleportAssetJson,
     beneficiary,
     amount,
     fee,
@@ -91,15 +87,13 @@ function extractTeleportFromOneMsg(
 function extractTeleportAssets(
   registry,
   downwardMessages = [],
-  extrinsicIndexer,
-  extrinsicHash
+  extrinsicIndexer
 ) {
   return downwardMessages.reduce((result, msg) => {
     const extracted = extractTeleportFromOneMsg(
       registry,
       msg,
-      extrinsicIndexer,
-      extrinsicHash
+      extrinsicIndexer
     );
     if (extracted) {
       return [...result, extracted];
@@ -110,7 +104,6 @@ function extractTeleportAssets(
 }
 
 async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
-  const extrinsicHash = extrinsic.hash.toHex();
   const name = extrinsic.method.method;
   const section = extrinsic.method.section;
 
@@ -132,8 +125,7 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
   const teleports = extractTeleportAssets(
     registry,
     downwardMessages,
-    extrinsicIndexer,
-    extrinsicHash
+    extrinsicIndexer
   );
 
   const col = await getTeleportCollection();

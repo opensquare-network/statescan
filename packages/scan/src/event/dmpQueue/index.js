@@ -1,6 +1,4 @@
-const {
-  getTeleportCollection,
-} = require("../../mongo");
+const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
 
 const Modules = Object.freeze({
@@ -12,18 +10,23 @@ const DmpQueueEvents = Object.freeze({
 });
 
 async function updateTeleportCompletion(
-  extrinsicHash,
+  blockHeight,
+  extrinsicIndex,
   messageId,
-  complete,
+  complete
 ) {
   const session = asyncLocalStorage.getStore();
   const col = await getTeleportCollection();
-  const result = await col.updateOne(
-    { extrinsicHash, messageId },
+  await col.updateOne(
+    {
+      "indexer.blockHeight": blockHeight,
+      "indexer.index": extrinsicIndex,
+      messageId,
+    },
     {
       $set: {
         complete,
-      }
+      },
     },
     { session }
   );
@@ -52,11 +55,21 @@ async function handleExecutedDownwardEvent(
     const [messageId, result] = eventData;
 
     if (result.incomplete) {
-      await updateTeleportCompletion(extrinsicHash, messageId, false);
+      await updateTeleportCompletion(
+        blockIndexer.blockHeight,
+        extrinsicIndex,
+        messageId,
+        false
+      );
     }
 
     if (result.complete) {
-      await updateTeleportCompletion(extrinsicHash, messageId, true);
+      await updateTeleportCompletion(
+        blockIndexer.blockHeight,
+        extrinsicIndex,
+        messageId,
+        true
+      );
     }
   }
 

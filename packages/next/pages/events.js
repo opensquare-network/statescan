@@ -52,7 +52,7 @@ export default function Events({ node, events, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  let { page, module, method } = context.query;
+  let { page, module, method, sign } = context.query;
   const nPage = parseInt(page) || 1;
 
   const { result: events } = await nextApi.fetch(`events`, {
@@ -62,7 +62,20 @@ export async function getServerSideProps(context) {
     ...(method ? { method } : {}),
   });
 
-  const filter = [];
+  const filter = [
+    {
+      value: sign ?? "",
+      name: "Sign",
+      query: "sign",
+      options: [
+        {
+          text: "Signed only",
+          value: "",
+        },
+        { text: "All", value: "all" },
+      ],
+    },
+  ];
   const { result: modules } = await nextApi.fetch(`events/modules`);
   filter.push({
     value: module && (modules || []).indexOf(module) > -1 ? module : "",

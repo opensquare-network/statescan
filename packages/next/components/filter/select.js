@@ -1,17 +1,18 @@
 import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
-import { useRouter } from "next/router";
 
 import { encodeURIQuery } from "utils";
 import { useOnClickOutside } from "utils/hooks";
-import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   position: relative;
+  @media screen and (max-width: 1100px) {
+    flex-grow: 1;
+  }
 `;
 
 const SelectWrapper = styled.div`
-  min-width: 160px;
+  width: 160px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -22,21 +23,29 @@ const SelectWrapper = styled.div`
   padding: 0 6px 0 12px;
   cursor: pointer;
   border: 1px solid #f4f4f4;
+  > span {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   > img {
     margin-left: 8px;
   }
   :hover {
-    color: ${(p) => p.themecolor};
+    background: #eeeeee;
   }
   ${(p) =>
     p.isActive &&
     css`
       border-color: #bbbbbb;
-      background-color: #ffffff;
+      background-color: #ffffff !important;
       :hover {
         color: inherit;
       }
     `}
+  @media screen and (max-width: 1100px) {
+    width: auto;
+  }
 `;
 
 const OptionWrapper = styled.div`
@@ -52,6 +61,7 @@ const OptionWrapper = styled.div`
   min-width: 160px;
   left: 0;
   top: 40px;
+  width: 100%;
 `;
 
 const OptionItem = styled.div`
@@ -60,6 +70,8 @@ const OptionItem = styled.div`
   line-height: 20px;
   font-weight: 400;
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
   :hover {
     background: #fafafa;
   }
@@ -70,11 +82,16 @@ const OptionItem = styled.div`
     `}
 `;
 
-export default function Select({ value, options, query, subQuery }) {
+export default function Select({
+  value,
+  options,
+  query,
+  subQuery,
+  name,
+  onSelect,
+}) {
   const [isActive, setIsActive] = useState(false);
   const ref = useRef();
-  const router = useRouter();
-  const theme = useTheme();
   useOnClickOutside(ref, () => setIsActive(false));
 
   const showText = options.find((item) => item.value === value)?.text;
@@ -85,11 +102,7 @@ export default function Select({ value, options, query, subQuery }) {
 
   return (
     <Wrapper ref={ref}>
-      <SelectWrapper
-        onClick={() => setIsActive(!isActive)}
-        isActive={isActive}
-        themecolor={theme.color}
-      >
+      <SelectWrapper onClick={() => setIsActive(!isActive)} isActive={isActive}>
         <span>{showText}</span>
         <img src="/imgs/icons/arrow-down.svg" />
       </SelectWrapper>
@@ -101,14 +114,15 @@ export default function Select({ value, options, query, subQuery }) {
               isActive={item.value === value}
               onClick={() => {
                 setIsActive(false);
-                router.push(
-                  `${router.pathname}?${encodeURIQuery({
-                    ...router.query,
-                    page: 1,
-                    [query]: item.value,
-                    ...subQeuryObj,
-                  })}`
-                );
+                // router.push(
+                //   `${router.pathname}?${encodeURIQuery({
+                //     ...router.query,
+                //     page: 1,
+                //     [query]: item.value,
+                //     ...subQeuryObj,
+                //   })}`
+                // );
+                onSelect(name, item.value);
               }}
             >
               {item.text}

@@ -25,7 +25,7 @@ async function getExtrinsics(ctx) {
     q.name = method;
   }
   if (signOnly === "true") {
-    q.listIgnore = true;
+    q.listIgnore = false;
   }
 
   const col = await getExtrinsicCollection();

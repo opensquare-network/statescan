@@ -25,7 +25,7 @@ async function getEvents(ctx) {
     q.method = method;
   }
   if (signOnly === "true") {
-    q.listIgnore = true;
+    q.listIgnore = false;
   }
 
   const col = await getEventCollection();

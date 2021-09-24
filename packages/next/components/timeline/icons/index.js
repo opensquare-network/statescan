@@ -12,7 +12,7 @@ import AssetThawed from "./thaw-asset.svg";
 import Destroyed from "./destroy.svg";
 import LinkIcon from "./link.svg";
 
-export default {
+const icons = {
   Created,
   ForceCreated,
   MetadataSet,
@@ -27,3 +27,5 @@ export default {
   Destroyed,
   LinkIcon,
 };
+
+export default icons;

@@ -30,9 +30,9 @@ export default function TeleportItem({ from, to }) {
   const iconTo = getIcon(to);
   return (
     <Wrapper>
-      <img src={`/imgs/icons/${iconFrom}`} />
-      <img src="/imgs/arrow-transfer.svg" />
-      <img src={`/imgs/icons/${iconTo}`} />
+      <img src={`/imgs/icons/${iconFrom}`} alt="" />
+      <img src="/imgs/arrow-transfer.svg" alt="" />
+      <img src={`/imgs/icons/${iconTo}`} alt="" />
     </Wrapper>
   );
 }

@@ -166,7 +166,7 @@ export default function SubMenu({ closeMenu }) {
         <MenuWrapper ref={ref}>
           {menus.map((item, index) => (
             <Fragment key={index}>
-              <Link href={`/${item.value}`}>
+              <Link href={`/${item.value}`} passHref>
                 <MenuItem
                   onClick={() => {
                     closeMenu();

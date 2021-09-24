@@ -143,7 +143,14 @@ export default function Overview({ node, overviewData, price }) {
       requestRef.current = requestAnimationFrame(tick);
       return () => cancelAnimationFrame(requestRef.current);
     }
-  }, [blocksHeightData, overviewData]);
+  }, [
+    blocksHeightData,
+    overviewData,
+    assetsCountDynamic,
+    blocksHeightDynamic,
+    holdersCountDynamic,
+    transfersCountDynamic,
+  ]);
 
   return (
     <Wrapper>

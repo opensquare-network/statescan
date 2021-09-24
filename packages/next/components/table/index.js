@@ -231,7 +231,7 @@ export default function Table({
   const [isCollapse, setIsCollapse] = useState();
 
   // Hanlding expand json data by default
-  const initExpand = [];
+  const initExpand = useMeno(() => []);
   if (expand >= 0) {
     initExpand[expand] = true;
   }
@@ -240,13 +240,13 @@ export default function Table({
     if (!initExpand.some((item) => item)) {
       setShowData((body || []).map(() => false));
     }
-  }, [body]);
+  }, [body, initExpand]);
 
   const timeType = useSelector(timeTypeSelector);
   useEffect(() => {
     const timeType = localStorage.getItem("timeType");
     dispatch(setTimeType(timeType));
-  }, []);
+  }, [dispatch]);
   const doSetTimeType = (timeType) => {
     dispatch(setTimeType(timeType));
   };

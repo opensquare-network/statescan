@@ -240,7 +240,7 @@ export default function Table({
     if (!initExpand.some((item) => item)) {
       setShowData((body || []).map(() => false));
     }
-  }, [body, initExpand]);
+  }, [body]);
 
   const timeType = useSelector(timeTypeSelector);
   useEffect(() => {

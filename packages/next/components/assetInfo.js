@@ -84,7 +84,6 @@ const LinkIcon = styled.img`
 
 export default function AssetInfo({ data, symbol, name }) {
   if (!data) return null;
-  console.log(data.icon);
   return (
     <>
       <Wrapper>

@@ -13,7 +13,11 @@ export function showIdentityInJSON(args) {
     if (typeof args[key] === "object" && !React.isValidElement(args[key])) {
       result[key] = showIdentityInJSON(args[key]);
     }
-    if (key === "Id" && typeof args[key] === "string") {
+    if (
+      (key === "Id" || key === "id")
+      && typeof args[key] === "string"
+      && args[key].match(/^[0-9a-zA-Z]{47,48}$/)
+    ) {
       result[key] = <Address address={args[key]} />;
     }
   });

@@ -8,15 +8,13 @@ import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
-  > div:first-child {
-    flex: 1;
-  }
   > :first-child {
     margin-right: 8px;
   }
 `;
 
 const StyledIcon = styled(Icon)`
+  flex-shrink: 0;
   cursor: pointer;
 `;
 

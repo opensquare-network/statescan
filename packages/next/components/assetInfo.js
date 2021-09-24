@@ -1,11 +1,10 @@
 import styled from "styled-components";
-import Image from "next/image";
 
 import ExternalLink from "./externalLink";
 import Tooltip from "./tooltip";
 
 const Wrapper = styled.div`
-  margin-top: 8px 0;
+  margin-top: 8px;
   display: flex;
   align-items: flex-start;
   @media screen and (max-width: 700px) {

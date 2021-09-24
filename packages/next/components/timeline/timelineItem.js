@@ -68,7 +68,7 @@ const BoldText = styled.p`
 const TimelineHeader = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 10px 48px 10px 0;
+  padding: 10px 48px 24px 0;
   min-width: 280px;
   > :nth-child(2) {
     margin-top: 4px;

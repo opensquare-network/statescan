@@ -35,7 +35,13 @@ async function getExtrinsics(ctx) {
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.countDocuments(q);
+
+  let total = 0;
+  if (Object.keys(q).length === 0) {
+    total = await col.estimatedDocumentCount();
+  } else {
+    total = await col.countDocuments(q);
+  }
 
   ctx.body = {
     items,

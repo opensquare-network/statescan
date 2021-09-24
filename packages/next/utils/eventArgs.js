@@ -1,4 +1,4 @@
-import Address from "components/address";
+import Address from "components/account/address";
 import { makeTablePairs } from "utils";
 
 export function makeEventArgs(node, event) {
@@ -14,7 +14,7 @@ export function makeEventArgs(node, event) {
     object_type: eventData.object_type,
     object_data: eventData.object_data.map(([type, val]) => {
       if (type === "AccountId") {
-        return [type, <Address address={val} to={`/account/${val}`} />];
+        return [type, <Address address={val} />];
       }
       return [type, val];
     }),

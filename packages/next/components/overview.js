@@ -146,10 +146,6 @@ export default function Overview({ node, overviewData, price }) {
   }, [
     blocksHeightData,
     overviewData,
-    assetsCountDynamic,
-    blocksHeightDynamic,
-    holdersCountDynamic,
-    transfersCountDynamic,
   ]);
 
   return (

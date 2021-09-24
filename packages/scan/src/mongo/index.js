@@ -77,7 +77,7 @@ async function initDb() {
   assetTransferCol = getCollection(assetTransferCollectionName);
   assetCol = getCollection(assetCollectionName);
   assetHolderCol = getCollection(assetHolderCollectionName);
-  rawAddressCol = getCollection("rawAddress");
+  rawAddressCol = await getCollection("rawAddress");
   addressCol = getCollection(addressCollectionName);
   approvalCol = getCollection(approvalCollectionName);
   teleportCol = getCollection(teleportCollectionMame);

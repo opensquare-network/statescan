@@ -31,7 +31,10 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
   const session = asyncLocalStorage.getStore();
 
   const finalizedHeight = getLatestFinalizedHeight();
-  if (finalizedHeight - blockIndexer.blockHeight > 100) {
+  if (
+    !process.env.UPDATE_ADDR_IN_TIME &&
+    finalizedHeight - blockIndexer.blockHeight > 100
+  ) {
     await saveToRawAddrs(addrs, session);
     logger.info(
       `${addrs.length} addresses updated at height ${blockIndexer.blockHeight}`

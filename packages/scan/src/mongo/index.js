@@ -70,21 +70,25 @@ async function initDb() {
 
   db = client.db(dbName);
 
-  statusCol = getCollection(statusCollectionName);
-  blockCol = getCollection(blockCollectionName);
-  eventCol = getCollection(eventCollectionName);
-  extrinsicCol = getCollection(extrinsicCollectionName);
-  assetTransferCol = getCollection(assetTransferCollectionName);
-  assetCol = getCollection(assetCollectionName);
-  assetHolderCol = getCollection(assetHolderCollectionName);
+  statusCol = await getCollection(statusCollectionName);
+  blockCol = await getCollection(blockCollectionName);
+  eventCol = await getCollection(eventCollectionName);
+  extrinsicCol = await getCollection(extrinsicCollectionName);
+  assetTransferCol = await getCollection(assetTransferCollectionName);
+  assetCol = await getCollection(assetCollectionName);
+  assetHolderCol = await getCollection(assetHolderCollectionName);
   rawAddressCol = await getCollection("rawAddress");
-  addressCol = getCollection(addressCollectionName);
-  approvalCol = getCollection(approvalCollectionName);
-  teleportCol = getCollection(teleportCollectionMame);
-  unFinalizedBlockCol = getCollection(unFinalizedCollectionName);
-  unFinalizedExtrinsicCol = getCollection(unFinalizedExtrinsicCollectionName);
-  unFinalizedEventCol = getCollection(unFinalizedEventCollectionName);
-  dailyAssetStatisticCol = getCollection(dailyAssetStatisticCollectionName);
+  addressCol = await getCollection(addressCollectionName);
+  approvalCol = await getCollection(approvalCollectionName);
+  teleportCol = await getCollection(teleportCollectionMame);
+  unFinalizedBlockCol = await getCollection(unFinalizedCollectionName);
+  unFinalizedExtrinsicCol = await getCollection(
+    unFinalizedExtrinsicCollectionName
+  );
+  unFinalizedEventCol = await getCollection(unFinalizedEventCollectionName);
+  dailyAssetStatisticCol = await getCollection(
+    dailyAssetStatisticCollectionName
+  );
 
   await _createIndexes();
 }

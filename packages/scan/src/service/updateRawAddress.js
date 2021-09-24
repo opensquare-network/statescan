@@ -46,7 +46,7 @@ async function updateAddresses(indexer, addrs = []) {
   const rawCol = await getRawAddressCollection();
   const rawBulk = rawCol.initializeUnorderedBulkOp();
   for (const addr of addrs) {
-    bulk.find({ address: addr }).updateOne({ $set: { updated: true } });
+    rawBulk.find({ address: addr }).updateOne({ $set: { updated: true } });
   }
   await rawBulk.execute();
 }

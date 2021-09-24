@@ -28,19 +28,29 @@ export default function Extrinsics({
         />
         <Table
           head={extrinsicsHead}
-          body={(extrinsics?.items || []).map((item) => [
+          body={(extrinsics?.items || []).map((item, index) => [
             <InLink
+              key={`${index}-1`}
               to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
             >
               {item?.indexer?.blockHeight}-{item?.indexer?.index}
             </InLink>,
-            <InLink to={`/block/${item?.indexer?.blockHeight}`}>
+            <InLink
+              key={`${index}-2`}
+              to={`/block/${item?.indexer?.blockHeight}`}
+            >
               {item?.indexer?.blockHeight}
             </InLink>,
             item?.indexer?.blockTime,
-            <HashEllipsis hash={item?.hash} to={`/extrinsic/${item?.hash}`} />,
-            <Result isSuccess={item?.isSuccess} />,
-            <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
+            <HashEllipsis
+              key={`${index}-3`}
+              hash={item?.hash}
+              to={`/extrinsic/${item?.hash}`}
+            />,
+            <Result key={`${index}-4`} isSuccess={item?.isSuccess} />,
+            <BreakText
+              key={`${index}-5`}
+            >{`${item?.section}(${item?.name})`}</BreakText>,
             showIdentityInJSON(item.args),
           ])}
           foot={

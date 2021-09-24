@@ -240,7 +240,7 @@ export default function Table({
     if (!initExpand.some((item) => item)) {
       setShowData((body || []).map(() => false));
     }
-  }, [body]);
+  }, [body, initExpand]);
 
   const timeType = useSelector(timeTypeSelector);
   useEffect(() => {
@@ -248,7 +248,7 @@ export default function Table({
     if (timeType) {
       dispatch(setTimeType(timeType));
     }
-  }, []);
+  }, [dispatch]);
   const doSetTimeType = (timeType) => {
     dispatch(setTimeType(timeType));
   };

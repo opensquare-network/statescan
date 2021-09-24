@@ -171,7 +171,7 @@ export default function Header({ node }) {
           >
             {isActive ? <IconActive /> : <Icon />}
           </IconWrapper>
-          <Link href={`/`}>
+          <Link href={`/`} passHref>
             <img
               className="logo-full"
               src="/imgs/logo.svg"
@@ -179,7 +179,7 @@ export default function Header({ node }) {
               style={{ cursor: "pointer" }}
             />
           </Link>
-          <Link href={`/`}>
+          <Link href={`/`} passHref>
             <img
               className="logo-s"
               src="/imgs/logo-s.svg"
@@ -189,7 +189,7 @@ export default function Header({ node }) {
           </Link>
           {(isActive || width > 900) && (
             <MenuWrapper ref={ref}>
-              <Link href={`/`}>
+              <Link href={`/`} passHref>
                 <MenuItem
                   themecolor={theme.color}
                   onClick={() => setIsActive(false)}
@@ -199,7 +199,7 @@ export default function Header({ node }) {
                 </MenuItem>
               </Link>
               <SubMenu closeMenu={() => setIsActive(false)} />
-              <Link href={`/assets`}>
+              <Link href={`/assets`} passHref>
                 <MenuItem
                   themecolor={theme.color}
                   onClick={() => setIsActive(false)}

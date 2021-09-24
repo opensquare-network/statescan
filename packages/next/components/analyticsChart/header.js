@@ -60,7 +60,7 @@ const Label = styled.div`
   color: rgba(17, 17, 17, 0.65);
 `;
 
-export default function ({ symbol, name, range, setRange }) {
+export default function Header({ symbol, name, range, setRange }) {
   return (
     <Wrapper>
       <FlexWrapper>

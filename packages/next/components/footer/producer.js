@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,11 +32,11 @@ export default function Producer() {
         <Text>{`© ${new Date().getFullYear()} Statescan`}</Text>
         <Text>·</Text>
         <Text>Powered by</Text>
-        <img src="/imgs/logo-opensquare.svg" alt="opensquare"/>
+        <img src="/imgs/logo-opensquare.svg" alt="opensquare" />
       </Wrapper>
       <Wrapper>
         <Text>· &nbsp;Funded by</Text>
-        <img src="/imgs/logo-kusamadotreasury.svg" alt="kusama dotreasury"/>
+        <img src="/imgs/logo-kusamadotreasury.svg" alt="kusama dotreasury" />
       </Wrapper>
     </Wrapper>
   );

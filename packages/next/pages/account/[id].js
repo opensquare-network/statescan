@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { useEffect } from "react";
+import Image from "next/image";
+
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";
 import Nav from "components/nav";
@@ -87,8 +88,9 @@ export default function Address({
       page: addressAssets?.page,
       total: addressAssets?.total,
       head: addressAssetsHead,
-      body: (addressAssets?.items || []).map((item) => [
+      body: (addressAssets?.items || []).map((item, index) => [
         <InLink
+          key={index}
           to={
             `/asset/${item.assetId}` +
             (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
@@ -116,8 +118,11 @@ export default function Address({
       page: addressTransfers?.page,
       total: addressTransfers?.total,
       head: addressTransfersHead,
-      body: (addressTransfers?.items || []).map((item) => [
-        <InLink to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}>
+      body: (addressTransfers?.items || []).map((item, index) => [
+        <InLink
+          key={index}
+          to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}
+        >
           {`${item.indexer.blockHeight}-${item.eventSort}`}
         </InLink>,
         item.extrinsicHash ? (
@@ -161,15 +166,20 @@ export default function Address({
       page: addressExtrinsics?.page,
       total: addressExtrinsics?.total,
       head: addressExtrincsHead,
-      body: (addressExtrinsics?.items || []).map((item) => [
+      body: (addressExtrinsics?.items || []).map((item, index) => [
         <InLink
+          key={`${index}-1`}
           to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         >
           {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         </InLink>,
-        <HashEllipsis hash={item?.hash} to={`/extrinsic/${item?.hash}`} />,
+        <HashEllipsis
+          key={`${index}-2`}
+          hash={item?.hash}
+          to={`/extrinsic/${item?.hash}`}
+        />,
         item?.indexer?.blockTime,
-        <Result isSuccess={item?.isSuccess} />,
+        <Result key={`${index}-3`} isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,
         showIdentityInJSON(item.args),
       ]),
@@ -186,14 +196,16 @@ export default function Address({
       page: addressTeleports?.page,
       total: addressTeleports?.total,
       head: customTeleportHead,
-      body: (addressTeleports?.items || []).map((item) => [
+      body: (addressTeleports?.items || []).map((item, index) => [
         <InLink
+          key={`${index}-1`}
           to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
         >
           {`${item.indexer.blockHeight}-${item.indexer.index}`}
         </InLink>,
         item.indexer.blockTime,
         <TeleportDirection
+          key={`${index}-2`}
           from={teleportSourceAndTarget(item.teleportDirection).source}
           to={teleportSourceAndTarget(item.teleportDirection).target}
         />,
@@ -247,7 +259,7 @@ export default function Address({
         />
       ),
     },
-  ]
+  ];
 
   return (
     <Layout node={node}>
@@ -261,6 +273,7 @@ export default function Address({
             head={addressHead}
             body={[
               <div
+                key="1"
                 style={{
                   display: "flex",
                   flexWrap: "wrap",
@@ -293,7 +306,7 @@ export default function Address({
                 addressDetail?.data?.miscFrozen?.$numberDecimal || 0,
                 symbol
               )} ${symbol}`,
-              <MinorText>{addressDetail?.nonce}</MinorText>,
+              <MinorText key="2">{addressDetail?.nonce}</MinorText>,
             ]}
           />
         </div>
@@ -336,8 +349,12 @@ export async function getServerSideProps(context) {
       page: activeTab === "teleports" ? nPage - 1 : 0,
     }),
     fetch(
-     `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
-      {method: "POST",   headers: {'Content-Type': 'application/json'}, body:  JSON.stringify({addresses: [id]})}
+      `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addresses: [id] }),
+      }
     )
       .then((res) => res.json())
       .catch(() => null),

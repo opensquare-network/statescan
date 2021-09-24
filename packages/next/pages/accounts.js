@@ -25,6 +25,7 @@ export default function Addresses({ node, addresses }) {
           body={(addresses?.items || []).map((item, index) => [
             `#${addresses.page * addresses.pageSize + index + 1}`,
             <Address
+              key={index}
               address={item?.address}
               to={`/account/${item?.address}`}
             />,

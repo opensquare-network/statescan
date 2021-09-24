@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Image from "next/image";
 
 import ExternalLink from "./externalLink";
 import Tooltip from "./tooltip";

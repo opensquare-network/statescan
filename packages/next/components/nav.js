@@ -55,14 +55,14 @@ export default function Nav({ data, node }) {
   return (
     <Wrapper>
       <NavWrapper node={node} themecolor={theme.color}>
-        <Link href={`/`}>
+        <Link href={`/`} passHref>
           <StyledLink node={node} themecolor={theme.color}>
             {nodeName}
           </StyledLink>
         </Link>
         {(data || []).map((item, index) =>
           item.path ? (
-            <Link href={item.path} key={index}>
+            <Link href={item.path} key={index} passHref>
               <StyledLink node={node}>{item.name}</StyledLink>
             </Link>
           ) : (

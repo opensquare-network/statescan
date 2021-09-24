@@ -8,7 +8,7 @@ import IdentityLink from "./account/identityLink";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { nodes } from "utils/constants";
-import {isNoIdentity} from "utils";
+import { isNoIdentity } from "utils";
 
 const StyledLink = styled.div`
   color: ${(p) => p.themecolor};
@@ -36,7 +36,7 @@ export default function AddressEllipsis({ address, to }) {
         setIdentity(identity);
       }
     });
-  }, [relayChain, address]);
+  }, [relayChain, address, isMounted]);
 
   const styledLink = (
     <StyledLink themecolor={theme.color} cursor={to ? "true" : "false"}>

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
+import Image from "next/image";
 
 import { useOnClickOutside } from "utils/hooks";
 
@@ -92,7 +93,7 @@ export default function Select({ value, options, name, onSelect }) {
     <Wrapper ref={ref}>
       <SelectWrapper onClick={() => setIsActive(!isActive)} isActive={isActive}>
         <span>{showText}</span>
-        <img src="/imgs/icons/arrow-down.svg" />
+        <img src="/imgs/icons/arrow-down.svg" alt="" />
       </SelectWrapper>
       {isActive && (
         <OptionWrapper>

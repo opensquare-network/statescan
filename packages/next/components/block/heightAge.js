@@ -2,6 +2,7 @@ import InLink from "../inLink";
 import MinorText from "../minorText";
 import { timeDuration } from "../../utils";
 import styled from "styled-components";
+import Image from "next/image";
 
 const Wrapper = styled.div`
   width: 240px;

@@ -38,7 +38,7 @@ export default function AnalyticsChart({ data, symbol, name, decimals }) {
       const ts = moment().subtract(1, "years").valueOf();
       setShowData(data.filter((item) => item.indexer.blockTime > ts));
     }
-  }, [range]);
+  }, [range, data]);
 
   const labels = (showData || []).map((item) => item.indexer.blockTime);
   const transferAmounts = (showData || []).map((item) =>

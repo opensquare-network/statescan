@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { useCallback } from "react";
+import Image from "next/image";
 
 import Layout from "components/layout";
 import Overview from "components/overview";
@@ -72,94 +74,121 @@ export default function Home({ node, overview: ssrOverview, price }) {
   const size = useWindowSize();
   const collapseSize = 900;
 
-  const pcViewBlockTableData = () =>
-    (overview?.latestBlocks || []).map((item) => [
-      <HeightAge
-        node={node}
-        height={item.header.number}
-        age={item.blockTime}
-        isFinalized={item.isFinalized}
-      />,
-      <AddressCounts
-        node={node}
-        validator={item.author}
-        extrinsicCount={item.extrinsicsCount}
-        eventsCount={item.eventsCount}
-      />,
-    ]);
+  const pcViewBlockTableData = useCallback(
+    () =>
+      (overview?.latestBlocks || []).map((item, index) => [
+        <HeightAge
+          key={`${index}-1`}
+          node={node}
+          height={item.header.number}
+          age={item.blockTime}
+          isFinalized={item.isFinalized}
+        />,
+        <AddressCounts
+          key={`${index}-2`}
+          node={node}
+          validator={item.author}
+          extrinsicCount={item.extrinsicsCount}
+          eventsCount={item.eventsCount}
+        />,
+      ]),
+    [node, overview?.latestBlocks]
+  );
 
-  const mobileViewBlockTableData = () =>
-    (overview?.latestBlocks || []).map((item) => [
-      <InLink to={`/block/${item.header.number}`}>
-        {item.header.number.toLocaleString()}
-      </InLink>,
-      <FlexWrapper>
-        <img
-          src="/imgs/icons/check-green.svg"
-          alt=""
-          style={{ marginRight: 8 }}
-        />
-        <MinorText>{timeDuration(item.blockTime)}</MinorText>
-      </FlexWrapper>,
-      item.author ? (
-        <AddressEllipsis address={item.author} to={`/account/${item.author}`} />
-      ) : (
-        "Unknown validator"
-      ),
-      item.extrinsicsCount,
-      item.eventsCount,
-    ]);
+  const mobileViewBlockTableData = useCallback(
+    () =>
+      (overview?.latestBlocks || []).map((item, index) => [
+        <InLink key={`${index}-1`} to={`/block/${item.header.number}`}>
+          {item.header.number.toLocaleString()}
+        </InLink>,
+        <FlexWrapper key={`${index}-2`}>
+          <img
+            src="/imgs/icons/check-green.svg"
+            alt=""
+            style={{ marginRight: 8 }}
+          />
+          <MinorText>{timeDuration(item.blockTime)}</MinorText>
+        </FlexWrapper>,
+        item.author ? (
+          <AddressEllipsis
+            address={item.author}
+            to={`/account/${item.author}`}
+          />
+        ) : (
+          "Unknown validator"
+        ),
+        item.extrinsicsCount,
+        item.eventsCount,
+      ]),
+    [overview?.latestBlocks]
+  );
 
-  const pcViewTransferTableData = () =>
-    (overview?.latestTransfers || []).map((item) => [
-      <TransferHeightAge
-        node={node}
-        height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-        age={item?.indexer?.blockTime}
-        isEvent={!item.extrinsicHash}
-        blockHeight={item.indexer.blockHeight}
-      />,
-      <AmountFromTo
-        node={node}
-        from={item.from}
-        to={item.to}
-        amount={
-          item?.assetSymbol
-            ? fromAssetUnit(item.balance, item.assetDecimals)
-            : fromSymbolUnit(item.balance, symbol)
-        }
-        symbol={item.assetSymbol ?? symbol}
-      />,
-    ]);
-  const mobileViewTransferTableData = () =>
-    (overview?.latestTransfers || []).map((item) => [
-      item.extrinsicHash ? (
-        <InLink
-          to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-        >
-          {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-        </InLink>
-      ) : (
-        <InLink to={`/block/${item.indexer.blockHeight}`}>
-          {`${item.indexer.blockHeight}`}
-        </InLink>
-      ),
-      <FlexWrapper>
-        <img
-          src="/imgs/icons/check-green.svg"
-          alt=""
-          style={{ marginRight: 8 }}
-        />
-        <MinorText>{timeDuration(item?.indexer?.blockTime)}</MinorText>
-      </FlexWrapper>,
-      <AddressEllipsis address={item.from} to={`/account/${item.from}`} />,
-      <AddressEllipsis address={item.to} to={`/account/${item.to}`} />,
-      item?.assetSymbol
-        ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
-            item.assetSymbol
-          }`
-        : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
-    ]);
+  const pcViewTransferTableData = useCallback(
+    () =>
+      (overview?.latestTransfers || []).map((item, index) => [
+        <TransferHeightAge
+          key={`${index}-1`}
+          node={node}
+          height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          age={item?.indexer?.blockTime}
+          isEvent={!item.extrinsicHash}
+          blockHeight={item.indexer.blockHeight}
+        />,
+        <AmountFromTo
+          key={`${index}-2`}
+          node={node}
+          from={item.from}
+          to={item.to}
+          amount={
+            item?.assetSymbol
+              ? fromAssetUnit(item.balance, item.assetDecimals)
+              : fromSymbolUnit(item.balance, symbol)
+          }
+          symbol={item.assetSymbol ?? symbol}
+        />,
+      ]),
+    [node, overview?.latestTransfers, symbol]
+  );
+  const mobileViewTransferTableData = useCallback(
+    () =>
+      (overview?.latestTransfers || []).map((item, index) => [
+        item.extrinsicHash ? (
+          <InLink
+            to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          >
+            {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          </InLink>
+        ) : (
+          <InLink to={`/block/${item.indexer.blockHeight}`}>
+            {`${item.indexer.blockHeight}`}
+          </InLink>
+        ),
+        <FlexWrapper key={`${index}-1`}>
+          <img
+            src="/imgs/icons/check-green.svg"
+            alt=""
+            style={{ marginRight: 8 }}
+          />
+          <MinorText>{timeDuration(item?.indexer?.blockTime)}</MinorText>
+        </FlexWrapper>,
+        <AddressEllipsis
+          key={`${index}-2`}
+          address={item.from}
+          to={`/account/${item.from}`}
+        />,
+        <AddressEllipsis
+          key={`${index}-3`}
+          address={item.to}
+          to={`/account/${item.to}`}
+        />,
+        item?.assetSymbol
+          ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
+              item.assetSymbol
+            }`
+          : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+      ]),
+    [overview?.latestTransfers, symbol]
+  );
 
   const [blockTableHead, setBlockTableHead] = useState([]);
   const [blockTableData, setBlockTableData] = useState(null);
@@ -180,7 +209,15 @@ export default function Home({ node, overview: ssrOverview, price }) {
       setTransferTableHead([]);
       setTransferTableData(pcViewTransferTableData());
     }
-  }, [size, overview, time]);
+  }, [
+    size,
+    overview,
+    time,
+    mobileViewBlockTableData,
+    mobileViewTransferTableData,
+    pcViewBlockTableData,
+    pcViewTransferTableData,
+  ]);
 
   return (
     <Layout node={node}>
@@ -213,20 +250,23 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <Table
           title="Assets"
           head={assetsHead}
-          body={(overview?.popularAssets || []).map((item) => [
+          body={(overview?.popularAssets || []).map((item, index) => [
             <InLink
+              key={`${index}-1`}
               to={
                 `/asset/${item.assetId}` +
                 (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
               }
             >{`#${item.assetId}`}</InLink>,
-            <Symbol symbol={item.symbol} />,
-            <Name name={item.name} />,
+            <Symbol key={`${index}-2`} symbol={item.symbol} />,
+            <Name key={`${index}-3`} name={item.name} />,
             <AddressEllipsis
+              key={`${index}-4`}
               address={item.owner}
               to={`/account/${item.owner}`}
             />,
             <AddressEllipsis
+              key={`${index}-5`}
               address={item.issuer}
               to={`/account/${item.issuer}`}
             />,

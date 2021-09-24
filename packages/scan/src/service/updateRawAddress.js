@@ -18,7 +18,7 @@ async function updateAddresses(indexer, addrs = []) {
 
   const accounts = await getOnChainAccounts(indexer, addrs);
   if (accounts.length <= 0) {
-    return;
+    throw new Error("Can not get on chain accounts from given addrs");
   }
 
   const col = await getAddressCollection();

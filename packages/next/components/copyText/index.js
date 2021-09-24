@@ -8,6 +8,9 @@ import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
+  > div:first-child {
+    flex: 1;
+  }
   > :first-child {
     margin-right: 8px;
   }

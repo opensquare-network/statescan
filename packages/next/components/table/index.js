@@ -231,7 +231,7 @@ export default function Table({
   const [isCollapse, setIsCollapse] = useState();
 
   // Hanlding expand json data by default
-  const initExpand = useMeno(() => []);
+  const initExpand = [];
   if (expand >= 0) {
     initExpand[expand] = true;
   }

@@ -12,6 +12,10 @@ async function getNotUpdatedAddresses() {
 }
 
 async function updateAddresses(indexer, addrs = []) {
+  if (addrs.length <= 0) {
+    return;
+  }
+
   const accounts = await getOnChainAccounts(indexer, addrs);
   if (accounts.length <= 0) {
     return;

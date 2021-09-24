@@ -146,7 +146,9 @@ export default function Filter({ total, data, allmodulemethods }) {
   const getCurrentFilter = () => {
     const filter = {};
     (selectData || []).forEach((item) => {
-      Object.assign(filter, { [item.query]: item.value });
+      if (item.value) {
+        Object.assign(filter, { [item.query]: item.value });
+      }
     });
     return filter;
   };

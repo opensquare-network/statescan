@@ -79,7 +79,12 @@ async function getTransfers(ctx) {
     return;
   }
 
+  const { sign_only: signOnly } = ctx.query;
+
   const q = {};
+  if (signOnly === "true") {
+    q.listIgnore = false;
+  }
 
   const col = await getAssetTransferCollection();
   const items = await col

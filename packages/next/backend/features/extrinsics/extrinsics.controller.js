@@ -1,9 +1,12 @@
+const NodeCache = require( "node-cache" );
 const {
   getExtrinsicCollection,
   getEventCollection,
   getAssetTransferCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
+
+const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 
 async function getExtrinsics(ctx) {
   const { page, pageSize } = extractPage(ctx);
@@ -186,6 +189,12 @@ async function getExtrinsicTransfers(ctx) {
 }
 
 async function getAllExtrinsicModuleMethods(ctx) {
+  const cachedResult = myCache.get(`all-extrinsic-module-methods`);
+  if (!cachedResult) {
+    ctx.body = cachedResult;
+    return;
+  }
+
   const col = await getExtrinsicCollection();
   const result = await col.aggregate([
     {
@@ -218,6 +227,8 @@ async function getAllExtrinsicModuleMethods(ctx) {
       }
     }
   ]).toArray();
+
+  myCache.set(`all-extrinsic-module-methods`, result, 15*60);
 
   ctx.body = result;
 }

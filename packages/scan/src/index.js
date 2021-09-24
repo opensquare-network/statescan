@@ -62,13 +62,13 @@ async function main() {
     const minHeight = blocks[0].height;
     const maxHeight = blocks[(blocks || []).length - 1].height;
     const updateAddrHeight = finalizedHeight - 100;
-    if (
-      (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) ||
-      (maxHeight >= finalizedHeight && maxHeight % 100 === 0)
-    ) {
+    if (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) {
       const block = (blocks || []).find((b) => b.height === updateAddrHeight);
       await updateAllRawAddrs(block);
       logger.info(`Accounts updated at ${updateAddrHeight}`);
+    } else if (maxHeight >= finalizedHeight && maxHeight % 100 === 0) {
+      const block = blocks[(blocks || []).length - 1];
+      await updateAllRawAddrs(block);
     }
 
     for (const block of blocks) {

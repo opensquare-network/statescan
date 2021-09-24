@@ -7,7 +7,8 @@ const { getRawAddressCollection, getAddressCollection } = require("../mongo");
 
 async function getNotUpdatedAddresses() {
   const col = await getRawAddressCollection();
-  return await col.find({ updated: false }).limit(500).toArray();
+  const addrObjs = await col.find({ updated: false }).limit(500).toArray();
+  return (addrObjs || []).map((obj) => obj.address);
 }
 
 async function updateAddresses(indexer, addrs = []) {

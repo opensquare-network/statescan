@@ -95,7 +95,7 @@ async function _createIndexes() {
     process.exit(1);
   }
 
-  // TODO: create indexes for better query performance
+  rawAddressCol.createIndex({ updated: 1 });
 }
 
 async function tryInit(col) {

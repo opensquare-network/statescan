@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
 import { timeTypes } from "utils/constants";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
@@ -12,18 +13,25 @@ const Wrapper = styled.div`
 
 const Item = styled.div`
   cursor: pointer;
-  &:hover {
-    color: rgba(17, 17, 17, 0.65);
-  }
+  ${(p) =>
+    p.color &&
+    css`
+      color: ${p.color};
+    `}
 `;
 
 export default function TimeHead({ timeType, setTimeType }) {
+  const color = useTheme().color;
   return (
     <Wrapper>
       {timeType === timeTypes.date ? (
-        <Item onClick={() => setTimeType(timeTypes.age)}>Date Time</Item>
+        <Item color={color} onClick={() => setTimeType(timeTypes.age)}>
+          Date Time
+        </Item>
       ) : (
-        <Item onClick={() => setTimeType(timeTypes.date)}>Age</Item>
+        <Item color={color} onClick={() => setTimeType(timeTypes.date)}>
+          Age
+        </Item>
       )}
     </Wrapper>
   );

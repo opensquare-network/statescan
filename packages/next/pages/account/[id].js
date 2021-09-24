@@ -41,6 +41,7 @@ import ChainAddressEllipsis from "../../components/chainAddressEllipsis";
 import ExplorerLink from "../../components/explorerLink";
 import BigNumber from "bignumber.js";
 import Source from "../../components/account/source";
+import Symbol from "components/symbol";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -90,13 +91,17 @@ export default function Address({
       head: addressAssetsHead,
       body: (addressAssets?.items || []).map((item, index) => [
         <InLink
-          key={index}
+          key={`${index}-1`}
           to={
             `/asset/${item.assetId}` +
             (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
           }
         >{`#${item.assetId}`}</InLink>,
-        item.assetSymbol,
+        <Symbol
+          key={`${index}-2`}
+          symbol={item.assetSymbol}
+          assetId={item.assetId}
+        />,
         item.assetName,
         bigNumber2Locale(
           fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)

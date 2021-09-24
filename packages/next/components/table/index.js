@@ -53,6 +53,7 @@ const StyledTable = styled.table`
     line-height: 16px;
     color: rgba(17, 17, 17, 0.35);
     text-align: left;
+    position: relative;
   }
 
   tbody {

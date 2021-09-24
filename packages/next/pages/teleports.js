@@ -1,4 +1,5 @@
 import Layout from "components/layout";
+import styled from "styled-components";
 import _ from "lodash";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import { teleportsHead, EmptyQuery, nodes } from "utils/constants";
@@ -15,7 +16,12 @@ import { getSymbol } from "utils/hooks";
 import BigNumber from "bignumber.js";
 import Result from "components/result";
 import ExplorerLink from "components/explorerLink";
-import Image from "next/image";
+
+const Icon = styled.img`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+`;
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -35,7 +41,7 @@ export default function Events({ node, teleports, filter }) {
   const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
+    sendAtCol.name = <Icon src={nodeInfo.icon} alt="" />;
   }
 
   return (

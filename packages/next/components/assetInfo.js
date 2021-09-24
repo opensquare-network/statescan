@@ -68,6 +68,7 @@ const RightWrapper = styled.div`
     color: rgba(17, 17, 17, 0.65);
     word-wrap: break-word;
     text-align: justify;
+    font-size: 14px;
   }
 `;
 

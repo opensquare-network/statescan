@@ -1,5 +1,8 @@
 import styled from "styled-components";
 
+import { getAssetInfo } from "utils/assetInfoData";
+import { useNode } from "utils/hooks";
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
@@ -14,10 +17,12 @@ const Icon = styled.img`
   margin-right: 8px;
 `;
 
-export default function Symbol({ symbol }) {
+export default function Symbol({ symbol, assetId }) {
+  const node = useNode();
+  const icon = getAssetInfo(node, assetId)?.icon;
   return (
     <Wrapper>
-      <Icon src="/imgs/icons/default.svg" />
+      <Icon src={icon ?? `/imgs/icons/default.svg`} />
       {symbol}
     </Wrapper>
   );

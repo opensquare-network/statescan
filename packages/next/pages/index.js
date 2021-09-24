@@ -236,7 +236,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
             }
           />
           <Table
-            title="Latest Transfers"
+            title="Signed Transfers"
             head={transferTableHead}
             body={transferTableData}
             collapse={collapseSize}

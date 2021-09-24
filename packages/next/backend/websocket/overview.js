@@ -37,6 +37,7 @@ async function calcOverview() {
   // Load latest 5 transfers
   const latestTransfers = await transferCol
     .aggregate([
+      { $match: { listIgnore: false } },
       { $sort: { "indexer.blockHeight": -1 } },
       { $limit: 5 },
       {

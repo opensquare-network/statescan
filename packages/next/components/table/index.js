@@ -245,7 +245,9 @@ export default function Table({
   const timeType = useSelector(timeTypeSelector);
   useEffect(() => {
     const timeType = localStorage.getItem("timeType");
-    dispatch(setTimeType(timeType));
+    if (timeType) {
+      dispatch(setTimeType(timeType));
+    }
   }, [dispatch]);
   const doSetTimeType = (timeType) => {
     dispatch(setTimeType(timeType));

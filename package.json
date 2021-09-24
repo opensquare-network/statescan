@@ -10,7 +10,8 @@
     "node": ">=15.0.0"
   },
   "scripts": {
-    "scan": "yarn workspace @statescan/scan scan"
+    "scan": "yarn workspace @statescan/scan scan",
+    "lint": "yarn workspace @statescan/server lint"
   },
   "devDependencies": {
     "husky": "^4.3.5",

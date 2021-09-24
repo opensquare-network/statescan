@@ -71,9 +71,11 @@ function Address({ address }) {
         paddingBottom: 8,
       }}
     >
-      <a href={`/account/${address}`}>
-        <Identity identity={identity} />
-      </a>
+      <Link href={`/account/${address}`} passHref>
+        <a>
+          <Identity identity={identity} />
+        </a>
+      </Link>
       <CopyText text={address}>
         <BreakText>
           <MinorText>

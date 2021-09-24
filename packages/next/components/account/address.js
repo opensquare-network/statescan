@@ -1,12 +1,24 @@
+import styled from "styled-components";
 import Identity from "./identity";
 import CopyText from "../copyText";
 import BreakText from "../breakText";
 import MinorText from "../minorText";
 import MonoText from "../monoText";
 import Source from "./source";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { nodes } from "../../utils/constants";
 import _ from "lodash";
+
+const Wrapper = styled.div`
+  a {
+    width: 100%;
+  }
+  [href]:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+`;
 
 function Address({ address }) {
   const [identity, setIdentity] = useState(null);
@@ -36,18 +48,22 @@ function Address({ address }) {
 
   if (!identity) {
     return (
-      <CopyText text={address}>
-        <BreakText>
-          <MinorText>
-            <MonoText>{address}</MonoText>
-          </MinorText>
-        </BreakText>
-      </CopyText>
+      <Wrapper>
+        <CopyText text={address}>
+          <BreakText>
+            <MinorText>
+              <Link href={`/account/${address}`} passHref>
+                <MonoText>{address}</MonoText>
+              </Link>
+            </MinorText>
+          </BreakText>
+        </CopyText>
+      </Wrapper>
     );
   }
 
   return (
-    <div
+    <Wrapper
       style={{
         display: "flex",
         flexWrap: "wrap",
@@ -55,16 +71,19 @@ function Address({ address }) {
         paddingBottom: 8,
       }}
     >
-      <Identity identity={identity} />
+      <a href={`/account/${address}`}>
+        <Identity identity={identity} />
+      </a>
       <CopyText text={address}>
         <BreakText>
           <MinorText>
-            <MonoText>{address}</MonoText>
+            <Link href={`/account/${address}`} passHref>
+              <MonoText>{address}</MonoText>
+            </Link>
           </MinorText>
         </BreakText>
       </CopyText>
-      <Source relayChain={relayChain} address={address} />
-    </div>
+    </Wrapper>
   );
 }
 

@@ -1,4 +1,4 @@
-import Address from "components/address";
+import Address from "components/account/address";
 import { makeTablePairs } from "utils";
 
 export function makeEventArgs(node, event) {

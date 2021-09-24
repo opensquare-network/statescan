@@ -15,7 +15,7 @@ async function getExtrinsics(ctx) {
     return;
   }
 
-  const { module, method, signOnly } = ctx.query;
+  const { module, method, sign_only: signOnly } = ctx.query;
 
   const q = {};
   if (module) {

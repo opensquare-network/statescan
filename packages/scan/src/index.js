@@ -11,6 +11,7 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
@@ -56,6 +57,18 @@ async function main() {
     if ((blocks || []).length <= 0) {
       await sleep(1000);
       continue;
+    }
+
+    const minHeight = blocks[0].height;
+    const maxHeight = blocks[(blocks || []).length - 1].height;
+    const updateAddrHeight = finalizedHeight - 100;
+    if (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) {
+      const block = (blocks || []).find((b) => b.height === updateAddrHeight);
+      await updateAllRawAddrs(block);
+      logger.info(`Accounts updated at ${updateAddrHeight}`);
+    } else if (maxHeight >= finalizedHeight && maxHeight % 100 === 0) {
+      const block = blocks[(blocks || []).length - 1];
+      await updateAllRawAddrs(block);
     }
 
     for (const block of blocks) {

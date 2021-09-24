@@ -1,46 +1,52 @@
 const { getAddressCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
-const { findRegistry } = require("../specs");
-const { getApi } = require("../api");
+const { getRawAddressCollection } = require("../mongo");
+const { getLatestFinalizedHeight } = require("../chain");
+const { getOnChainAccounts } = require("./getOnChainAccounts");
 const { logger } = require("../logger");
-const { getAccountStorageKey } = require("./accountStorageKey");
 const { toDecimal128 } = require(".");
+
+async function saveToRawAddrs(addrs = [], session) {
+  if (addrs.length <= 0) {
+    return;
+  }
+
+  const col = await getRawAddressCollection();
+  const bulk = col.initializeUnorderedBulkOp();
+  for (const addr of addrs) {
+    bulk
+      .find({ address: addr })
+      .upsert()
+      .updateOne({ $set: { updated: false } });
+  }
+
+  await bulk.execute(null, { session });
+}
 
 async function handleMultiAddress(blockIndexer, addrs = []) {
   if (addrs.length <= 0) {
     return;
   }
 
-  const uniqueAddrs = [...new Set(addrs)];
-  const api = await getApi();
-  const keys = uniqueAddrs.map(getAccountStorageKey);
-  const result = await api.rpc.state.queryStorageAt(
-    keys,
-    blockIndexer.blockHash
-  );
-  const accountInfoHexArr = (result || []).map((i) => i.toHex());
+  const session = asyncLocalStorage.getStore();
 
-  const accounts = uniqueAddrs.reduce((result, address, idx) => {
-    const accountInfoHex = accountInfoHexArr[idx];
-    if (!accountInfoHex) {
-      return result;
-    }
-
-    const registry = findRegistry(blockIndexer.blockHeight);
-    const accountInfo = registry.createType(
-      "AccountInfo",
-      accountInfoHex,
-      true
+  const finalizedHeight = getLatestFinalizedHeight();
+  if (
+    !process.env.UPDATE_ADDR_IN_TIME &&
+    finalizedHeight - blockIndexer.blockHeight > 100
+  ) {
+    await saveToRawAddrs(addrs, session);
+    logger.info(
+      `${addrs.length} addresses updated at height ${blockIndexer.blockHeight}`
     );
-    result.push({ address, info: accountInfo.toJSON() });
-    return result;
-  }, []);
+    return;
+  }
 
+  const accounts = await getOnChainAccounts(blockIndexer, addrs);
   if (accounts.length <= 0) {
     return;
   }
 
-  const session = asyncLocalStorage.getStore();
   const col = await getAddressCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const account of accounts) {
@@ -62,7 +68,7 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
   }
   await bulk.execute(null, { session });
 
-  logger.info(`${uniqueAddrs.length} addresses have been updated`);
+  logger.info(`${accounts.length} addresses have been updated`);
 }
 
 module.exports = {

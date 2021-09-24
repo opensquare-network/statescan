@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Image from "next/image";
 
 import ExternalLink from "./externalLink";
 import Tooltip from "./tooltip";
@@ -83,6 +84,7 @@ const LinkIcon = styled.img`
 
 export default function AssetInfo({ data, symbol, name }) {
   if (!data) return null;
+  console.log(data.icon);
   return (
     <>
       <Wrapper>

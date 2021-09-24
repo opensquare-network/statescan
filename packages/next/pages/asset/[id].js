@@ -50,17 +50,29 @@ export default function Asset({
       page: assetTransfers?.page,
       total: assetTransfers?.total,
       head: assetTransfersHead,
-      body: (assetTransfers?.items || []).map((item) => [
-        <InLink to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}>
+      body: (assetTransfers?.items || []).map((item, index) => [
+        <InLink
+          key={`${index}-1`}
+          to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}
+        >
           {`${item.indexer.blockHeight}-${item.eventSort}`}
         </InLink>,
         <InLink
+          key={`${index}-2`}
           to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
         >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
-        <Tooltip label={item.method} bg />,
+        <Tooltip key={`${index}-3`} label={item.method} bg />,
         item.indexer.blockTime,
-        <AddressEllipsis address={item?.from} to={`/account/${item?.from}`} />,
-        <AddressEllipsis address={item?.to} to={`/account/${item?.to}`} />,
+        <AddressEllipsis
+          key={`${index}-4`}
+          address={item?.from}
+          to={`/account/${item?.from}`}
+        />,
+        <AddressEllipsis
+          key={`${index}-5`}
+          address={item?.to}
+          to={`/account/${item?.to}`}
+        />,
         item.assetSymbol
           ? `${bigNumber2Locale(
               fromAssetUnit(item.balance, item.assetDecimals)
@@ -84,7 +96,11 @@ export default function Asset({
       head: assetHoldersHead,
       body: (assetHolders?.items || []).map((item, index) => [
         index + assetHolders.page * assetHolders.pageSize + 1,
-        <Address address={item?.address} to={`/account/${item?.address}`} />,
+        <Address
+          key={index}
+          address={item?.address}
+          to={`/account/${item?.address}`}
+        />,
         bigNumber2Locale(
           fromAssetUnit(item?.balance?.$numberDecimal, item?.assetDecimals)
         ),
@@ -131,14 +147,16 @@ export default function Asset({
           <DetailTable
             head={assetHead}
             body={[
-              <MinorText>{asset?.symbol}</MinorText>,
-              <MinorText>{asset?.name}</MinorText>,
-              <MinorText>{`#${asset?.assetId}`}</MinorText>,
+              <MinorText key="1">{asset?.symbol}</MinorText>,
+              <MinorText key="2">{asset?.name}</MinorText>,
+              <MinorText key="3">{`#${asset?.assetId}`}</MinorText>,
               <Address
+                key="4"
                 address={asset?.owner}
                 to={`/account/${asset?.owner}`}
               />,
               <Address
+                key="5"
                 address={asset?.issuer}
                 to={`/account/${asset?.issuer}`}
               />,
@@ -146,8 +164,8 @@ export default function Asset({
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
               asset?.decimals,
-              <MinorText>{assetHolders?.total}</MinorText>,
-              <MinorText>{assetTransfers?.total}</MinorText>,
+              <MinorText key="6">{assetHolders?.total}</MinorText>,
+              <MinorText key="7">{assetTransfers?.total}</MinorText>,
             ]}
             info={
               <AssetInfo

@@ -13,11 +13,12 @@ function Address({ address }) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const relayChain =
     nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
-  const headers = {
-    accept: "application/json, text/plain, */*",
-    "content-type": "application/json;charset=UTF-8",
-  };
+
   useEffect(() => {
+    const headers = {
+      accept: "application/json, text/plain, */*",
+      "content-type": "application/json;charset=UTF-8",
+    };
     fetch(
       `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
       {
@@ -31,7 +32,7 @@ function Address({ address }) {
         !_.isEmpty(res) && setIdentity(res[0]);
       })
       .catch(() => null);
-  }, []);
+  }, [address, relayChain]);
 
   if (!identity) {
     return (

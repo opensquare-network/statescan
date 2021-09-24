@@ -17,20 +17,23 @@ export default function Assets({ node, assets }) {
         <Nav data={[{ name: "Asset Tracker" }]} node={node} />
         <Table
           head={assetsHead}
-          body={(assets?.items || []).map((item) => [
+          body={(assets?.items || []).map((item, index) => [
             <InLink
+              key={`${index}-1`}
               to={
                 `/asset/${item.assetId}` +
                 (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
               }
             >{`#${item.assetId}`}</InLink>,
-            <Symbol symbol={item.symbol} />,
-            <Name name={item.name} />,
+            <Symbol key={`${index}-2`} symbol={item.symbol} />,
+            <Name key={`${index}-3`} name={item.name} />,
             <AddressEllipsis
+              key={`${index}-4`}
               address={item.owner}
               to={`/account/${item.owner}`}
             />,
             <AddressEllipsis
+              key={`${index}-5`}
               address={item.issuer}
               to={`/account/${item.issuer}`}
             />,

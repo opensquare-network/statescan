@@ -1,5 +1,6 @@
 import { Axis, Chart, LineAdvance, Tooltip } from "bizcharts";
 import styled from "styled-components";
+import Image from "next/image";
 
 const ChartWrapper = styled.div`
   svg,

@@ -71,15 +71,22 @@ export default function Block({
       page: blockExtrinsics?.page,
       total: blockExtrinsics?.total,
       head: blockExtrinsicsHead,
-      body: (blockExtrinsics?.items || []).map((item) => [
+      body: (blockExtrinsics?.items || []).map((item, index) => [
         <InLink
+          key={`${index}-1`}
           to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
-        <HashEllipsis hash={item?.hash} to={`/extrinsic/${item?.hash}`} />,
-        <MinorText>
+        <HashEllipsis
+          key={`${index}-2`}
+          hash={item?.hash}
+          to={`/extrinsic/${item?.hash}`}
+        />,
+        <MinorText key={`${index}-3`}>
           <Result isSuccess={item?.isSuccess} />
         </MinorText>,
-        <BreakText>{`${item?.section}(${item?.name})`}</BreakText>,
+        <BreakText
+          key={`${index}-4`}
+        >{`${item?.section}(${item?.name})`}</BreakText>,
         item.args,
       ]),
       foot: (
@@ -95,8 +102,9 @@ export default function Block({
       page: blockEvents?.page,
       total: blockEvents?.total,
       head: blockEventsHead,
-      body: (blockEvents?.items || []).map((item) => [
+      body: (blockEvents?.items || []).map((item, index) => [
         <InLink
+          key={`${index}-1`}
           to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
         >{`${item?.indexer?.blockHeight}-${item?.sort}`}</InLink>,
         Number.isInteger(item?.phase?.value) ? (
@@ -106,7 +114,9 @@ export default function Block({
         ) : (
           "-"
         ),
-        <BreakText>{`${item?.section}(${item?.method})`}</BreakText>,
+        <BreakText
+          key={`${index}-2`}
+        >{`${item?.section}(${item?.method})`}</BreakText>,
         makeEventArgs(node, item),
       ]),
       expand,
@@ -150,7 +160,9 @@ export default function Block({
         return [
           `${blockDetail?.header?.number}-${i}`,
           blockDetail?.header?.number,
-          <span style={{ textTransform: "capitalize" }}>{itemName}</span>,
+          <span key="1" style={{ textTransform: "capitalize" }}>
+            {itemName}
+          </span>,
           makeTablePairs(itemFields, toArray(item[itemName])),
         ];
       }),
@@ -169,7 +181,7 @@ export default function Block({
           <DetailTable
             head={blockHead}
             body={[
-              <FlexWrapper>
+              <FlexWrapper key="1">
                 <MinorText>{time(blockDetail?.blockTime)}</MinorText>
                 <AccessoryText>
                   {blockDetail?.blockTime &&
@@ -177,14 +189,14 @@ export default function Block({
                 </AccessoryText>
               </FlexWrapper>,
               "Finalized",
-              <CopyText text={blockDetail?.hash}>
+              <CopyText key="2" text={blockDetail?.hash}>
                 <BreakText>
                   <MinorText>
                     <MonoText>{blockDetail?.hash}</MonoText>
                   </MinorText>
                 </BreakText>
               </CopyText>,
-              <BreakText>
+              <BreakText key="3">
                 <MinorText>
                   <MonoText>
                     <InLink
@@ -195,12 +207,12 @@ export default function Block({
                   </MonoText>
                 </MinorText>
               </BreakText>,
-              <BreakText>
+              <BreakText key="4">
                 <MinorText>
                   <MonoText>{blockDetail?.header?.stateRoot}</MonoText>
                 </MinorText>
               </BreakText>,
-              <BreakText>
+              <BreakText key="5">
                 <MinorText>
                   <MonoText>{blockDetail?.header?.extrinsicsRoot}</MonoText>
                 </MinorText>

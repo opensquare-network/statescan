@@ -51,14 +51,17 @@ export default function Block({ node, id, eventDetail }) {
           <DetailTable
             head={eventHead}
             body={[
-              <FlexWrapper>
+              <FlexWrapper key="1">
                 <MinorText>{time(eventDetail?.indexer?.blockTime)}</MinorText>
                 <AccessoryText>
                   {eventDetail?.indexer?.blockTime &&
                     timeDuration(eventDetail?.indexer?.blockTime)}
                 </AccessoryText>
               </FlexWrapper>,
-              <InLink to={`/block/${eventDetail?.indexer?.blockHeight}`}>
+              <InLink
+                key="2"
+                to={`/block/${eventDetail?.indexer?.blockHeight}`}
+              >
                 {eventDetail?.indexer?.blockHeight}
               </InLink>,
               eventDetail?.phase?.value ? (

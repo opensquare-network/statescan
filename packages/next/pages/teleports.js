@@ -15,6 +15,7 @@ import { getSymbol } from "utils/hooks";
 import BigNumber from "bignumber.js";
 import Result from "components/result";
 import ExplorerLink from "components/explorerLink";
+import Image from "next/image";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -34,7 +35,7 @@ export default function Events({ node, teleports, filter }) {
   const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img src={nodeInfo.icon} />;
+    sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
   }
 
   return (
@@ -44,14 +45,16 @@ export default function Events({ node, teleports, filter }) {
         <Filter total={`All ${teleports?.total} teleports`} data={filter} />
         <Table
           head={customTeleportHead}
-          body={(teleports?.items || []).map((item) => [
+          body={(teleports?.items || []).map((item, index) => [
             <InLink
+              key={`${index}-1`}
               to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
             >
               {`${item.indexer.blockHeight}-${item.indexer.index}`}
             </InLink>,
             item.indexer.blockTime,
             <TeleportDirection
+              key={`${index}-2`}
               from={teleportSourceAndTarget(item.teleportDirection).source}
               to={teleportSourceAndTarget(item.teleportDirection).target}
             />,

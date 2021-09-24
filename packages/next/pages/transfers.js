@@ -21,22 +21,31 @@ export default function Transfers({ node, transfers, filter }) {
         <Filter total="" data={filter} />
         <Table
           head={transfersHead}
-          body={(transfers?.items || []).map((item) => [
+          body={(transfers?.items || []).map((item, index) => [
             <InLink
+              key={`${index}-1`}
               to={`/event/${item?.indexer?.blockHeight}-${item?.eventSort}`}
             >
               {item?.indexer?.blockHeight}-{item?.eventSort}
             </InLink>,
-            <InLink to={`/block/${item?.indexer?.blockHeight}`}>
+            <InLink
+              key={`${index}-2`}
+              to={`/block/${item?.indexer?.blockHeight}`}
+            >
               {item?.indexer?.blockHeight}
             </InLink>,
             item.extrinsicHash ? <Tooltip label={item.method} bg /> : "-",
             item?.indexer?.blockTime,
             <AddressEllipsis
+              key={`${index}-3`}
               address={item?.from}
               to={`/account/${item?.from}`}
             />,
-            <AddressEllipsis address={item?.to} to={`/account/${item?.to}`} />,
+            <AddressEllipsis
+              key={`${index}-4`}
+              address={item?.to}
+              to={`/account/${item?.to}`}
+            />,
             item.assetSymbol
               ? `${bigNumber2Locale(
                   fromAssetUnit(item.balance, item.assetDecimals)

@@ -21,11 +21,17 @@ export default function Events({ node, events, filter, allmodulemethods }) {
         />
         <Table
           head={eventsHead}
-          body={(events?.items || []).map((item) => [
-            <InLink to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}>
+          body={(events?.items || []).map((item, index) => [
+            <InLink
+              key={`${index}-1`}
+              to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
+            >
               {item?.indexer?.blockHeight}-{item?.sort}
             </InLink>,
-            <InLink to={`/block/${item?.indexer?.blockHeight}`}>
+            <InLink
+              key={`${index}-2`}
+              to={`/block/${item?.indexer?.blockHeight}`}
+            >
               {item?.indexer?.blockHeight}
             </InLink>,
             item?.indexer?.blockTime,

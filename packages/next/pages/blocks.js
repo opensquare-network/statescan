@@ -13,6 +13,7 @@ import {
   listenFirstPageBlocks,
   unSubscribeFirstBlocks,
 } from "services/websocket";
+import Image from "next/image";
 
 export default function Blocks({ node, blocks: ssrBlocks }) {
   const [time, setTime] = useState(Date.now());
@@ -47,18 +48,19 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
         <Nav data={[{ name: "Blocks" }]} node={node} />
         <Table
           head={blocksHead}
-          body={(blocks?.items || []).map((item) => [
-            <InLink to={`/block/${item?.header?.number}`}>
+          body={(blocks?.items || []).map((item, index) => [
+            <InLink key={`${index}-1`} to={`/block/${item?.header?.number}`}>
               {item?.header?.number}
             </InLink>,
             item?.blockTime,
             <img
+              key={`${index}-2`}
               src={`/imgs/icons/${
                 !item?.isFinalized ? "circle-pending" : "check-green"
               }.svg`}
               alt=""
             />,
-            <ThemeText>
+            <ThemeText key={`${index}-3`}>
               <HashEllipsis hash={item?.hash} />
             </ThemeText>,
             item?.author ? (

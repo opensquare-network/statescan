@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useEffect } from "react";
 import { showIdentityInJSON } from "utils/dataWrapper";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
@@ -64,8 +63,11 @@ export default function Extrinsic({
       page: extrinsicEvents?.page,
       total: extrinsicEvents?.total,
       head: extrinsicEventsHead,
-      body: (extrinsicEvents?.items || []).map((item) => [
-        <InLink to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}>
+      body: (extrinsicEvents?.items || []).map((item, index) => [
+        <InLink
+          key={index}
+          to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
+        >
           {`${item?.indexer?.blockHeight}-${item?.sort}`}
         </InLink>,
         `${item?.section}(${item?.method})`,
@@ -109,7 +111,7 @@ export default function Extrinsic({
               null,
             ]}
             body={[
-              <FlexWrapper>
+              <FlexWrapper key="1">
                 <MinorText>
                   {time(extrinsicDetail?.indexer?.blockTime)}
                 </MinorText>
@@ -117,7 +119,10 @@ export default function Extrinsic({
                   {timeDuration(extrinsicDetail?.indexer?.blockTime)}
                 </AccessoryText>
               </FlexWrapper>,
-              <InLink to={`/block/${extrinsicDetail?.indexer?.blockHeight}`}>
+              <InLink
+                key="2"
+                to={`/block/${extrinsicDetail?.indexer?.blockHeight}`}
+              >
                 {extrinsicDetail?.indexer?.blockHeight}
               </InLink>,
               extrinsicDetail?.lifetime ? (
@@ -131,15 +136,19 @@ export default function Extrinsic({
                   </InLink>
                 </MinorText>
               ) : undefined,
-              <BreakText>
+              <BreakText key="3">
                 <CopyText text={extrinsicDetail?.hash}>
                   <MinorText>
                     <MonoText>{extrinsicDetail?.hash}</MonoText>
                   </MinorText>
                 </CopyText>
               </BreakText>,
-              <MinorText>{capitalize(extrinsicDetail?.section)}</MinorText>,
-              <MinorText>{capitalize(extrinsicDetail?.name)}</MinorText>,
+              <MinorText key="4">
+                {capitalize(extrinsicDetail?.section)}
+              </MinorText>,
+              <MinorText key="5">
+                {capitalize(extrinsicDetail?.name)}
+              </MinorText>,
               extrinsicDetail?.signer ? (
                 <CopyText text={extrinsicDetail?.signer}>
                   <Address
@@ -156,7 +165,7 @@ export default function Extrinsic({
               extrinsicDetail?.nonce === undefined ? undefined : (
                 <MinorText>{extrinsicDetail?.nonce}</MinorText>
               ),
-              <MinorText>
+              <MinorText key="6">
                 <Result isSuccess={extrinsicDetail?.isSuccess} />
               </MinorText>,
             ]}

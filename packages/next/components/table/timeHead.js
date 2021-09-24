@@ -20,10 +20,10 @@ const Item = styled.div`
 export default function TimeHead({ timeType, setTimeType }) {
   return (
     <Wrapper>
-      {timeType === timeTypes.age ? (
-        <Item onClick={() => setTimeType(timeTypes.date)}>Age</Item>
-      ) : (
+      {timeType === timeTypes.date ? (
         <Item onClick={() => setTimeType(timeTypes.age)}>Date Time</Item>
+      ) : (
+        <Item onClick={() => setTimeType(timeTypes.date)}>Age</Item>
       )}
     </Wrapper>
   );

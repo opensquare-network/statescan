@@ -13,11 +13,11 @@ export default function TimeBody({ timeType, ts }) {
       <Tooltip
         content={
           <Wrapper>
-            {timeType === timeTypes.age ? time(ts) : timeDuration(ts)}
+            {timeType === timeTypes.date ? timeDuration(ts) : time(ts)}
           </Wrapper>
         }
       >
-        <div>{timeType === timeTypes.age ? timeDuration(ts) : time(ts)}</div>
+        <div>{timeType === timeTypes.date ? time(ts) : timeDuration(ts)}</div>
       </Tooltip>
     </Wrapper>
   );

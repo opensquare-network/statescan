@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { timeTypes } from "utils/constants";
 
-const DEFAULT_TIMETYPE = timeTypes.date;
+const DEFAULT_TIMETYPE = timeTypes.age;
 
 const preferenceSlice = createSlice({
   name: "preference",

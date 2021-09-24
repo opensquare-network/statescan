@@ -7,12 +7,14 @@ import Source from "./source";
 import { useEffect, useState } from "react";
 import { nodes } from "../../utils/constants";
 import _ from "lodash";
+import { useIsMounted } from "utils/hooks";
 
 function Address({ address }) {
   const [identity, setIdentity] = useState(null);
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const relayChain =
     nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+  const isMounted = useIsMounted();
 
   useEffect(() => {
     const headers = {
@@ -29,10 +31,12 @@ function Address({ address }) {
     )
       .then((res) => res.json())
       .then((res) => {
-        !_.isEmpty(res) && setIdentity(res[0]);
+        if (!_.isEmpty(res) && isMounted()) {
+          setIdentity(res[0]);
+        }
       })
       .catch(() => null);
-  }, [address, relayChain]);
+  }, [address, relayChain, isMounted]);
 
   if (!identity) {
     return (

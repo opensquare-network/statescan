@@ -25,7 +25,11 @@ export default function Assets({ node, assets }) {
                 (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
               }
             >{`#${item.assetId}`}</InLink>,
-            <Symbol key={`${index}-2`} symbol={item.symbol} />,
+            <Symbol
+              key={`${index}-2`}
+              symbol={item.symbol}
+              assetId={item.assetId}
+            />,
             <Name key={`${index}-3`} name={item.name} />,
             <AddressEllipsis
               key={`${index}-4`}

@@ -131,14 +131,13 @@ export default function SearchS() {
     setHintAssets([]);
   }, [router]);
 
-  const delayedQuery = useCallback(
+  const delayedQuery = useCallback(() => {
     debounce((value) => {
       nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
         setHintAssets(res.result?.assets || []);
       });
-    }, 500),
-    []
-  );
+    }, 500);
+  }, []);
 
   const onInput = (e) => {
     const value = e.target.value;

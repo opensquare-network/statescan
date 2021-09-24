@@ -1,4 +1,4 @@
-import { useEffect, useState, Fragment } from "react";
+import { useEffect, useState, Fragment, useMemo } from "react";
 import styled, { css } from "styled-components";
 
 import { useWindowSize } from "utils/hooks";
@@ -231,16 +231,17 @@ export default function Table({
   const [isCollapse, setIsCollapse] = useState();
 
   // Hanlding expand json data by default
-  const initExpand = [];
+  const initExpand = useMemo(() => [], []);
   if (expand >= 0) {
     initExpand[expand] = true;
   }
   const [showData, setShowData] = useState(initExpand);
+
   useEffect(() => {
     if (!initExpand.some((item) => item)) {
       setShowData((body || []).map(() => false));
     }
-  }, [body]);
+  }, [body, initExpand]);
 
   const timeType = useSelector(timeTypeSelector);
   useEffect(() => {

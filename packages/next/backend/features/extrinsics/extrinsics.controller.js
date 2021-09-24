@@ -190,7 +190,7 @@ async function getExtrinsicTransfers(ctx) {
 
 async function getAllExtrinsicModuleMethods(ctx) {
   const cachedResult = myCache.get(`all-extrinsic-module-methods`);
-  if (!cachedResult) {
+  if (cachedResult) {
     ctx.body = cachedResult;
     return;
   }

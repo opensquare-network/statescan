@@ -1,9 +1,12 @@
+const NodeCache = require( "node-cache" );
 const {
   getEventCollection,
   getAssetTransferCollection,
   getAssetCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
+
+const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 
 async function getEvents(ctx) {
   const { page, pageSize } = extractPage(ctx);
@@ -93,6 +96,12 @@ async function getEvent(ctx) {
 }
 
 async function getAllEventModuleMethods(ctx) {
+  const cachedResult = myCache.get(`all-event-module-methods`);
+  if (cachedResult) {
+    ctx.body = cachedResult;
+    return;
+  }
+
   const col = await getEventCollection();
   const result = await col.aggregate([
     {
@@ -125,6 +134,8 @@ async function getAllEventModuleMethods(ctx) {
       }
     }
   ]).toArray();
+
+  myCache.set(`all-event-module-methods`, result, 15*60);
 
   ctx.body = result;
 }

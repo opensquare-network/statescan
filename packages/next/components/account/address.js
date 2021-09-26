@@ -4,7 +4,7 @@ import CopyText from "../copyText";
 import BreakText from "../breakText";
 import MinorText from "../minorText";
 import MonoText from "../monoText";
-import Source from "./source";
+import { fetchIdentity } from "services/identity";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { nodes } from "../../utils/constants";
@@ -29,25 +29,12 @@ function Address({ address }) {
   const isMounted = useIsMounted();
 
   useEffect(() => {
-    const headers = {
-      accept: "application/json, text/plain, */*",
-      "content-type": "application/json;charset=UTF-8",
-    };
-    fetch(
-      `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
-      {
-        headers,
-        method: "POST",
-        body: JSON.stringify({ addresses: [address] }),
+    setIdentity(null);
+    fetchIdentity(relayChain, address).then((identity) => {
+      if (isMounted()) {
+        setIdentity(identity);
       }
-    )
-      .then((res) => res.json())
-      .then((res) => {
-        if (!_.isEmpty(res) && isMounted()) {
-          setIdentity(res[0]);
-        }
-      })
-      .catch(() => null);
+    });
   }, [address, relayChain, isMounted]);
 
   if (!identity) {

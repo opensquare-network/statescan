@@ -143,10 +143,9 @@ export default function Overview({ node, overviewData, price }) {
       requestRef.current = requestAnimationFrame(tick);
       return () => cancelAnimationFrame(requestRef.current);
     }
-  }, [
-    blocksHeightData,
-    overviewData,
-  ]);
+    /*eslint-disable */
+  }, [blocksHeightData, overviewData]);
+  /*eslint-enable */
 
   return (
     <Wrapper>

@@ -325,7 +325,7 @@ export default function TimelineItem({ data, asset }) {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,
         };
       }
-      case "Destoryed": {
+      case "Destroyed": {
         const [assetId] = timelineItem.eventData;
         return {
           "Asset ID": <FieldText>{`#${assetId}`}</FieldText>,

@@ -8,6 +8,7 @@ import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
+  line-height: 20px;
   > :first-child {
     margin-right: 8px;
   }
@@ -29,7 +30,7 @@ export default function CopyText({ children, text }) {
 
   return (
     <Wrapper>
-      <div>{children}</div>
+      {children}
       <StyledIcon onClick={onCopy} />
     </Wrapper>
   );

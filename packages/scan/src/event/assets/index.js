@@ -258,7 +258,6 @@ async function handleAssetsEvent(
 
   if (method === AssetsEvents.Destroyed) {
     const [assetId] = eventData;
-    await destroyAsset(blockIndexer, assetId);
     await saveAssetTimeline(
       blockIndexer,
       assetId,
@@ -269,6 +268,7 @@ async function handleAssetsEvent(
       extrinsicIndex,
       extrinsicHash
     );
+    await destroyAsset(blockIndexer, assetId);
   }
 
   if (method === AssetsEvents.Transferred) {

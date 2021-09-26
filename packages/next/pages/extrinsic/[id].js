@@ -24,6 +24,8 @@ import PageNotFound from "components/pageNotFound";
 import JsonAttributes from "components/jsonAttributes";
 import Address from "components/address";
 import { makeEventArgs } from "utils/eventArgs";
+import ModuleItem from "components/moduleItem";
+import CallItem from "components/callItem";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -143,12 +145,10 @@ export default function Extrinsic({
                   </MinorText>
                 </CopyText>
               </BreakText>,
-              <MinorText key="4">
+              <ModuleItem key="4">
                 {capitalize(extrinsicDetail?.section)}
-              </MinorText>,
-              <MinorText key="5">
-                {capitalize(extrinsicDetail?.name)}
-              </MinorText>,
+              </ModuleItem>,
+              <CallItem key="5">{capitalize(extrinsicDetail?.name)}</CallItem>,
               extrinsicDetail?.signer ? (
                 <CopyText text={extrinsicDetail?.signer}>
                   <Address

@@ -109,6 +109,7 @@ export default function AnalyticsChart({ data, symbol, name, decimals }) {
             display: false,
           },
           ticks: {
+            beginAtZero: true,
             callback: function (value) {
               return value / 1000 + "k";
             },

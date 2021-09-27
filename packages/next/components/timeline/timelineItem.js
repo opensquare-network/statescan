@@ -72,13 +72,16 @@ const TimelineHeader = styled.div`
   padding: 10px 48px 24px 0;
   min-width: 280px;
   > :nth-child(2) {
-    margin-top: 4px;
+    margin-top: 8px;
   }
   > :nth-child(3) {
     margin-top: 8px;
   }
   @media screen and (max-width: 900px) {
-    min-width: 0px;
+    > :nth-child(2) {
+      margin-top: 12px;
+    }
+    min-width: 0;
   }
 `;
 

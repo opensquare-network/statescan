@@ -34,7 +34,7 @@ export function hashEllipsis(hash = "", start = 6, end = 6) {
   return `${prefix}${main.slice(0, start)}...${hash.slice(-end)}`;
 }
 
-export function timeDuration(time) {
+export function timeDuration(time, roughly = false) {
   if (!time) {
     return "Unknown time";
   }
@@ -67,21 +67,21 @@ export function timeDuration(time) {
   let dd = now.diff(time, "days");
   if (dd) {
     hh %= 24;
-    if (hh) {
+    if (hh && !roughly) {
       return `${dd} day${dd > 1 ? "s" : ""} ${hh} hr${hh > 1 ? "s" : ""} ago`;
     }
     return `${dd} day${dd > 1 ? "s" : ""} ago`;
   }
   if (hh) {
     mm %= 60;
-    if (mm) {
+    if (mm && !roughly) {
       return `${hh} hr${hh > 1 ? "s" : ""} ${mm} min${mm > 1 ? "s" : ""} ago`;
     }
     return `${hh} hr${hh > 1 ? "s" : ""} ago`;
   }
   if (mm) {
     ss %= 60;
-    if (ss) {
+    if (ss && !roughly) {
       return `${mm} min${mm > 1 ? "s" : ""} ${ss} sec${ss > 1 ? "s" : ""} ago`;
     }
     return `${mm} min${mm > 1 ? "s" : ""} ago`;
@@ -152,5 +152,5 @@ export function makeTablePairs(keys, vals) {
 }
 
 export function isNoIdentity(identity) {
-  return (!identity || identity?.info?.status === "NO_ID");
+  return !identity || identity?.info?.status === "NO_ID";
 }

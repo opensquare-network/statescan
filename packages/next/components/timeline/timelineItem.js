@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import icons from "./icons";
 import Time from "./time";
+import BlockHeight from "./blockHeight";
 import InLink from "components/inLink";
 import CopyText from "components/copyText";
 import BreakText from "components/breakText";
@@ -71,18 +72,22 @@ const TimelineHeader = styled.div`
   padding: 10px 48px 24px 0;
   min-width: 280px;
   > :nth-child(2) {
-    margin-top: 4px;
+    margin-top: 8px;
   }
   > :nth-child(3) {
     margin-top: 8px;
   }
   @media screen and (max-width: 900px) {
-    min-width: 0px;
+    > :nth-child(2) {
+      margin-top: 12px;
+    }
+    min-width: 0;
   }
 `;
 
 const TimelineFields = styled.div`
   flex-grow: 1;
+  padding-top: 2px;
   padding-bottom: 16px;
   border-bottom: 1px solid #f8f8f8;
 `;
@@ -371,6 +376,7 @@ export default function TimelineItem({ data, asset }) {
         <TimelineHeader>
           <BoldText>{getTitle(data)}</BoldText>
           <Time ts={data.eventIndexer.blockTime} />
+          <BlockHeight height={data.eventIndexer.blockHeight} />
           <Links>
             <InLink
               to={`/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}`}

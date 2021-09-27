@@ -122,6 +122,9 @@ export default function AnalyticsChart({ data, symbol, name, decimals }) {
           gridLines: {
             drawBorder: false,
           },
+          ticks: {
+            beginAtZero: true,
+          },
         },
       ],
       xAxes: [

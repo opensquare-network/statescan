@@ -23,6 +23,7 @@ import PageNotFound from "components/pageNotFound";
 import AnalyticsChart from "components/analyticsChart";
 import { getAssetInfo } from "utils/assetInfoData";
 import AssetInfo from "components/assetInfo";
+import Status from "../../components/status";
 
 export default function Asset({
   node,
@@ -133,6 +134,14 @@ export default function Asset({
 
   const assetInfoData = getAssetInfo(node, asset?.assetId);
 
+  let status = "Active";
+  if (asset.isFrozen) {
+    status = "Frozen";
+  }
+  if (asset.destroyedAt) {
+    status = "Destroyed";
+  }
+
   return (
     <Layout node={node}>
       <Section>
@@ -164,8 +173,9 @@ export default function Asset({
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
               asset?.decimals,
-              <MinorText key="6">{assetHolders?.total}</MinorText>,
-              <MinorText key="7">{assetTransfers?.total}</MinorText>,
+              <Status key="6" status={status} />,
+              <MinorText key="7">{assetHolders?.total}</MinorText>,
+              <MinorText key="8">{assetTransfers?.total}</MinorText>,
             ]}
             info={
               <AssetInfo

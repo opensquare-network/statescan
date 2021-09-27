@@ -214,6 +214,7 @@ export const assetHead = [
   "Issuer",
   "Total Supply",
   "Decimals",
+  "Status",
   "Holders",
   "Transfers",
 ];

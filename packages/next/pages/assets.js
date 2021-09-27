@@ -29,6 +29,7 @@ export default function Assets({ node, assets }) {
               key={`${index}-2`}
               symbol={item.symbol}
               assetId={item.assetId}
+              destroyedAt={item.destroyedAt}
             />,
             <Name key={`${index}-3`} name={item.name} />,
             <AddressEllipsis
@@ -60,7 +61,7 @@ export default function Assets({ node, assets }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { tab, page } = context.query;
+  const { page } = context.query;
 
   const nPage = parseInt(page) || 1;
 

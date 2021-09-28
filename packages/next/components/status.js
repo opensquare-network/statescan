@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 const Wrapper = styled.div`
   padding: 4px 12px;
   font-size: 14px;
+  line-height: 16px;
   color: #ffffff;
   border-radius: 4px;
   ${(p) =>

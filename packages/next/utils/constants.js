@@ -206,18 +206,20 @@ export const blockHead = [
   "Validator",
 ];
 
-export const assetHead = [
-  "Symbol",
-  "Name",
-  "Asset ID",
-  "Owner",
-  "Issuer",
-  "Total Supply",
-  "Decimals",
-  "Status",
-  "Holders",
-  "Transfers",
-];
+export const getAssetHead = (status) => {
+  return [
+    "Symbol",
+    "Name",
+    "Asset ID",
+    "Owner",
+    "Issuer",
+    "Total Supply",
+    "Decimals",
+    ...(status === "Active" ? [] : ["Status"]),
+    "Holders",
+    "Transfers",
+  ];
+};
 
 export const eventHead = [
   "Timestamp",

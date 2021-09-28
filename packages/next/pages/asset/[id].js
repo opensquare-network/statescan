@@ -2,10 +2,10 @@ import Layout from "components/layout";
 import Nav from "components/nav";
 import { getSymbol } from "utils/hooks";
 import {
-  assetHead,
   assetTransfersHead,
   assetHoldersHead,
   EmptyQuery,
+  getAssetHead,
 } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
@@ -154,7 +154,7 @@ export default function Asset({
             node={node}
           />
           <DetailTable
-            head={assetHead}
+            head={getAssetHead(status)}
             body={[
               <MinorText key="1">{asset?.symbol}</MinorText>,
               <MinorText key="2">{asset?.name}</MinorText>,
@@ -173,7 +173,9 @@ export default function Asset({
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
               asset?.decimals,
-              <Status key="6" status={status} />,
+              ...(status === "Active"
+                ? []
+                : [<Status key="6" status={status} />]),
               <MinorText key="7">{assetHolders?.total}</MinorText>,
               <MinorText key="8">{assetTransfers?.total}</MinorText>,
             ]}

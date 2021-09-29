@@ -52,12 +52,18 @@ let unFinalizedEventCol = null;
 let dailyAssetStatisticCol = null;
 
 async function getCollection(colName) {
-  try {
-    await db.createCollection(colName);
-  } catch (e) {
-    // ignore
-  }
-  return db.collection(colName);
+  return new Promise((resolve, reject) => {
+    db.listCollections({ name: colName }).next(async (err, info) => {
+      if (!info) {
+        const col = await db.createCollection(colName);
+        resolve(col);
+      } else if (err) {
+        reject(err);
+      }
+
+      resolve(db.collection(colName));
+    });
+  });
 }
 
 async function initDb() {

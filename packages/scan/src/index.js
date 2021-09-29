@@ -11,6 +11,7 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { initDb } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
@@ -21,6 +22,7 @@ const { updateUnFinalized } = require("./unFinalized");
 const scanStep = parseInt(process.env.SCAN_STEP) || 100;
 
 async function main() {
+  await initDb();
   await updateHeight();
   await updateSpecs();
   const specHeights = getSpecHeights();

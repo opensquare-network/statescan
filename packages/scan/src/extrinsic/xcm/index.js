@@ -138,7 +138,7 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
     bulk.insert(teleport);
   }
   const session = asyncLocalStorage.getStore();
-  await bulk.execute(null, { session });
+  await bulk.execute({ session });
 }
 
 async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {

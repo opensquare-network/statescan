@@ -20,7 +20,7 @@ async function saveToRawAddrs(addrs = [], session) {
       .updateOne({ $set: { updated: false } });
   }
 
-  await bulk.execute(null, { session });
+  await bulk.execute({ session });
 }
 
 async function handleMultiAddress(blockIndexer, addrs = []) {
@@ -66,7 +66,7 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
         },
       });
   }
-  await bulk.execute(null, { session });
+  await bulk.execute({ session });
 
   logger.info(`${accounts.length} addresses have been updated`);
 }

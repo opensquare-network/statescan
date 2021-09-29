@@ -24,11 +24,10 @@
     "lodash.omit": "^4.5.0",
     "log4js": "^6.3.0",
     "moment-timezone": "^0.5.33",
-    "mongodb": "^3.6.9"
+    "mongodb": "4.1.2"
   },
   "devDependencies": {
-    "@types/mongodb": "^3.6.18",
-    "@types/node": "^15.12.0",
+    "@types/node": "^16.10.1",
     "jest": "^27.1.0"
   },
   "jest": {

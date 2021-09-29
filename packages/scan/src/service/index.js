@@ -33,7 +33,7 @@ async function saveExtrinsics(extrinsics = [], session) {
     bulk.insert(extrinsic);
   }
 
-  const result = await bulk.execute(null, { session });
+  const result = await bulk.execute({ session });
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }
@@ -50,7 +50,7 @@ async function saveEvents(events = [], session) {
     bulk.insert(event);
   }
 
-  const result = await bulk.execute(null, { session });
+  const result = await bulk.execute({ session });
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }
@@ -68,7 +68,7 @@ async function saveNativeTokenTransfers(blockHeight, session) {
     bulk.insert(transfer);
   }
 
-  const result = await bulk.execute(null, { session });
+  const result = await bulk.execute({ session });
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }

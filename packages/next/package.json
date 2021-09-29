@@ -29,7 +29,7 @@
     "lodash": "^4.17.21",
     "lodash.omit": "^4.5.0",
     "moment": "^2.29.1",
-    "mongodb": "^3.6.6",
+    "mongodb": "4.1.2",
     "next": "^11.1.1",
     "node-cache": "^5.1.2",
     "nprogress": "^0.2.0",

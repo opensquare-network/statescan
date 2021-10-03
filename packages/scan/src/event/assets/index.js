@@ -43,6 +43,7 @@ async function saveNewAssetTransfer(
       from,
       to,
       balance,
+      listIgnore: false,
     },
     { session }
   );

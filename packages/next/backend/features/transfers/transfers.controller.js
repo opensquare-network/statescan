@@ -33,6 +33,7 @@ async function getLatestTransfers(ctx) {
   const col = await getAssetTransferCollection();
   const items = await col
     .aggregate([
+      { $match: { listIgnore: false } },
       { $sort: { "indexer.blockHeight": -1 } },
       { $limit: 5 },
       {

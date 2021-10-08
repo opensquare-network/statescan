@@ -37,6 +37,16 @@ const statemineInfo = new Map([
           url: "https://app.subsocial.network/@rmrkapp",
           icon: "/imgs/icons/link-subsocial.svg",
         },
+        {
+          name: "Youtube",
+          url: "https://www.youtube.com/channel/UCZ9dCwNm2aErxsYxDdm-AtQ",
+          icon: "/imgs/icons/link-youtube.svg",
+        },
+        {
+          name: "Discord",
+          url: "https://discord.com/invite/SpNEQSSwWv",
+          icon: "/imgs/icons/link-discord.svg",
+        },
       ],
     },
   ],

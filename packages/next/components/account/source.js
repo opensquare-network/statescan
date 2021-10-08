@@ -2,8 +2,9 @@ import PolkascanGrey from "../../public/imgs/icons/identity/polkascan-grey.svg";
 import Polkascan from "../../public/imgs/icons/identity/polkascan.svg";
 import SubscanGrey from "../../public/imgs/icons/identity/subscan-grey.svg";
 import Subscan from "../../public/imgs/icons/identity/subscan.svg";
+import SubIdGrey from "../../public/imgs/icons/identity/sub-id-grey.svg";
+import SubId from "../../public/imgs/icons/identity/sub-id.svg";
 import styled from "styled-components";
-
 
 const Wrapper = styled.div`
   width: 100%;
@@ -18,7 +19,7 @@ const Wrapper = styled.div`
     height: 20px;
     margin-left: 8px;
   }
-`
+`;
 
 const Source = styled.a`
   svg {
@@ -37,25 +38,34 @@ const Source = styled.a`
   }
 `;
 
-
-export default function Sources({address, relayChain}) {
-  return <Wrapper>
-    <Source
-      href={`https://polkascan.io/${relayChain}/account/${address}`}
-      target="_blank"
-      title="polkascan"
-      style={{margin:0}}
-    >
-      <PolkascanGrey className="hover-hide"/>
-      <Polkascan className="hover-show"/>
-    </Source>
-    <Source
-      href={`https://${relayChain}.subscan.io/account/${address}`}
-      target="_blank"
-      title="subascan"
-    >
-      <SubscanGrey className="hover-hide"/>
-      <Subscan className="hover-show"/>
-    </Source>
-  </Wrapper>
+export default function Sources({ address, relayChain }) {
+  return (
+    <Wrapper>
+      <Source
+        href={`https://polkascan.io/${relayChain}/account/${address}`}
+        target="_blank"
+        title="polka-scan"
+        style={{ margin: 0 }}
+      >
+        <PolkascanGrey className="hover-hide" />
+        <Polkascan className="hover-show" />
+      </Source>
+      <Source
+        href={`https://${relayChain}.subscan.io/account/${address}`}
+        target="_blank"
+        title="sub-scan"
+      >
+        <SubscanGrey className="hover-hide" />
+        <Subscan className="hover-show" />
+      </Source>
+      <Source
+        href={`https://sub.id/#/${address}`}
+        target="_blank"
+        title="sub-id"
+      >
+        <SubIdGrey className="hover-hide" />
+        <SubId className="hover-show" />
+      </Source>
+    </Wrapper>
+  );
 }

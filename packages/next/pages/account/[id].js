@@ -1,5 +1,4 @@
 import _ from "lodash";
-import Image from "next/image";
 
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Layout from "components/layout";

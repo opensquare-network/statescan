@@ -1,23 +1,23 @@
 const { getApi } = require("./api");
 
 let latestFinalizedHeight = null;
-let unsubscribeNewHead = null;
-
 let latestUnFinalizedHeight = null;
-
-function getUnSubscribeNewHeadFunction() {
-  return unsubscribeNewHead;
-}
 
 async function updateHeight() {
   const api = await getApi();
 
-  unsubscribeNewHead = await api.rpc.chain.subscribeFinalizedHeads((header) => {
-    latestFinalizedHeight = header.number.toNumber();
+  await new Promise((resolve) => {
+    api.rpc.chain.subscribeFinalizedHeads((header) => {
+      latestFinalizedHeight = header.number.toNumber();
+      resolve();
+    });
   });
 
-  await api.rpc.chain.subscribeNewHeads((header) => {
-    latestUnFinalizedHeight = header.number.toNumber();
+  await new Promise((resolve) => {
+    api.rpc.chain.subscribeNewHeads((header) => {
+      latestUnFinalizedHeight = header.number.toNumber();
+      resolve();
+    });
   });
 }
 
@@ -30,7 +30,6 @@ function getLatestUnFinalizedHeight() {
 }
 
 module.exports = {
-  getUnSubscribeNewHeadFunction,
   updateHeight,
   getLatestFinalizedHeight,
   getLatestUnFinalizedHeight,

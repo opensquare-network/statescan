@@ -5,8 +5,10 @@ const {
   getAssetHolderCollection,
   getAssetApprovalCollection,
 } = require("../../mongo");
-const { getApi } = require("../../api");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { getAssetsApprovals } = require("./approvals");
+const { getAssetsMetadata } = require("./metadata");
+const { getAssetsAsset } = require("./assetStorage");
 const { Modules, AssetsEvents } = require("../../utils/constants");
 const { addAddresses } = require("../../store/blockAddresses");
 const { addAddress } = require("../../store/blockAddresses");
@@ -50,13 +52,8 @@ async function saveNewAssetTransfer(
 }
 
 async function updateOrCreateAsset(blockIndexer, assetId) {
-  const api = await getApi();
-  const asset = (
-    await api.query.assets.asset.at(blockIndexer.blockHash, assetId)
-  ).toJSON();
-  const metadata = (
-    await api.query.assets.metadata.at(blockIndexer.blockHash, assetId)
-  ).toJSON();
+  const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
+  const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);
 
   const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
@@ -87,13 +84,8 @@ async function saveAssetTimeline(
   extrinsicIndex,
   extrinsicHash
 ) {
-  const api = await getApi();
-  const asset = (
-    await api.query.assets.asset.at(blockIndexer.blockHash, assetId)
-  ).toJSON();
-  const metadata = (
-    await api.query.assets.metadata.at(blockIndexer.blockHash, assetId)
-  ).toJSON();
+  const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
+  const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);
 
   const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
@@ -138,10 +130,11 @@ async function destroyAsset(blockIndexer, assetId) {
 }
 
 async function updateOrCreateAssetHolder(blockIndexer, assetId, address) {
-  const api = await getApi();
-  const account = (
-    await api.query.assets.account.at(blockIndexer.blockHash, assetId, address)
-  ).toJSON();
+  const account = await getAssetsAccount(
+    blockIndexer.blockHash,
+    assetId,
+    address
+  );
 
   const session = asyncLocalStorage.getStore();
   const assetCol = await getAssetCollection();
@@ -172,15 +165,12 @@ async function updateOrCreateAssetHolder(blockIndexer, assetId, address) {
 }
 
 async function updateOrCreateApproval(blockIndexer, assetId, owner, delegate) {
-  const api = await getApi();
-  const approval = (
-    await api.query.assets.approvals.at(
-      blockIndexer.blockHash,
-      assetId,
-      owner,
-      delegate
-    )
-  ).toJSON();
+  const approval = await getAssetsApprovals(
+    blockIndexer.blockHash,
+    assetId,
+    owner,
+    delegate
+  );
 
   const session = asyncLocalStorage.getStore();
   const assetCol = await getAssetCollection();

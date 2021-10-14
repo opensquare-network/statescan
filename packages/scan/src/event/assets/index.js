@@ -6,6 +6,7 @@ const {
   getAssetApprovalCollection,
 } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { getAssetsAccount } = require("./accountStorage");
 const { getAssetsApprovals } = require("./approvals");
 const { getAssetsMetadata } = require("./metadata");
 const { getAssetsAsset } = require("./assetStorage");

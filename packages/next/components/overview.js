@@ -10,7 +10,7 @@ const Wrapper = styled.div`
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-radius: 8px;
-  padding: 40px 64px;
+  padding: 39px 64px;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -156,15 +156,15 @@ export default function Overview({ node, overviewData, price }) {
       </ItemWrapper>
       <ItemWrapper>
         <Title>Assets</Title>
-        <Text>{assetsCountDynamic}</Text>
+        <Text>{assetsCountDynamic?.toLocaleString()}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Transfers</Title>
-        <Text>{transfersCountDynamic}</Text>
+        <Text>{transfersCountDynamic?.toLocaleString()}</Text>
       </ItemWrapper>
       <ItemWrapper>
         <Title>Holders</Title>
-        <Text>{holdersCountDynamic}</Text>
+        <Text>{holdersCountDynamic?.toLocaleString()}</Text>
       </ItemWrapper>
       <Divider />
       <div />

@@ -8,20 +8,20 @@ import TimeBody from "./timeBody";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 import InnerDataTable from "./innerDataTable";
+import { p_18_bold, text_dark_major } from "../../styles/textStyles";
 
 const Wrapper = styled.div``;
 
 const Title = styled.h4`
-  font-weight: bold;
-  font-size: 18px;
-  line-height: 18px;
-  color: #111111;
+  ${p_18_bold};
+  ${text_dark_major};
   margin: 0 0 24px;
 `;
 
 const StyledTable = styled.table`
   width: 100%;
   background: #ffffff;
+  border: 1px solid #f8f8f8;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
@@ -162,6 +162,7 @@ const CollapseTableDataItem = styled.pre`
 
 const CollapseWrapper = styled.div`
   background: #ffffff;
+  border: 1px solid #f8f8f8;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),

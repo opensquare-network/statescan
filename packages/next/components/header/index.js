@@ -58,35 +58,29 @@ const IconWrapper = styled.div`
   display: none;
   width: 36px;
   height: 36px;
-  background: #f4f4f4;
+  background: #ffffff;
   border-radius: 8px;
   margin-right: 12px;
   cursor: pointer;
   align-items: center;
   justify-content: center;
   padding: 6px;
+  border: 1px solid #eeeeee;
 
   > svg {
     stroke: rgba(17, 17, 17, 0.65);
   }
 
   :hover {
-    background: #fafafa;
-
-    > svg {
-      stroke: #111111;
-    }
+    border-color: #bbbbbb;
   }
-
   ${(p) =>
     p.isActive &&
     css`
-      background: #fafafa;
+      border-color: #bbbbbb;
+    `}
 
-      > svg {
-        stroke: #111111;
-      }
-    `} @media screen and(max-width: 900 px) {
+  @media screen and (max-width: 900px) {
     display: block;
   }
 `;
@@ -100,6 +94,7 @@ const MenuWrapper = styled.div`
     top: 60px;
     margin: 0;
     background: #ffffff;
+    border: 1px solid #f8f8f8;
     box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
       0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
       0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),

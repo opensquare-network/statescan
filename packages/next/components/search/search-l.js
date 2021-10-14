@@ -19,7 +19,7 @@ const ExploreWrapper = styled.div`
 
   @media screen and (max-width: 900px) {
     flex-direction: column;
-    max-width: 318px;
+    /* max-width: 318px; */
     width: 100%;
     > * {
       width: 100% !important;
@@ -34,8 +34,8 @@ const ExploreWrapper = styled.div`
 const ExploreInput = styled.input`
   width: 480px;
   padding: 12px 16px;
-  background: #f4f4f4;
-  border: 1px solid #f4f4f4;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
   border-radius: 8px;
   font-size: 15px;
   line-height: 18px;
@@ -47,7 +47,6 @@ const ExploreInput = styled.input`
 
   :active,
   :focus {
-    background-color: #ffffff;
     border: 1px solid #bbbbbb;
   }
 `;
@@ -81,6 +80,7 @@ const ExploreHintsWrapper = styled.div`
   max-height: 308px;
   position: absolute;
   border-radius: 8px;
+  border: 1px solid #f8f8f8;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
@@ -210,7 +210,7 @@ export default function SearchL({ node }) {
         onKeyDown={onKeyDown}
         value={searchKeyword}
         onChange={onInput}
-        placeholder="Address / Transaction / Asset..."
+        placeholder="Block / Address / Extrinsic / Asset /..."
         onFocus={() => setFocus(true)}
         onBlur={() => setTimeout(() => setFocus(false), 100)}
       />

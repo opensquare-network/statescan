@@ -141,6 +141,16 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
   await bulk.execute({ session });
 }
 
+function extractConcreteFungible(assetArg, indexer) {
+  if (assetArg.isV0) {
+    const v0 = assetArg.asV0;
+
+    return v0[0].asConcreteFungible.toJSON();
+  }
+
+  logger.error("teleport assets higher version(>0) found, not handle", indexer);
+}
+
 async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
   const hash = extrinsic.hash.toHex();
   const name = extrinsic.method.method;
@@ -152,10 +162,26 @@ async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
 
   const { args } = extrinsic.method.toJSON();
 
-  const concreteFungible = args.assets.find(
-    (item) => item.concreteFungible
-  )?.concreteFungible;
-  const beneficiary = args.beneficiary.x1?.accountId32.id;
+  const argIndex = extrinsic.method.meta.args.findIndex(
+    (arg) => arg.name.toString() === "assets"
+  );
+  if (argIndex < 0) {
+    return;
+  }
+
+  const assetsArg = extrinsic.method.args[argIndex];
+  const argMeta = extrinsic.method.meta.args[argIndex];
+  let concreteFungible = null;
+  const typeName = argMeta.type.toString();
+  if (typeName === "VersionedMultiAssets") {
+    concreteFungible = extractConcreteFungible(assetsArg, extrinsicIndexer);
+  } else if (typeName === "Vec<MultiAsset>") {
+    concreteFungible = assetsArg[0].asConcreteFungible.toJSON();
+  }
+
+  const beneficiary = args.beneficiary.v0
+    ? args.beneficiary.v0.x1?.accountId32.id
+    : args.beneficiary.v0.x1?.accountId32.id;
   const amount = concreteFungible?.amount;
 
   await saveNewTeleportAssetOut(

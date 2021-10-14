@@ -1,6 +1,8 @@
 const { blake2AsHex } = require("@polkadot/util-crypto");
 const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { teleportLogger } = require("../../logger");
+const { bigAdd } = require("../../utils");
 const { addAddress } = require("../../store/blockAddresses");
 const { getRegistryByHeight } = require("../../utils/registry");
 const { logger } = require("../../logger");
@@ -141,14 +143,68 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
   await bulk.execute({ session });
 }
 
-function extractConcreteFungible(assetArg, indexer) {
-  if (assetArg.isV0) {
-    const v0 = assetArg.asV0;
-
-    return v0[0].asConcreteFungible.toJSON();
+function extractTeleportAssetsFromExtrinsic(extrinsic, indexer) {
+  const destArg = extrinsic.method.args[0];
+  // FIXME: currently we only handle x1 and to parent teleport. Try to parse and support more.
+  if (!destArg.isX1 || !destArg.asX1.isParent) {
+    teleportLogger.info(`Get not support teleport at ${indexer.blockHeight}`);
+    // todo: log this block height and see what happens on it later
+    return {
+      isSupported: false,
+    };
   }
 
-  logger.error("teleport assets higher version(>0) found, not handle", indexer);
+  const beneficiaryArg = extrinsic.method.args[1];
+  if (!beneficiaryArg.isX1 || !beneficiaryArg.asX1.isAccountId32) {
+    return {
+      isSupported: false,
+    };
+  }
+
+  const beneficiary = beneficiaryArg.asX1.asAccountId32.id.toString();
+
+  let amount;
+  let hasFungible = false;
+  const assetsArg = extrinsic.method.args[2];
+  const assetsArgTypeName = extrinsic.method.meta.args[2].type.toString();
+  if ("Vec<MultiAsset>" === assetsArgTypeName) {
+    amount = assetsArg.reduce((result, asset) => {
+      // fixme: improve the way to check asset
+      if (asset.isConcreteFungible) {
+        hasFungible = true;
+        return bigAdd(result, asset.asConcreteFungible.amount.toString());
+      }
+
+      return result;
+    }, "0");
+  } else if ("VersionedMultiAssets" === assetsArgTypeName) {
+    teleportLogger.info(
+      `teleport assets with type VersionedMultiAssets at ${indexer.blockHeight}`
+    );
+
+    amount = assetsArg.reduce((result, asset) => {
+      // fixme: improve the way to check asset
+      if (!asset.isV0) {
+        return result;
+      }
+
+      if (asset.asV0.isConcreteFungible) {
+        hasFungible = true;
+        return bigAdd(result, asset.asV0.asConcreteFungible.amount.toString());
+      }
+
+      return result;
+    }, "0");
+  }
+
+  return {
+    isSupported: true,
+    hasFungible,
+    data: {
+      beneficiary,
+      amount,
+    },
+  };
 }
 
 async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
@@ -160,30 +216,19 @@ async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
     return;
   }
 
-  const { args } = extrinsic.method.toJSON();
-
-  const argIndex = extrinsic.method.meta.args.findIndex(
-    (arg) => arg.name.toString() === "assets"
-  );
-  if (argIndex < 0) {
+  const info = extractTeleportAssetsFromExtrinsic(extrinsic, extrinsicIndexer);
+  if (!info.isSupported) {
     return;
   }
 
-  const assetsArg = extrinsic.method.args[argIndex];
-  const argMeta = extrinsic.method.meta.args[argIndex];
-  let concreteFungible = null;
-  const typeName = argMeta.type.toString();
-  if (typeName === "VersionedMultiAssets") {
-    concreteFungible = extractConcreteFungible(assetsArg, extrinsicIndexer);
-  } else if (typeName === "Vec<MultiAsset>") {
-    concreteFungible = assetsArg[0].asConcreteFungible.toJSON();
+  if (!info.hasFungible) {
+    teleportLogger.info(`no fungible at ${extrinsicIndexer.blockHeight}`);
+    return;
   }
 
-  const beneficiary = args.beneficiary.v0
-    ? args.beneficiary.v0.x1?.accountId32.id
-    : args.beneficiary.x1?.accountId32.id;
-  const amount = concreteFungible?.amount;
+  const { beneficiary, amount } = info.data;
 
+  const { args } = extrinsic.method.toJSON();
   await saveNewTeleportAssetOut(
     extrinsicIndexer,
     hash,
@@ -198,4 +243,5 @@ module.exports = {
   handleTeleportAssetDownwardMessage,
   handleTeleportAssets,
   extractTeleportFromOneMsg,
+  extractTeleportAssetsFromExtrinsic,
 };

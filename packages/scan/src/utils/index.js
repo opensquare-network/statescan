@@ -29,10 +29,15 @@ function toDecimal128(num) {
   return Decimal128.fromString(new BigNumber(num).toString());
 }
 
+function bigAdd(v1, v2) {
+  return new BigNumber(v1).plus(v2).toString();
+}
+
 module.exports = {
   isHex,
   isExtrinsicSuccess,
   extractExtrinsicEvents,
   getExtrinsicSigner,
   toDecimal128,
+  bigAdd,
 };

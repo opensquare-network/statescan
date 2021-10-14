@@ -5,14 +5,13 @@ const isProduction = process.env.NODE_ENV === "production";
 
 const scanFileCategory = "block-scan";
 const statisticFileCategory = "statistic";
+const teleportFileCategory = "teleport";
 
 log4js.configure({
   appenders: {
     [scanFileCategory]: { type: "file", filename: `log/scan.log` },
-    [statisticFileCategory]: {
-      type: "file",
-      filename: `log/statistic.log`,
-    },
+    [statisticFileCategory]: { type: "file", filename: `log/statistic.log` },
+    [teleportFileCategory]: { type: "file", filename: `log/teleport.log` },
     errorFile: {
       type: "file",
       filename: `log/errors.log`,
@@ -33,13 +32,19 @@ log4js.configure({
       appenders: [isProduction ? statisticFileCategory : "out", "errors"],
       level: logLevel,
     },
+    [teleportFileCategory]: {
+      appenders: [isProduction ? teleportFileCategory : "out", "errors"],
+      level: logLevel,
+    },
   },
 });
 
 const logger = log4js.getLogger(scanFileCategory);
 const statisticLogger = log4js.getLogger(statisticFileCategory);
+const teleportLogger = log4js.getLogger(teleportFileCategory);
 
 module.exports = {
   logger,
   statisticLogger,
+  teleportLogger,
 };

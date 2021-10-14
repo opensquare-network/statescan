@@ -8,11 +8,6 @@ const Wrapper = styled.div`
   width: 100%;
   height: 320px;
   background: linear-gradient(180deg, #eeeeee 0%, #ffffff 100%);
-  ${(p) =>
-    p.isHomePage &&
-    css`
-      height: 464px;
-    `};
 `;
 
 const Masked = styled.div`

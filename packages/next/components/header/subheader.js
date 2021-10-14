@@ -2,30 +2,25 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { nodes } from "utils/constants";
 import SearchL from "components/search/search-l";
-import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 24px 8px 32px;
+  align-items: flex-start;
+  margin: 40px 0 16px;
 
   > :not(:first-child) {
     margin-top: 32px;
   }
 
   @media screen and (max-width: 900px) {
-    padding: 16px 8px 16px;
+    align-items: center;
   }
 `;
 
-const Logo = styled.img`
-  width: 120px;
-  height: 120px;
-  @media screen and (max-width: 900px) {
-    width: 100px;
-    height: 100px;
-  }
+const Container = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
 `;
 
 const Title = styled.h1`
@@ -42,7 +37,6 @@ const Title = styled.h1`
 `;
 
 export default function Subheader({ node }) {
-  const theme = useTheme();
   const [name, setName] = useState();
 
   useEffect(() => {
@@ -50,10 +44,11 @@ export default function Subheader({ node }) {
   }, [node]);
 
   return (
-    <Wrapper>
-      <Logo src={`/imgs/${theme.logo}`} alt="logo" />
-      <Title>{name} Explorer</Title>
-      <SearchL node={node} />
-    </Wrapper>
+    <Container>
+      <Wrapper>
+        <Title>{name} Explorer</Title>
+        <SearchL node={node} />
+      </Wrapper>
+    </Container>
   );
 }

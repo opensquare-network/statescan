@@ -17,19 +17,20 @@ const FlexWrapper = styled.div`
 const Dropdown = styled.div`
   height: 36px;
   width: 156px;
-  background: #f4f4f4;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
   border-radius: 8px;
   display: flex;
   align-items: center;
   padding: 8px;
   cursor: pointer;
   :hover {
-    background: #fafafa;
+    border-color: #bbbbbb;
   }
   ${(p) =>
     p.active &&
     css`
-      background: #fafafa;
+      border-color: #bbbbbb;
     `}
 `;
 
@@ -63,6 +64,7 @@ const ArrowDown = styled.img`
 
 const Options = styled.div`
   background: #ffffff;
+  border: 1px solid #f8f8f8;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),

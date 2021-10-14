@@ -13,8 +13,12 @@ const Wrapper = styled.div`
     margin-top: 32px;
   }
 
-  @media screen and (max-width: 900px) {
-    align-items: center;
+  @media screen and (max-width: 800px) {
+    align-items: stretch;
+    margin: 24px 0 0;
+    > :not(:first-child) {
+      margin-top: 24px;
+    }
   }
 `;
 

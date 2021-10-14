@@ -181,7 +181,7 @@ async function handleTeleportAssets(extrinsic, extrinsicIndexer, signer) {
 
   const beneficiary = args.beneficiary.v0
     ? args.beneficiary.v0.x1?.accountId32.id
-    : args.beneficiary.v0.x1?.accountId32.id;
+    : args.beneficiary.x1?.accountId32.id;
   const amount = concreteFungible?.amount;
 
   await saveNewTeleportAssetOut(

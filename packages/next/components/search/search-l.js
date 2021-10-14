@@ -17,7 +17,7 @@ const ExploreWrapper = styled.div`
     margin-left: 16px;
   }
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 900px) {
     flex-direction: column;
     /* max-width: 318px; */
     width: 100%;

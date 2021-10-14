@@ -13,7 +13,7 @@ const Wrapper = styled.div`
     margin-top: 32px;
   }
 
-  @media screen and (max-width: 800px) {
+  @media screen and (max-width: 900px) {
     align-items: stretch;
     margin: 24px 0 0;
     > :not(:first-child) {

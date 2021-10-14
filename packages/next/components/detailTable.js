@@ -9,7 +9,6 @@ const Wrapper = styled.div`
     0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-
   border-radius: 8px;
   padding: 16px 0px;
 `;

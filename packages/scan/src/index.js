@@ -4,13 +4,12 @@ const { disconnect } = require("./api");
 const { updateHeight, getLatestFinalizedHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
-const { getBlocks } = require("./mongo/meta");
-const { GenericBlock } = require("@polkadot/types");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { fetchBlocks } = require("./service/fetchBlocks");
 const { initDb } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
@@ -55,7 +54,12 @@ async function main() {
       await updateSpecs();
     }
 
-    const blocks = await getBlocks(scanFinalizedHeight, targetHeight);
+    const heights = [];
+    for (let i = scanFinalizedHeight; i <= targetHeight; i++) {
+      heights.push(i);
+    }
+
+    const blocks = await fetchBlocks(heights);
     if ((blocks || []).length <= 0) {
       await sleep(1000);
       continue;
@@ -97,25 +101,16 @@ async function main() {
   }
 }
 
-async function scanBlock(blockInDb, session) {
-  const registry = await findRegistry(blockInDb.height);
-  const block = new GenericBlock(registry, blockInDb.block.block);
-
-  const blockEvents = registry.createType(
-    "Vec<EventRecord>",
-    blockInDb.events,
-    true
-  );
-
-  const blockIndexer = getBlockIndexer(block);
+async function scanBlock(blockInfo, session) {
+  const blockIndexer = getBlockIndexer(blockInfo.block);
   if (isNewDay(blockIndexer.blockTime)) {
     await makeAssetStatistics(getLastBlockIndexer());
   }
 
   await scanNormalizedBlock(
-    block,
-    blockEvents,
-    blockInDb.author,
+    blockInfo.block,
+    blockInfo.events,
+    blockInfo.author,
     blockIndexer,
     session
   );

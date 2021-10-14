@@ -79,6 +79,20 @@ async function getBlocks(startHeight, endHeight) {
     .toArray();
 }
 
+async function getBlocksByHeights(heights = []) {
+  if (heights.length <= 0) {
+    return [];
+  }
+
+  const col = await getBlockCollection();
+  return await col
+    .find({
+      height: { $in: heights },
+    })
+    .sort({ height: 1 })
+    .toArray();
+}
+
 async function getAllVersionChangeHeights() {
   const col = await getVersionCollection();
   const versions = await col.find({}).sort({ height: 1 }).toArray();
@@ -90,4 +104,5 @@ module.exports = {
   getBlockCollection,
   getBlocks,
   getAllVersionChangeHeights,
+  getBlocksByHeights,
 };

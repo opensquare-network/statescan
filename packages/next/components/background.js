@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 
 import { useHomePage } from "utils/hooks";
 
@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   left: 0;
   width: 100%;
   height: 320px;
-  background: linear-gradient(180deg, #eeeeee 0%, #ffffff 100%);
+  background: #ffffff;
 `;
 
 const Masked = styled.div`

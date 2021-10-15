@@ -12,11 +12,6 @@ function isExtrinsicSuccess(events) {
   return events.some((e) => e.event.method === "ExtrinsicSuccess");
 }
 
-function getExtrinsicSigner(extrinsic) {
-  let signer = extrinsic._raw.signature.get("signer").toString();
-  return signer;
-}
-
 function isHex(blockData) {
   if (typeof blockData !== "string") {
     return false;
@@ -37,7 +32,6 @@ module.exports = {
   isHex,
   isExtrinsicSuccess,
   extractExtrinsicEvents,
-  getExtrinsicSigner,
   toDecimal128,
   bigAdd,
 };

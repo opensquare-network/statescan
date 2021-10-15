@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
-import Image from "next/image";
 
 import { useOnClickOutside } from "utils/hooks";
 
@@ -18,11 +17,11 @@ const SelectWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   font-weight: 400;
-  background: #f4f4f4;
+  background: #ffffff;
   border-radius: 6px;
   padding: 0 6px 0 12px;
   cursor: pointer;
-  border: 1px solid #f4f4f4;
+  border: 1px solid #eeeeee;
   > span {
     flex: 1 1 auto;
     overflow: hidden;
@@ -32,13 +31,12 @@ const SelectWrapper = styled.div`
     margin-left: 8px;
   }
   :hover {
-    background: #eeeeee;
+    border-color: #bbbbbb;
   }
   ${(p) =>
     p.isActive &&
     css`
       border-color: #bbbbbb;
-      background-color: #ffffff !important;
       :hover {
         color: inherit;
       }

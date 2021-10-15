@@ -154,11 +154,20 @@ export default function SubMenu({ closeMenu }) {
     }
   }, [width]);
 
+  const onMounseOver = () => {
+    if (width > 900) {
+      setIsActive(true);
+    }
+  };
+
+  const onMouseLeave = () => {
+    if (width > 900) {
+      setIsActive(false);
+    }
+  };
+
   return (
-    <Wrapper
-      onMouseOver={() => setIsActive(true)}
-      onMouseLeave={() => setIsActive(false)}
-    >
+    <Wrapper onMouseOver={onMounseOver} onMouseLeave={onMouseLeave}>
       <TitleWrapper isActive={isActive} themecolor={theme.color}>
         BlockChain
         <ArrowDown />

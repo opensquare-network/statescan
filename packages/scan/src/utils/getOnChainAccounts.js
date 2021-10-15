@@ -1,4 +1,4 @@
-const { findRegistry } = require("../specs");
+const { findBlockApi } = require("../spec/blockApi");
 const { getApi } = require("../api");
 const { getAccountStorageKey } = require("./accountStorageKey");
 
@@ -9,14 +9,14 @@ async function getOnChainAccounts(indexer, addrs = []) {
   const result = await api.rpc.state.queryStorageAt(keys, indexer.blockHash);
   const accountInfoHexArr = (result || []).map((i) => i.toHex());
 
-  const registry = await findRegistry(indexer.blockHeight);
+  const blockApi = await findBlockApi(indexer.blockHash);
   return uniqueAddrs.reduce((result, address, idx) => {
     const accountInfoHex = accountInfoHexArr[idx];
     if (!accountInfoHex) {
       return result;
     }
 
-    const accountInfo = registry.createType(
+    const accountInfo = blockApi.registry.createType(
       "AccountInfo",
       accountInfoHex,
       true

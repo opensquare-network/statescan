@@ -1,4 +1,3 @@
-const { setSpecHeights } = require("../specs");
 const { getOnChainAccounts } = require("./getOnChainAccounts");
 const { setApi } = require("../api");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
@@ -25,7 +24,6 @@ describe("Get onchain accounts", () => {
         "0x1c4d57ac4a413e0fe279a4c4545215f6bf81092e38ac8963f45010b536943dc4",
     };
 
-    setSpecHeights([indexer.blockHeight]);
     const accounts = await getOnChainAccounts(indexer, [
       "CpjsLDC1JFyrhm3ftC9Gs4QoyrkHKhZKtK7YqGTRFtTafgp",
     ]);

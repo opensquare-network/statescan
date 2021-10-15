@@ -9,13 +9,14 @@ const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { withSession } = require("./mongo");
 const last = require("lodash.last");
+const { isUseMeta } = require("./env");
 const { fetchBlocks } = require("./service/fetchBlocks");
 const { initDb } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
-const { updateSpecs, getSpecHeights, findRegistry } = require("./specs");
+const { updateSpecs, getSpecHeights } = require("./specs");
 const { updateUnFinalized } = require("./unFinalized");
 
 const scanStep = parseInt(process.env.SCAN_STEP) || 100;
@@ -23,11 +24,14 @@ const scanStep = parseInt(process.env.SCAN_STEP) || 100;
 async function main() {
   await initDb();
   await updateHeight();
-  await updateSpecs();
-  const specHeights = getSpecHeights();
-  if (specHeights.length <= 0 || specHeights[0] > 1) {
-    logger.error("No specHeights or invalid");
-    return;
+
+  if (isUseMeta()) {
+    await updateSpecs();
+    const specHeights = getSpecHeights();
+    if (specHeights.length <= 0 || specHeights[0] > 1) {
+      logger.error("No specHeights or invalid");
+      return;
+    }
   }
 
   let scanFinalizedHeight = await getNextScanHeight();

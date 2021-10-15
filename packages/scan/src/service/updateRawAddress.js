@@ -1,11 +1,16 @@
+const { getUpdateAddrStep } = require("../env");
 const { getBlockIndexer } = require("../block/getBlockIndexer");
 const { toDecimal128 } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");
 
 async function getNotUpdatedAddresses() {
+  const updateAddrStep = getUpdateAddrStep();
   const col = await getRawAddressCollection();
-  const addrObjs = await col.find({ updated: false }).limit(500).toArray();
+  const addrObjs = await col
+    .find({ updated: false })
+    .limit(updateAddrStep)
+    .toArray();
   return (addrObjs || []).map((obj) => obj.address);
 }
 

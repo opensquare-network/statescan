@@ -1,10 +1,10 @@
+const { blockLogger } = require("../logger");
 const { isUseMeta } = require("../env");
 const { findRegistry } = require("../specs");
 const { getBlocksByHeights } = require("../mongo/meta");
 const { findBlockApi } = require("../spec/blockApi");
 const { getApi } = require("../api");
 const { extractAuthor } = require("@polkadot/api-derive/type/util");
-const { logger } = require("../logger");
 const { GenericBlock } = require("@polkadot/types");
 
 async function fetchBlocks(heights = []) {
@@ -41,7 +41,7 @@ async function fetchBlocksFromDb(heights = []) {
     try {
       block = await constructBlockFromDbData(blockInDb);
     } catch (e) {
-      logger.error(
+      blockLogger.error(
         `can not construct block from db data at ${blockInDb.height}`,
         e
       );

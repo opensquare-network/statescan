@@ -17,9 +17,10 @@ const Masked = styled.div`
   position: relative;
   top: -8px;
   background: radial-gradient(
-    39.66% 101.89% at 50.29% 24.73%,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(221, 221, 221, 0.32) 100%
+    87.94% 100% at 50% 100%,
+    #f1f1f1 0%,
+    #fafafa 64.58%,
+    #ffffff 100%
   );
   -webkit-mask-image: url("/imgs/pattern-dot.svg");
   mask-image: url("/imgs/pattern-dot.svg");

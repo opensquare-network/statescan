@@ -1,6 +1,4 @@
 const { getBlockIndexer } = require("../block/getBlockIndexer");
-const { GenericBlock } = require("@polkadot/types");
-const { findRegistry } = require("../specs");
 const { toDecimal128 } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");
@@ -59,9 +57,7 @@ async function updateAllRawAddrsInDB(indexer) {
   } while ((addrs || []).length > 0);
 }
 
-async function updateAllRawAddrs(blockInDb) {
-  const registry = await findRegistry(blockInDb.height);
-  const block = new GenericBlock(registry, blockInDb.block.block);
+async function updateAllRawAddrs(block) {
   const blockIndexer = getBlockIndexer(block);
 
   await updateAllRawAddrsInDB(blockIndexer);

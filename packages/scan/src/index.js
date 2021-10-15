@@ -70,11 +70,11 @@ async function main() {
     const updateAddrHeight = finalizedHeight - 100;
     if (minHeight <= updateAddrHeight && maxHeight >= updateAddrHeight) {
       const block = (blocks || []).find((b) => b.height === updateAddrHeight);
-      await updateAllRawAddrs(block);
+      await updateAllRawAddrs(block.block);
       logger.info(`Accounts updated at ${updateAddrHeight}`);
     } else if (maxHeight >= finalizedHeight && maxHeight % 100 === 0) {
       const block = blocks[(blocks || []).length - 1];
-      await updateAllRawAddrs(block);
+      await updateAllRawAddrs(block.block);
     }
 
     for (const block of blocks) {

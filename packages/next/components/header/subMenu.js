@@ -65,6 +65,11 @@ const MouseWrapper = styled.div`
   left: 50%;
   transform: translateX(-50%);
   padding-top: 10px;
+  @media screen and (max-width: 900px) {
+    position: static;
+    left: 0;
+    transform: none;
+  }
 `;
 
 const MenuWrapper = styled.div`
@@ -154,7 +159,7 @@ export default function SubMenu({ closeMenu }) {
     }
   }, [width]);
 
-  const onMounseOver = () => {
+  const onMouseOver = () => {
     if (width > 900) {
       setIsActive(true);
     }
@@ -167,7 +172,7 @@ export default function SubMenu({ closeMenu }) {
   };
 
   return (
-    <Wrapper onMouseOver={onMounseOver} onMouseLeave={onMouseLeave}>
+    <Wrapper onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
       <TitleWrapper isActive={isActive} themecolor={theme.color}>
         BlockChain
         <ArrowDown />

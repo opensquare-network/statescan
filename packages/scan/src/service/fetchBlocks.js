@@ -8,11 +8,13 @@ const { extractAuthor } = require("@polkadot/api-derive/type/util");
 const { GenericBlock } = require("@polkadot/types");
 
 async function fetchBlocks(heights = []) {
+  let blocks;
   if (isUseMeta()) {
-    return await fetchBlocksFromDb(heights);
+    blocks = await fetchBlocksFromDb(heights);
   } else {
-    return await fetchBlocksFromNode(heights);
+    blocks = await fetchBlocksFromNode(heights);
   }
+  return blocks.filter((b) => b !== null);
 }
 
 async function constructBlockFromDbData(blockInDb) {
@@ -45,7 +47,7 @@ async function fetchBlocksFromDb(heights = []) {
         `can not construct block from db data at ${blockInDb.height}`,
         e
       );
-      block = await fetchOneBlockFromNode(blockInDb.height);
+      block = await makeSureFetch(blockInDb.height);
     }
 
     blocks.push(block);
@@ -57,10 +59,19 @@ async function fetchBlocksFromDb(heights = []) {
 async function fetchBlocksFromNode(heights = []) {
   const allPromises = [];
   for (const height of heights) {
-    allPromises.push(fetchOneBlockFromNode(height));
+    allPromises.push(makeSureFetch(height));
   }
 
   return await Promise.all(allPromises);
+}
+
+async function makeSureFetch(height) {
+  try {
+    return await fetchOneBlockFromNode(height);
+  } catch (e) {
+    blockLogger.error(`error fetch block ${height}`, e);
+    return null;
+  }
 }
 
 async function fetchOneBlockFromNode(height) {

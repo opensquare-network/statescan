@@ -8,7 +8,7 @@ const { initDb, withSession } = require("../mongo");
 
 async function test() {
   await initDb();
-  const height = 184910;
+  const height = 983158;
   // const height = 917004;
   setSpecHeights([height]);
 

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import AddressEllipsis from "../addressEllipsis";
+import SymbolLink from "components/symbolLink";
 
 const Wrapper = styled.div`
   margin-right: 0;
@@ -28,12 +29,12 @@ const Amount = styled.span`
   color: #111111;
 `;
 
-export default function AmountFromTo({ amount, symbol, from, to }) {
+export default function AmountFromTo({ amount, symbol, from, to, assetId }) {
   return (
     <Wrapper>
       <FlexWrapper>
         <Amount>
-          {amount} {symbol}
+          {amount} <SymbolLink assetId={assetId}>{symbol}</SymbolLink>
         </Amount>
       </FlexWrapper>
       <FlexWrapper>

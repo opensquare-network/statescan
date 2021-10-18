@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { getAssetInfo } from "utils/assetInfoData";
 import { useNode } from "utils/hooks";
 import Tooltip from "./tooltip";
+import SymbolLink from "./symbolLink";
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,9 +33,11 @@ export default function Symbol({ symbol, assetId, destroyedAt }) {
     );
   }
   return (
-    <Wrapper>
-      {Icon}
-      {symbol}
-    </Wrapper>
+    <SymbolLink assetId={assetId}>
+      <Wrapper>
+        {Icon}
+        {symbol}
+      </Wrapper>
+    </SymbolLink>
   );
 }

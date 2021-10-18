@@ -63,7 +63,9 @@ export default function Nav({ data, node }) {
         {(data || []).map((item, index) =>
           item.path ? (
             <Link href={item.path} key={index} passHref>
-              <StyledLink node={node}>{item.name}</StyledLink>
+              <StyledLink node={node} themecolor={theme.color}>
+                {item.name}
+              </StyledLink>
             </Link>
           ) : (
             <NoLink key={index}>{item.name}</NoLink>

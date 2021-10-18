@@ -11,6 +11,7 @@
   },
   "scripts": {
     "scan": "yarn workspace @statescan/scan scan",
+    "test": "yarn workspace @statescan/scan test",
     "lint": "yarn workspace @statescan/server lint"
   },
   "devDependencies": {

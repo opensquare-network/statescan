@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 
 import ArrowDown from "./arrow-down.svg";
-import { useOnClickOutside, useWindowSize, useNode } from "utils/hooks";
+import { useWindowSize } from "utils/hooks";
 import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
@@ -59,9 +59,20 @@ const TitleWrapper = styled.div`
   }
 `;
 
-const MenuWrapper = styled.div`
+const MouseWrapper = styled.div`
   z-index: 99;
   position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding-top: 10px;
+  @media screen and (max-width: 900px) {
+    position: static;
+    left: 0;
+    transform: none;
+  }
+`;
+
+const MenuWrapper = styled.div`
   min-width: 136px;
   background: #ffffff;
   border: 1px solid #f8f8f8;
@@ -70,9 +81,6 @@ const MenuWrapper = styled.div`
     0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
     0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-radius: 8px;
-  top: calc(100% + 10px);
-  left: 50%;
-  transform: translateX(-50%);
   padding: 8px 0;
   @media screen and (max-width: 900px) {
     position: static;
@@ -143,9 +151,7 @@ export default function SubMenu({ closeMenu }) {
   const [isActive, setIsActive] = useState(false);
   const { width } = useWindowSize();
   const ref = useRef();
-  const node = useNode();
   const theme = useTheme();
-  useOnClickOutside(ref, () => setIsActive(false));
 
   useEffect(() => {
     if (width <= 900) {
@@ -153,35 +159,45 @@ export default function SubMenu({ closeMenu }) {
     }
   }, [width]);
 
+  const onMouseOver = () => {
+    if (width > 900) {
+      setIsActive(true);
+    }
+  };
+
+  const onMouseLeave = () => {
+    if (width > 900) {
+      setIsActive(false);
+    }
+  };
+
   return (
-    <Wrapper>
-      <TitleWrapper
-        onClick={() => setIsActive(true)}
-        isActive={isActive}
-        themecolor={theme.color}
-      >
+    <Wrapper onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
+      <TitleWrapper isActive={isActive} themecolor={theme.color}>
         BlockChain
         <ArrowDown />
       </TitleWrapper>
       {(isActive || width <= 900) && (
-        <MenuWrapper ref={ref}>
-          {menus.map((item, index) => (
-            <Fragment key={index}>
-              <Link href={`/${item.value}`} passHref>
-                <MenuItem
-                  onClick={() => {
-                    closeMenu();
-                    setIsActive(false);
-                  }}
-                  selected={router.pathname === `/${item.value}`}
-                >
-                  {item.name}
-                </MenuItem>
-              </Link>
-              {index === 2 && <Divider />}
-            </Fragment>
-          ))}
-        </MenuWrapper>
+        <MouseWrapper>
+          <MenuWrapper ref={ref}>
+            {menus.map((item, index) => (
+              <Fragment key={index}>
+                <Link href={`/${item.value}`} passHref>
+                  <MenuItem
+                    onClick={() => {
+                      closeMenu();
+                      setIsActive(false);
+                    }}
+                    selected={router.pathname === `/${item.value}`}
+                  >
+                    {item.name}
+                  </MenuItem>
+                </Link>
+                {index === 2 && <Divider />}
+              </Fragment>
+            ))}
+          </MenuWrapper>
+        </MouseWrapper>
       )}
     </Wrapper>
   );

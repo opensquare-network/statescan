@@ -106,10 +106,11 @@ async function fetchOneBlockFromNode(height) {
     height,
     block: block.block,
     events,
-    author,
+    author: author ? author.toString() : author,
   };
 }
 
 module.exports = {
   fetchBlocks,
+  fetchOneBlockFromNode,
 };

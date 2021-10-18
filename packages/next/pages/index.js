@@ -145,6 +145,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
               : fromSymbolUnit(item.balance, symbol)
           }
           symbol={item.assetSymbol ?? symbol}
+          assetId={item.assetId}
         />,
       ]),
     [node, overview?.latestTransfers, symbol]

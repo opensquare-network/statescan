@@ -41,6 +41,7 @@ import ExplorerLink from "../../components/explorerLink";
 import BigNumber from "bignumber.js";
 import Source from "../../components/account/source";
 import Symbol from "components/symbol";
+import SymbolLink from "components/symbolLink";
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -149,13 +150,16 @@ export default function Address({
         ) : (
           <AddressEllipsis address={item.to} />
         ),
-        item.assetSymbol
-          ? `${bigNumber2Locale(
-              fromAssetUnit(item.balance, item.assetDecimals)
-            )} ${item.assetSymbol}`
-          : `${bigNumber2Locale(
-              fromSymbolUnit(item.balance, symbol)
-            )} ${symbol}`,
+        <>
+          {item.assetSymbol
+            ? `${bigNumber2Locale(
+                fromAssetUnit(item.balance, item.assetDecimals)
+              )} `
+            : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))} `}
+          <SymbolLink assetId={item.assetId}>
+            {item.assetSymbol ? item.assetSymbol : symbol}
+          </SymbolLink>
+        </>,
       ]),
       foot: (
         <Pagination

@@ -1,11 +1,10 @@
 const { blake2AsHex } = require("@polkadot/util-crypto");
 const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
-const { teleportLogger } = require("../../logger");
 const { bigAdd } = require("../../utils");
 const { addAddress } = require("../../store/blockAddresses");
 const { getRegistryByHeight } = require("../../utils/registry");
-const { logger } = require("../../logger");
+const { logger, teleportLogger } = require("../../logger");
 
 async function saveNewTeleportAssetOut(
   extrinsicIndexer,
@@ -40,7 +39,16 @@ function extractTeleportFromOneMsg(
   const pubMsg = downwardMessage.pubMsg;
   const messageId = blake2AsHex(pubMsg.toHex());
 
-  const versionedXcm = registry.createType("VersionedXcm", pubMsg, true);
+  let versionedXcm;
+  try {
+    versionedXcm = registry.createType("VersionedXcm", pubMsg, true);
+  } catch (e) {
+    teleportLogger.info(
+      `versionedXcm parse failed at ${extrinsicIndexer.blockHeight}`
+    );
+    return null;
+  }
+
   if (!versionedXcm.isV0) {
     return;
   }

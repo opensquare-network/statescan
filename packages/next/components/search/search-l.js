@@ -145,8 +145,10 @@ export default function SearchL({ node }) {
   const theme = useTheme();
 
   const delayedQuery = useCallback(() => {
-    debounce((value) => {
+    return debounce((value) => {
+      console.log({ value });
       nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
+        console.log({ res });
         setHintAssets(res.result?.assets || []);
       });
     }, 500);
@@ -155,7 +157,7 @@ export default function SearchL({ node }) {
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    delayedQuery(value);
+    delayedQuery()(value);
   };
 
   const onSearch = () => {

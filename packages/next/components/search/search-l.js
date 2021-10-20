@@ -7,6 +7,7 @@ import InLink from "components/inLink";
 import nextApi from "services/nextApi";
 import debounce from "lodash/debounce";
 import { useTheme } from "utils/hooks";
+import SearchHints from "./searchHints";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -19,7 +20,6 @@ const ExploreWrapper = styled.div`
 
   @media screen and (max-width: 900px) {
     flex-direction: column;
-    /* max-width: 318px; */
     width: 100%;
     > * {
       width: 100% !important;
@@ -32,7 +32,7 @@ const ExploreWrapper = styled.div`
 `;
 
 const ExploreInput = styled.input`
-  width: 480px;
+  width: 100%;
   padding: 12px 16px;
   background: #ffffff;
   border: 1px solid #eeeeee;
@@ -66,6 +66,12 @@ const ExploreButton = styled.div`
     css`
       background: #000000;
     `}
+`;
+
+const SearchWrapper = styled.div`
+  position: relative;
+  align-self: flex-start;
+  width: 480px;
 `;
 
 const ExploreHintsWrapper = styled.div`
@@ -138,7 +144,7 @@ export default function SearchL({ node }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [assets, setHintAssets] = useState([]);
+  const [hints, setHints] = useState([]);
   const [focus, setFocus] = useState(false);
   const [selected, select] = useState(0);
   const iconMap = new Map([["osn", "osn"]]);
@@ -149,7 +155,7 @@ export default function SearchL({ node }) {
       console.log({ value });
       nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
         console.log({ res });
-        setHintAssets(res.result?.assets || []);
+        setHints(res.result?.assets || []);
       });
     }, 500);
   }, []);
@@ -208,14 +214,17 @@ export default function SearchL({ node }) {
 
   return (
     <ExploreWrapper>
-      <ExploreInput
-        onKeyDown={onKeyDown}
-        value={searchKeyword}
-        onChange={onInput}
-        placeholder="Block / Address / Extrinsic / Asset /..."
-        onFocus={() => setFocus(true)}
-        onBlur={() => setTimeout(() => setFocus(false), 100)}
-      />
+      <SearchWrapper>
+        <ExploreInput
+          onKeyDown={onKeyDown}
+          value={searchKeyword}
+          onChange={onInput}
+          placeholder="Block / Address / Extrinsic / Asset /..."
+          onFocus={() => setFocus(true)}
+          onBlur={() => setTimeout(() => setFocus(false), 100)}
+        />
+        <SearchHints hints={hints} focus={focus} />
+      </SearchWrapper>
       <ExploreButton
         node={node}
         onClick={onSearch}
@@ -223,7 +232,7 @@ export default function SearchL({ node }) {
       >
         Explore
       </ExploreButton>
-      {focus && assets?.length > 0 && (
+      {/* {focus && assets?.length > 0 && (
         <ExploreHintsWrapper>
           {assets.map((hint, index) => {
             const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
@@ -242,7 +251,7 @@ export default function SearchL({ node }) {
             );
           })}
         </ExploreHintsWrapper>
-      )}
+      )} */}
     </ExploreWrapper>
   );
 }

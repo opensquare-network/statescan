@@ -36,13 +36,16 @@ async function search(ctx) {
   const icaseQ = new RegExp(`^${escapeRegex(q)}$`, "i");
 
   const [asset, address, block, extrinsic] = await Promise.all([
-    assetCol.findOne({
-      $or: [
-        { name: icaseQ },
-        { symbol: icaseQ },
-        ...(isNum ? [{ assetId: Number(q) }] : []),
-      ],
-    }),
+    assetCol.findOne(
+      {
+        $or: [
+          { name: icaseQ },
+          { symbol: icaseQ },
+          ...(isNum ? [{ assetId: Number(q) }] : []),
+        ],
+      },
+      { projection: { timeline: 0 } }
+    ),
     isAddr ? addressCol.findOne({ address: icaseQ }) : null,
     isNum
       ? blockCol.findOne(
@@ -84,7 +87,7 @@ async function searchAutoComplete(ctx) {
   }
 
   const lowerQ = prefix.toLowerCase();
-  const isHash = !!lowerQ.match(/^0x[0-9a-f]{64}$/);
+  const isHash = !!lowerQ.match(/^0x[0-9a-f]{6,64}$/);
   const isNum = prefix.match(/^[0-9]+$/);
 
   const assetCol = await getAssetCollection();
@@ -95,17 +98,19 @@ async function searchAutoComplete(ctx) {
 
   const [assets, addresses, blocks] = await Promise.all([
     prefix.length >= 2
-      ? assetCol
-          .find({
+      ? assetCol.find(
+          {
             $or: [
               { name: prefixPattern },
               { symbol: prefixPattern },
               ...(isNum ? [{ assetId: Number(prefix) }] : []),
             ],
-          })
-          .sort({ name: 1 })
-          .limit(10)
-          .toArray()
+          },
+          { projection: { timeline: 0 } }
+        )
+        .sort({ name: 1 })
+        .limit(10)
+        .toArray()
       : [],
     prefix.length >= 4
       ? addressCol
@@ -121,7 +126,7 @@ async function searchAutoComplete(ctx) {
         ).toArray()
       : isHash
       ? blockCol.find(
-          { hash: lowerQ },
+          { hash: prefixPattern },
           { projection: { extrinsics: 0 } }
         ).toArray()
       : [],

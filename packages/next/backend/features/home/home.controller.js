@@ -36,13 +36,16 @@ async function search(ctx) {
   const icaseQ = new RegExp(`^${escapeRegex(q)}$`, "i");
 
   const [asset, address, block, extrinsic] = await Promise.all([
-    assetCol.findOne({
-      $or: [
-        { name: icaseQ },
-        { symbol: icaseQ },
-        ...(isNum ? [{ assetId: Number(q) }] : []),
-      ],
-    }),
+    assetCol.findOne(
+      {
+        $or: [
+          { name: icaseQ },
+          { symbol: icaseQ },
+          ...(isNum ? [{ assetId: Number(q) }] : []),
+        ],
+      },
+      { projection: { timeline: 0 } }
+    ),
     isAddr ? addressCol.findOne({ address: icaseQ }) : null,
     isNum
       ? blockCol.findOne(
@@ -50,10 +53,16 @@ async function search(ctx) {
           { projection: { extrinsics: 0 } }
         )
       : isHash
-      ? blockCol.findOne({ hash: q }, { projection: { extrinsics: 0 } })
+      ? blockCol.findOne(
+          { hash: lowerQ },
+          { projection: { extrinsics: 0 } }
+        )
       : null,
     isHash
-      ? extrinsicCol.findOne({ hash: q }, { projection: { data: 0 } })
+      ? extrinsicCol.findOne(
+          { hash: lowerQ },
+          { projection: { data: 0 } }
+        )
       : null,
   ]);
 
@@ -72,23 +81,36 @@ async function searchAutoComplete(ctx) {
     ctx.body = {
       assets: [],
       addresses: [],
+      blocks: [],
     };
     return;
   }
 
-  const prefixPattern = new RegExp(`^${escapeRegex(prefix)}`, "i");
+  const lowerQ = prefix.toLowerCase();
+  const isHash = !!lowerQ.match(/^0x[0-9a-f]{6,64}$/);
+  const isNum = prefix.match(/^[0-9]+$/);
+
   const assetCol = await getAssetCollection();
   const addressCol = await getAddressCollection();
+  const blockCol = await getBlockCollection();
 
-  const [assets, addresses] = await Promise.all([
+  const prefixPattern = new RegExp(`^${escapeRegex(lowerQ)}`, "i");
+
+  const [assets, addresses, blocks] = await Promise.all([
     prefix.length >= 2
-      ? assetCol
-          .find({
-            $or: [{ name: prefixPattern }, { symbol: prefixPattern }],
-          })
-          .sort({ name: 1 })
-          .limit(10)
-          .toArray()
+      ? assetCol.find(
+          {
+            $or: [
+              { name: prefixPattern },
+              { symbol: prefixPattern },
+              ...(isNum ? [{ assetId: Number(prefix) }] : []),
+            ],
+          },
+          { projection: { timeline: 0 } }
+        )
+        .sort({ name: 1 })
+        .limit(10)
+        .toArray()
       : [],
     prefix.length >= 4
       ? addressCol
@@ -97,11 +119,23 @@ async function searchAutoComplete(ctx) {
           .limit(10)
           .toArray()
       : [],
+    isNum
+      ? blockCol.find(
+          { "header.number": Number(prefix) },
+          { projection: { extrinsics: 0 } }
+        ).toArray()
+      : isHash
+      ? blockCol.find(
+          { hash: prefixPattern },
+          { projection: { extrinsics: 0 } }
+        ).toArray()
+      : [],
   ]);
 
   ctx.body = {
     assets,
     addresses,
+    blocks,
   };
 }
 

@@ -7,7 +7,6 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import Filter from "components/filter";
-import { makeEventArgs } from "utils/eventArgs";
 
 export default function Events({ node, events, filter, allmodulemethods }) {
   return (
@@ -20,6 +19,7 @@ export default function Events({ node, events, filter, allmodulemethods }) {
           allmodulemethods={allmodulemethods}
         />
         <Table
+          type="event"
           head={eventsHead}
           body={(events?.items || []).map((item, index) => [
             <InLink
@@ -44,7 +44,7 @@ export default function Events({ node, events, filter, allmodulemethods }) {
               "-"
             ),
             `${item?.section}(${item?.meta?.name})`,
-            makeEventArgs(node, item),
+            item,
           ])}
           foot={
             <Pagination

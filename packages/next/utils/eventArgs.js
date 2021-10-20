@@ -14,7 +14,7 @@ export function makeEventArgs(node, event) {
     object_type: eventData.object_type,
     object_data: eventData.object_data.map(([type, val]) => {
       if (type === "AccountId") {
-        return [type, <Address address={val} />];
+        return [type, <Address key="0" address={val} />];
       }
       return [type, val];
     }),

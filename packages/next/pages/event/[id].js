@@ -17,7 +17,6 @@ import { eventHead } from "utils/constants";
 import PageNotFound from "components/pageNotFound";
 import JsonAttributes from "components/jsonAttributes";
 import { getSymbol } from "utils/hooks";
-import { makeEventArgs } from "utils/eventArgs";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -95,7 +94,8 @@ export default function Block({ node, id, eventDetail }) {
             foot={
               <JsonAttributes
                 title={"Attributes"}
-                data={makeEventArgs(node, eventDetail)}
+                data={eventDetail}
+                type="event"
               />
             }
           />

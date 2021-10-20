@@ -24,8 +24,11 @@ describe("XCM", () => {
   test("teleport works", async () => {
     const height = 66710;
     setSpecHeights([height]);
+    const blockHash = await api.rpc.chain.getBlockHash(height);
 
-    const registry = await findRegistry(height);
+    const blockApi = await api.at(blockHash);
+
+    const registry = blockApi.registry;
     const block = new GenericBlock(registry, block66710.block.block);
 
     const setValidationDataExtrinsic = block.extrinsics[0];

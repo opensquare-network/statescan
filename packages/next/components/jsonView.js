@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Wrapper = styled.div`
   border: 1px solid #eeeeee;
   background-color: #ffffff;
-  padding: 8px;
+  padding: 16px;
   overflow-x: auto;
 `;
 

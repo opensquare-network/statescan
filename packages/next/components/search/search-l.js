@@ -3,10 +3,10 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/router";
 import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
-import InLink from "components/inLink";
 import nextApi from "services/nextApi";
 import debounce from "lodash/debounce";
 import { useTheme } from "utils/hooks";
+import SearchHints from "./searchHints";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -19,7 +19,6 @@ const ExploreWrapper = styled.div`
 
   @media screen and (max-width: 900px) {
     flex-direction: column;
-    /* max-width: 318px; */
     width: 100%;
     > * {
       width: 100% !important;
@@ -32,7 +31,7 @@ const ExploreWrapper = styled.div`
 `;
 
 const ExploreInput = styled.input`
-  width: 480px;
+  width: 100%;
   padding: 12px 16px;
   background: #ffffff;
   border: 1px solid #eeeeee;
@@ -68,86 +67,26 @@ const ExploreButton = styled.div`
     `}
 `;
 
-const ExploreHintsWrapper = styled.div`
-  z-index: 9999999;
-  background-color: #ffffff;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-left: 0 !important;
-  top: 53px;
-  left: 0;
+const SearchWrapper = styled.div`
+  position: relative;
+  align-self: flex-start;
   width: 480px;
-  max-height: 308px;
-  position: absolute;
-  border-radius: 8px;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-
-  .selected {
-    background-color: #fafafa;
-  }
-`;
-
-const ExploreHint = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0;
-  padding: 0 16px 0 16px;
-  cursor: pointer;
-  line-height: 48px;
-  background-color: #ffffff;
-  font-size: 15px;
-
-  svg,
-  img {
-    margin-right: 8px;
-  }
-
-  * {
-    margin: 0;
-  }
-
-  :hover {
-    background-color: #fafafa;
-  }
-`;
-
-const Token = styled.span`
-  margin-right: 8px;
-  white-space: nowrap;
-  font-weight: 500;
-  color: #111111;
-`;
-
-const TokenDesc = styled.span`
-  width: 299px;
-  margin-right: 8px;
-  overflow: hidden;
-  color: rgba(17, 17, 17, 0.35);
-`;
-
-const Height = styled.span`
-  color: rgba(17, 17, 17, 0.65);
 `;
 
 export default function SearchL({ node }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [assets, setHintAssets] = useState([]);
+  const [hints, setHints] = useState([]);
   const [focus, setFocus] = useState(false);
   const [selected, select] = useState(0);
-  const iconMap = new Map([["osn", "osn"]]);
   const theme = useTheme();
 
   const delayedQuery = useCallback(() => {
-    debounce((value) => {
+    return debounce((value) => {
       nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
-        setHintAssets(res.result?.assets || []);
+        console.log({ res });
+        setHints(res?.result);
       });
     }, 500);
   }, []);
@@ -155,7 +94,7 @@ export default function SearchL({ node }) {
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    delayedQuery(value);
+    delayedQuery()(value);
   };
 
   const onSearch = () => {
@@ -181,6 +120,7 @@ export default function SearchL({ node }) {
   };
 
   const onKeyDown = (e) => {
+    return;
     if (!focus) {
       return;
     }
@@ -206,14 +146,17 @@ export default function SearchL({ node }) {
 
   return (
     <ExploreWrapper>
-      <ExploreInput
-        onKeyDown={onKeyDown}
-        value={searchKeyword}
-        onChange={onInput}
-        placeholder="Block / Address / Extrinsic / Asset /..."
-        onFocus={() => setFocus(true)}
-        onBlur={() => setTimeout(() => setFocus(false), 100)}
-      />
+      <SearchWrapper>
+        <ExploreInput
+          onKeyDown={onKeyDown}
+          value={searchKeyword}
+          onChange={onInput}
+          placeholder="Block / Address / Extrinsic / Asset /..."
+          onFocus={() => setFocus(true)}
+          onBlur={() => setTimeout(() => setFocus(false), 100)}
+        />
+        <SearchHints hints={hints} focus={focus} />
+      </SearchWrapper>
       <ExploreButton
         node={node}
         onClick={onSearch}
@@ -221,26 +164,6 @@ export default function SearchL({ node }) {
       >
         Explore
       </ExploreButton>
-      {focus && assets?.length > 0 && (
-        <ExploreHintsWrapper>
-          {assets.map((hint, index) => {
-            const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
-            return (
-              <InLink
-                key={index}
-                to={`/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
-              >
-                <ExploreHint className={selected === index && "selected"}>
-                  <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
-                  <Token>{hint.symbol}</Token>
-                  <TokenDesc>{hint.name}</TokenDesc>
-                  <Height>#{hint.assetId}</Height>
-                </ExploreHint>
-              </InLink>
-            );
-          })}
-        </ExploreHintsWrapper>
-      )}
     </ExploreWrapper>
   );
 }

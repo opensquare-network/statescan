@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import InnerDataTable from "components/table/innerDataTable";
+
+import JsonDisplay from "./jsonDisplay";
 
 const Wrapper = styled.div``;
 
@@ -16,27 +17,18 @@ const Title = styled.div`
   line-height: 20px;
 `;
 
-const TableDataItem = styled.pre`
-  background: #fafafa;
-  border-radius: 4px;
-  margin: 8px 24px 16px;
-  padding: 32px;
-  font-size: 14px;
-  line-height: 20px;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  font-family: "Inter";
-  overflow-x: auto;
+const JsonDisplayWrapper = styled.div`
+  padding: 8px 24px;
 `;
 
-export default function JsonAttributes({ title, data }) {
+export default function JsonAttributes({ title, data, type }) {
   return (
     <Wrapper>
       <Divider />
       <Title>{title}</Title>
-      <TableDataItem>
-        <InnerDataTable data={data} />
-      </TableDataItem>
+      <JsonDisplayWrapper>
+        <JsonDisplay data={data} type={type} />
+      </JsonDisplayWrapper>
     </Wrapper>
   );
 }

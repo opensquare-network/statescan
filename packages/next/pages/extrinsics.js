@@ -9,7 +9,6 @@ import HashEllipsis from "components/hashEllipsis";
 import Result from "components/result";
 import BreakText from "components/breakText";
 import Filter from "components/filter";
-import { showIdentityInJSON } from "utils/dataWrapper";
 
 export default function Extrinsics({
   node,
@@ -27,6 +26,7 @@ export default function Extrinsics({
           allmodulemethods={allmodulemethods}
         />
         <Table
+          type="extrinsic"
           head={extrinsicsHead}
           body={(extrinsics?.items || []).map((item, index) => [
             <InLink
@@ -51,7 +51,7 @@ export default function Extrinsics({
             <BreakText
               key={`${index}-5`}
             >{`${item?.section}(${item?.name})`}</BreakText>,
-            showIdentityInJSON(item.args),
+            item.args,
           ])}
           foot={
             <Pagination

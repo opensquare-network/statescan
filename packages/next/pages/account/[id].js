@@ -21,7 +21,6 @@ import {
   nodes,
   teleportsHead,
 } from "utils/constants";
-import { showIdentityInJSON } from "utils/dataWrapper";
 import MinorText from "components/minorText";
 import MonoText from "components/monoText";
 import BreakText from "components/breakText";
@@ -171,6 +170,7 @@ export default function Address({
     },
     {
       name: "Extrinsics",
+      type: "extrinsic",
       page: addressExtrinsics?.page,
       total: addressExtrinsics?.total,
       head: addressExtrincsHead,
@@ -189,7 +189,7 @@ export default function Address({
         item?.indexer?.blockTime,
         <Result key={`${index}-3`} isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,
-        showIdentityInJSON(item.args),
+        item.args,
       ]),
       foot: (
         <Pagination

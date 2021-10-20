@@ -140,6 +140,7 @@ export default function TabTable({ data, activeTab, collapse }) {
           foot={data?.[currentTab]?.foot}
           collapse={collapse}
           expand={data?.[currentTab]?.expand}
+          type={data?.[currentTab]?.type}
         />
       )}
     </div>

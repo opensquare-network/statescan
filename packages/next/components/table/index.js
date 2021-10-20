@@ -7,8 +7,8 @@ import TimeHead from "./timeHead";
 import TimeBody from "./timeBody";
 import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
-import InnerDataTable from "./innerDataTable";
 import { p_18_bold, text_dark_major } from "../../styles/textStyles";
+import JsonDisplay from "components/jsonDisplay";
 
 const Wrapper = styled.div``;
 
@@ -114,7 +114,7 @@ const StyledTr = styled.tr`
 `;
 
 const TableDataWrapper = styled.td`
-  padding: 0 24px 16px !important;
+  padding: 8px 24px 8px !important;
 `;
 
 const CollapseTableDataWrapper = styled.div`
@@ -228,6 +228,7 @@ export default function Table({
   rowHeight = 49,
   collapse,
   expand,
+  type,
 }) {
   const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState();
@@ -334,24 +335,12 @@ export default function Table({
                     {showData[bodyIndex] && (
                       <StyledTr>
                         <TableDataWrapper colSpan="100%">
-                          <TableDataItem>
-                            {head?.[body[bodyIndex].length - 1].display ===
-                            "table" ? (
-                              <InnerDataTable
-                                data={
-                                  body?.[bodyIndex]?.[
-                                    body[bodyIndex].length - 1
-                                  ]
-                                }
-                              />
-                            ) : (
-                              JSON.stringify(
-                                body?.[bodyIndex]?.[body[bodyIndex].length - 1],
-                                null,
-                                2
-                              )
-                            )}
-                          </TableDataItem>
+                          <JsonDisplay
+                            data={
+                              body?.[bodyIndex]?.[body[bodyIndex].length - 1]
+                            }
+                            type={type}
+                          />
                         </TableDataWrapper>
                       </StyledTr>
                     )}
@@ -425,22 +414,10 @@ export default function Table({
                     </CollapseTable>
                     {showData[bodyIndex] && (
                       <CollapseTableDataWrapper>
-                        <CollapseTableDataItem>
-                          {head?.[body[bodyIndex].length - 1].display ===
-                          "table" ? (
-                            <InnerDataTable
-                              data={
-                                body?.[bodyIndex]?.[body[bodyIndex].length - 1]
-                              }
-                            />
-                          ) : (
-                            JSON.stringify(
-                              body?.[bodyIndex]?.[body[bodyIndex].length - 1],
-                              null,
-                              2
-                            )
-                          )}
-                        </CollapseTableDataItem>
+                        <JsonDisplay
+                          data={body?.[bodyIndex]?.[body[bodyIndex].length - 1]}
+                          type={type}
+                        />
                       </CollapseTableDataWrapper>
                     )}
                     <div className="border-bottom"></div>

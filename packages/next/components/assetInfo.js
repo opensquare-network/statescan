@@ -30,6 +30,7 @@ const LeftWrapper = styled.div`
     width: 60px;
     height: 60px;
     margin-right: 16px;
+    border-radius: 50%;
   }
 `;
 

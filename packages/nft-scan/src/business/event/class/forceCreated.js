@@ -1,24 +1,25 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
 const { TimelineItemTypes } = require("../../common/constants");
+const { insertNewClassWithDetails } = require("./common");
 const { UniquesEvents } = require("../../common/constants");
-const { updateClass } = require("../../../mongo/service/class");
 
-async function handleDestroyed(event, indexer) {
-  const [classId] = event.data.toJSON();
+async function handleForceCreated(event, indexer) {
+  const [classId, owner] = event.data.toJSON();
+  await insertNewClassWithDetails(classId, indexer);
 
   const timelineItem = {
     indexer,
-    name: UniquesEvents.Destroyed,
+    name: UniquesEvents.ForceCreated,
     type: TimelineItemTypes.event,
     args: {
       classId,
+      owner,
     },
   };
-  await insertClassTimelineItem(classId, timelineItem);
 
-  await updateClass(classId, { isDestroyed: true });
+  await insertClassTimelineItem(classId, timelineItem);
 }
 
 module.exports = {
-  handleDestroyed,
+  handleForceCreated,
 };

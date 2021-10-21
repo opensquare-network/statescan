@@ -12,8 +12,10 @@ function getDbName() {
 const mongoUrl = process.env.MONGO_SCAN_URL || "mongodb://localhost:27017";
 const statusCollectionName = "status";
 const classCollectionName = "nftClass";
+const classTimelineCollectionName = "classTimeline";
 let statusCol = null;
 let classCol = null;
+let classTimelineCol = null;
 
 let client = null;
 let db = null;
@@ -45,6 +47,7 @@ async function initDb() {
 
   statusCol = await getCollection(statusCollectionName);
   classCol = await getCollection(classCollectionName);
+  classTimelineCol = await getCollection(classTimelineCollectionName);
 
   await _createIndexes();
 }
@@ -72,8 +75,14 @@ async function getClassCollection() {
   return classCol;
 }
 
+async function getClassTimelineCollection() {
+  await tryInit(classTimelineCol);
+  return classTimelineCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
   getClassCollection,
+  getClassTimelineCollection,
 };

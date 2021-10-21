@@ -1,3 +1,4 @@
+const { handleForceCreated } = require("./forceCreated");
 const { handleDestroyed } = require("./destroyed");
 const { handleMetadataSet } = require("./metadataSet");
 const { handleCreated } = require("./created");
@@ -9,7 +10,9 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     return;
   }
 
-  if ([UniquesEvents.ForceCreated, UniquesEvents.Created].includes(method)) {
+  if (UniquesEvents.ForceCreated === method) {
+    await handleForceCreated(...arguments);
+  } else if (UniquesEvents.Created === method) {
     await handleCreated(...arguments);
   } else if (UniquesEvents.ClassMetadataSet === method) {
     await handleMetadataSet(...arguments);

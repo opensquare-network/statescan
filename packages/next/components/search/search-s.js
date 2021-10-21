@@ -54,6 +54,7 @@ export default function SearchS() {
   const [focus, setFocus] = useState(false);
   const hintMap = useMemo(() => new Map(), []);
   const forceUpdate = useForceUpdate();
+  const [selected, setSelected] = useState(0);
 
   useEffect(() => {
     if (hintMap.has(searchKeyword)) return;
@@ -70,16 +71,7 @@ export default function SearchS() {
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-  };
-
-  const onKeyDown = (e) => {
-    if (!focus) {
-      return;
-    }
-
-    if (e.code === "Enter") {
-      return onSearch();
-    }
+    setSelected(0);
   };
 
   const onSearch = () => {
@@ -104,6 +96,56 @@ export default function SearchS() {
     });
   };
 
+  const onKeyDown = (e) => {
+    if (!focus) {
+      return;
+    }
+    if (e.code === "Enter") {
+      if (!toPage(selected)) {
+        onSearch();
+      }
+      return;
+    }
+    if (e.code === "ArrowUp") {
+      e.preventDefault();
+      if (selected > 0) {
+        setSelected(selected - 1);
+      }
+      return;
+    }
+    if (e.code === "ArrowDown") {
+      e.preventDefault();
+      const max =
+        (hintMap.get(searchKeyword)?.blocks?.length ?? 0) +
+        (hintMap.get(searchKeyword)?.assets?.length ?? 0);
+      if (selected < max - 1) {
+        setSelected(selected + 1);
+      }
+      return;
+    }
+  };
+
+  const toPage = (index) => {
+    const currentHint = hintMap.get(searchKeyword);
+    const blocksLength = currentHint?.blocks?.length ?? 0;
+    const assetsLength = currentHint?.assets?.length ?? 0;
+    const maxLength = blocksLength + assetsLength;
+    if (index < 0 || index >= maxLength) return;
+    if (index + 1 <= blocksLength) {
+      router.push(`/block/${currentHint.blocks[index].header?.number}`);
+      return true;
+    }
+    if (index + 1 > blocksLength && index + 1 <= maxLength) {
+      router.push(
+        `/asset/${currentHint.assets[index - blocksLength].assetId}_${
+          currentHint.assets[index - blocksLength].createdAt.blockHeight
+        }`
+      );
+      return true;
+    }
+    return false;
+  };
+
   if (isHomePage) return null;
 
   return (
@@ -117,7 +159,12 @@ export default function SearchS() {
           onBlur={() => setTimeout(() => setFocus(false), 100)}
           onKeyDown={onKeyDown}
         />
-        <SearchHints hints={hintMap.get(searchKeyword)} focus={focus} />
+        <SearchHints
+          hints={hintMap.get(searchKeyword)}
+          focus={focus}
+          selected={selected}
+          toPage={toPage}
+        />
       </SearchWrapper>
     </ExploreWrapper>
   );

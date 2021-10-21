@@ -80,6 +80,7 @@ export default function SearchL({ node }) {
   const hintMap = useMemo(() => new Map(), []);
   const theme = useTheme();
   const forceUpdate = useForceUpdate();
+  const [selected, setSelected] = useState(0);
 
   useEffect(() => {
     if (hintMap.has(searchKeyword)) return;
@@ -92,6 +93,7 @@ export default function SearchL({ node }) {
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
+    setSelected(0);
   };
 
   const onSearch = () => {
@@ -120,10 +122,50 @@ export default function SearchL({ node }) {
     if (!focus) {
       return;
     }
-
     if (e.code === "Enter") {
-      return onSearch();
+      if (!toPage(selected)) {
+        onSearch();
+      }
+      return;
     }
+    if (e.code === "ArrowUp") {
+      e.preventDefault();
+      if (selected > 0) {
+        setSelected(selected - 1);
+      }
+      return;
+    }
+    if (e.code === "ArrowDown") {
+      e.preventDefault();
+      const max =
+        (hintMap.get(searchKeyword)?.blocks?.length ?? 0) +
+        (hintMap.get(searchKeyword)?.assets?.length ?? 0);
+      if (selected < max - 1) {
+        setSelected(selected + 1);
+      }
+      return;
+    }
+  };
+
+  const toPage = (index) => {
+    const currentHint = hintMap.get(searchKeyword);
+    const blocksLength = currentHint?.blocks?.length ?? 0;
+    const assetsLength = currentHint?.assets?.length ?? 0;
+    const maxLength = blocksLength + assetsLength;
+    if (index < 0 || index >= maxLength) return;
+    if (index + 1 <= blocksLength) {
+      router.push(`/block/${currentHint.blocks[index].header?.number}`);
+      return true;
+    }
+    if (index + 1 > blocksLength && index + 1 <= maxLength) {
+      router.push(
+        `/asset/${currentHint.assets[index - blocksLength].assetId}_${
+          currentHint.assets[index - blocksLength].createdAt.blockHeight
+        }`
+      );
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -135,9 +177,14 @@ export default function SearchL({ node }) {
           onChange={onInput}
           placeholder="Block / Address / Extrinsic / Asset /..."
           onFocus={() => setFocus(true)}
-          onBlur={() => setTimeout(() => setFocus(false), 100)}
+          onBlur={() => setTimeout(() => setFocus(false), 200)}
         />
-        <SearchHints hints={hintMap.get(searchKeyword)} focus={focus} />
+        <SearchHints
+          hints={hintMap.get(searchKeyword)}
+          focus={focus}
+          selected={selected}
+          toPage={toPage}
+        />
       </SearchWrapper>
       <ExploreButton
         node={node}

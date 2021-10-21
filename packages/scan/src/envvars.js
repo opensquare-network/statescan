@@ -4,15 +4,6 @@ const CHAINS = {
   WESTMINT: "westmint",
 };
 
-function currentChain() {
-  if (Object.values(CHAINS).includes(process.env.CHAIN)) {
-    return process.env.CHAIN;
-  } else {
-    return CHAINS.STATEMINE;
-  }
-}
-
 module.exports = {
   CHAINS,
-  currentChain,
 };

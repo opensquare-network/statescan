@@ -1,3 +1,5 @@
+const { handleThawed } = require("./thawed");
+const { handleFrozen } = require("./frozen");
 const { handleMetadataCleared } = require("./metadataCleared");
 const { handleForceCreated } = require("./forceCreated");
 const { handleDestroyed } = require("./destroyed");
@@ -17,6 +19,10 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleCreated(...arguments);
   } else if (UniquesEvents.ClassMetadataSet === method) {
     await handleMetadataSet(...arguments);
+  } else if (UniquesEvents.ClassFrozen === method) {
+    await handleFrozen(...arguments);
+  } else if (UniquesEvents.ClassThawed === method) {
+    await handleThawed(...arguments);
   } else if (UniquesEvents.Destroyed === method) {
     await handleDestroyed(...arguments);
   } else if (UniquesEvents.ClassMetadataCleared === method) {

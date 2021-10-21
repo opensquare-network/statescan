@@ -18,6 +18,7 @@ const Img = styled.img`
   height: 24px;
   margin-right: 8px;
   display: initial !important;
+  border-radius: 50%;
 `;
 
 export default function Symbol({ symbol, assetId, destroyedAt }) {

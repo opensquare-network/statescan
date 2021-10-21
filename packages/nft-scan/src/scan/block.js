@@ -1,3 +1,5 @@
+const { handleEvents } = require("../business/event");
+
 function extractBlockTime(extrinsics) {
   const setTimeExtrinsic = extrinsics.find(
     (ex) => ex.method.section === "timestamp" && ex.method.method === "set"
@@ -23,8 +25,7 @@ function getBlockIndexer(block) {
 async function scanBlock(block, blockEvents) {
   const blockIndexer = getBlockIndexer(block);
 
-  console.log(blockIndexer);
-  // todo: handle extrinsics and events
+  await handleEvents(blockEvents, block.extrinsics, blockIndexer);
 }
 
 module.exports = {

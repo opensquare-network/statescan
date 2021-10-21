@@ -5,7 +5,7 @@ const { initDb } = require("./mongo");
 
 async function test() {
   await initDb();
-  const height = 323750;
+  const height = 338600;
 
   const api = await getApi();
   const blockHash = await api.rpc.chain.getBlockHash(height);

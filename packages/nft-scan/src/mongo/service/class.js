@@ -6,9 +6,20 @@ async function insertClass(indexer, classId, details) {
     classId,
     indexer,
     details,
+    isDestroyed: false,
   });
+}
+
+async function updateClass(classId, updates) {
+  const classCol = await getClassCollection();
+  let update = {
+    $set: updates,
+  };
+
+  await classCol.updateOne({ classId, isDestroyed: false }, update);
 }
 
 module.exports = {
   insertClass,
+  updateClass,
 };

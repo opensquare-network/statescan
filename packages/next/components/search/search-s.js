@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
-import { useHomePage } from "utils/hooks";
+import { useHomePage, useForceUpdate } from "utils/hooks";
 import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
-import InLink from "components/inLink";
 import nextApi from "services/nextApi";
-import debounce from "lodash/debounce";
+import SearchHints from "./searchHints";
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -22,32 +21,9 @@ const ExploreWrapper = styled.div`
   }
 `;
 
-const ExploreHintsWrapper = styled.div`
-  z-index: 9999999;
-  background-color: #ffffff;
-  margin-left: 0 !important;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  top: 53px;
-  left: 0;
-  width: 320px;
-  max-height: 308px;
-  position: absolute;
-  border-radius: 8px;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-  border: 1px solid #ffffff;
-
-  .selected {
-    background-color: #fafafa;
-  }
-`;
 const Input = styled.input`
   padding-left: 44px;
-  width: 320px;
+  width: 280px;
   font-size: 15px;
   line-height: 36px;
   border: none;
@@ -65,56 +41,9 @@ const Input = styled.input`
   }
 `;
 
-const ExploreHint = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  margin: 0;
-  padding: 0 16px 0 16px;
-  cursor: pointer;
-  line-height: 48px;
-  background-color: #ffffff;
-  font-size: 15px;
-
-  svg,
-  img {
-    margin-right: 8px;
-  }
-
-  * {
-    margin: 0;
-  }
-
-  :hover {
-    background-color: #fafafa;
-  }
-`;
-
-const Token = styled.span`
-  margin-right: 8px;
-  overflow: hidden;
-  width: 80px;
-  font-weight: 500;
-  color: #111111;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  flex-grow: 0;
-`;
-
-const TokenDesc = styled.span`
-  width: 117px;
-  margin-right: 8px;
-  overflow: hidden;
-  color: rgba(17, 17, 17, 0.35);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  flex-grow: 0;
-`;
-
-const Height = styled.span`
-  flex-grow: 1;
-  text-align: right;
-  color: rgba(17, 17, 17, 0.65);
+const SearchWrapper = styled.div`
+  position: relative;
+  align-self: flex-start;
 `;
 
 export default function SearchS() {
@@ -122,28 +51,25 @@ export default function SearchS() {
   const router = useRouter();
   const isHomePage = useHomePage();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [assets, setHintAssets] = useState([]);
   const [focus, setFocus] = useState(false);
-  const [selected, select] = useState(0);
-  const iconMap = new Map([["osn", "osn"]]);
+  const hintMap = useMemo(() => new Map(), []);
+  const forceUpdate = useForceUpdate();
+
+  useEffect(() => {
+    if (hintMap.has(searchKeyword)) return;
+    nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
+      hintMap.set(searchKeyword, res?.result);
+      forceUpdate();
+    });
+  }, [searchKeyword, hintMap, forceUpdate]);
 
   useEffect(() => {
     setSearchKeyword("");
-    setHintAssets([]);
   }, [router]);
-
-  const delayedQuery = useCallback(() => {
-    debounce((value) => {
-      nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
-        setHintAssets(res.result?.assets || []);
-      });
-    }, 500);
-  }, []);
 
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    delayedQuery(value);
   };
 
   const onKeyDown = (e) => {
@@ -152,23 +78,10 @@ export default function SearchS() {
     }
 
     if (e.code === "Enter") {
-      if (selected > assets.length - 1) {
-        return onSearch();
-      }
-      const hint = assets[selected];
-      return router.push(
-        `/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-      );
-    }
-
-    if (e.code === "ArrowDown" && selected < assets.length - 1) {
-      select(selected + 1);
-    }
-
-    if (e.code === "ArrowUp" && selected > 0) {
-      select(selected - 1);
+      return onSearch();
     }
   };
+
   const onSearch = () => {
     nextApi.fetch(`search?q=${searchKeyword}`).then((res) => {
       const { asset, extrinsic, block, address } = res.result || {};
@@ -195,34 +108,17 @@ export default function SearchS() {
 
   return (
     <ExploreWrapper>
-      <Input
-        value={searchKeyword}
-        onChange={onInput}
-        placeholder="Address / Transaction / Asset..."
-        onFocus={() => setFocus(true)}
-        onBlur={() => setTimeout(() => setFocus(false), 100)}
-        onKeyDown={onKeyDown}
-      />
-      {focus && assets?.length > 0 && (
-        <ExploreHintsWrapper>
-          {assets.map((hint, index) => {
-            const icon = iconMap.get(hint.symbol.toLowerCase()) ?? "unknown";
-            return (
-              <InLink
-                key={index}
-                to={`/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`}
-              >
-                <ExploreHint className={selected === index && "selected"}>
-                  <img src={`/imgs/token-icons/${icon}.svg`} alt="" />
-                  <Token>{hint.symbol}</Token>
-                  <TokenDesc>{hint.name}</TokenDesc>
-                  <Height>#{hint.assetId}</Height>
-                </ExploreHint>
-              </InLink>
-            );
-          })}
-        </ExploreHintsWrapper>
-      )}
+      <SearchWrapper>
+        <Input
+          value={searchKeyword}
+          onChange={onInput}
+          placeholder="Address / Transaction / Asset..."
+          onFocus={() => setFocus(true)}
+          onBlur={() => setTimeout(() => setFocus(false), 100)}
+          onKeyDown={onKeyDown}
+        />
+        <SearchHints hints={hintMap.get(searchKeyword)} focus={focus} />
+      </SearchWrapper>
     </ExploreWrapper>
   );
 }

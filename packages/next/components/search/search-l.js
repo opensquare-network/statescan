@@ -1,11 +1,10 @@
 import styled, { css } from "styled-components";
-import { useState, useCallback } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/router";
 import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import nextApi from "services/nextApi";
-import debounce from "lodash/debounce";
-import { useTheme } from "utils/hooks";
+import { useTheme, useForceUpdate } from "utils/hooks";
 import SearchHints from "./searchHints";
 
 const ExploreWrapper = styled.div`
@@ -77,24 +76,22 @@ export default function SearchL({ node }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [hints, setHints] = useState([]);
   const [focus, setFocus] = useState(false);
-  const [selected, select] = useState(0);
+  const hintMap = useMemo(() => new Map(), []);
   const theme = useTheme();
+  const forceUpdate = useForceUpdate();
 
-  const delayedQuery = useCallback(() => {
-    return debounce((value) => {
-      nextApi.fetch(`search/autocomplete?prefix=${value}`).then((res) => {
-        console.log({ res });
-        setHints(res?.result);
-      });
-    }, 500);
-  }, []);
+  useEffect(() => {
+    if (hintMap.has(searchKeyword)) return;
+    nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
+      hintMap.set(searchKeyword, res?.result);
+      forceUpdate();
+    });
+  }, [searchKeyword, hintMap, forceUpdate]);
 
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    delayedQuery()(value);
   };
 
   const onSearch = () => {
@@ -120,27 +117,12 @@ export default function SearchL({ node }) {
   };
 
   const onKeyDown = (e) => {
-    return;
     if (!focus) {
       return;
     }
 
     if (e.code === "Enter") {
-      if (selected > assets.length - 1) {
-        return onSearch();
-      }
-      const hint = assets[selected];
-      return router.push(
-        `/asset/${hint.assetId}_${hint.createdAt?.blockHeight}`
-      );
-    }
-
-    if (e.code === "ArrowDown" && selected < assets.length - 1) {
-      select(selected + 1);
-    }
-
-    if (e.code === "ArrowUp" && selected > 0) {
-      select(selected - 1);
+      return onSearch();
     }
   };
 
@@ -155,7 +137,7 @@ export default function SearchL({ node }) {
           onFocus={() => setFocus(true)}
           onBlur={() => setTimeout(() => setFocus(false), 100)}
         />
-        <SearchHints hints={hints} focus={focus} />
+        <SearchHints hints={hintMap.get(searchKeyword)} focus={focus} />
       </SearchWrapper>
       <ExploreButton
         node={node}

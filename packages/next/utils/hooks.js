@@ -95,3 +95,11 @@ export function useTheme() {
 export function getSymbol(node) {
   return nodes.find((item) => item.value === node)?.symbol;
 }
+
+export function useForceUpdate() {
+  const [, forceUpdate] = useState();
+
+  return useCallback(() => {
+    forceUpdate((s) => !s);
+  }, []);
+}

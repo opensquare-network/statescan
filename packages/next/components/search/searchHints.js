@@ -91,6 +91,7 @@ const IndexWrapper = styled.div`
 `;
 
 export default function SearchHints({ hints, focus }) {
+  const iconMap = new Map([["osn", "osn"]]);
   if (!focus) return null;
   if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0))
     return null;
@@ -117,10 +118,19 @@ export default function SearchHints({ hints, focus }) {
         <>
           <Title>ASSETS</Title>
           {hints.assets.map((item, index) => (
-            <Link href={`/asset/${item.assetId}`} key={index} passHref>
+            <Link
+              href={`/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+              key={index}
+              passHref
+            >
               <AssetItem>
                 <AssetWrapper>
-                  <img src="/imgs/token-icons/unknown.svg" alt="" />
+                  <img
+                    src={`/imgs/token-icons/${
+                      iconMap.get(item.symbol.toLowerCase()) ?? "unknown"
+                    }.svg`}
+                    alt=""
+                  />
                   <div>{item.symbol}</div>
                 </AssetWrapper>
                 <AssetName>{item.name}</AssetName>

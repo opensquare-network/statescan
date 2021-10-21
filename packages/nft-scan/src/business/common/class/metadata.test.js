@@ -1,7 +1,11 @@
 const { queryClassMetadataByHeight } = require("./metadata");
 const { setApi } = require("../../../api");
-const { elaraStatemine } = require("../../../testCommon/constants");
+const {
+  elaraStatemine,
+  testTimeout,
+} = require("../../../testCommon/constants");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
+jest.setTimeout(testTimeout);
 
 describe("Query class metadata", () => {
   let api;

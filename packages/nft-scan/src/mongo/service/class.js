@@ -1,3 +1,4 @@
+const { getClassAttributeCollection } = require("../index");
 const { getClassCollection, getClassTimelineCollection } = require("../index");
 const { logger } = require("../../logger");
 
@@ -37,8 +38,52 @@ async function insertClassTimelineItem(classId, timelineItem = {}) {
   });
 }
 
+async function insertClassAttribute(classId, key, value, deposit, indexer) {
+  const classCol = await getClassCollection();
+  const nftClass = await classCol.findOne({ classId, isDestroyed: false });
+  if (!nftClass) {
+    logger.error(
+      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}`
+    );
+    return;
+  }
+
+  const classHeight = nftClass.indexer.blockHeight;
+  const col = await getClassAttributeCollection();
+  await col.insertOne({
+    classId,
+    classHeight,
+    key,
+    value,
+    deposit,
+    indexer,
+  });
+}
+
+async function deleteClassAttribute(classId, key) {
+  const classCol = await getClassCollection();
+  const nftClass = await classCol.findOne({ classId, isDestroyed: false });
+  if (!nftClass) {
+    logger.error(
+      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}`
+    );
+    return;
+  }
+
+  const classHeight = nftClass.indexer.blockHeight;
+  const col = await getClassAttributeCollection();
+
+  await col.deleteOne({
+    classId,
+    classHeight,
+    key,
+  });
+}
+
 module.exports = {
   insertClass,
   updateClass,
   insertClassTimelineItem,
+  insertClassAttribute,
+  deleteClassAttribute,
 };

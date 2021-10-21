@@ -13,9 +13,12 @@ const mongoUrl = process.env.MONGO_SCAN_URL || "mongodb://localhost:27017";
 const statusCollectionName = "status";
 const classCollectionName = "nftClass";
 const classTimelineCollectionName = "classTimeline";
+const classAttributeCollectionName = "classAttribute";
+
 let statusCol = null;
 let classCol = null;
 let classTimelineCol = null;
+let classAttributeCol = null;
 
 let client = null;
 let db = null;
@@ -48,6 +51,7 @@ async function initDb() {
   statusCol = await getCollection(statusCollectionName);
   classCol = await getCollection(classCollectionName);
   classTimelineCol = await getCollection(classTimelineCollectionName);
+  classAttributeCol = await getCollection(classAttributeCollectionName);
 
   await _createIndexes();
 }
@@ -57,6 +61,11 @@ async function _createIndexes() {
     console.error("Please call initDb first");
     process.exit(1);
   }
+
+  classCol.createIndex({ classId: 1 });
+  classCol.createIndex({ classId: 1, isDestroyed: 1 });
+
+  classTimelineCol.createIndex({ classId: 1, classHeight: 1 });
 }
 
 async function tryInit(col) {
@@ -80,9 +89,15 @@ async function getClassTimelineCollection() {
   return classTimelineCol;
 }
 
+async function getClassAttributeCollection() {
+  await tryInit(classAttributeCol);
+  return classAttributeCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
   getClassCollection,
   getClassTimelineCollection,
+  getClassAttributeCollection,
 };

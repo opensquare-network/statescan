@@ -1,3 +1,4 @@
+const { handleMetadataCleared } = require("./metadataCleared");
 const { handleForceCreated } = require("./forceCreated");
 const { handleDestroyed } = require("./destroyed");
 const { handleMetadataSet } = require("./metadataSet");
@@ -18,6 +19,8 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleMetadataSet(...arguments);
   } else if (UniquesEvents.Destroyed === method) {
     await handleDestroyed(...arguments);
+  } else if (UniquesEvents.ClassMetadataCleared === method) {
+    await handleMetadataCleared(...arguments);
   }
 }
 

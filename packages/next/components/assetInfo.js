@@ -27,15 +27,14 @@ const LeftWrapper = styled.div`
   min-width: 26.7%;
   flex-wrap: wrap;
   .logo {
-    width: 60px;
-    height: 60px;
+    width: 52px;
+    height: 52px;
     margin-right: 16px;
     border-radius: 50%;
   }
 `;
 
 const SymbolWrapper = styled.div`
-  margin-top: 4px;
   > :not(:first-child) {
     margin-top: 8px;
   }
@@ -70,6 +69,11 @@ const RightWrapper = styled.div`
     text-align: justify;
     font-size: 14px;
   }
+  .noinfo {
+    font-size: 14px;
+    line-height: 20px;
+    color: rgba(17, 17, 17, 0.2);
+  }
 `;
 
 const LinksWrapper = styled.div`
@@ -84,26 +88,27 @@ const LinkIcon = styled.img`
 `;
 
 export default function AssetInfo({ data, symbol, name }) {
-  if (!data) return null;
+  // if (!data) return null;
   return (
     <>
       <Wrapper>
         <LeftWrapper>
-          <img className="logo" src={data.icon} alt="logo" />
+          <img
+            className="logo"
+            src={data?.icon ?? "/imgs/icons/default.svg"}
+            alt="logo"
+          />
           <SymbolWrapper>
             {symbol && <div className="symbol">{symbol}</div>}
             {name && <div className="name">{name}</div>}
           </SymbolWrapper>
         </LeftWrapper>
         <RightWrapper>
-          {data.about && (
-            <>
-              <div className="title">About</div>
-              <div className="content">{data.about}</div>
-            </>
-          )}
+          <div className="title">About</div>
+          {data?.about && <div className="content">{data?.about}</div>}
+          {!data?.about && <div className="noinfo">No more information.</div>}
           <LinksWrapper>
-            {(data.links || []).map((item, index) => (
+            {(data?.links || []).map((item, index) => (
               <Tooltip key={index} title={item.name} content={item.url}>
                 <ExternalLink href={item.url}>
                   <LinkIcon src={item.icon} />

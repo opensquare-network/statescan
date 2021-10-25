@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useCallback } from "react";
-import Image from "next/image";
 
 import Layout from "components/layout";
 import Overview from "components/overview";
@@ -43,6 +42,9 @@ const TableWrapper = styled.div`
   column-gap: 24px;
   row-gap: 32px;
   grid-template-columns: repeat(auto-fill, minmax(588px, 1fr));
+  table {
+    table-layout: auto;
+  }
   @media screen and (max-width: 900px) {
     grid-template-columns: 1fr;
   }

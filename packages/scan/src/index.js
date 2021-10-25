@@ -98,6 +98,10 @@ async function main() {
         }
 
         scanFinalizedHeight = block.height + 1;
+
+        if (block.height % 80000 === 0) {
+          process.exit(0);
+        }
       });
     }
 

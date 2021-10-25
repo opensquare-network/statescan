@@ -13,7 +13,6 @@ import {
   listenFirstPageBlocks,
   unSubscribeFirstBlocks,
 } from "services/websocket";
-import Image from "next/image";
 
 export default function Blocks({ node, blocks: ssrBlocks }) {
   const [time, setTime] = useState(Date.now());
@@ -50,7 +49,7 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
           head={blocksHead}
           body={(blocks?.items || []).map((item, index) => [
             <InLink key={`${index}-1`} to={`/block/${item?.header?.number}`}>
-              {item?.header?.number}
+              {item?.header?.number.toLocaleString()}
             </InLink>,
             item?.blockTime,
             <img

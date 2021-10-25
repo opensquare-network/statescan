@@ -127,12 +127,14 @@ export default function Address({
           key={index}
           to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}
         >
-          {`${item.indexer.blockHeight}-${item.eventSort}`}
+          {`${item.indexer.blockHeight.toLocaleString()}-${item.eventSort}`}
         </InLink>,
         item.extrinsicHash ? (
           <InLink
             to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-          >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>
+          >{`${item.indexer.blockHeight.toLocaleString()}-${
+            item.extrinsicIndex
+          }`}</InLink>
         ) : (
           "-"
         ),
@@ -179,7 +181,9 @@ export default function Address({
           key={`${index}-1`}
           to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
         >
-          {`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
+          {`${item?.indexer?.blockHeight.toLocaleString()}-${
+            item?.indexer?.index
+          }`}
         </InLink>,
         <HashEllipsis
           key={`${index}-2`}
@@ -209,7 +213,7 @@ export default function Address({
           key={`${index}-1`}
           to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
         >
-          {`${item.indexer.blockHeight}-${item.indexer.index}`}
+          {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.index}`}
         </InLink>,
         item.indexer.blockTime,
         <TeleportDirection
@@ -239,7 +243,7 @@ export default function Address({
             chain={teleportSourceAndTarget(item.teleportDirection).source}
             href={`/block/${item.pubSentAt}`}
           >
-            {item.pubSentAt}
+            {item.pubSentAt.toLocaleString()}
           </ExplorerLink>
         ) : (
           "-"

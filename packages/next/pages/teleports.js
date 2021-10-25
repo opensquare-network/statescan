@@ -56,7 +56,9 @@ export default function Events({ node, teleports, filter }) {
               key={`${index}-1`}
               to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
             >
-              {`${item.indexer.blockHeight}-${item.indexer.index}`}
+              {`${item.indexer.blockHeight.toLocaleString()}-${
+                item.indexer.index
+              }`}
             </InLink>,
             item.indexer.blockTime,
             <TeleportDirection
@@ -89,7 +91,7 @@ export default function Events({ node, teleports, filter }) {
                 chain={teleportSourceAndTarget(item.teleportDirection).source}
                 href={`/block/${item.pubSentAt}`}
               >
-                {item.pubSentAt}
+                {item.pubSentAt.toLocaleString()}
               </ExplorerLink>
             ) : (
               "-"

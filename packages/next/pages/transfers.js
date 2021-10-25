@@ -27,13 +27,13 @@ export default function Transfers({ node, transfers, filter }) {
               key={`${index}-1`}
               to={`/event/${item?.indexer?.blockHeight}-${item?.eventSort}`}
             >
-              {item?.indexer?.blockHeight}-{item?.eventSort}
+              {item?.indexer?.blockHeight.toLocaleString()}-{item?.eventSort}
             </InLink>,
             <InLink
               key={`${index}-2`}
               to={`/block/${item?.indexer?.blockHeight}`}
             >
-              {item?.indexer?.blockHeight}
+              {item?.indexer?.blockHeight.toLocaleString()}
             </InLink>,
             item.extrinsicHash ? <Tooltip label={item.method} bg /> : "-",
             item?.indexer?.blockTime,

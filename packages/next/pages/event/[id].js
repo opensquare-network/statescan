@@ -61,13 +61,15 @@ export default function Block({ node, id, eventDetail }) {
                 key="2"
                 to={`/block/${eventDetail?.indexer?.blockHeight}`}
               >
-                {eventDetail?.indexer?.blockHeight}
+                {eventDetail?.indexer?.blockHeight.toLocaleString()}
               </InLink>,
               eventDetail?.phase?.value ? (
                 <InLink
                   to={`/extrinsic/${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
                 >
-                  {`${eventDetail?.indexer?.blockHeight}-${eventDetail?.phase?.value}`}
+                  {`${eventDetail?.indexer?.blockHeight.toLocaleString()}-${
+                    eventDetail?.phase?.value
+                  }`}
                 </InLink>
               ) : (
                 "-"

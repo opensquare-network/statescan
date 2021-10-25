@@ -26,13 +26,13 @@ export default function Events({ node, events, filter, allmodulemethods }) {
               key={`${index}-1`}
               to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
             >
-              {item?.indexer?.blockHeight}-{item?.sort}
+              {item?.indexer?.blockHeight.toLocaleString()}-{item?.sort}
             </InLink>,
             <InLink
               key={`${index}-2`}
               to={`/block/${item?.indexer?.blockHeight}`}
             >
-              {item?.indexer?.blockHeight}
+              {item?.indexer?.blockHeight.toLocaleString()}
             </InLink>,
             item?.indexer?.blockTime,
             item?.extrinsicHash ? (

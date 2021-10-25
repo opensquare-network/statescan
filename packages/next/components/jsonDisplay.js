@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 import { useTheme, useNode } from "utils/hooks";
 import InnerDataTable from "./table/innerDataTable";
-import { convertCallForJsonView, convertCallForTableView } from "utils/dataWrapper";
+import { convertArgsForJsonView, convertArgsForTableView } from "utils/dataWrapper";
 import { makeEventArgs } from "utils/eventArgs";
 
 const JsonView = dynamic(
@@ -67,11 +67,11 @@ export default function JsonDisplay({ data, type }) {
 
   useEffect(() => {
     if (type === "extrinsic") {
-      setTableData(convertCallForTableView(data));
-      setJsonData(convertCallForJsonView(data));
+      setTableData(convertArgsForTableView(data));
+      setJsonData(convertArgsForJsonView(data));
     } else if (type === "event") {
       setTableData(makeEventArgs(node, data));
-      setJsonData(makeEventArgs(node, data));
+      setJsonData(data.data);
     }
   }, [type, data, node]);
 

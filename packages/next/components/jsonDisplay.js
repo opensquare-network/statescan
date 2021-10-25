@@ -6,7 +6,6 @@ import { useTheme, useNode } from "utils/hooks";
 import InnerDataTable from "./table/innerDataTable";
 import { convertCallForJsonView, convertCallForTableView } from "utils/dataWrapper";
 import { makeEventArgs } from "utils/eventArgs";
-import { CALL } from "utils/constants";
 
 const JsonView = dynamic(
   () => import("components/jsonView").catch((e) => console.error(e)),
@@ -58,8 +57,6 @@ export default function JsonDisplay({ data, type }) {
   const [jsonData, setJsonData] = useState({});
   const theme = useTheme();
   const node = useNode();
-
-  data = CALL;
 
   useEffect(() => {
     const item = window.localStorage.getItem("displayType");

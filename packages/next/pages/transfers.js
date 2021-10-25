@@ -10,7 +10,7 @@ import { bigNumber2Locale, fromSymbolUnit, fromAssetUnit } from "utils";
 import { getSymbol } from "utils/hooks";
 import Tooltip from "components/tooltip";
 import Filter from "components/filter";
-import SymbolLink from "components/SymbolLink";
+import SymbolLink from "components/symbolLink";
 
 export default function Transfers({ node, transfers, filter }) {
   const symbol = getSymbol(node);

@@ -129,7 +129,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <TransferHeightAge
           key={`${index}-1`}
           node={node}
-          height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          extrinsicIndex={item.extrinsicIndex}
           age={item?.indexer?.blockTime}
           isEvent={!item.extrinsicHash}
           blockHeight={item.indexer.blockHeight}
@@ -157,11 +157,13 @@ export default function Home({ node, overview: ssrOverview, price }) {
           <InLink
             to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
           >
-            {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+            {`${item.indexer.blockHeight.toLocaleString()}-${
+              item.extrinsicIndex
+            }`}
           </InLink>
         ) : (
           <InLink to={`/block/${item.indexer.blockHeight}`}>
-            {`${item.indexer.blockHeight}`}
+            {`${item.indexer.blockHeight.toLocaleString()}`}
           </InLink>
         ),
         <FlexWrapper key={`${index}-1`}>

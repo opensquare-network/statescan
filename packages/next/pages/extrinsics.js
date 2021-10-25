@@ -33,13 +33,14 @@ export default function Extrinsics({
               key={`${index}-1`}
               to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
             >
-              {item?.indexer?.blockHeight}-{item?.indexer?.index}
+              {item?.indexer?.blockHeight.toLocaleString()}-
+              {item?.indexer?.index}
             </InLink>,
             <InLink
               key={`${index}-2`}
               to={`/block/${item?.indexer?.blockHeight}`}
             >
-              {item?.indexer?.blockHeight}
+              {item?.indexer?.blockHeight.toLocaleString()}
             </InLink>,
             item?.indexer?.blockTime,
             <HashEllipsis

@@ -20,6 +20,7 @@ const Title = styled.h4`
 
 const StyledTable = styled.table`
   width: 100%;
+  table-layout: fixed;
   background: #ffffff;
   border: 1px solid #f8f8f8;
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
@@ -283,7 +284,7 @@ export default function Table({
                   key={index}
                   style={{
                     textAlign: item.align ?? "left",
-                    width: item.width,
+                    width: item.width ?? "100%",
                   }}
                 >
                   {item.type === "time" && (

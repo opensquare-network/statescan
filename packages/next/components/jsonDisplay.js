@@ -53,8 +53,8 @@ const Button = styled.div`
 
 export default function JsonDisplay({ data, type }) {
   const [displayType, setDisplayType] = useState("table");
-  const [tableData, setTableData] = useState({});
-  const [jsonData, setJsonData] = useState({});
+  const [tableData, setTableData] = useState();
+  const [jsonData, setJsonData] = useState();
   const theme = useTheme();
   const node = useNode();
 
@@ -72,6 +72,8 @@ export default function JsonDisplay({ data, type }) {
     } else if (type === "event") {
       setTableData(makeEventArgs(node, data));
       setJsonData(data.data);
+    } else {
+      setTableData(data);
     }
   }, [type, data, node]);
 
@@ -83,26 +85,30 @@ export default function JsonDisplay({ data, type }) {
   return (
     <Wrapper colSpan="100%">
       <ActionWrapper>
-        <Button
-          color={theme?.color}
-          background={theme?.colorSecondary}
-          active={displayType === "table"}
-          onClick={() => onClick("table")}
-        >
-          Table
-        </Button>
-        <Button
-          color={theme?.color}
-          background={theme?.colorSecondary}
-          active={displayType === "json"}
-          onClick={() => onClick("json")}
-        >
-          Json
-        </Button>
+        {tableData && (
+          <Button
+            color={theme?.color}
+            background={theme?.colorSecondary}
+            active={displayType === "table" || !jsonData}
+            onClick={() => onClick("table")}
+          >
+            Table
+          </Button>
+        )}
+        {jsonData && (
+          <Button
+            color={theme?.color}
+            background={theme?.colorSecondary}
+            active={displayType === "json"}
+            onClick={() => onClick("json")}
+          >
+            Json
+          </Button>
+        )}
       </ActionWrapper>
       <div>
-        {displayType === "table" && <InnerDataTable data={tableData} />}
-        {displayType === "json" && <JsonView src={jsonData} />}
+        {(displayType === "table" || !jsonData) && <InnerDataTable data={tableData} />}
+        {(displayType === "json" && jsonData ) && <JsonView src={jsonData} />}
       </div>
     </Wrapper>
   );

@@ -64,6 +64,7 @@ export default function Extrinsic({
       page: extrinsicEvents?.page,
       total: extrinsicEvents?.total,
       head: extrinsicEventsHead,
+      type: "event",
       body: (extrinsicEvents?.items || []).map((item, index) => [
         <InLink
           key={index}
@@ -72,7 +73,7 @@ export default function Extrinsic({
           {`${item?.indexer?.blockHeight.toLocaleString()}-${item?.sort}`}
         </InLink>,
         `${item?.section}(${item?.method})`,
-        makeEventArgs(node, item),
+        item,
       ]),
       expand,
       foot: (

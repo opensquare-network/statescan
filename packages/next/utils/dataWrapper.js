@@ -56,9 +56,10 @@ export function convertCallForJsonView(call, chain) {
 
 
 export function convertArgsForJsonView(args, chain) {
-  return args.map((arg) => ({
-      ...arg,
-      value: (() => {
+  return Object.fromEntries(args.map(
+    (arg) => ([
+      arg.name,
+      (() => {
         switch (arg.type) {
           case "Call":
           case "CallOf": {
@@ -76,5 +77,6 @@ export function convertArgsForJsonView(args, chain) {
           }
         }
       })(),
-    }));
+    ])
+  ));
 }

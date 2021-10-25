@@ -10,6 +10,7 @@ import { bigNumber2Locale, fromSymbolUnit, fromAssetUnit } from "utils";
 import { getSymbol } from "utils/hooks";
 import Tooltip from "components/tooltip";
 import Filter from "components/filter";
+import SymbolLink from "components/SymbolLink";
 
 export default function Transfers({ node, transfers, filter }) {
   const symbol = getSymbol(node);
@@ -46,13 +47,16 @@ export default function Transfers({ node, transfers, filter }) {
               address={item?.to}
               to={`/account/${item?.to}`}
             />,
-            item.assetSymbol
-              ? `${bigNumber2Locale(
-                  fromAssetUnit(item.balance, item.assetDecimals)
-                )} ${item.assetSymbol}`
-              : `${bigNumber2Locale(
-                  fromSymbolUnit(item.balance, symbol)
-                )} ${symbol}`,
+            <>
+              {item.assetSymbol
+                ? `${bigNumber2Locale(
+                    fromAssetUnit(item.balance, item.assetDecimals)
+                  )} `
+                : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))} `}
+              <SymbolLink assetId={item.assetId}>
+                {item.assetSymbol ? item.assetSymbol : symbol}
+              </SymbolLink>
+            </>,
           ])}
           foot={
             <Pagination

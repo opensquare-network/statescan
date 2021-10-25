@@ -243,3 +243,265 @@ export const EmptyQuery = {
   pageSize: 10,
   items: [],
 };
+
+export const CALL = {
+  "callIndex": "0x0302",
+  "section": "utility",
+  "method": "batchAll",
+  "args": [
+    {
+      "name": "calls",
+      "type": "Vec<Call>",
+      "value": [
+        {
+          "callIndex": "0x6803",
+          "section": "cdpEngine",
+          "method": "setCollateralParams",
+          "args": [
+            {
+              "name": "currencyId",
+              "type": "CurrencyId",
+              "value": {
+                "token": "KSM"
+              }
+            },
+            {
+              "name": "interestRatePerSec",
+              "type": "ChangeOptionRate",
+              "value": {
+                "newValue": 937303552
+              }
+            },
+            {
+              "name": "liquidationRatio",
+              "type": "ChangeOptionRatio",
+              "value": {
+                "newValue": "0x00000000000000001f399b1438a10000"
+              }
+            },
+            {
+              "name": "liquidationPenalty",
+              "type": "ChangeOptionRate",
+              "value": {
+                "newValue": "0x0000000000000000025bf6196bd10000"
+              }
+            },
+            {
+              "name": "requiredCollateralRatio",
+              "type": "ChangeOptionRatio",
+              "value": {
+                "newValue": "0x00000000000000002629f66e0c530000"
+              }
+            },
+            {
+              "name": "maximumTotalDebitValue",
+              "type": "ChangeBalance",
+              "value": {
+                "newValue": "0x00000000000000015af1d78b58c40000"
+              }
+            }
+          ]
+        },
+        {
+          "callIndex": "0x5b06",
+          "section": "dex",
+          "method": "listProvisioning",
+          "args": [
+            {
+              "name": "currencyIdA",
+              "type": "CurrencyId",
+              "value": {
+                "token": "KUSD"
+              }
+            },
+            {
+              "name": "currencyIdB",
+              "type": "CurrencyId",
+              "value": {
+                "token": "KSM"
+              }
+            },
+            {
+              "name": "minContributionA",
+              "type": "Balance",
+              "value": 20000000000000
+            },
+            {
+              "name": "minContributionB",
+              "type": "Balance",
+              "value": 100000000000
+            },
+            {
+              "name": "targetProvisionA",
+              "type": "Balance",
+              "value": "0x000000000000000000b1a2bc2ec50000"
+            },
+            {
+              "name": "targetProvisionB",
+              "type": "Balance",
+              "value": 250000000000000
+            },
+            {
+              "name": "notBefore",
+              "type": "BlockNumber",
+              "value": 276700
+            }
+          ]
+        },
+        {
+          "callIndex": "0x0200",
+          "section": "scheduler",
+          "method": "schedule",
+          "args": [
+            {
+              "name": "when",
+              "type": "BlockNumber",
+              "value": 276700
+            },
+            {
+              "name": "maybePeriodic",
+              "type": "Option<Period>",
+              "value": null
+            },
+            {
+              "name": "priority",
+              "type": "Priority",
+              "value": 255
+            },
+            {
+              "name": "call",
+              "type": "Call",
+              "value": {
+                "callIndex": "0x0302",
+                "section": "utility",
+                "method": "batchAll",
+                "args": [
+                  {
+                    "name": "calls",
+                    "type": "Vec<Call>",
+                    "value": [
+                      {
+                        "callIndex": "0x7804",
+                        "section": "incentives",
+                        "method": "updateDexSavingRewards",
+                        "args": [
+                          {
+                            "name": "updates",
+                            "type": "Vec<(PoolId,Rate)>",
+                            "value": [
+                              [
+                                {
+                                  "dexSaving": {
+                                    "dexShare": [
+                                      {
+                                        "token": "KUSD"
+                                      },
+                                      {
+                                        "token": "KSM"
+                                      }
+                                    ]
+                                  }
+                                },
+                                56238214645
+                              ]
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "callIndex": "0x7803",
+                        "section": "incentives",
+                        "method": "updateIncentiveRewards",
+                        "args": [
+                          {
+                            "name": "updates",
+                            "type": "Vec<(PoolId,Balance)>",
+                            "value": [
+                              [
+                                {
+                                  "dexIncentive": {
+                                    "dexShare": [
+                                      {
+                                        "token": "KUSD"
+                                      },
+                                      {
+                                        "token": "KSM"
+                                      }
+                                    ]
+                                  }
+                                },
+                                3000000000000
+                              ],
+                              [
+                                {
+                                  "dexIncentive": {
+                                    "dexShare": [
+                                      {
+                                        "token": "KAR"
+                                      },
+                                      {
+                                        "token": "KSM"
+                                      }
+                                    ]
+                                  }
+                                },
+                                1500000000000
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "callIndex": "0x7805",
+          "section": "incentives",
+          "method": "updatePayoutDeductionRates",
+          "args": [
+            {
+              "name": "updates",
+              "type": "Vec<(PoolId,Rate)>",
+              "value": [
+                [
+                  {
+                    "dexIncentive": {
+                      "dexShare": [
+                        {
+                          "token": "KUSD"
+                        },
+                        {
+                          "token": "KSM"
+                        }
+                      ]
+                    }
+                  },
+                  "0x00000000000000000429d069189e0000"
+                ],
+                [
+                  {
+                    "dexIncentive": {
+                      "dexShare": [
+                        {
+                          "token": "KAR"
+                        },
+                        {
+                          "token": "KSM"
+                        }
+                      ]
+                    }
+                  },
+                  "0x000000000000000006f05b59d3b20000"
+                ]
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+};

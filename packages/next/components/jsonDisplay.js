@@ -4,8 +4,9 @@ import dynamic from "next/dynamic";
 
 import { useTheme, useNode } from "utils/hooks";
 import InnerDataTable from "./table/innerDataTable";
-import { showIdentityInJSON } from "utils/dataWrapper";
+import { convertCallForJsonView, convertCallForTableView } from "utils/dataWrapper";
 import { makeEventArgs } from "utils/eventArgs";
+import { CALL } from "utils/constants";
 
 const JsonView = dynamic(
   () => import("components/jsonView").catch((e) => console.error(e)),
@@ -53,9 +54,12 @@ const Button = styled.div`
 
 export default function JsonDisplay({ data, type }) {
   const [displayType, setDisplayType] = useState("table");
-  const [innerData, setInnerData] = useState(data);
+  const [tableData, setTableData] = useState({});
+  const [jsonData, setJsonData] = useState({});
   const theme = useTheme();
   const node = useNode();
+
+  data = CALL;
 
   useEffect(() => {
     const item = window.localStorage.getItem("displayType");
@@ -66,9 +70,11 @@ export default function JsonDisplay({ data, type }) {
 
   useEffect(() => {
     if (type === "extrinsic") {
-      setInnerData(showIdentityInJSON(data));
+      setTableData(convertCallForTableView(data));
+      setJsonData(convertCallForJsonView(data));
     } else if (type === "event") {
-      setInnerData(makeEventArgs(node, data));
+      setTableData(makeEventArgs(node, data));
+      setJsonData(makeEventArgs(node, data));
     }
   }, [type, data, node]);
 
@@ -98,8 +104,8 @@ export default function JsonDisplay({ data, type }) {
         </Button>
       </ActionWrapper>
       <div>
-        {displayType === "table" && <InnerDataTable data={innerData} />}
-        {displayType === "json" && <JsonView src={data} />}
+        {displayType === "table" && <InnerDataTable data={tableData} />}
+        {displayType === "json" && <JsonView src={jsonData} />}
       </div>
     </Wrapper>
   );

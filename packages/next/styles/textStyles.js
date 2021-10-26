@@ -24,3 +24,12 @@ export const text_dark_major = css`
 export const text_dark_minor = css`
   color: rgba(17, 17, 17, 0.65);
 `;
+
+export const card_border = css`
+  border: 1px solid rgb(244, 244, 244);
+  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
+    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
+    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
+    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
+  border-radius: 8px;
+`;

@@ -18,6 +18,7 @@ export default function JsonView({ src }) {
         enableClipboard={false}
         collapseStringsAfterLength={false}
         displayDataTypes={false}
+        name={false}
       />
     </Wrapper>
   );

@@ -6,29 +6,41 @@ function normalizeCall(call) {
 
   const args = [];
   for (let index = 0; index < call.args.length; index++) {
-    let arg = call.args[index];
+    const arg = call.args[index];
 
     const argMeta = call.meta.args[index];
     const name = argMeta.name.toString();
     const type = argMeta.type.toString();
     if (type === "Call" || type === "CallOf") {
-      args.push([name, normalizeCall(arg)]);
+      args.push({
+        name,
+        type,
+        value: normalizeCall(arg),
+      });
       continue;
     }
 
     if (type === "Vec<Call>" || type === "Vec<CallOf>") {
-      args.push([name, arg.map(normalizeCall)]);
+      args.push({
+        name,
+        type,
+        value: arg.map(normalizeCall),
+      });
       continue;
     }
 
-    args.push([name, arg.toHuman()]);
+    args.push({
+      name,
+      type,
+      value: arg.toJSON(),
+    });
   }
 
   return {
     callIndex,
     section,
     method,
-    args: Object.fromEntries(args),
+    args,
   };
 }
 

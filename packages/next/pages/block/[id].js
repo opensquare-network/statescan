@@ -15,7 +15,6 @@ import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
 import MonoText from "components/monoText";
 import Address from "components/address";
-import { makeEventArgs } from "utils/eventArgs";
 
 import { timeDuration, time, makeTablePairs } from "utils";
 import {
@@ -71,6 +70,7 @@ export default function Block({
       page: blockExtrinsics?.page,
       total: blockExtrinsics?.total,
       head: blockExtrinsicsHead,
+      type: "extrinsic",
       body: (blockExtrinsics?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
@@ -104,6 +104,7 @@ export default function Block({
       page: blockEvents?.page,
       total: blockEvents?.total,
       head: blockEventsHead,
+      type: "event",
       body: (blockEvents?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
@@ -123,7 +124,7 @@ export default function Block({
         <BreakText
           key={`${index}-2`}
         >{`${item?.section}(${item?.method})`}</BreakText>,
-        makeEventArgs(node, item),
+        item,
       ]),
       expand,
       foot: (

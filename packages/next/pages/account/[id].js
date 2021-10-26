@@ -176,6 +176,7 @@ export default function Address({
       page: addressExtrinsics?.page,
       total: addressExtrinsics?.total,
       head: addressExtrincsHead,
+      type: "extrinsic",
       body: (addressExtrinsics?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}

@@ -24,7 +24,7 @@ const StyledTable = styled.table`
   table-layout: fixed;
   background: #ffffff;
   ${card_border};
-  border-radius: 8px;
+  border-spacing: 0px;
 
   thead {
     background: #fafafa;

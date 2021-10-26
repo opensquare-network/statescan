@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+import Symbol from "components/symbol";
+
 const Wrapper = styled.div`
   width: 100%;
   position: absolute;
@@ -100,7 +102,6 @@ const IndexWrapper = styled.div`
 `;
 
 export default function SearchHints({ hints, focus, selected, toPage }) {
-  const iconMap = new Map([["osn", "osn"]]);
   if (!focus) return null;
   if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0))
     return null;
@@ -135,12 +136,7 @@ export default function SearchHints({ hints, focus, selected, toPage }) {
               onClick={() => toPage((hints?.blocks?.length ?? 0) + index)}
             >
               <AssetWrapper>
-                <img
-                  src={`/imgs/token-icons/${
-                    iconMap.get(item.symbol.toLowerCase()) ?? "unknown"
-                  }.svg`}
-                  alt=""
-                />
+                <Symbol assetId={item.assetId} />
                 <div>{item.symbol}</div>
               </AssetWrapper>
               <AssetName>{item.name}</AssetName>

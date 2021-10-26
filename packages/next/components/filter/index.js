@@ -22,6 +22,7 @@ const Wrapper = styled.div`
   margin-bottom: 16px;
   display: flex;
   align-items: center;
+  min-height: 72px;
   @media screen and (max-width: 1100px) {
     flex-direction: column;
     align-items: stretch;
@@ -161,6 +162,41 @@ export default function Filter({ total, data, allmodulemethods }) {
         <HiddenButton active={show}>
           <FilterIcon onClick={() => setShow(!show)} />
         </HiddenButton>
+        {total.includes("teleport") && (
+          <div style={{ display: "flex" }}>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z"
+                stroke="#FFBB37"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M10 6.25L10 10.4167M10 13.7583L10.0083 13.7491"
+                stroke="#FFBB37"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            <span
+              style={{
+                marginLeft: 8,
+                color: "rgba(17, 17, 17, 0.65)",
+                fontWeight: 400,
+              }}
+            >
+              There are issues with teleports scan and we are fixing them.
+            </span>
+          </div>
+        )}
       </TotalWrapper>
       {(show || width > 1100) && selectData?.length > 0 && (
         <>

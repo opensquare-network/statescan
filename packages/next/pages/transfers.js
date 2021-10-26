@@ -19,7 +19,7 @@ export default function Transfers({ node, transfers, filter }) {
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Transfers" }]} node={node} />
-        <Filter total="" data={filter} />
+        <Filter total={`All ${transfers?.total} transfers`} data={filter} />
         <Table
           head={transfersHead}
           body={(transfers?.items || []).map((item, index) => [

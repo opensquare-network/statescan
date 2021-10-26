@@ -111,6 +111,11 @@ async function searchAutoComplete(ctx) {
         .sort({ name: 1 })
         .limit(10)
         .toArray()
+      : isNum
+      ? assetCol.find(
+          { assetId: Number(prefix) },
+          { projection: { timeline: 0 } }
+        ).toArray()
       : [],
     prefix.length >= 4
       ? addressCol

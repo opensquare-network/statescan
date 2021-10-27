@@ -314,10 +314,6 @@ export default function Address({
                 addressDetail?.data?.reserved?.$numberDecimal || 0,
                 symbol
               )} ${symbol}`,
-              `${fromSymbolUnit(
-                addressDetail?.data?.miscFrozen?.$numberDecimal || 0,
-                symbol
-              )} ${symbol}`,
               <MinorText key="2">{addressDetail?.nonce}</MinorText>,
             ]}
           />

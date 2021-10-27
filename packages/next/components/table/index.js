@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 import { p_18_bold, text_dark_major } from "../../styles/textStyles";
 import JsonDisplay from "components/jsonDisplay";
+import { card_border } from "styles/textStyles";
 
 const Wrapper = styled.div``;
 
@@ -22,13 +23,8 @@ const StyledTable = styled.table`
   width: 100%;
   table-layout: fixed;
   background: #ffffff;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
+  ${card_border};
   border-spacing: 0px;
-  border-radius: 8px;
 
   thead {
     background: #fafafa;
@@ -163,12 +159,7 @@ const CollapseTableDataItem = styled.pre`
 
 const CollapseWrapper = styled.div`
   background: #ffffff;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-  border-radius: 8px;
+  ${card_border};
 `;
 
 const CollapseTableWrapper = styled.div`

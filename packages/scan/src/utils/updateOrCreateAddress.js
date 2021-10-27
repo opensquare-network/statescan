@@ -4,7 +4,7 @@ const { getRawAddressCollection } = require("../mongo");
 const { getLatestFinalizedHeight } = require("../chain");
 const { getOnChainAccounts } = require("./getOnChainAccounts");
 const { logger } = require("../logger");
-const { toDecimal128 } = require(".");
+const { toDecimal128, bigAdd } = require(".");
 
 async function saveToRawAddrs(addrs = [], session) {
   if (addrs.length <= 0) {
@@ -50,6 +50,7 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
   const col = await getAddressCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const account of accounts) {
+    const total = bigAdd(account.info.data.free, account.info.data.reserved);
     bulk
       .find({ address: account.address })
       .upsert()
@@ -61,6 +62,7 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
             reserved: toDecimal128(account.info.data.reserved),
             miscFrozen: toDecimal128(account.info.data.miscFrozen),
             feeFrozen: toDecimal128(account.info.data.feeFrozen),
+            total: toDecimal128(total),
           },
           lastUpdatedAt: blockIndexer,
         },

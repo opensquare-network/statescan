@@ -165,8 +165,7 @@ export const transfersHead = [
 export const addressesHead = [
   { name: "Rank", width: 96 },
   { name: "Account" },
-  { name: "Locked", width: 240, align: "right" },
-  { name: "Free", width: 240, align: "right" },
+  { name: "Balance", width: 240, align: "right" },
 ];
 
 export const teleportsHead = [
@@ -181,7 +180,7 @@ export const teleportsHead = [
   { name: "Total", align: "right" },
 ];
 
-export const addressHead = ["Address", "Free", "Reserved", "Locked", "Nonce"];
+export const addressHead = ["Address", "Total Balance", "Free", "Reserved", "Nonce"];
 
 export const extrinsicHead = [
   "Timestamp",

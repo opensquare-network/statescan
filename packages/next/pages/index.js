@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useCallback } from "react";
-import Image from "next/image";
 
 import Layout from "components/layout";
 import Overview from "components/overview";
@@ -43,6 +42,9 @@ const TableWrapper = styled.div`
   column-gap: 24px;
   row-gap: 32px;
   grid-template-columns: repeat(auto-fill, minmax(588px, 1fr));
+  table {
+    table-layout: auto;
+  }
   @media screen and (max-width: 900px) {
     grid-template-columns: 1fr;
   }
@@ -129,7 +131,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <TransferHeightAge
           key={`${index}-1`}
           node={node}
-          height={`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+          extrinsicIndex={item.extrinsicIndex}
           age={item?.indexer?.blockTime}
           isEvent={!item.extrinsicHash}
           blockHeight={item.indexer.blockHeight}
@@ -157,11 +159,13 @@ export default function Home({ node, overview: ssrOverview, price }) {
           <InLink
             to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
           >
-            {`${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+            {`${item.indexer.blockHeight.toLocaleString()}-${
+              item.extrinsicIndex
+            }`}
           </InLink>
         ) : (
           <InLink to={`/block/${item.indexer.blockHeight}`}>
-            {`${item.indexer.blockHeight}`}
+            {`${item.indexer.blockHeight.toLocaleString()}`}
           </InLink>
         ),
         <FlexWrapper key={`${index}-1`}>

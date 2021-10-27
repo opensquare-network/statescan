@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 
 import { useTheme, useNode } from "utils/hooks";
 import InnerDataTable from "./table/innerDataTable";
-import { showIdentityInJSON } from "utils/dataWrapper";
+import { convertArgsForJsonView, convertArgsForTableView } from "utils/dataWrapper";
 import { makeEventArgs } from "utils/eventArgs";
 
 const JsonView = dynamic(
@@ -53,7 +53,8 @@ const Button = styled.div`
 
 export default function JsonDisplay({ data, type }) {
   const [displayType, setDisplayType] = useState("table");
-  const [innerData, setInnerData] = useState(data);
+  const [tableData, setTableData] = useState();
+  const [jsonData, setJsonData] = useState();
   const theme = useTheme();
   const node = useNode();
 
@@ -66,9 +67,13 @@ export default function JsonDisplay({ data, type }) {
 
   useEffect(() => {
     if (type === "extrinsic") {
-      setInnerData(showIdentityInJSON(data));
+      setTableData(convertArgsForTableView(data));
+      setJsonData(convertArgsForJsonView(data));
     } else if (type === "event") {
-      setInnerData(makeEventArgs(node, data));
+      setTableData(makeEventArgs(node, data));
+      setJsonData(data.data);
+    } else {
+      setTableData(data);
     }
   }, [type, data, node]);
 
@@ -80,26 +85,30 @@ export default function JsonDisplay({ data, type }) {
   return (
     <Wrapper colSpan="100%">
       <ActionWrapper>
-        <Button
-          color={theme?.color}
-          background={theme?.colorSecondary}
-          active={displayType === "table"}
-          onClick={() => onClick("table")}
-        >
-          Table
-        </Button>
-        <Button
-          color={theme?.color}
-          background={theme?.colorSecondary}
-          active={displayType === "json"}
-          onClick={() => onClick("json")}
-        >
-          Json
-        </Button>
+        {tableData && (
+          <Button
+            color={theme?.color}
+            background={theme?.colorSecondary}
+            active={displayType === "table" || !jsonData}
+            onClick={() => onClick("table")}
+          >
+            Table
+          </Button>
+        )}
+        {jsonData && (
+          <Button
+            color={theme?.color}
+            background={theme?.colorSecondary}
+            active={displayType === "json"}
+            onClick={() => onClick("json")}
+          >
+            Json
+          </Button>
+        )}
       </ActionWrapper>
       <div>
-        {displayType === "table" && <InnerDataTable data={innerData} />}
-        {displayType === "json" && <JsonView src={data} />}
+        {(displayType === "table" || !jsonData) && <InnerDataTable data={tableData} />}
+        {(displayType === "json" && jsonData ) && <JsonView src={jsonData} />}
       </div>
     </Wrapper>
   );

@@ -64,15 +64,16 @@ export default function Extrinsic({
       page: extrinsicEvents?.page,
       total: extrinsicEvents?.total,
       head: extrinsicEventsHead,
+      type: "event",
       body: (extrinsicEvents?.items || []).map((item, index) => [
         <InLink
           key={index}
           to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
         >
-          {`${item?.indexer?.blockHeight}-${item?.sort}`}
+          {`${item?.indexer?.blockHeight.toLocaleString()}-${item?.sort}`}
         </InLink>,
         `${item?.section}(${item?.method})`,
-        makeEventArgs(node, item),
+        item,
       ]),
       expand,
       foot: (
@@ -124,16 +125,16 @@ export default function Extrinsic({
                 key="2"
                 to={`/block/${extrinsicDetail?.indexer?.blockHeight}`}
               >
-                {extrinsicDetail?.indexer?.blockHeight}
+                {extrinsicDetail?.indexer?.blockHeight.toLocaleString()}
               </InLink>,
               extrinsicDetail?.lifetime ? (
                 <MinorText>
-                  <InLink to={`/lifetime?.[0]}`}>
-                    {extrinsicDetail?.lifetime?.[0]}
+                  <InLink to={`/block/${extrinsicDetail?.lifetime?.[0]}`}>
+                    {extrinsicDetail?.lifetime?.[0].toLocaleString()}
                   </InLink>
                   {" - "}
                   <InLink to={`/block/${extrinsicDetail?.lifetime?.[1]}`}>
-                    {extrinsicDetail?.lifetime?.[1]}
+                    {extrinsicDetail?.lifetime?.[1].toLocaleString()}
                   </InLink>
                 </MinorText>
               ) : undefined,

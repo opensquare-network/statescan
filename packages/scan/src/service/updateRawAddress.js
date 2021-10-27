@@ -1,6 +1,6 @@
 const { getUpdateAddrStep } = require("../env");
 const { getBlockIndexer } = require("../block/getBlockIndexer");
-const { toDecimal128 } = require("../utils");
+const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");
 
@@ -27,6 +27,7 @@ async function updateAddresses(indexer, addrs = []) {
   const col = await getAddressCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const account of accounts) {
+    const total = bigAdd(account.info.data.free, account.info.data.reserved);
     bulk
       .find({ address: account.address })
       .upsert()
@@ -38,6 +39,7 @@ async function updateAddresses(indexer, addrs = []) {
             reserved: toDecimal128(account.info.data.reserved),
             miscFrozen: toDecimal128(account.info.data.miscFrozen),
             feeFrozen: toDecimal128(account.info.data.feeFrozen),
+            total: toDecimal128(total),
           },
           lastUpdatedAt: indexer,
         },

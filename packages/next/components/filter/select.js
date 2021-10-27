@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import styled, { css } from "styled-components";
 
 import { useOnClickOutside } from "utils/hooks";
+import { card_border } from "styles/textStyles";
 
 const Wrapper = styled.div`
   position: relative;
@@ -49,12 +50,7 @@ const SelectWrapper = styled.div`
 const OptionWrapper = styled.div`
   z-index: 99;
   position: absolute;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-  border-radius: 8px;
+  ${card_border};
   padding: 8px 0;
   background: #ffffff;
   min-width: 160px;

@@ -15,7 +15,6 @@ import Pagination from "components/pagination";
 import HashEllipsis from "components/hashEllipsis";
 import MonoText from "components/monoText";
 import Address from "components/address";
-import { makeEventArgs } from "utils/eventArgs";
 
 import { timeDuration, time, makeTablePairs } from "utils";
 import {
@@ -71,11 +70,14 @@ export default function Block({
       page: blockExtrinsics?.page,
       total: blockExtrinsics?.total,
       head: blockExtrinsicsHead,
+      type: "extrinsic",
       body: (blockExtrinsics?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
           to={`/extrinsic/${item?.indexer?.blockHeight}-${item?.indexer?.index}`}
-        >{`${item?.indexer?.blockHeight}-${item?.indexer?.index}`}</InLink>,
+        >{`${item?.indexer?.blockHeight.toLocaleString()}-${
+          item?.indexer?.index
+        }`}</InLink>,
         <HashEllipsis
           key={`${index}-2`}
           hash={item?.hash}
@@ -102,22 +104,27 @@ export default function Block({
       page: blockEvents?.page,
       total: blockEvents?.total,
       head: blockEventsHead,
+      type: "event",
       body: (blockEvents?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
           to={`/event/${item?.indexer?.blockHeight}-${item?.sort}`}
-        >{`${item?.indexer?.blockHeight}-${item?.sort}`}</InLink>,
+        >{`${item?.indexer?.blockHeight.toLocaleString()}-${
+          item?.sort
+        }`}</InLink>,
         Number.isInteger(item?.phase?.value) ? (
           <InLink
             to={`/extrinsic/${item?.indexer.blockHeight}-${item?.phase?.value}`}
-          >{`${item?.indexer?.blockHeight}-${item?.phase?.value}`}</InLink>
+          >{`${item?.indexer?.blockHeight.toLocaleString()}-${
+            item?.phase?.value
+          }`}</InLink>
         ) : (
           "-"
         ),
         <BreakText
           key={`${index}-2`}
         >{`${item?.section}(${item?.method})`}</BreakText>,
-        makeEventArgs(node, item),
+        item,
       ]),
       expand,
       foot: (
@@ -158,8 +165,8 @@ export default function Block({
         }
 
         return [
-          `${blockDetail?.header?.number}-${i}`,
-          blockDetail?.header?.number,
+          `${blockDetail?.header?.number.toLocaleString()}-${i}`,
+          blockDetail?.header?.number.toLocaleString(),
           <span key="1" style={{ textTransform: "capitalize" }}>
             {itemName}
           </span>,

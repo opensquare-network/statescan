@@ -6,6 +6,7 @@ import Link from "next/link";
 import ArrowDown from "./arrow-down.svg";
 import { useWindowSize } from "utils/hooks";
 import { useTheme } from "utils/hooks";
+import { card_border } from "styles/textStyles";
 
 const Wrapper = styled.div`
   position: relative;
@@ -75,12 +76,7 @@ const MouseWrapper = styled.div`
 const MenuWrapper = styled.div`
   min-width: 136px;
   background: #ffffff;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-  border-radius: 8px;
+  ${card_border};
   padding: 8px 0;
   @media screen and (max-width: 900px) {
     position: static;

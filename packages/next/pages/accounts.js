@@ -12,16 +12,12 @@ import Address from "components/address";
 export default function Addresses({ node, addresses }) {
   const symbol = getSymbol(node);
 
-  const customAddressesHead = _.cloneDeep(addressesHead);
-  customAddressesHead[2].name = `${customAddressesHead[2].name} ${symbol}`;
-  customAddressesHead[3].name = `${customAddressesHead[3].name} ${symbol}`;
-
   return (
     <Layout node={node}>
       <section>
         <Nav data={[{ name: "Accounts" }]} node={node} />
         <Table
-          head={customAddressesHead}
+          head={addressesHead}
           body={(addresses?.items || []).map((item, index) => [
             `#${addresses.page * addresses.pageSize + index + 1}`,
             <Address
@@ -30,10 +26,10 @@ export default function Addresses({ node, addresses }) {
               to={`/account/${item?.address}`}
             />,
             `${bigNumber2Locale(
-              fromSymbolUnit(item?.data?.reserved?.$numberDecimal, symbol)
-            )} ${symbol}`,
-            `${bigNumber2Locale(
-              fromSymbolUnit(item?.data?.free?.$numberDecimal, symbol)
+              fromSymbolUnit(
+                item?.data?.total?.$numberDecimal || "0",
+                symbol
+              )
             )} ${symbol}`,
           ])}
           foot={

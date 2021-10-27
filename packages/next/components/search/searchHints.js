@@ -1,5 +1,7 @@
-import styled from "styled-components";
-import Link from "next/link";
+import styled, { css } from "styled-components";
+
+import Symbol from "components/symbol";
+import { card_border } from "styles/textStyles";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -7,12 +9,7 @@ const Wrapper = styled.div`
   margin-top: 4px;
   max-height: 292px;
   background: #ffffff;
-  border: 1px solid #f8f8f8;
-  box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
-  border-radius: 8px;
+  ${card_border};
   z-index: 99;
   overflow-y: auto;
 `;
@@ -36,6 +33,11 @@ const BlockItem = styled.div`
   :hover {
     background-color: #fafafa;
   }
+  ${(p) =>
+    p.selected &&
+    css`
+      background-color: #fafafa;
+    `}
 `;
 
 const BlockWrapper = styled.div`
@@ -61,6 +63,11 @@ const AssetItem = styled.div`
   :hover {
     background-color: #fafafa;
   }
+  ${(p) =>
+    p.selected &&
+    css`
+      background-color: #fafafa;
+    `}
 `;
 
 const AssetWrapper = styled.div`
@@ -90,7 +97,7 @@ const IndexWrapper = styled.div`
   margin-left: auto;
 `;
 
-export default function SearchHints({ hints, focus }) {
+export default function SearchHints({ hints, focus, selected, toPage }) {
   const iconMap = new Map([["osn", "osn"]]);
   if (!focus) return null;
   if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0))
@@ -102,15 +109,17 @@ export default function SearchHints({ hints, focus }) {
         <>
           <Title>BLOCKS</Title>
           {hints.blocks.map((item, index) => (
-            <Link href={`/block/${item.header?.number}`} key={index} passHref>
-              <BlockItem>
-                <BlockWrapper>
-                  <img src="/imgs/icons/latest-blocks.svg" alt="" />
-                  <div>Block</div>
-                </BlockWrapper>
-                <IndexWrapper>{`#${item.header?.number}`}</IndexWrapper>
-              </BlockItem>
-            </Link>
+            <BlockItem
+              selected={selected === index}
+              key={index}
+              onClick={() => toPage(index)}
+            >
+              <BlockWrapper>
+                <img src="/imgs/icons/latest-blocks.svg" alt="" />
+                <div>Block</div>
+              </BlockWrapper>
+              <IndexWrapper>{`#${item.header?.number}`}</IndexWrapper>
+            </BlockItem>
           ))}
         </>
       )}
@@ -118,25 +127,18 @@ export default function SearchHints({ hints, focus }) {
         <>
           <Title>ASSETS</Title>
           {hints.assets.map((item, index) => (
-            <Link
-              href={`/asset/${item.assetId}_${item.createdAt.blockHeight}`}
+            <AssetItem
               key={index}
-              passHref
+              selected={selected === (hints?.blocks?.length ?? 0) + index}
+              onClick={() => toPage((hints?.blocks?.length ?? 0) + index)}
             >
-              <AssetItem>
-                <AssetWrapper>
-                  <img
-                    src={`/imgs/token-icons/${
-                      iconMap.get(item.symbol.toLowerCase()) ?? "unknown"
-                    }.svg`}
-                    alt=""
-                  />
-                  <div>{item.symbol}</div>
-                </AssetWrapper>
-                <AssetName>{item.name}</AssetName>
-                <IndexWrapper>{`#${item.assetId}`}</IndexWrapper>
-              </AssetItem>
-            </Link>
+              <AssetWrapper>
+                <Symbol assetId={item.assetId} />
+                <div>{item.symbol}</div>
+              </AssetWrapper>
+              <AssetName>{item.name}</AssetName>
+              <IndexWrapper>{`#${item.assetId}`}</IndexWrapper>
+            </AssetItem>
           ))}
         </>
       )}

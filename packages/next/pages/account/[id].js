@@ -308,6 +308,10 @@ export default function Address({
                 />
               </div>,
               `${fromSymbolUnit(
+                addressDetail?.data?.total?.$numberDecimal || 0,
+                symbol
+              )} ${symbol}`,
+              `${fromSymbolUnit(
                 addressDetail?.data?.free?.$numberDecimal || 0,
                 symbol
               )} ${symbol}`,

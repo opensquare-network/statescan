@@ -4,7 +4,10 @@ import dynamic from "next/dynamic";
 
 import { useTheme, useNode } from "utils/hooks";
 import InnerDataTable from "./table/innerDataTable";
-import { convertArgsForJsonView, convertArgsForTableView } from "utils/dataWrapper";
+import {
+  convertArgsForJsonView,
+  convertArgsForTableView,
+} from "utils/dataWrapper";
 import { makeEventArgs } from "utils/eventArgs";
 
 const JsonView = dynamic(
@@ -13,7 +16,7 @@ const JsonView = dynamic(
 );
 
 const Wrapper = styled.div`
-  padding: 32px;
+  padding: 24px;
   background: #fafafa;
   border-radius: 4px;
   font-size: 14px;
@@ -107,8 +110,10 @@ export default function JsonDisplay({ data, type }) {
         )}
       </ActionWrapper>
       <div>
-        {(displayType === "table" || !jsonData) && <InnerDataTable data={tableData} />}
-        {(displayType === "json" && jsonData ) && <JsonView src={jsonData} />}
+        {(displayType === "table" || !jsonData) && (
+          <InnerDataTable data={tableData} />
+        )}
+        {displayType === "json" && jsonData && <JsonView src={jsonData} />}
       </div>
     </Wrapper>
   );

@@ -181,7 +181,7 @@ export const teleportsHead = [
   { name: "Total", align: "right" },
 ];
 
-export const addressHead = ["Address", "Free", "Reserved", "Locked", "Nonce"];
+export const addressHead = ["Address", "Free", "Reserved", "Nonce"];
 
 export const extrinsicHead = [
   "Timestamp",

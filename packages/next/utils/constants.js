@@ -50,6 +50,16 @@ export const assetsHead = [
   { name: "Total Supply", align: "right" },
 ];
 
+export const nftsHead = [
+  { name: "ID", width: 136 },
+  { name: "Class", width: 100 },
+  { name: "Name", width: 332 },
+  { name: "Created Time", width: 200 },
+  { name: "Owner", width: 152 },
+  { name: "Instance", width: 120 },
+  { name: "Status" },
+];
+
 export const addressExtrincsHead = [
   { name: "ID", width: 160 },
   { name: "Hash" },
@@ -180,7 +190,13 @@ export const teleportsHead = [
   { name: "Total", align: "right" },
 ];
 
-export const addressHead = ["Address", "Total Balance", "Free", "Reserved", "Nonce"];
+export const addressHead = [
+  "Address",
+  "Total Balance",
+  "Free",
+  "Reserved",
+  "Nonce",
+];
 
 export const extrinsicHead = [
   "Timestamp",

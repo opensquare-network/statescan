@@ -6,6 +6,7 @@ import { nftsHead } from "utils/constants";
 import Pagination from "components/pagination";
 import Filter from "../components/filter";
 import Status from "../components/status";
+import InLink from "../components/inLink";
 
 export default function NftClasses({ node, nfts, filter }) {
   return (
@@ -23,7 +24,9 @@ export default function NftClasses({ node, nfts, filter }) {
               src={nftClass.class}
               alt=""
             />,
-            nftClass.name,
+            <InLink key={`name${index}`} to={`/nft/classes/${nftClass.id}`}>
+              nftClass.name
+            </InLink>,
             nftClass.createdTime,
             <AddressEllipsis
               key={`owner-${index}`}

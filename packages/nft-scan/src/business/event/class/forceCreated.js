@@ -3,8 +3,8 @@ const { TimelineItemTypes } = require("../../common/constants");
 const { insertNewClassWithDetails } = require("./common");
 const { UniquesEvents } = require("../../common/constants");
 
-async function handleCreated(event, indexer) {
-  const [classId, creator, owner] = event.data.toJSON();
+async function handleForceCreated(event, indexer) {
+  const [classId, owner] = event.data.toJSON();
   await insertNewClassWithDetails(classId, indexer);
 
   const timelineItem = {
@@ -13,7 +13,6 @@ async function handleCreated(event, indexer) {
     type: TimelineItemTypes.event,
     args: {
       classId,
-      creator,
       owner,
     },
   };
@@ -22,5 +21,5 @@ async function handleCreated(event, indexer) {
 }
 
 module.exports = {
-  handleCreated,
+  handleForceCreated,
 };

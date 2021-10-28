@@ -17,7 +17,13 @@ const UniquesEvents = Object.freeze({
   AttributeCleared: "AttributeCleared",
 });
 
+const TimelineItemTypes = Object.freeze({
+  extrinsic: "extrinsic",
+  event: "event",
+});
+
 module.exports = {
   Modules,
   UniquesEvents,
+  TimelineItemTypes,
 };

@@ -1,20 +1,20 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
 const { TimelineItemTypes } = require("../../common/constants");
-const { insertNewClassWithDetails } = require("./common");
 const { UniquesEvents } = require("../../common/constants");
+const { updateMetadata } = require("./common");
 
-async function handleCreated(event, indexer) {
-  const [classId, creator, owner] = event.data.toJSON();
-  await insertNewClassWithDetails(classId, indexer);
+async function handleMetadataSet(event, indexer) {
+  const [classId, data, isFrozen] = event.data.toJSON();
+  await updateMetadata(classId, indexer);
 
   const timelineItem = {
     indexer,
-    name: UniquesEvents.ForceCreated,
+    name: UniquesEvents.ClassMetadataSet,
     type: TimelineItemTypes.event,
     args: {
       classId,
-      creator,
-      owner,
+      data,
+      isFrozen,
     },
   };
 
@@ -22,5 +22,5 @@ async function handleCreated(event, indexer) {
 }
 
 module.exports = {
-  handleCreated,
+  handleMetadataSet,
 };

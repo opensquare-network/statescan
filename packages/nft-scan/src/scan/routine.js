@@ -39,6 +39,10 @@ async function oneStepScan(startHeight) {
       await sleep(1000);
       logger.error(`Error with block scan ${item.height}`, e);
     }
+
+    if (item.height % 10000 === 0) {
+      process.exit(0);
+    }
   }
 
   const lastHeight = last(blocks || []).height;

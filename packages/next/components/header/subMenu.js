@@ -36,7 +36,6 @@ const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   > svg {
-    margin-left: 4px;
     stroke: #111111;
     stroke-width: 1.5;
   }

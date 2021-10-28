@@ -19,7 +19,13 @@ async function insertNewClassWithDetails(classId, indexer) {
   await insertClass(indexer, classId, details);
 }
 
+async function updateClassWithDetails(classId, indexer) {
+  const details = await queryClassDetails(classId, indexer);
+  await updateClass(classId, { details });
+}
+
 module.exports = {
   updateMetadata,
   insertNewClassWithDetails,
+  updateClassWithDetails,
 };

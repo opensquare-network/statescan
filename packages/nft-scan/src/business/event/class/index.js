@@ -7,6 +7,8 @@ const { handleForceCreated } = require("./forceCreated");
 const { handleDestroyed } = require("./destroyed");
 const { handleMetadataSet } = require("./metadataSet");
 const { handleCreated } = require("./created");
+const { handleTeamChanged } = require("./teamChanged");
+const { handleAssetStatusChanged } = require("./assetStatusChanged");
 const { Modules, UniquesEvents } = require("../../common/constants");
 
 async function handleEvent(event, indexer, blockEvents, extrinsic) {
@@ -33,6 +35,10 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleDestroyed(...arguments);
   } else if (UniquesEvents.ClassMetadataCleared === method) {
     await handleMetadataCleared(...arguments);
+  } else if (UniquesEvents.TeamChanged === method) {
+    await handleTeamChanged(...arguments);
+  } else if (UniquesEvents.AssetStatusChanged === method) {
+    await handleAssetStatusChanged(...arguments);
   }
 }
 

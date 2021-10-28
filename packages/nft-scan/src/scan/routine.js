@@ -3,7 +3,7 @@ const { fetchBlocks } = require("../chain/fetchBlocks");
 const { getScanStep } = require("../env");
 const { sleep } = require("../utils/sleep");
 const { getLatestHeight } = require("../chain/finalizedHead");
-const { getNextScanHeight } = require("../mongo/scanHeight");
+const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const { logger } = require("../logger");
 const last = require("lodash.last");
 
@@ -34,6 +34,7 @@ async function oneStepScan(startHeight) {
     // TODO: do following operations in one transaction
     try {
       await scanBlock(item.block, item.events);
+      await updateScanHeight(item.height);
     } catch (e) {
       await sleep(1000);
       logger.error(`Error with block scan ${item.height}`, e);

@@ -247,6 +247,16 @@ export const getNFTClassHead = (status) => {
   ];
 };
 
+export const getNFTClassInstanceHead = (status) => {
+  return [
+    "ID",
+    "Created Time",
+    "Owner",
+    "Issuer",
+    ...(status === "Active" ? [] : ["Status"]),
+  ];
+};
+
 export const NFTClassInstanceHead = [
   { name: "ID", width: 136 },
   { name: "NFT", width: 100 },

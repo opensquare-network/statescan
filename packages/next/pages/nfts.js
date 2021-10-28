@@ -17,16 +17,16 @@ export default function NftClasses({ node, nfts, filter }) {
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
-            nftClass.id,
+            <InLink key={`id${index}`} to={`/nft/classes/${nftClass.id}`}>
+              {nftClass.id}
+            </InLink>,
             <img
               width={32}
               key={`class${index}`}
               src={nftClass.class}
               alt=""
             />,
-            <InLink key={`name${index}`} to={`/nft/classes/${nftClass.id}`}>
-              nftClass.name
-            </InLink>,
+            nftClass.name,
             nftClass.createdTime,
             <AddressEllipsis
               key={`owner-${index}`}

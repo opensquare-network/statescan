@@ -18,24 +18,20 @@ import InLink from "components/inLink";
 import Address from "components/address";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
-import Tooltip from "components/tooltip";
 import Timeline from "components/timeline";
-import { ssrNextApi as nextApi } from "services/nextApi";
-import PageNotFound from "components/pageNotFound";
-import AnalyticsChart from "components/analyticsChart";
-import { getAssetInfo } from "utils/assetInfoData";
-import AssetInfo from "components/assetInfo";
 import Status from "components/status";
 import styled from "styled-components";
 import { card_border } from "../../../styles/textStyles";
 import NftInfo from "../../../components/nftInfo";
 
 const Between = styled.div`
-  display: flex;
+  margin-bottom: 16px;
   padding: 24px;
+  display: flex;
   ${card_border};
   background: white;
-  div {
+
+  > div {
     flex-grow: 1;
     border: none;
     box-shadow: none;
@@ -43,8 +39,39 @@ const Between = styled.div`
 `;
 
 export default function NftClass({ node }) {
-  const symbol = getSymbol(node);
-  const assetTransfers = {};
+  const NFTClass = {
+    id: 1,
+    class: "/imgs/icons/nft.png",
+    name: "Elementum amet, duis tellus",
+    createdTime: "2021-10-25 20:12:00",
+    owner: "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv",
+    instanceCount: 10,
+    status: "Active",
+  };
+
+  const classInstances = {
+    total: 2,
+    items: [
+      {
+        id: 1,
+        class: "/imgs/icons/nft.png",
+        name: "Elementum amet, duis tellus",
+        createdTime: "2021-10-25 20:12:00",
+        owner: "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv",
+        instanceCount: 10,
+        status: "Active",
+      },
+      {
+        id: 2,
+        class: "/imgs/icons/nft.png",
+        name: "Elementum amet, duis tellus",
+        createdTime: "2021-10-25 20:12:00",
+        owner: "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv",
+        instanceCount: 10,
+        status: "Frozen",
+      },
+    ],
+  };
   const assetHolders = {};
   const asset = {};
   const tab = {};
@@ -52,45 +79,28 @@ export default function NftClass({ node }) {
   const tabTableData = [
     {
       name: "Instance",
-      page: assetTransfers?.page,
-      total: assetTransfers?.total,
+      page: classInstances?.page,
+      total: classInstances?.total,
       head: NFTClassInstanceHead,
-      body: (assetTransfers?.items || []).map((item, index) => [
-        <InLink
-          key={`${index}-1`}
-          to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}
-        >
-          {`${item.indexer.blockHeight}-${item.eventSort}`}
+      body: (classInstances?.items || []).map((instance, index) => [
+        <InLink key={`id${index}`} to={`/nft/classes/${instance.id}`}>
+          {instance.id}
         </InLink>,
-        <InLink
-          key={`${index}-2`}
-          to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-        >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
-        <Tooltip key={`${index}-3`} label={item.method} bg />,
-        item.indexer.blockTime,
+        <img width={32} key={`class${index}`} src={instance.class} alt="" />,
+        instance.name,
+        instance.createdTime,
         <AddressEllipsis
-          key={`${index}-4`}
-          address={item?.from}
-          to={`/account/${item?.from}`}
+          key={`owner-${index}`}
+          address={instance.owner}
+          to={`/account/${instance.owner}`}
         />,
-        <AddressEllipsis
-          key={`${index}-5`}
-          address={item?.to}
-          to={`/account/${item?.to}`}
-        />,
-        item.assetSymbol
-          ? `${bigNumber2Locale(
-              fromAssetUnit(item.balance, item.assetDecimals)
-            )} ${item.assetSymbol}`
-          : `${bigNumber2Locale(
-              fromSymbolUnit(item.balance, symbol)
-            )} ${symbol}`,
+        <Status key={`status-${index}`} status={instance.status} />,
       ]),
       foot: (
         <Pagination
-          page={assetTransfers?.page}
-          pageSize={assetTransfers?.pageSize}
-          total={assetTransfers?.total}
+          page={classInstances?.page}
+          pageSize={classInstances?.pageSize}
+          total={classInstances?.total}
         />
       ),
     },
@@ -122,18 +132,18 @@ export default function NftClass({ node }) {
             <DetailTable
               head={getNFTClassHead(status)}
               body={[
-                <MinorText key="1">{asset?.symbol}</MinorText>,
-                <MinorText key="2">{asset?.name}</MinorText>,
-                <MinorText key="3">{`#${asset?.assetId}`}</MinorText>,
+                <MinorText key="1">{NFTClass?.id}</MinorText>,
+                <MinorText key="2">{NFTClass?.createdTime}</MinorText>,
+                <MinorText key="3">{NFTClass?.instanceCount}</MinorText>,
                 <Address
                   key="4"
-                  address={asset?.owner}
-                  to={`/account/${asset?.owner}`}
+                  address={NFTClass?.owner}
+                  to={`/account/${NFTClass?.owner}`}
                 />,
                 <Address
                   key="5"
-                  address={asset?.issuer}
-                  to={`/account/${asset?.issuer}`}
+                  address={NFTClass?.owner}
+                  to={`/account/${NFTClass?.owner}`}
                 />,
                 `${bigNumber2Locale(
                   fromAssetUnit(asset?.supply, asset?.decimals)
@@ -143,7 +153,7 @@ export default function NftClass({ node }) {
                   ? []
                   : [<Status key="6" status={status} />]),
                 <MinorText key="7">{assetHolders?.total}</MinorText>,
-                <MinorText key="8">{assetTransfers?.total}</MinorText>,
+                <MinorText key="8">{classInstances?.total}</MinorText>,
               ]}
               info={
                 <NftInfo

@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 
 const Wrapper = styled.div`
+  display: inline-block;
   padding: 4px 12px;
   font-size: 14px;
   line-height: 16px;

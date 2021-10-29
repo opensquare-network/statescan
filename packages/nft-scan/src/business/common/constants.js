@@ -3,6 +3,7 @@ const Modules = Object.freeze({
 });
 
 const UniquesEvents = Object.freeze({
+  // class events
   Created: "Created",
   ForceCreated: "ForceCreated",
   Destroyed: "Destroyed",
@@ -13,6 +14,19 @@ const UniquesEvents = Object.freeze({
   AssetStatusChanged: "AssetStatusChanged", // asset class status changed, should save old and new status
   ClassMetadataSet: "ClassMetadataSet",
   ClassMetadataCleared: "ClassMetadataCleared",
+
+  // instance events
+  Issued: "Issued",
+  Transferred: "Transferred",
+  ApprovedTransfer: "ApprovedTransfer",
+  ApprovalCancelled: "ApprovalCancelled",
+  Burned: "Burned",
+  Frozen: "Frozen",
+  Thawed: "Thawed",
+  MetadataSet: "MetadataSet",
+  MetadataCleared: "MetadataCleared",
+
+  // shared events
   AttributeSet: "AttributeSet",
   AttributeCleared: "AttributeCleared",
 });

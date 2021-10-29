@@ -20,8 +20,14 @@ const unFinalizedEventCollectionName = "unFinalizedEvent";
 // Statistic
 const dailyAssetStatisticCollectionName = "dailyAssetStatistic";
 
+// NFT
+const nftClassCollectionName = "nftClass";
+const classTimelineCollectionName = "classTimeline";
+const classAttributeCollectionName = "classAttribute";
+
 let client = null;
 let db = null;
+let nftDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -39,13 +45,26 @@ let unFinalizedEventCol = null;
 
 let dailyAssetStatisticCol = null;
 
+let nftClassCol = null;
+let classTimelineCol = null;
+let classAttributeCol = null;
+
 function getDbName() {
-  const dbName = process.env.MONGO_DB_SERVER_NAME;
+  const dbName = process.env.MONGO_DB_NAME;
   if (!dbName) {
-    throw new Error("MONGO_DB_SERVER_NAME not set");
+    throw new Error("MONGO_DB_NAME not set");
   }
 
   return dbName;
+}
+
+function getNftDbName() {
+  const nftDbName = process.env.MONGO_DB_NFT_NAME;
+  if (!nftDbName) {
+    throw new Error("MONGO_DB_NFT_NAME not set");
+  }
+
+  return nftDbName;
 }
 
 async function initDb() {
@@ -72,6 +91,14 @@ async function initDb() {
   unFinalizedEventCol = db.collection(unFinalizedEventCollectionName);
 
   dailyAssetStatisticCol = db.collection(dailyAssetStatisticCollectionName);
+
+  const nftDbName = getNftDbName();
+  console.log(`Use nft scan DB name:`, nftDbName);
+
+  nftDb = client.db(nftDbName);
+  nftClassCol = nftDb.collection(nftClassCollectionName);
+  classTimelineCol = nftDb.collection(classTimelineCollectionName);
+  classAttributeCol = nftDb.collection(classAttributeCollectionName);
 
   await _createIndexes();
 }
@@ -222,6 +249,21 @@ async function getDailyAssetStatisticCollection() {
   return dailyAssetStatisticCol;
 }
 
+async function getNftClassCollection() {
+  await tryInit(nftClassCol);
+  return nftClassCol;
+}
+
+async function getClassTimelineCollection() {
+  await tryInit(classTimelineCol);
+  return classTimelineCol;
+}
+
+async function getClassAttributeCollection() {
+  await tryInit(classAttributeCol);
+  return classAttributeCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -237,4 +279,7 @@ module.exports = {
   getUnFinalizedEventCollection,
   getUnFinalizedExrinsicCollection,
   getDailyAssetStatisticCollection,
+  getNftClassCollection,
+  getClassTimelineCollection,
+  getClassAttributeCollection,
 };

@@ -1,5 +1,13 @@
 import { css } from "styled-components";
 
+export const h4_24_bold = css`
+  font-family: Inter;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 24px;
+`;
+
 export const p_12_normal = css`
   font-family: Inter;
   font-size: 12px;

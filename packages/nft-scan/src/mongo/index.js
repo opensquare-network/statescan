@@ -14,11 +14,17 @@ const statusCollectionName = "status";
 const classCollectionName = "nftClass";
 const classTimelineCollectionName = "classTimeline";
 const classAttributeCollectionName = "classAttribute";
+const instanceCollectionName = "nftInstance";
+const instanceTimelineCollectionName = "instanceTimeline";
+const instanceAttributeCollectionName = "instanceAttribute";
 
 let statusCol = null;
 let classCol = null;
 let classTimelineCol = null;
 let classAttributeCol = null;
+let instanceCol = null;
+let instanceTimelineCol = null;
+let instanceAttributeCol = null;
 
 let client = null;
 let db = null;
@@ -52,6 +58,9 @@ async function initDb() {
   classCol = await getCollection(classCollectionName);
   classTimelineCol = await getCollection(classTimelineCollectionName);
   classAttributeCol = await getCollection(classAttributeCollectionName);
+  instanceCol = await getCollection(instanceCollectionName);
+  instanceTimelineCol = await getCollection(instanceTimelineCollectionName);
+  instanceAttributeCol = await getCollection(instanceAttributeCollectionName);
 
   await _createIndexes();
 }
@@ -94,10 +103,28 @@ async function getClassAttributeCollection() {
   return classAttributeCol;
 }
 
+async function getInstanceCollection() {
+  await tryInit(instanceCol);
+  return instanceCol;
+}
+
+async function getInstanceTimelineCollection() {
+  await tryInit(instanceTimelineCol);
+  return instanceTimelineCol;
+}
+
+async function getInstanceAttributeCollection() {
+  await tryInit(instanceAttributeCol);
+  return instanceAttributeCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
   getClassCollection,
   getClassTimelineCollection,
   getClassAttributeCollection,
+  getInstanceCollection,
+  getInstanceTimelineCollection,
+  getInstanceAttributeCollection,
 };

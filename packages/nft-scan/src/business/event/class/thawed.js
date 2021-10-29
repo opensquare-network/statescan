@@ -1,11 +1,11 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
 const { TimelineItemTypes } = require("../../common/constants");
 const { UniquesEvents } = require("../../common/constants");
-const { updateMetadata } = require("./common");
+const { updateClassWithDetails } = require("./common");
 
 async function handleThawed(event, indexer) {
   const [classId] = event.data.toJSON();
-  await updateMetadata(classId, indexer);
+  await updateClassWithDetails(classId, indexer);
 
   const timelineItem = {
     indexer,

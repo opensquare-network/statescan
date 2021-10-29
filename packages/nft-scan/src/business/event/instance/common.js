@@ -18,7 +18,13 @@ async function insertNewInstance(classId, instanceId, indexer) {
   await insertInstance(indexer, classId, instanceId, details);
 }
 
+async function updateInstanceWithDetails(classId, instanceId, indexer) {
+  const details = await queryClassDetails(classId, instanceId, indexer);
+  await updateClass(classId, instanceId, { details });
+}
+
 module.exports = {
   insertNewInstance,
   updateMetadata,
+  updateInstanceWithDetails,
 };

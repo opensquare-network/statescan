@@ -1,6 +1,7 @@
 const {
   getClassCollection,
-  getInstanceCollection
+  getInstanceCollection,
+  getInstanceTimelineCollection,
 } = require("../index");
 const { logger } = require("../../logger");
 
@@ -35,7 +36,7 @@ async function insertInstanceTimelineItem(classId, instanceId, timelineItem = {}
   const classHeight = nftInstance.classHeight;
   const instanceHeight = nftInstance.indexer.blockHeight;
 
-  const col = await getClassTimelineCollection();
+  const col = await getInstanceTimelineCollection();
   await col.insertOne({
     classId,
     classHeight,
@@ -45,7 +46,26 @@ async function insertInstanceTimelineItem(classId, instanceId, timelineItem = {}
   });
 }
 
+async function updateInstance(classId, instanceId, updates) {
+  const classCol = await getClassCollection();
+  const nftClass = await classCol.findOne({ classId, isDestroyed: false });
+  if (!nftClass) {
+    logger.error(`Can not find class ${classId} when set timeline item`);
+    return;
+  }
+
+  const classHeight = nftClass.indexer.blockHeight;
+
+  const instanceCol = await getInstanceCollection();
+  let update = {
+    $set: updates,
+  };
+
+  await instanceCol.updateOne({ classId, classHeight, instanceId, isDestroyed: false }, update);
+}
+
 module.exports = {
   insertInstance,
   insertInstanceTimelineItem,
+  updateInstance,
 };

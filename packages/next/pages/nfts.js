@@ -6,6 +6,7 @@ import { nftsHead } from "utils/constants";
 import Pagination from "components/pagination";
 import Filter from "../components/filter";
 import Status from "../components/status";
+import InLink from "../components/inLink";
 
 export default function NftClasses({ node, nfts, filter }) {
   return (
@@ -16,7 +17,9 @@ export default function NftClasses({ node, nfts, filter }) {
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
-            nftClass.id,
+            <InLink key={`id${index}`} to={`/nft/classes/${nftClass.id}`}>
+              {nftClass.id}
+            </InLink>,
             <img
               width={32}
               key={`class${index}`}

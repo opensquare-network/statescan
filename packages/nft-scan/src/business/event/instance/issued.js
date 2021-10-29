@@ -5,7 +5,6 @@ const { UniquesEvents } = require("../../common/constants");
 
 async function handleIssued(event, indexer, blockEvents, extrinsic) {
   const [classId, instanceId, owner] = event.data.toJSON();
-  console.log(classId, instanceId);
   await insertNewInstance(classId, instanceId, indexer);
 
   const timelineItem = {

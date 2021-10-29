@@ -43,7 +43,6 @@ async function insertInstanceTimelineItem(classId, instanceId, timelineItem = {}
     return;
   }
 
-  const classHeight = nftInstance.classHeight;
   const instanceHeight = nftInstance.indexer.blockHeight;
 
   const col = await getInstanceTimelineCollection();

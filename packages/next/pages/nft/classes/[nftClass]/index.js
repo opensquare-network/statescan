@@ -1,19 +1,11 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
-import { getSymbol } from "utils/hooks";
-import {
-  assetTransfersHead,
-  assetHoldersHead,
-  EmptyQuery,
-  getAssetHead,
-  getNFTClassHead,
-  NFTClassInstanceHead,
-} from "utils/constants";
+import { getNFTClassHead, NFTClassInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
 import AddressEllipsis from "components/addressEllipsis";
-import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
+import { bigNumber2Locale, fromAssetUnit } from "utils";
 import InLink from "components/inLink";
 import Address from "components/address";
 import TabTable from "components/tabTable";
@@ -21,8 +13,8 @@ import Pagination from "components/pagination";
 import Timeline from "components/timeline";
 import Status from "components/status";
 import styled from "styled-components";
-import { card_border } from "../../../styles/textStyles";
-import NftInfo from "../../../components/nftInfo";
+import { card_border } from "styles/textStyles";
+import NftInfo from "components/nftInfo";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -83,7 +75,10 @@ export default function NftClass({ node }) {
       total: classInstances?.total,
       head: NFTClassInstanceHead,
       body: (classInstances?.items || []).map((instance, index) => [
-        <InLink key={`id${index}`} to={`/nft/classes/${instance.id}`}>
+        <InLink
+          key={`id${index}`}
+          to={`/nft/classes/${NFTClass.id}/instances/${instance.id}`}
+        >
           {instance.id}
         </InLink>,
         <img width={32} key={`class${index}`} src={instance.class} alt="" />,

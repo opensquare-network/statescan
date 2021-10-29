@@ -7,8 +7,10 @@ import Pagination from "components/pagination";
 import Filter from "../components/filter";
 import Status from "../components/status";
 import InLink from "../components/inLink";
+import { ssrNextApi as nextApi } from "../services/nextApi";
 
-export default function NftClasses({ node, nfts, filter }) {
+export default function NftClasses({ node, nft, nfts, filter }) {
+  console.log(nft);
   return (
     <Layout node={node}>
       <section>
@@ -52,6 +54,14 @@ export default function NftClasses({ node, nfts, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
+  const { page } = context.query;
+
+  const nPage = parseInt(page) || 1;
+
+  const { result: nft } = await nextApi.fetch(`nftclasses`, {
+    page: nPage - 1,
+    pageSize: 25,
+  });
 
   const nfts = {
     items: [
@@ -97,6 +107,7 @@ export async function getServerSideProps(context) {
       node,
       nfts,
       filter,
+      nft,
     },
   };
 }

@@ -1,0 +1,22 @@
+{
+  "name": "@statescan/xcm-scan",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest src"
+  },
+  "dependencies": {
+    "@polkadot/api": "6.5.3-3",
+    "dotenv": "^10.0.0",
+    "lodash.last": "^3.0.0",
+    "mongodb": "4.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.1",
+    "jest": "^27.1.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@polkadot|@babel)/)"
+    ]
+  }
+}

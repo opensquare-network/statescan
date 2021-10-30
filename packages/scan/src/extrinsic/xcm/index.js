@@ -35,8 +35,16 @@ function extractTeleportFromOneMsg(
   downwardMessage,
   extrinsicIndexer
 ) {
-  const pubSentAt = downwardMessage.pubSentAt.toJSON();
-  const pubMsg = downwardMessage.pubMsg;
+  const sentAt = downwardMessage.pubSentAt || downwardMessage.sentAt;
+  if (!sentAt) {
+    return null;
+  }
+
+  const pubSentAt = sentAt.toJSON();
+  const pubMsg = downwardMessage.pubMsg || downwardMessage.msg;
+  if (!pubMsg) {
+    return null;
+  }
   const messageId = blake2AsHex(pubMsg.toHex());
 
   let versionedXcm;

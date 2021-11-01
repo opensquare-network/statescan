@@ -18,6 +18,11 @@ async function findBlockApi(blockHash) {
   return blockApi;
 }
 
+function removeBlockApi(blockHash) {
+  delete blockApiMap[blockHash];
+}
+
 module.exports = {
   findBlockApi,
+  removeBlockApi,
 };

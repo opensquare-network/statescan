@@ -3,6 +3,7 @@ const { getBlockIndexer } = require("../block/getBlockIndexer");
 const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");
+const { logger } = require("../logger");
 
 async function getNotUpdatedAddresses() {
   const updateAddrStep = getUpdateAddrStep();
@@ -27,7 +28,10 @@ async function updateAddresses(indexer, addrs = []) {
   const col = await getAddressCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const account of accounts) {
-    const total = bigAdd(account.info.data.free, account.info.data.reserved);
+    const total = bigAdd(
+      account.info.data.free || 0,
+      account.info.data.reserved || 0
+    );
     bulk
       .find({ address: account.address })
       .upsert()
@@ -61,13 +65,20 @@ async function updateAllRawAddrsInDB(indexer) {
   do {
     await updateAddresses(indexer, addrs);
     addrs = await getNotUpdatedAddresses();
+    logger.info(
+      `${(addrs || []).length} addrs updated at ${indexer.blockHeight}`
+    );
   } while ((addrs || []).length > 0);
 }
 
 async function updateAllRawAddrs(block) {
   const blockIndexer = getBlockIndexer(block);
 
-  await updateAllRawAddrsInDB(blockIndexer);
+  try {
+    await updateAllRawAddrsInDB(blockIndexer);
+  } catch (e) {
+    logger.error("error when updateAllRawAddrsInDB", e);
+  }
 }
 
 module.exports = {

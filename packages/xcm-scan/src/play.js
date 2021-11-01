@@ -1,11 +1,14 @@
 require("dotenv").config();
+const { setSpecHeights } = require("./chain/specs");
 const { scanBlock } = require("./scan/block");
 const { getApi } = require("./api");
 const { initDb } = require("./mongo");
 
 async function test() {
   await initDb();
-  const height = 323750;
+  const height = 1070850;
+
+  setSpecHeights([height]);
 
   const api = await getApi();
   const blockHash = await api.rpc.chain.getBlockHash(height);

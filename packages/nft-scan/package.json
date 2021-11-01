@@ -5,7 +5,7 @@
     "test": "jest src"
   },
   "dependencies": {
-    "@polkadot/api": "6.5.3-3",
+    "@polkadot/api": "6.5.3-9",
     "dotenv": "^10.0.0",
     "lodash.last": "^3.0.0",
     "mongodb": "4.1.2"

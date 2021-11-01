@@ -1,3 +1,5 @@
+const { handleDmpQueueEvent } = require("./dmpQueue");
+
 async function handleEvents(events, extrinsics, blockIndexer) {
   for (let sort = 0; sort < events.length; sort++) {
     const { event, phase } = events[sort];
@@ -17,8 +19,7 @@ async function handleEvents(events, extrinsics, blockIndexer) {
       extrinsic = extrinsics[extrinsicIndex];
     }
 
-    // todo handle event
-    // await handleEvent(event, indexer, events, extrinsic);
+    await handleDmpQueueEvent(event, indexer, events, extrinsic);
   }
 }
 

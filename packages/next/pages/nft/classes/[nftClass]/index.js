@@ -15,6 +15,7 @@ import Status from "components/status";
 import styled from "styled-components";
 import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
+import CopyText from "../../../../components/copyText";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -24,6 +25,7 @@ const Between = styled.div`
   background: white;
 
   > div {
+    margin-left: 16px;
     flex-grow: 1;
     border: none;
     box-shadow: none;
@@ -130,16 +132,18 @@ export default function NftClass({ node }) {
                 <MinorText key="1">{NFTClass?.id}</MinorText>,
                 <MinorText key="2">{NFTClass?.createdTime}</MinorText>,
                 <MinorText key="3">{NFTClass?.instanceCount}</MinorText>,
-                <Address
-                  key="4"
-                  address={NFTClass?.owner}
-                  to={`/account/${NFTClass?.owner}`}
-                />,
-                <Address
-                  key="5"
-                  address={NFTClass?.owner}
-                  to={`/account/${NFTClass?.owner}`}
-                />,
+                <CopyText key="4" text={NFTClass?.owner}>
+                  <Address
+                    address={NFTClass?.owner}
+                    to={`/account/${NFTClass?.owner}`}
+                  />
+                </CopyText>,
+                <CopyText key="5" text={NFTClass?.owner}>
+                  <Address
+                    address={NFTClass?.owner}
+                    to={`/account/${NFTClass?.owner}`}
+                  />
+                </CopyText>,
                 `${bigNumber2Locale(
                   fromAssetUnit(asset?.supply, asset?.decimals)
                 )} ${asset?.symbol}`,

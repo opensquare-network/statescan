@@ -32,11 +32,17 @@ async function handleDownwardMsg(call, indexer) {
 }
 
 async function handleOneMsg(msg, indexer, registry) {
+  const relayChainAt = msg.pubSentAt || msg.sentAt;
+  console.log("relayChainAt", relayChainAt);
   let versionedXcm;
   try {
-    versionedXcm = registry.createType("VersionedXcm", msg, false);
+    versionedXcm = registry.createType(
+      "VersionedXcm",
+      msg.pubMsg || msg.msg,
+      true
+    );
   } catch (e) {
-    console.log(`versionedXcm parse failed at ${indexer.blockHeight}`);
+    console.log(`versionedXcm parse failed at ${indexer.blockHeight}`, e);
     return null;
   }
 

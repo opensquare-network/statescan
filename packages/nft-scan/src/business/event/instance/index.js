@@ -8,6 +8,8 @@ const { handleMetadataCleared } = require("./metadataCleared");
 const { handleMetadataSet } = require("./metadataSet");
 const { handleThawed } = require("./thawed");
 const { handleTransferred } = require("./transferred");
+const { handleAttributeCleared } = require("./attributeCleared");
+const { handleAttributeSet } = require("./attributeSet");
 
 async function handleEvent(event, indexer, blockEvents, extrinsic) {
   const { section, method } = event;
@@ -33,6 +35,10 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleMetadataSet(...arguments);
   } else if (UniquesEvents.MetadataCleared === method) {
     await handleMetadataCleared(...arguments);
+  } else if (UniquesEvents.AttributeCleared === method) {
+    await handleAttributeCleared(...arguments);
+  } else if (UniquesEvents.AttributeSet === method) {
+    await handleAttributeSet(...arguments);
   }
 }
 

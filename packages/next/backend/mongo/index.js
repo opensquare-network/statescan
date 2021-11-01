@@ -24,6 +24,9 @@ const dailyAssetStatisticCollectionName = "dailyAssetStatistic";
 const nftClassCollectionName = "nftClass";
 const classTimelineCollectionName = "classTimeline";
 const classAttributeCollectionName = "classAttribute";
+const nftInstanceCollectionName = "nftInstance";
+const instanceTimelineCollectionName = "instanceTimeline";
+const instanceAttributeCollectionName = "instanceAttribute";
 
 let client = null;
 let db = null;
@@ -48,6 +51,9 @@ let dailyAssetStatisticCol = null;
 let nftClassCol = null;
 let classTimelineCol = null;
 let classAttributeCol = null;
+let nftInstanceCol = null;
+let instanceTimelineCol = null;
+let instanceAttributeCol = null;
 
 function getDbName() {
   const dbName = process.env.MONGO_DB_NAME;
@@ -99,6 +105,9 @@ async function initDb() {
   nftClassCol = nftDb.collection(nftClassCollectionName);
   classTimelineCol = nftDb.collection(classTimelineCollectionName);
   classAttributeCol = nftDb.collection(classAttributeCollectionName);
+  nftInstanceCol = nftDb.collection(nftInstanceCollectionName);
+  instanceTimelineCol = nftDb.collection(instanceTimelineCollectionName);
+  instanceAttributeCol = nftDb.collection(instanceAttributeCollectionName);
 
   await _createIndexes();
 }
@@ -264,6 +273,21 @@ async function getClassAttributeCollection() {
   return classAttributeCol;
 }
 
+async function getNftInstanceCollection() {
+  await tryInit(nftInstanceCol);
+  return nftInstanceCol;
+}
+
+async function getInstanceTimelineCollection() {
+  await tryInit(instanceTimelineCol);
+  return instanceTimelineCol;
+}
+
+async function getInstanceAttributeCollection() {
+  await tryInit(instanceAttributeCol);
+  return instanceAttributeCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -282,4 +306,7 @@ module.exports = {
   getNftClassCollection,
   getClassTimelineCollection,
   getClassAttributeCollection,
+  getNftInstanceCollection,
+  getInstanceTimelineCollection,
+  getInstanceAttributeCollection,
 };

@@ -1,9 +1,11 @@
 import Address from "components/account/address";
 import { makeTablePairs } from "utils";
 
+const last = (arr) => arr.length && arr[arr.length - 1] || undefined;
+
 export function makeEventArgs(node, event) {
   const eventData = makeTablePairs(
-    ["Docs", ...event.meta.args],
+    ["Docs", ...event.meta.fields.map((f, i) => f.typeName && last(f.typeName.split("::")) || event.meta.args[i])],
     [
       (event?.meta?.docs || event?.meta?.documentation)?.join("").trim() || "",
       ...event.data,

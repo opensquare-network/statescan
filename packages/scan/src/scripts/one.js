@@ -70,7 +70,7 @@ async function saveBusiness({ block, events }, blockIndexer) {
 
       const { section, method, data } = event;
       if (section === "assets" || method === "Transferred") {
-        const [assetId, from, to, balance] = data.toJson();
+        const [assetId, from, to, balance] = data.toJSON();
         const asset = await assetCol.findOne({ assetId, destroyedAt: null });
         if (!asset) {
           continue;

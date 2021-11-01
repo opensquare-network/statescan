@@ -1,3 +1,4 @@
+const { removeBlockApi } = require("./spec/blockApi");
 const { setLastBlockIndexer } = require("./statistic/date");
 const { saveData } = require("./service");
 const { handleEvents } = require("./event");
@@ -44,6 +45,7 @@ async function scanNormalizedBlock(
   );
 
   setLastBlockIndexer(blockIndexer);
+  removeBlockApi(blockIndexer.blockHash);
 }
 
 module.exports = {

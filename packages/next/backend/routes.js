@@ -14,6 +14,7 @@ const chainFeatureRouters = [
   require("./features/prices/routes"),
   require("./features/teleports/routes"),
   require("./features/nftclasses/routes"),
+  require("./features/nftinstances/routes"),
 ];
 
 const commonFeatureRouters = [];

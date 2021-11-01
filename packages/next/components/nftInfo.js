@@ -9,7 +9,7 @@ import {
 } from "../styles/textStyles";
 
 const Wrapper = styled.div`
-  padding-left: 40px;
+  padding-left: 24px;
   margin-top: 8px;
   ${text_dark_minor};
 
@@ -33,7 +33,6 @@ const Divider = styled.div`
 `;
 
 export default function NftInfo({ data }) {
-  // if (!data) return null;
   return (
     <>
       <Wrapper>

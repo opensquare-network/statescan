@@ -14,6 +14,9 @@ const Wrapper = styled.div`
 `;
 
 export default function Status({ status }) {
+  if (!status) {
+    return null;
+  }
   let bg = `#3765DC`;
   switch (status) {
     case "Active":

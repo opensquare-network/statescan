@@ -8,9 +8,9 @@ import Filter from "../components/filter";
 import Status from "../components/status";
 import InLink from "../components/inLink";
 import { ssrNextApi as nextApi } from "../services/nextApi";
+import { time } from "../utils";
 
-export default function NftClasses({ node, nft, nfts, filter }) {
-  console.log(nft);
+export default function NftClasses({ node, nfts, filter }) {
   return (
     <Layout node={node}>
       <section>
@@ -19,24 +19,27 @@ export default function NftClasses({ node, nft, nfts, filter }) {
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
-            <InLink key={`id${index}`} to={`/nft/classes/${nftClass.id}`}>
-              {nftClass.id}
+            <InLink key={`id${index}`} to={`/nft/classes/${nftClass.classId}`}>
+              {nftClass.classId}
             </InLink>,
             <img
               width={32}
               key={`class${index}`}
-              src={nftClass.class}
+              src={nftClass.class ?? "/imgs/icons/nft.png"}
               alt=""
             />,
-            nftClass.name,
-            nftClass.createdTime,
+            nftClass.name ?? "NFT",
+            time(nftClass?.indexer?.blockTime),
             <AddressEllipsis
               key={`owner-${index}`}
-              address={nftClass.owner}
-              to={`/account/${nftClass.owner}`}
+              address={nftClass.details?.owner}
+              to={`/account/${nftClass.details?.owner}`}
             />,
-            nftClass.instanceCount,
-            <Status key={`status-${index}`} status={nftClass.status} />,
+            nftClass.details?.instances,
+            <Status
+              key={`status-${index}`}
+              status={nftClass.details?.isFroze ? "Frozen" : "Active"}
+            />,
           ])}
           foot={
             <Pagination
@@ -54,51 +57,42 @@ export default function NftClasses({ node, nft, nfts, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { page } = context.query;
+  const { page, category, status } = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const { result: nft } = await nextApi.fetch(`nftclasses`, {
+  const { result: nfts } = await nextApi.fetch(`nftclasses`, {
     page: nPage - 1,
     pageSize: 25,
+    ...(category ? { category } : {}),
+    ...(status ? { status } : {}),
   });
-
-  const nfts = {
-    items: [
-      {
-        id: 1,
-        class: "/imgs/icons/nft.png",
-        name: "Elementum amet, duis tellus",
-        createdTime: "2021-10-25 20:12:00",
-        owner: "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv",
-        instanceCount: 10,
-        status: "Active",
-      },
-      {
-        id: 2,
-        class: "/imgs/icons/nft.png",
-        name: "Elementum amet, duis tellus",
-        createdTime: "2021-10-25 20:12:00",
-        owner: "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv",
-        instanceCount: 10,
-        status: "Frozen",
-      },
-    ],
-    total: 2,
-  };
 
   const filter = [
     {
       value: "",
       name: "Category",
       query: "category",
-      options: [{ text: "All", value: "" }],
+      options: [
+        { text: "All", value: "" },
+        {
+          text: "Recognized",
+          value: "recognized",
+        },
+        {
+          text: "Unrecognized",
+          value: "unrecognized",
+        },
+      ],
     },
     {
       value: "",
       name: "Status",
       query: "status",
-      options: [{ text: "All", value: "" }],
+      options: [
+        { text: "All", value: "" },
+        { text: "Frozen", value: "frozen" },
+      ],
     },
   ];
 
@@ -107,7 +101,6 @@ export async function getServerSideProps(context) {
       node,
       nfts,
       filter,
-      nft,
     },
   };
 }

@@ -12,12 +12,14 @@ import {
   bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
+  time,
   timeDuration,
 } from "utils";
 import {
   blocksLatestHead,
   transfersLatestHead,
   assetsHead,
+  nftsHead,
 } from "utils/constants";
 import { getSymbol, useWindowSize } from "utils/hooks";
 import { useSelector } from "react-redux";
@@ -30,6 +32,7 @@ import TransferHeightAge from "../components/transfer/heightAge";
 import AddressCounts from "../components/block/addressCounts";
 import AmountFromTo from "../components/transfer/amountFromTo";
 import Name from "../components/account/name";
+import Status from "../components/status";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -62,7 +65,7 @@ const FlexWrapper = styled.div`
 export default function Home({ node, overview: ssrOverview, price }) {
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
-  const [time, setTime] = useState(Date.now());
+  const [currentTime, setTime] = useState(Date.now());
   useEffect(() => {
     connect();
     const interval = setInterval(() => setTime(Date.now()), 1000);
@@ -289,6 +292,44 @@ export default function Home({ node, overview: ssrOverview, price }) {
           }
           collapse={collapseSize}
         />
+        <Table
+          title="NFT classes"
+          head={nftsHead}
+          body={(ssrOverview?.nftclasses?.items || []).map(
+            (nftClass, index) => [
+              <InLink
+                key={`id${index}`}
+                to={`/nft/classes/${nftClass.classId}`}
+              >
+                {nftClass.classId}
+              </InLink>,
+              <img
+                width={32}
+                key={`class${index}`}
+                src={nftClass.class ?? "/imgs/icons/nft.png"}
+                alt=""
+              />,
+              nftClass.name ?? "NFT",
+              time(nftClass?.indexer?.blockTime),
+              <AddressEllipsis
+                key={`owner-${index}`}
+                address={nftClass.details?.owner}
+                to={`/account/${nftClass.details?.owner}`}
+              />,
+              nftClass.details?.instances,
+              <Status
+                key={`status-${index}`}
+                status={nftClass.details?.isFroze ? "Frozen" : "Active"}
+              />,
+            ]
+          )}
+          foot={
+            <FootWrapper>
+              <InLink to={`/assets`}>View all</InLink>
+            </FootWrapper>
+          }
+          collapse={collapseSize}
+        />
       </Wrapper>
     </Layout>
   );
@@ -305,6 +346,7 @@ export async function getServerSideProps() {
     { result: transfersCount },
     { result: holdersCount },
     { result: price },
+    { result: nftclasses },
   ] = await Promise.all([
     nextApi.fetch(`blocks/latest`),
     nextApi.fetch(`assets/popular`),
@@ -313,6 +355,7 @@ export async function getServerSideProps() {
     nextApi.fetch(`transfers/count`),
     nextApi.fetch(`holders/count`),
     nextApi.fetch(`${node}/prices/daily`),
+    nextApi.fetch(`nftclasses`, { page: 0, pageSize: 5 }),
   ]);
 
   return {
@@ -325,6 +368,7 @@ export async function getServerSideProps() {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
+        nftclasses: nftclasses,
       },
       price: price ?? [],
     },

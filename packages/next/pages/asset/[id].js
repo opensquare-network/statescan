@@ -17,7 +17,7 @@ import Address from "components/address";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
-import Timeline from "components/timeline";
+import AssetTimeline from "../../components/timeline/assetTimeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import PageNotFound from "components/pageNotFound";
 import AnalyticsChart from "components/analyticsChart";
@@ -117,7 +117,9 @@ export default function Asset({
     {
       name: "Timeline",
       total: asset?.timeline?.length,
-      component: <Timeline data={asset?.timeline} node={node} asset={asset} />,
+      component: (
+        <AssetTimeline data={asset?.timeline} node={node} asset={asset} />
+      ),
     },
     {
       name: "Analytics",

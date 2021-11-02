@@ -1,28 +1,22 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
-import { getSymbol } from "utils/hooks";
-import {
-  assetTransfersHead,
-  assetHoldersHead,
-  EmptyQuery,
-  getAssetHead,
-  getNFTClassHead,
-  NFTClassInstanceHead,
-} from "utils/constants";
+import CopyText from "components/copyText";
+import { getNFTClassHead, NFTClassInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
 import AddressEllipsis from "components/addressEllipsis";
-import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
+import { bigNumber2Locale, fromAssetUnit, time } from "utils";
 import InLink from "components/inLink";
 import Address from "components/address";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
-import Timeline from "components/timeline";
+import Timeline from "components/timeline/NFTTimeline";
 import Status from "components/status";
 import styled from "styled-components";
 import { card_border } from "../../../styles/textStyles";
 import NftInfo from "../../../components/nftInfo";
+import { ssrNextApi as nextApi } from "../../../services/nextApi";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -32,23 +26,14 @@ const Between = styled.div`
   background: white;
 
   > div {
+    margin-left: 16px;
     flex-grow: 1;
     border: none;
     box-shadow: none;
   }
 `;
 
-export default function NftClass({ node }) {
-  const NFTClass = {
-    id: 1,
-    class: "/imgs/icons/nft.png",
-    name: "Elementum amet, duis tellus",
-    createdTime: "2021-10-25 20:12:00",
-    owner: "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv",
-    instanceCount: 10,
-    status: "Active",
-  };
-
+export default function NftClass({ node, NFTClass, NFTInstances }) {
   const classInstances = {
     total: 2,
     items: [
@@ -107,7 +92,7 @@ export default function NftClass({ node }) {
     {
       name: "Timeline",
       total: asset?.timeline?.length,
-      component: <Timeline data={asset?.timeline} node={node} asset={asset} />,
+      component: <Timeline data={NFTClass?.timeline} node={node} />,
     },
   ];
 
@@ -132,19 +117,23 @@ export default function NftClass({ node }) {
             <DetailTable
               head={getNFTClassHead(status)}
               body={[
-                <MinorText key="1">{NFTClass?.id}</MinorText>,
-                <MinorText key="2">{NFTClass?.createdTime}</MinorText>,
-                <MinorText key="3">{NFTClass?.instanceCount}</MinorText>,
-                <Address
-                  key="4"
-                  address={NFTClass?.owner}
-                  to={`/account/${NFTClass?.owner}`}
-                />,
-                <Address
-                  key="5"
-                  address={NFTClass?.owner}
-                  to={`/account/${NFTClass?.owner}`}
-                />,
+                <MinorText key="1">{NFTClass?.classId}</MinorText>,
+                <MinorText key="2">
+                  {time(NFTClass?.indexer?.blockTime)}
+                </MinorText>,
+                <MinorText key="3">{NFTClass?.details?.instances}</MinorText>,
+                <CopyText key="4" text={NFTClass?.owner}>
+                  <Address
+                    address={NFTClass?.details?.owner}
+                    to={`/account/${NFTClass?.details?.owner}`}
+                  />
+                </CopyText>,
+                <CopyText key="5" text={NFTClass?.details?.owner}>
+                  <Address
+                    address={NFTClass?.details?.owner}
+                    to={`/account/${NFTClass?.details?.owner}`}
+                  />
+                </CopyText>,
                 `${bigNumber2Locale(
                   fromAssetUnit(asset?.supply, asset?.decimals)
                 )} ${asset?.symbol}`,
@@ -175,10 +164,17 @@ export default function NftClass({ node }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
+  const { id: classId } = context.query;
+  const { result: NFTClass } = await nextApi.fetch(`nftclasses/${classId}`);
+  const { result: NFTInstances } = await nextApi.fetch(
+    `nftclasses/${classId}/instances`
+  );
 
   return {
     props: {
       node,
+      NFTClass,
+      NFTInstances: NFTInstances ?? [],
     },
   };
 }

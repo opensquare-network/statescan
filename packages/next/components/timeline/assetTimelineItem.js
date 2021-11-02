@@ -197,7 +197,7 @@ function formatBalance(balance, asset) {
   );
 }
 
-export default function TimelineItem({ data, asset }) {
+export default function AssetTimelineItem({ data, asset }) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.method] || timelineItem.method;
 

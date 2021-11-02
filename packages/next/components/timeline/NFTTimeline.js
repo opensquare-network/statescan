@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   background-color: #ffffff;
 `;
 
-export default function Timeline({ data, node, asset }) {
+export default function NFTTimeline({ data, node, asset }) {
   return (
     <Wrapper>
       {(data || []).map((item, index) => {

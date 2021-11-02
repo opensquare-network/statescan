@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { disconnect } = require("./api");
+const { disconnect, isApiConnected } = require("./api");
 const { updateHeight, getLatestFinalizedHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { sleep } = require("./utils/sleep");
@@ -99,6 +99,11 @@ async function main() {
           logger.error(`Error with block scan ${block.height}`, e);
           await session.abortTransaction();
           await sleep(3000);
+
+          if (!isApiConnected()) {
+            console.log(`provider disconnected, will restart`);
+            process.exit(0);
+          }
         }
 
         scanFinalizedHeight = block.height + 1;

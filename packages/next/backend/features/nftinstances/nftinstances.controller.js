@@ -2,10 +2,24 @@ const { HttpError } = require("../../exc");
 const { extractPage } = require("../../utils");
 const {
   getNftClassCollection,
-  getClassAttributeCollection,
-  getClassTimelineCollection,
   getNftInstanceCollection,
+  getInstanceAttributeCollection,
+  getInstanceTimelineCollection,
+  getIpfsMetadataCollection,
 }  = require("../../mongo");
+
+async function getIpfsData(nftObj) {
+  if (!nftObj?.metadata?.data) {
+    return undefined;
+  }
+
+  const ipfsMetadataCol = await getIpfsMetadataCollection();
+  const ipfsMetadata = await ipfsMetadataCol.findOne({
+    dataId: nftObj.metadata.data,
+  });
+
+  return ipfsMetadata;
+}
 
 async function getNftInstancesByClassId(ctx) {
   const { page, pageSize } = extractPage(ctx);
@@ -30,14 +44,34 @@ async function getNftInstancesByClassId(ctx) {
     classHeight: nftClass.indexer.blockHeight,
     isDestroyed: false,
   };
+
   const instanceCol = await getNftInstanceCollection();
-  const items = await instanceCol.find(q)
-    .sort({
-      instanceId: 1,
-    })
-    .skip(page * pageSize)
-    .limit(pageSize)
-    .toArray();
+  const items = await instanceCol.aggregate([
+    { $match: q },
+    {
+      $sort: {
+        instanceHeight: -1,
+      },
+    },
+    { $skip: page * pageSize },
+    { $limit: pageSize },
+    {
+      $lookup: {
+        from: "ipfsMetadata",
+        localField: "metadata.data",
+        foreignField: "dataId",
+        as: "ipfsMetadata",
+      }
+    },
+    {
+      $addFields: {
+        ipfsMetadata: {
+          $arrayElemAt: ["$ipfsMetadata", 0],
+        },
+      }
+    }
+  ]).toArray();
+
   const total = await instanceCol.countDocuments(q);
 
   ctx.body = {
@@ -74,13 +108,31 @@ async function getNftInstancesByClass(ctx) {
     isDestroyed: false,
   };
   const instanceCol = await getNftInstanceCollection();
-  const items = await instanceCol.find(q)
-    .sort({
-      instanceId: 1,
-    })
-    .skip(page * pageSize)
-    .limit(pageSize)
-    .toArray();
+  const items = await instanceCol.aggregate([
+    { $match: q },
+    {
+      $sort: {
+        instanceHeight: -1,
+      },
+    },
+    { $skip: page * pageSize },
+    { $limit: pageSize },
+    {
+      $lookup: {
+        from: "ipfsMetadata",
+        localField: "metadata.data",
+        foreignField: "dataId",
+        as: "ipfsMetadata",
+      }
+    },
+    {
+      $addFields: {
+        ipfsMetadata: {
+          $arrayElemAt: ["$ipfsMetadata", 0],
+        },
+      }
+    }
+  ]).toArray();
   const total = await instanceCol.countDocuments(q);
 
   ctx.body = {
@@ -116,7 +168,7 @@ async function getNftInstanceById(ctx) {
     throw new HttpError(404, "NFT instance not found");
   }
 
-  const timelineCol = await getClassTimelineCollection();
+  const timelineCol = await getInstanceTimelineCollection();
   const timeline = await timelineCol.find({
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
@@ -124,7 +176,7 @@ async function getNftInstanceById(ctx) {
     instanceHeight: nftInstance.instanceHeight,
   }).toArray();
 
-  const attrCol = await getClassAttributeCollection();
+  const attrCol = await getInstanceAttributeCollection();
   const attributes = await attrCol.find({
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
@@ -132,10 +184,13 @@ async function getNftInstanceById(ctx) {
     instanceHeight: nftInstance.instanceHeight,
   }).toArray();
 
+  const ipfsMetadata = await getIpfsData(nftInstance);
+
   ctx.body = {
     ...nftInstance,
     timeline,
     attributes,
+    ipfsMetadata,
   };
 }
 
@@ -166,7 +221,7 @@ async function getNftInstance(ctx) {
     throw new HttpError(404, "NFT instance not found");
   }
 
-  const timelineCol = await getClassTimelineCollection();
+  const timelineCol = await getInstanceTimelineCollection();
   const timeline = await timelineCol.find({
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
@@ -174,7 +229,7 @@ async function getNftInstance(ctx) {
     instanceHeight: nftInstance.instanceHeight,
   }).toArray();
 
-  const attrCol = await getClassAttributeCollection();
+  const attrCol = await getInstanceAttributeCollection();
   const attributes = await attrCol.find({
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
@@ -182,10 +237,13 @@ async function getNftInstance(ctx) {
     instanceHeight: nftInstance.instanceHeight,
   }).toArray();
 
+  const ipfsMetadata = await getIpfsData(nftInstance);
+
   ctx.body = {
     ...nftInstance,
     timeline,
     attributes,
+    ipfsMetadata,
   };
 }
 

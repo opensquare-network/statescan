@@ -4,7 +4,21 @@ const {
   getNftClassCollection,
   getClassAttributeCollection,
   getClassTimelineCollection,
+  getIpfsMetadataCollection,
 }  = require("../../mongo");
+
+async function getIpfsData(nftObj) {
+  if (!nftObj?.metadata?.data) {
+    return undefined;
+  }
+
+  const ipfsMetadataCol = await getIpfsMetadataCollection();
+  const ipfsMetadata = await ipfsMetadataCol.findOne({
+    dataId: nftObj.metadata.data,
+  });
+
+  return ipfsMetadata;
+}
 
 async function getNftClasses(ctx) {
   const { page, pageSize } = extractPage(ctx);
@@ -15,15 +29,35 @@ async function getNftClasses(ctx) {
 
   const col = await getNftClassCollection();
 
-  const items = await col
-    .find({})
-    .sort({
-      classId: 1,
-    })
-    .skip(page * pageSize)
-    .limit(pageSize)
-    .toArray();
-  const total = await col.estimatedDocumentCount();
+  const q = { isDestroyed: false };
+
+  const items = await col.aggregate([
+    { $match: q },
+    {
+      $sort: {
+        classId: 1,
+      }
+    },
+    { $skip: page * pageSize },
+    { $limit: pageSize },
+    {
+      $lookup: {
+        from: "ipfsMetadata",
+        localField: "metadata.data",
+        foreignField: "dataId",
+        as: "ipfsMetadata",
+      }
+    },
+    {
+      $addFields: {
+        ipfsMetadata: {
+          $arrayElemAt: ["$ipfsMetadata", 0]
+        }
+      }
+    }
+  ]).toArray();
+
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,
@@ -56,10 +90,13 @@ async function getNftClassById(ctx) {
     classHeight: item.indexer.blockHeight,
   }).toArray();
 
+  const ipfsMetadata = await getIpfsData(item);
+
   ctx.body = {
     ...item,
     timeline,
     attributes,
+    ipfsMetadata,
   };
 }
 
@@ -87,10 +124,13 @@ async function getNftClass(ctx) {
     classHeight: item.indexer.blockHeight,
   }).toArray();
 
+  const ipfsMetadata = await getIpfsData(item);
+
   ctx.body = {
     ...item,
     timeline,
     attributes,
+    ipfsMetadata,
   };
 }
 

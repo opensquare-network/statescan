@@ -368,7 +368,7 @@ export async function getServerSideProps() {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
-        nftclasses: nftclasses,
+        nftclasses: nftclasses ?? {},
       },
       price: price ?? [],
     },

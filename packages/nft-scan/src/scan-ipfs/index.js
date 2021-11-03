@@ -11,6 +11,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function main() {
   while (true) {
+    console.log(`Last IPFS scan run at`, new Date());
     const classCol = await getClassCollection();
     const instanceCol = await getInstanceCollection();
     const nftClass = await classCol.findOne({ metadata: { $ne: null }, recognized: null });

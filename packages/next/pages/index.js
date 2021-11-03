@@ -325,7 +325,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
           )}
           foot={
             <FootWrapper>
-              <InLink to={`/assets`}>View all</InLink>
+              <InLink to={`/nfts`}>View all</InLink>
             </FootWrapper>
           }
           collapse={collapseSize}

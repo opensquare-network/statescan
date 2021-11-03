@@ -25,10 +25,12 @@ export default function NftClasses({ node, nfts, filter }) {
             <img
               width={32}
               key={`class${index}`}
-              src={nftClass.class ?? "/imgs/icons/nft.png"}
+              src={
+                nftClass?.ipfsMetadata?.imageThumbnail ?? "/imgs/icons/nft.png"
+              }
               alt=""
             />,
-            nftClass.name ?? "NFT",
+            nftClass?.ipfsMetadata?.name ?? "unrecognized",
             time(nftClass?.indexer?.blockTime),
             <AddressEllipsis
               key={`owner-${index}`}

@@ -6,7 +6,7 @@ const {
   getInstanceCollection,
   getIpfsMetadataCollection,
 } = require("../mongo");
-const { scanMeta } = require('./utils');
+const { scanMeta, scanMetaImage } = require('./utils');
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -45,8 +45,12 @@ async function main() {
     await queueIpfsTask(instanceCol);
 
     const ipfsMetadataCol = await getIpfsMetadataCollection();
-    const items = await ipfsMetadataCol.find({ recognized: null }).limit(10).toArray();
+    let items = await ipfsMetadataCol.find({ recognized: null }).limit(10).toArray();
     await Promise.all(items.map(item => scanMeta(item.dataId)));
+
+    items = await ipfsMetadataCol.find({ recognized: true, imageThumbnail: null }).limit(10).toArray();
+    await Promise.all(items.map(item => scanMetaImage(item.dataId)));
+
     await sleep(5000);
   }
 }

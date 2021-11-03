@@ -243,7 +243,7 @@ export const getNFTClassHead = (status) => {
     "Instance",
     "Owner",
     "Issuer",
-    ...(status === "Active" ? [] : ["Status"]),
+    ...(status === "Frozen" ? ["Status"] : []),
   ];
 };
 

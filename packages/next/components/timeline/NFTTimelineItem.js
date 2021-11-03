@@ -9,6 +9,7 @@ import { bigNumber2Locale, fromAssetUnit } from "utils";
 import BigNumber from "bignumber.js";
 import Address from "components/address";
 import { Component, useEffect } from "react";
+import placeholder from "lodash/fp/placeholder";
 
 const div = styled.div``;
 
@@ -198,7 +199,7 @@ function formatBalance(balance, asset) {
     <BreakText>
       {bigNumber2Locale(balanceStr)}
       {Number.isInteger(asset.decimals) && asset.symbol ? (
-        <span style={{ marginLeft: 8 }}>
+        <span style={{marginLeft: 8}}>
           ({bigNumber2Locale(fromAssetUnit(balance, asset.decimals))}{" "}
           {asset.symbol})
         </span>
@@ -209,7 +210,7 @@ function formatBalance(balance, asset) {
   );
 }
 
-export default function NFTTimelineItem({ data }) {
+export default function NFTTimelineItem({data}) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.name] || timelineItem.name;
 
@@ -226,68 +227,33 @@ export default function NFTTimelineItem({ data }) {
     switch (timelineItem.name) {
       case "ForceCreated": {
         return {
-          "Asset Id": "#11234",
-          Admin: (
-            <CopyText>
-              {" "}
-              <Address
-                address={`15vJindFbPGtseT4RxSh8zuD86u9nGLt8G7es8RLykY36KBS`}
-              />{" "}
-            </CopyText>
-          ),
-          "Min Balance": "1.00000000 KSM",
+          ...timelineItem.args,
+          owner: <CopyText> <Address address={timelineItem.args.owner}/> </CopyText>
         };
       }
       case "AssetStatusChanged": {
         return {
-          "Asset Id": "#11234",
-          Admin: (
-            <CopyText>
-              {" "}
-              <Address
-                address={`15vJindFbPGtseT4RxSh8zuD86u9nGLt8G7es8RLykY36KBS`}
-              />{" "}
-            </CopyText>
-          ),
-          Owner: (
-            <CopyText>
-              {" "}
-              <Address
-                address={`15vJindFbPGtseT4RxSh8zuD86u9nGLt8G7es8RLykY36KBS`}
-              />{" "}
-            </CopyText>
-          ),
-          Issuer: (
-            <CopyText>
-              {" "}
-              <Address
-                address={`15vJindFbPGtseT4RxSh8zuD86u9nGLt8G7es8RLykY36KBS`}
-              />{" "}
-            </CopyText>
-          ),
-          Freezer: (
-            <CopyText>
-              {" "}
-              <Address
-                address={`15vJindFbPGtseT4RxSh8zuD86u9nGLt8G7es8RLykY36KBS`}
-              />{" "}
-            </CopyText>
-          ),
-          "Min Balance": "1.00000000 KSM",
-          Sufficient: "True",
-          Frozen: "False",
+          ...timelineItem.args,
+          owner: <CopyText> <Address address={timelineItem.args.owner}/> </CopyText>,
+          issuer: <CopyText> <Address address={timelineItem.args.issuer}/> </CopyText>,
+          admin: <CopyText> <Address address={timelineItem.args.admin}/> </CopyText>,
+          freezer: <CopyText> <Address address={timelineItem.args.freezer}/> </CopyText>,
+          freeHolding: timelineItem?.args?.freeHolding?.toString(),
+          isFrozen: timelineItem?.args?.isFrozen?.toString(),
         };
       }
       case "ClassMetadataSet": {
         return {
-          "Asset Id": "#11234",
-          Symbol: "KSM",
-          Name: "NFT",
-          Decimals: "12",
+          ...timelineItem.args,
+          data: <BreakText>{timelineItem.args.data}</BreakText>,
+          isFrozen: timelineItem?.args?.isFrozen?.toString(),
         };
       }
       default:
-        return timelinePlaceholder;
+        if (!timelineItem.args) {
+          return placeholder;
+        }
+        return timelineItem.args;
     }
   };
 
@@ -296,22 +262,22 @@ export default function NFTTimelineItem({ data }) {
   return (
     <Wrapper>
       <ItemLine>
-        <TopLine className="top-line" />
-        <Icon />
-        <BotLine className="bot-line" />
+        <TopLine className="top-line"/>
+        <Icon/>
+        <BotLine className="bot-line"/>
       </ItemLine>
       <ItemWrapper>
         <TimelineHeader>
           <BoldText>{getTitle(data)}</BoldText>
-          <Time ts={data.indexer.blockTime} />
-          <BlockHeight height={data.indexer.blockHeight} />
+          <Time ts={data.indexer.blockTime}/>
+          <BlockHeight height={data.indexer.blockHeight}/>
           <Links>
             <InLink
               to={`/extrinsic/${data.indexer.blockHeight}-${data.indexer.extrinsicIndex}`}
             >
               <LinkItem>
                 <span>{"Extrinsic"}</span>
-                <icons.LinkIcon />
+                <icons.LinkIcon/>
               </LinkItem>
             </InLink>
             <InLink
@@ -319,7 +285,7 @@ export default function NFTTimelineItem({ data }) {
             >
               <LinkItem>
                 <span>{"Event"}</span>
-                <icons.LinkIcon />
+                <icons.LinkIcon/>
               </LinkItem>
             </InLink>
           </Links>

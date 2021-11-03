@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   ${card_border};
   padding: 0 24px;
   background-color: #ffffff;
+  text-transform: capitalize;
 `;
 
 export default function NFTTimeline({ data, node, asset }) {

@@ -4,24 +4,49 @@ dotenv.config();
 const {
   getClassCollection,
   getInstanceCollection,
+  getIpfsMetadataCollection,
 } = require("../mongo");
 const { scanMeta } = require('./utils');
 
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+async function queueIpfsTask(nftCol) {
+  const items = await nftCol.find({ "metadata.data": { $ne: null } }).toArray();
+
+  if (items.length === 0) {
+    return;
+  }
+
+  const ipfsMetadataCol = await getIpfsMetadataCollection();
+  const batch = ipfsMetadataCol.initializeUnorderedBulkOp();
+
+  items.forEach(item =>
+    batch.find({ dataId: item.metadata.data })
+    .upsert()
+    .update({
+      $set: {
+        dataId: item.metadata.data,
+      },
+    })
+  );
+
+  await batch.execute();
+
+}
+
 async function main() {
   while (true) {
     console.log(`Last IPFS scan run at`, new Date());
+
     const classCol = await getClassCollection();
     const instanceCol = await getInstanceCollection();
-    const nftClass = await classCol.findOne({ metadata: { $ne: null }, recognized: null });
-    const nftInstance = await instanceCol.findOne({ metadata: { $ne: null }, recognized: null });
-    if (nftClass) {
-      await scanMeta(classCol, nftClass);
-    }
-    if (nftInstance) {
-      await scanMeta(instanceCol, nftInstance);
-    }
+
+    await queueIpfsTask(classCol);
+    await queueIpfsTask(instanceCol);
+
+    const ipfsMetadataCol = await getIpfsMetadataCollection();
+    const items = await ipfsMetadataCol.find({ recognized: null }).limit(10).toArray();
+    await Promise.all(items.map(item => scanMeta(item.dataId)));
     await sleep(5000);
   }
 }

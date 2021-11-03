@@ -31,7 +31,9 @@ async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
     process.exit(0);
   }
   console.log(`Re-scan instance object`, nftInstance._id);
-  await scanMeta(instanceCol, nftInstance);
+  if (nftInstance.metadata?.data) {
+    await scanMeta(nftInstance.metadata.data);
+  }
 }
 
 async function scanClass(classId, classHeight) {
@@ -49,7 +51,9 @@ async function scanClass(classId, classHeight) {
     process.exit(0);
   }
   console.log(`Re-scan class object`, nftClass._id);
-  await scanMeta(classCol, nftClass);
+  if (nftClass.metadata?.data) {
+    await scanMeta(nftClass.metadata.data);
+  }
 }
 
 async function main() {

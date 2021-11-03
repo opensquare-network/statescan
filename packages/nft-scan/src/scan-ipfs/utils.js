@@ -1,27 +1,17 @@
 const axios = require("axios");
 const isIPFS = require("is-ipfs");
+const { getIpfsMetadataCollection } = require("../mongo");
 
-async function updateRecognized(nftCol, nftObj, recognized) {
-  await nftCol.updateOne(
-    { _id: nftObj._id },
-    {
-      $set: {
-        recognized
-      }
-    }
-  );
-}
+async function fetchDataFromIPFS(dataId) {
+  if (!dataId) {
+    throw new Error(`dataId is missing`);
+  }
 
-async function fetchDataFromIPFS(nftObj) {
-  if (!nftObj.metadata.data) {
+  if (!dataId.startsWith("0x")) {
     return null;
   }
 
-  if (!nftObj.metadata.data.startsWith("0x")) {
-    return null;
-  }
-
-  const dataStr = Buffer.from(nftObj.metadata.data.slice(2), 'hex').toString();
+  const dataStr = Buffer.from(dataId.slice(2), 'hex').toString();
 
   if (!isIPFS.cid(dataStr)) {
     return null;
@@ -33,6 +23,7 @@ async function fetchDataFromIPFS(nftObj) {
 
   if (jsonData?.name && jsonData?.description && jsonData?.image) {
     return {
+      cid: dataStr,
       name: jsonData.name,
       description: jsonData.description,
       image: jsonData.image,
@@ -42,28 +33,41 @@ async function fetchDataFromIPFS(nftObj) {
   return null;
 }
 
-async function scanMeta(nftCol, nftObj) {
-  if (!nftObj) {
+async function scanMeta(dataId) {
+  if (!dataId) {
     return;
   }
 
+  console.log(`Scanning ipfs meta data for`, dataId);
+
+  const ipfsMetadataCol = await getIpfsMetadataCollection();
+
   try {
-    const nftIPFSData = await fetchDataFromIPFS(nftObj);
-    if (!nftIPFSData) {
-      await updateRecognized(nftCol, nftObj, false);
-      return;
+    const nftIPFSData = await fetchDataFromIPFS(dataId);
+    if (nftIPFSData) {
+      await ipfsMetadataCol.updateOne(
+        { dataId },
+        {
+          $set: {
+            ...nftIPFSData,
+            recognized: true,
+            timestamp: new Date()
+          }
+        },
+        { upsert: true }
+      );
+    } else {
+      await ipfsMetadataCol.updateOne(
+        { dataId },
+        {
+          $set: {
+            recognized: false,
+            timestamp: new Date(),
+          },
+        },
+        { upsert: true }
+      );
     }
-
-    await nftCol.updateOne(
-      { _id: nftObj._id },
-      {
-        $set: {
-          info: nftIPFSData,
-          recognized: true,
-        }
-      }
-    );
-
   } catch (e) {
     console.error(e);
   }

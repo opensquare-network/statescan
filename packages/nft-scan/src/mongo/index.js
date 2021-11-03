@@ -17,6 +17,7 @@ const classAttributeCollectionName = "classAttribute";
 const instanceCollectionName = "nftInstance";
 const instanceTimelineCollectionName = "instanceTimeline";
 const instanceAttributeCollectionName = "instanceAttribute";
+const ipfsMetadataCollectionName = "ipfsMetadata";
 
 let statusCol = null;
 let classCol = null;
@@ -25,6 +26,7 @@ let classAttributeCol = null;
 let instanceCol = null;
 let instanceTimelineCol = null;
 let instanceAttributeCol = null;
+let ipfsMetadataCol = null;
 
 let client = null;
 let db = null;
@@ -61,6 +63,7 @@ async function initDb() {
   instanceCol = await getCollection(instanceCollectionName);
   instanceTimelineCol = await getCollection(instanceTimelineCollectionName);
   instanceAttributeCol = await getCollection(instanceAttributeCollectionName);
+  ipfsMetadataCol = await getCollection(ipfsMetadataCollectionName);
 
   await _createIndexes();
 }
@@ -118,6 +121,11 @@ async function getInstanceAttributeCollection() {
   return instanceAttributeCol;
 }
 
+async function getIpfsMetadataCollection() {
+  await tryInit(ipfsMetadataCol);
+  return ipfsMetadataCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -127,4 +135,5 @@ module.exports = {
   getInstanceCollection,
   getInstanceTimelineCollection,
   getInstanceAttributeCollection,
+  getIpfsMetadataCollection,
 };

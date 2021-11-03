@@ -50,7 +50,7 @@ async function getNftInstancesByClassId(ctx) {
     { $match: q },
     {
       $sort: {
-        instanceHeight: -1,
+        "indexer.blockHeight": 1,
       },
     },
     { $skip: page * pageSize },
@@ -112,7 +112,7 @@ async function getNftInstancesByClass(ctx) {
     { $match: q },
     {
       $sort: {
-        instanceHeight: -1,
+        "indexer.blockHeight": 1,
       },
     },
     { $skip: page * pageSize },

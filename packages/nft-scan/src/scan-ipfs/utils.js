@@ -1,6 +1,16 @@
 const axios = require("axios");
 const isIPFS = require("is-ipfs");
+const sharp = require("sharp");
 const { getIpfsMetadataCollection } = require("../mongo");
+
+async function createImageThumbnail(imageData, width, height) {
+  const thumbnail = await sharp(imageData)
+    .resize(width, height)
+    .png({ compressionLevel: 9, adaptiveFiltering: true, force: true })
+    .toBuffer();
+  const thumbnailDataURL = `data:image/png;base64,${thumbnail.toString("base64")}`;
+  return thumbnailDataURL;
+}
 
 async function fetchDataFromIPFS(dataId) {
   if (!dataId) {
@@ -56,6 +66,8 @@ async function scanMeta(dataId) {
         },
         { upsert: true }
       );
+
+      await scanMetaImage(dataId);
     } else {
       await ipfsMetadataCol.updateOne(
         { dataId },
@@ -73,6 +85,59 @@ async function scanMeta(dataId) {
   }
 }
 
+async function scanMetaImage(dataId) {
+  if (!dataId) {
+    return;
+  }
+
+  console.log(`Scanning ipfs meta image for`, dataId);
+
+  const ipfsMetadataCol = await getIpfsMetadataCollection();
+  const item = await ipfsMetadataCol.findOne({ dataId });
+  if (!item) {
+    return;
+  }
+
+  if (!item.recognized) {
+    return;
+  }
+
+  if (!item.image) {
+    return;
+  }
+
+  const image = item.image.split("/").pop();
+  if (!image) {
+    return;
+  }
+
+  if (!isIPFS.cid(image)) {
+    return;
+  }
+
+  console.log(`Fetch image:`, image);
+
+  // fetch image from ipfs link item.image
+  const ipfsImage = await axios({
+    url: `https://ipfs.io/ipfs/${image}`,
+    responseType: "arraybuffer"
+  });
+  const imageData = ipfsImage.data;
+
+  // create image thumbnail from image data
+  const imageThumbnail = await createImageThumbnail(imageData, 32, 32);
+  await ipfsMetadataCol.updateOne(
+    { dataId },
+    {
+      $set: {
+        imageThumbnail,
+      },
+    },
+    { upsert: true }
+  );
+}
+
 module.exports = {
   scanMeta,
+  scanMetaImage,
 };

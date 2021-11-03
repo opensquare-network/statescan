@@ -8,10 +8,19 @@ const {
   getInstanceCollection,
 } = require("../mongo");
 
-async function scanInstance(classId, instanceId) {
+async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
   console.log(`Re-scan instance data from IPFS for`, classId, instanceId);
+
+  const query = { classId, instanceId };
+  if (classHeight) {
+    query.classHeight = classHeight;
+  }
+  if (instanceHeight) {
+    query["indexer.blockHeight"] = instanceHeight;
+  }
+
   const instanceCol = await getInstanceCollection();
-  const nftInstance = await instanceCol.findOne({ classId, instanceId }, {
+  const nftInstance = await instanceCol.findOne(query, {
     sort: {
       classHeight: -1,
       "indexer.blockHeight": -1
@@ -25,10 +34,16 @@ async function scanInstance(classId, instanceId) {
   await scanMeta(instanceCol, nftInstance);
 }
 
-async function scanClass(classId) {
+async function scanClass(classId, classHeight) {
   console.log(`Re-scan class data from IPFS for`, classId);
+
+  const query = { classId };
+  if (classHeight) {
+    query["indexer.blockHeight"] = classHeight;
+  }
+
   const classCol = await getClassCollection();
-  const nftClass = await classCol.findOne({ classId }, { sort: { "indexer.blockHeight": -1 } });
+  const nftClass = await classCol.findOne(query, { sort: { "indexer.blockHeight": -1 } });
   if (!nftClass) {
     console.log(`Class ${classId} not found`);
     process.exit(0);
@@ -46,12 +61,14 @@ async function main() {
   }
 
   const classId = parseInt(args.classId);
+  const classHeight = parseInt(args.classHeight);
   const instanceId = parseInt(args.instanceId);
+  const instanceHeight = parseInt(args.instanceHeight);
 
   if (instanceId) {
-    await scanInstance(classId, instanceId);
+    await scanInstance(classId, classHeight, instanceId, instanceHeight);
   } else {
-    await scanClass(classId);
+    await scanClass(classId, classHeight);
   }
 }
 

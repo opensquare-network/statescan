@@ -2,6 +2,7 @@ const { insertInstanceTimelineItem } = require("../../../mongo/service/instance"
 const { TimelineItemTypes } = require("../../common/constants");
 const { insertNewInstance } = require("./common");
 const { UniquesEvents } = require("../../common/constants");
+const { updateClassWithDetails } = require("../class/common");
 
 async function handleIssued(event, indexer, blockEvents, extrinsic) {
   const [classId, instanceId, owner] = event.data.toJSON();
@@ -19,6 +20,7 @@ async function handleIssued(event, indexer, blockEvents, extrinsic) {
   };
 
   await insertInstanceTimelineItem(classId, instanceId, timelineItem);
+  await updateClassWithDetails(classId, indexer);
 }
 
 module.exports = {

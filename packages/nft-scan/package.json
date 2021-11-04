@@ -5,7 +5,7 @@
     "test": "jest src"
   },
   "dependencies": {
-    "@polkadot/api": "6.5.3-3",
+    "@polkadot/api": "6.6.2-10",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "is-ipfs": "^6.0.2",

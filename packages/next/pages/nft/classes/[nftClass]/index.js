@@ -6,7 +6,7 @@ import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
 import AddressEllipsis from "components/addressEllipsis";
-import { bigNumber2Locale, fromAssetUnit, time } from "utils";
+import { time } from "utils";
 import InLink from "components/inLink";
 import Address from "components/address";
 import TabTable from "components/tabTable";
@@ -30,6 +30,10 @@ const Between = styled.div`
     flex-grow: 1;
     border: none;
     box-shadow: none;
+  }
+  
+  img {
+    object-fit: contain;
   }
 `;
 
@@ -140,16 +144,18 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const {nftClass: classId} = context.query;
+  const {nftClass: classId , page} = context.query;
+  const nPage = parseInt(page) || 1;
   const {result: NFTClass} = await nextApi.fetch(`nftclasses/${classId}`);
   const {result: NFTInstances} = await nextApi.fetch(
-    `nftclasses/${classId}/instances`
+    `nftclasses/${classId}/instances`,
+    {page: nPage - 1},
   );
 
   return {
     props: {
       node,
-      NFTClass,
+      NFTClass: NFTClass ?? null,
       NFTInstances: NFTInstances ?? [],
     },
   };

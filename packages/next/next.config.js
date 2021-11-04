@@ -7,4 +7,7 @@ module.exports = {
 
     return config;
   },
+  images: {
+    domains: ["cloudflare-ipfs.com"],
+  },
 };

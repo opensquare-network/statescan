@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { addressEllipsis, time } from "../../utils";
 import Address from "../address";
 import NftInfo from "../nftInfo";
@@ -46,12 +47,24 @@ const Value = styled.div`
   color: rgba(17, 17, 17, 0.65);
 `
 
+const ImgWrapper = styled.div`
+  position: relative;
+  max-width: 480px;
+  max-height: 480px;
+`
+
 export default function Preview({NFTClass}) {
-  console.log(NFTClass.details)
   return <Wrapper>
-    <img
-      src={`https://ipfs-sh.decoo-cloud.cn/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-      width={480} alt=""/>
+    <ImgWrapper>
+      <Image
+        src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
+        width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
+        height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
+        alt=""
+        placeholder="blur"
+        blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
+      />
+    </ImgWrapper>
 
     <NftInfo
       data={{

@@ -17,6 +17,7 @@ import styled from "styled-components";
 import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
+import Image from "next/image";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -37,6 +38,12 @@ const Between = styled.div`
   }
 `;
 
+const ImgWrapper = styled.div`
+  position: relative;
+  max-width: 480px;
+  max-height: 480px;
+`
+
 export default function NftClass({node, NFTClass, NFTInstances}) {
   const tab = {};
 
@@ -55,7 +62,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         </InLink>,
         <img width={32} key={`class${index}`} src={
           instance?.ipfsMetadata?.imageThumbnail ?? (
-            `https://ipfs-sh.decoo-cloud.cn/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
+            `https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
           )
         }
              alt=""/>,
@@ -94,9 +101,16 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
             node={node}
           />
           <Between>
-            <img
-              src={`https://ipfs-sh.decoo-cloud.cn/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-              width={480} alt=""/>
+            <ImgWrapper>
+              <Image
+                src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
+                width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
+                height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
+                alt=""
+                placeholder="blur"
+                blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
+              />
+            </ImgWrapper>
             <DetailTable
               head={getNFTClassHead(status)}
               body={[

@@ -10,6 +10,7 @@ const { handleCreated } = require("./created");
 const { handleTeamChanged } = require("./teamChanged");
 const { handleAssetStatusChanged } = require("./assetStatusChanged");
 const { handleOwnerChanged } = require("./ownerChanged");
+const { handleRedeposited } = require("./redeposited");
 const { Modules, UniquesEvents } = require("../../common/constants");
 
 async function handleEvent(event, indexer, blockEvents, extrinsic) {
@@ -42,6 +43,8 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleAssetStatusChanged(...arguments);
   } else if (UniquesEvents.OwnerChanged === method) {
     await handleOwnerChanged(...arguments);
+  } else if (UniquesEvents.Redeposited === method) {
+    await handleRedeposited(...arguments);
   }
 }
 

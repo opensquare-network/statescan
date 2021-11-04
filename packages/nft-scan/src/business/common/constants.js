@@ -14,6 +14,7 @@ const UniquesEvents = Object.freeze({
   AssetStatusChanged: "AssetStatusChanged", // asset class status changed, should save old and new status
   ClassMetadataSet: "ClassMetadataSet",
   ClassMetadataCleared: "ClassMetadataCleared",
+  Redeposited: "Redeposited",
 
   // instance events
   Issued: "Issued",

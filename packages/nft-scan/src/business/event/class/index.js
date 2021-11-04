@@ -9,6 +9,7 @@ const { handleMetadataSet } = require("./metadataSet");
 const { handleCreated } = require("./created");
 const { handleTeamChanged } = require("./teamChanged");
 const { handleAssetStatusChanged } = require("./assetStatusChanged");
+const { handleOwnerChanged } = require("./ownerChanged");
 const { Modules, UniquesEvents } = require("../../common/constants");
 
 async function handleEvent(event, indexer, blockEvents, extrinsic) {
@@ -39,6 +40,8 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleTeamChanged(...arguments);
   } else if (UniquesEvents.AssetStatusChanged === method) {
     await handleAssetStatusChanged(...arguments);
+  } else if (UniquesEvents.OwnerChanged === method) {
+    await handleOwnerChanged(...arguments);
   }
 }
 

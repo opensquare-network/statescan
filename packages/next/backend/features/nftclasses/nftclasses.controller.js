@@ -20,11 +20,11 @@ async function getIpfsData(nftObj) {
   return ipfsMetadata;
 }
 
-async function queryAllClasses(page, pageSize) {
+async function queryAllClasses(statusQuery, page, pageSize) {
   const col = await getNftClassCollection();
 
   const [result] = await col.aggregate([
-    { $match: { isDestroyed: false } },
+    { $match: statusQuery },
     {
       $facet: {
         items: [
@@ -57,11 +57,11 @@ async function queryAllClasses(page, pageSize) {
   return result;
 }
 
-async function queryRecognizedClasses(page, pageSize)  {
+async function queryRecognizedClasses(statusQuery, page, pageSize)  {
   const col = await getNftClassCollection();
 
   const [result] = await col.aggregate([
-    { $match: { isDestroyed: false } },
+    { $match: statusQuery },
     {
       $lookup: {
         from: "ipfsMetadata",
@@ -99,11 +99,11 @@ async function queryRecognizedClasses(page, pageSize)  {
   return result;
 }
 
-async function queryUnrecognizedClasses(page, pageSize) {
+async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
   const col = await getNftClassCollection();
 
   const [result] = await col.aggregate([
-    { $match: { isDestroyed: false } },
+    { $match: statusQuery },
     {
       $lookup: {
         from: "ipfsMetadata",
@@ -151,34 +151,42 @@ async function getNftClasses(ctx) {
     return;
   }
 
-  const { recognized } = ctx.query;
+  const { recognized, status } = ctx.query;
+
+  const statusQuery = { isDestroyed: false };
+  if (status === "destroyed") {
+    statusQuery.isDestroyed = true;
+  }
+  else if (status === "frozen") {
+    statusQuery["details.isFrozen"] = true;
+  }
 
   if (recognized === "true" || recognized === "1") {
-    const result = await queryRecognizedClasses(page, pageSize);
+    const result = await queryRecognizedClasses(statusQuery, page, pageSize);
 
     ctx.body = {
       items: result.items,
       page,
       pageSize,
-      total: result.total[0].count,
+      total: result.total[0]?.count || 0,
     };
   } else if (recognized === "false" || recognized === "0") {
-    const result = await queryUnrecognizedClasses(page, pageSize);
+    const result = await queryUnrecognizedClasses(statusQuery, page, pageSize);
 
     ctx.body = {
       items: result.items,
       page,
       pageSize,
-      total: result.total[0].count,
+      total: result.total[0]?.count || 0,
     };
   } else {
-    const result = await queryAllClasses(page, pageSize);
+    const result = await queryAllClasses(statusQuery, page, pageSize);
 
     ctx.body = {
       items: result.items,
       page,
       pageSize,
-      total: result.total[0].count,
+      total: result.total[0]?.count || 0,
     };
   }
 }

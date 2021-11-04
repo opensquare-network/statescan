@@ -3,9 +3,13 @@ const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
 const { getIpfsMetadataCollection } = require("../mongo");
 
-async function createImageThumbnail(imageData, width, height) {
-  const thumbnail = await sharp(imageData)
-    .resize(width, height)
+async function createImageThumbnail(image, width, height) {
+  const thumbnail = await image
+    .resize({
+      fit: sharp.fit.outside,
+      width,
+      height,
+    })
     .png({ compressionLevel: 9, adaptiveFiltering: true, force: true })
     .toBuffer();
   const thumbnailDataURL = `data:image/png;base64,${thumbnail.toString("base64")}`;
@@ -123,13 +127,17 @@ async function scanMetaImage(dataId) {
     responseType: "arraybuffer"
   });
   const imageData = ipfsImage.data;
+  const sharpImage = sharp(imageData);
+  const { format, size, width, height } = await sharpImage.metadata();
+  const imageMetadata = { format, size, width, height };
 
   // create image thumbnail from image data
-  const imageThumbnail = await createImageThumbnail(imageData, 32, 32);
+  const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
   await ipfsMetadataCol.updateOne(
     { dataId },
     {
       $set: {
+        imageMetadata,
         imageThumbnail,
       },
     },

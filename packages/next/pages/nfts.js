@@ -18,14 +18,17 @@ import Address from "../components/address";
 import NftInfo from "../components/nftInfo";
 import styled from "styled-components";
 import { useOnClickOutside } from "../utils/hooks";
+import Preview from "../components/nft/preview";
 
 const MyModal = styled(Modal)`
-  > div{
+  > div {
     box-shadow: none;
     border: none;
   }
+
   padding: 24px;
-  a{
+
+  a {
     display: block;
     background-color: #000000;
     font-family: Inter;
@@ -38,15 +41,16 @@ const MyModal = styled(Modal)`
   }
 `
 
-export default function NftClasses({ node, nfts, filter }) {
+export default function NftClasses({node, nfts, filter}) {
   const [showModal, setShowModal] = useState(false);
+  const [previewNFTClass, setPreviewNFTCLass] = useState(null);
   const ref = useRef();
   const NFTClass = nfts.items[0];
   const status = NFTClass?.details?.isFrozen ? "Frozen" : "Active";
 
   useOnClickOutside(ref, (event) => {
-    //exclude manually
-    if (document?.querySelector(".modals")?.contains(event.target)) {
+    // exclude manually
+    if (document?.querySelector(".modal")?.contains(event.target)) {
       return;
     }
     setShowModal(false);
@@ -56,47 +60,12 @@ export default function NftClasses({ node, nfts, filter }) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <img
-            src={`https://ipfs-sh.decoo-cloud.cn/ipfs/${nfts.items[0]?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-            width={480} alt=""/>
-          <DetailTable
-            head={getNFTClassHead(status)}
-            body={[
-              <MinorText key="1">{NFTClass?.classId}</MinorText>,
-              <MinorText key="2">
-                {time(NFTClass?.indexer?.blockTime)}
-              </MinorText>,
-              <MinorText key="3">{NFTClass?.details?.instances}</MinorText>,
-              <CopyText key="4" text={NFTClass?.owner}>
-                <Address
-                  address={NFTClass?.details?.owner}
-                  to={`/account/${NFTClass?.details?.owner}`}
-                />
-              </CopyText>,
-              <CopyText key="5" text={NFTClass?.details?.issuer}>
-                <Address
-                  address={NFTClass?.details?.issuer}
-                  to={`/account/${NFTClass?.details?.issuer}`}
-                />
-              </CopyText>,
-              <Status key="6" status={status}/>
-            ]}
-            info={
-              <NftInfo
-                data={{
-                  title: NFTClass?.ipfsMetadata?.name ?? "Unrecognized",
-                  description:
-                    NFTClass?.ipfsMetadata?.description ?? "Unrecognized",
-                }}
-              />
-            }
-          />
-          <a href={`/nft/classes/${NFTClass.classId}`}>Detail</a>
+          <Preview NFTClass={previewNFTClass}/>
         </MyModal>
       </div>
       <section>
-        <Nav data={[{ name: "NFT Classes" }]} node={node} />
-        <Filter total={`All ${nfts?.total} nft classes`} data={filter} />
+        <Nav data={[{name: "NFT Classes"}]} node={node}/>
+        <Filter total={`All ${nfts?.total} nft classes`} data={filter}/>
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
@@ -104,8 +73,11 @@ export default function NftClasses({ node, nfts, filter }) {
               {nftClass.classId}
             </InLink>,
             <img
-              onClick={()=> setShowModal(true)}
-              width={32}
+              onClick={() => {
+                setPreviewNFTCLass(nftClass);
+                setShowModal(true);
+              }}
+              style={{cursor: "pointer", width: 32}}
               key={`class${index}`}
               src={
                 nftClass?.ipfsMetadata?.imageThumbnail ?? "/imgs/icons/nft.png"
@@ -141,31 +113,31 @@ export default function NftClasses({ node, nfts, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { page, category, status } = context.query;
+  const {page, recognized, status} = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const { result: nfts } = await nextApi.fetch(`nftclasses`, {
+  const {result: nfts} = await nextApi.fetch(`nftclasses`, {
     page: nPage - 1,
     pageSize: 25,
-    ...(category ? { category } : {}),
-    ...(status ? { status } : {}),
+    ...(recognized ? {recognized} : {}),
+    ...(status ? {status} : {}),
   });
 
   const filter = [
     {
       value: "",
       name: "Category",
-      query: "category",
+      query: "recognized",
       options: [
-        { text: "All", value: "" },
+        {text: "All", value: ""},
         {
           text: "Recognized",
-          value: "recognized",
+          value: "true",
         },
         {
           text: "Unrecognized",
-          value: "unrecognized",
+          value: "false",
         },
       ],
     },
@@ -174,8 +146,9 @@ export async function getServerSideProps(context) {
       name: "Status",
       query: "status",
       options: [
-        { text: "All", value: "" },
-        { text: "Frozen", value: "frozen" },
+        {text: "All", value: ""},
+        {text: "Frozen", value: "frozen"},
+        {text: "Destroyed", value: "destroyed"},
       ],
     },
   ];

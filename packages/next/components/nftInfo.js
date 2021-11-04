@@ -44,7 +44,7 @@ export default function NftInfo({ data }) {
           <div className="noinfo">No more description.</div>
         )}
       </Wrapper>
-      <Divider />
+      <Divider className="divider" />
     </>
   );
 }

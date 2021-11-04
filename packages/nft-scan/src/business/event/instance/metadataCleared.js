@@ -1,6 +1,7 @@
 const { insertInstanceTimelineItem } = require("../../../mongo/service/instance");
 const { TimelineItemTypes } = require("../../common/constants");
 const { UniquesEvents } = require("../../common/constants");
+const { updateClassWithDetails } = require("../class/common");
 const { updateMetadata } = require("./common");
 
 async function handleMetadataCleared(event, indexer) {
@@ -18,6 +19,7 @@ async function handleMetadataCleared(event, indexer) {
   };
 
   await insertInstanceTimelineItem(classId, instanceId, timelineItem);
+  await updateClassWithDetails(classId, indexer);
 }
 
 module.exports = {

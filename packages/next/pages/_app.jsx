@@ -6,6 +6,7 @@ import Head from "next/head";
 import { store } from "../store";
 import { useNode } from "utils/hooks";
 
+import "semantic-ui-css/semantic.min.css";
 import "nprogress/nprogress.css";
 import "styles/globals.css";
 

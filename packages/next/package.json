@@ -38,6 +38,8 @@
     "react-dom": "17.0.2",
     "react-json-view": "^1.21.3",
     "react-redux": "^7.2.4",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.4",
     "sharp": "^0.29.2",
     "socket.io": "^3.0.4",
     "socket.io-client": "^4.1.3",

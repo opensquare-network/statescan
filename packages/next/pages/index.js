@@ -292,44 +292,6 @@ export default function Home({ node, overview: ssrOverview, price }) {
           }
           collapse={collapseSize}
         />
-        <Table
-          title="NFT classes"
-          head={nftsHead}
-          body={(ssrOverview?.nftclasses?.items || []).map(
-            (nftClass, index) => [
-              <InLink
-                key={`id${index}`}
-                to={`/nft/classes/${nftClass.classId}`}
-              >
-                {nftClass.classId}
-              </InLink>,
-              <img
-                width={32}
-                key={`class${index}`}
-                src={nftClass.class ?? "/imgs/icons/nft.png"}
-                alt=""
-              />,
-              nftClass.name ?? "NFT",
-              time(nftClass?.indexer?.blockTime),
-              <AddressEllipsis
-                key={`owner-${index}`}
-                address={nftClass.details?.owner}
-                to={`/account/${nftClass.details?.owner}`}
-              />,
-              nftClass.details?.instances,
-              <Status
-                key={`status-${index}`}
-                status={nftClass.details?.isFroze ? "Frozen" : "Active"}
-              />,
-            ]
-          )}
-          foot={
-            <FootWrapper>
-              <InLink to={`/assets`}>View all</InLink>
-            </FootWrapper>
-          }
-          collapse={collapseSize}
-        />
       </Wrapper>
     </Layout>
   );

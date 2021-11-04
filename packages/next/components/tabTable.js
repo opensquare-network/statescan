@@ -70,7 +70,7 @@ const TabTag = styled.div`
   color: ${(p) => p.themecolor};
 `;
 
-export default function TabTable({ data, activeTab, collapse }) {
+export default function TabTable({ data, activeTab, collapse, query = {} }) {
   const router = useRouter();
   const theme = useTheme();
   const activeTabIndex = data
@@ -97,6 +97,7 @@ export default function TabTable({ data, activeTab, collapse }) {
               router.push(
                 {
                   query: {
+                    ...query,
                     id: router.query.id,
                     tab: item.name.toLowerCase(),
                     ...(item.page > 0 ? { page: item.page + 1 } : {}),

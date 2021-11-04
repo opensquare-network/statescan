@@ -20,26 +20,48 @@ async function getIpfsData(nftObj) {
   return ipfsMetadata;
 }
 
-async function getNftClasses(ctx) {
-  const { page, pageSize } = extractPage(ctx);
-  if (pageSize === 0 || page < 0) {
-    ctx.status = 400;
-    return;
-  }
-
+async function queryAllClasses(page, pageSize) {
   const col = await getNftClassCollection();
 
-  const q = { isDestroyed: false };
-
-  const items = await col.aggregate([
-    { $match: q },
+  const [result] = await col.aggregate([
+    { $match: { isDestroyed: false } },
     {
-      $sort: {
-        classId: 1,
+      $facet: {
+        items: [
+          { $sort: { classId: 1 } },
+          { $skip: page * pageSize },
+          { $limit: pageSize },
+          {
+            $lookup: {
+              from: "ipfsMetadata",
+              localField: "metadata.data",
+              foreignField: "dataId",
+              as: "ipfsMetadata",
+            }
+          },
+          {
+            $addFields: {
+              ipfsMetadata: {
+                $arrayElemAt: ["$ipfsMetadata", 0]
+              }
+            }
+          }
+        ],
+        total: [
+          { $count: "count" }
+        ],
       }
     },
-    { $skip: page * pageSize },
-    { $limit: pageSize },
+  ]).toArray();
+
+  return result;
+}
+
+async function queryRecognizedClasses(page, pageSize)  {
+  const col = await getNftClassCollection();
+
+  const [result] = await col.aggregate([
+    { $match: { isDestroyed: false } },
     {
       $lookup: {
         from: "ipfsMetadata",
@@ -54,18 +76,111 @@ async function getNftClasses(ctx) {
           $arrayElemAt: ["$ipfsMetadata", 0]
         }
       }
-    }
+    },
+    {
+      $match: {
+        "ipfsMetadata.recognized": true
+      }
+    },
+    {
+      $facet: {
+        items: [
+          { $sort: { classId: 1 } },
+          { $skip: page * pageSize },
+          { $limit: pageSize },
+        ],
+        total: [
+          { $count: "count" }
+        ],
+      },
+    },
   ]).toArray();
 
-  const total = await col.countDocuments(q);
+  return result;
+}
 
-  ctx.body = {
-    items,
-    page,
-    pageSize,
-    total,
-  };
+async function queryUnrecognizedClasses(page, pageSize) {
+  const col = await getNftClassCollection();
 
+  const [result] = await col.aggregate([
+    { $match: { isDestroyed: false } },
+    {
+      $lookup: {
+        from: "ipfsMetadata",
+        localField: "metadata.data",
+        foreignField: "dataId",
+        as: "ipfsMetadata",
+      }
+    },
+    {
+      $addFields: {
+        ipfsMetadata: {
+          $arrayElemAt: ["$ipfsMetadata", 0]
+        }
+      }
+    },
+    {
+      $match: {
+        $or: [
+          { "ipfsMetadata.recognized": false },
+          { "ipfsMetadata.recognized": { $exists: false } },
+        ]
+      }
+    },
+    {
+      $facet: {
+        items: [
+          { $sort: { classId: 1 } },
+          { $skip: page * pageSize },
+          { $limit: pageSize },
+        ],
+        total: [
+          { $count: "count" }
+        ],
+      },
+    },
+  ]).toArray();
+
+  return result;
+}
+
+async function getNftClasses(ctx) {
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { recognized } = ctx.query;
+
+  if (recognized === "true" || recognized === "1") {
+    const result = await queryRecognizedClasses(page, pageSize);
+
+    ctx.body = {
+      items: result.items,
+      page,
+      pageSize,
+      total: result.total[0].count,
+    };
+  } else if (recognized === "false" || recognized === "0") {
+    const result = await queryUnrecognizedClasses(page, pageSize);
+
+    ctx.body = {
+      items: result.items,
+      page,
+      pageSize,
+      total: result.total[0].count,
+    };
+  } else {
+    const result = await queryAllClasses(page, pageSize);
+
+    ctx.body = {
+      items: result.items,
+      page,
+      pageSize,
+      total: result.total[0].count,
+    };
+  }
 }
 
 async function getNftClassById(ctx) {

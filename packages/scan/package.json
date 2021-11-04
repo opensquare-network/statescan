@@ -12,7 +12,7 @@
     "test": "jest src"
   },
   "dependencies": {
-    "@polkadot/api": "6.5.3-3",
+    "@polkadot/api": "6.6.2-10",
     "bignumber.js": "^9.0.1",
     "dotenv": "^10.0.0",
     "lodash.findlast": "^4.6.0",

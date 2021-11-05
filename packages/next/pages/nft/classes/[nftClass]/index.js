@@ -46,6 +46,14 @@ const ImgWrapper = styled.div`
   background-color: #555555;
 `
 
+const ThumbnailContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+`;
+
 export default function NftClass({node, NFTClass, NFTInstances}) {
   const tab = {};
 
@@ -62,12 +70,18 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         >
           {instance.instanceId}
         </InLink>,
-        <img width={32} key={`class${index}`} src={
-          instance?.ipfsMetadata?.imageThumbnail ?? (
-            `https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
-          )
-        }
-             alt=""/>,
+        <ThumbnailContainer>
+          <img
+            width={32}
+            key={`class${index}`}
+            src={
+              instance?.ipfsMetadata?.imageThumbnail ?? (
+                `https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
+              )
+            }
+            alt=""
+          />
+        </ThumbnailContainer>,
         instance?.ipfsMetadata?.name ?? (NFTClass?.ipfsMetadata?.name ?? "unrecognized"),
         time(instance?.indexer?.blockTime),
         <AddressEllipsis

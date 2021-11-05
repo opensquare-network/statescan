@@ -32,7 +32,7 @@ const Between = styled.div`
     border: none;
     box-shadow: none;
   }
-  
+
   img {
     object-fit: contain;
   }
@@ -42,6 +42,8 @@ const ImgWrapper = styled.div`
   position: relative;
   max-width: 480px;
   max-height: 480px;
+  height: 480px;
+  background-color: #555555;
 `
 
 export default function NftClass({node, NFTClass, NFTInstances}) {

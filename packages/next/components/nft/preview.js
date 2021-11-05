@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
-  
+
   > div{
     padding: 0;
   }
@@ -42,15 +42,20 @@ const Field = styled.div`
 `
 
 const Value = styled.div`
-  font-size: 14px;
-  line-height: 20px;
-  color: rgba(17, 17, 17, 0.65);
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgba(17, 17, 17, 0.65);
 `
 
 const ImgWrapper = styled.div`
-  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   max-width: 480px;
   max-height: 480px;
+  height: 480px;
+  background-color: #555555;
 `
 
 export default function Preview({NFTClass}) {

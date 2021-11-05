@@ -1,7 +1,5 @@
 import styled from "styled-components";
 
-import ExternalLink from "./externalLink";
-import Tooltip from "./tooltip";
 import {
   h4_24_bold,
   text_dark_major,
@@ -10,12 +8,20 @@ import {
 
 const Wrapper = styled.div`
   padding-left: 24px;
-  margin-top: 8px;
+  margin-top: 24px;
   ${text_dark_minor};
 
   .title {
     ${h4_24_bold};
     ${text_dark_major};
+  }
+  .content {
+    margin-top: 16px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: rgba(17, 17, 17, 0.65);
   }
 
   @media screen and (max-width: 700px) {

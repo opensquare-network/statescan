@@ -2,7 +2,7 @@ import Layout from "components/layout";
 import Nav from "components/nav";
 import Table from "components/table";
 import AddressEllipsis from "components/addressEllipsis";
-import { getNFTClassHead, nftsHead } from "utils/constants";
+import { nftsHead } from "utils/constants";
 import Pagination from "components/pagination";
 import Filter from "../components/filter";
 import Status from "../components/status";
@@ -11,11 +11,6 @@ import { ssrNextApi as nextApi } from "../services/nextApi";
 import { time } from "../utils";
 import { Modal } from "semantic-ui-react";
 import { useRef, useState } from "react";
-import DetailTable from "../components/detailTable";
-import MinorText from "../components/minorText";
-import CopyText from "../components/copyText";
-import Address from "../components/address";
-import NftInfo from "../components/nftInfo";
 import styled from "styled-components";
 import { useOnClickOutside } from "../utils/hooks";
 import Preview from "../components/nft/preview";
@@ -41,12 +36,18 @@ const MyModal = styled(Modal)`
   }
 `
 
+const ThumbnailContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+`;
+
 export default function NftClasses({node, nfts, filter}) {
   const [showModal, setShowModal] = useState(false);
   const [previewNFTClass, setPreviewNFTCLass] = useState(null);
   const ref = useRef();
-  const NFTClass = nfts.items[0];
-  const status = NFTClass?.details?.isFrozen ? "Frozen" : "Active";
 
   useOnClickOutside(ref, (event) => {
     // exclude manually
@@ -72,18 +73,20 @@ export default function NftClasses({node, nfts, filter}) {
             <InLink key={`id${index}`} to={`/nft/classes/${nftClass.classId}`}>
               {nftClass.classId}
             </InLink>,
-            <img
-              onClick={() => {
-                setPreviewNFTCLass(nftClass);
-                setShowModal(true);
-              }}
-              style={{cursor: "pointer", width: 32}}
-              key={`class${index}`}
-              src={
-                nftClass?.ipfsMetadata?.imageThumbnail ?? "/imgs/icons/nft.png"
-              }
-              alt=""
-            />,
+            <ThumbnailContainer>
+              <img
+                onClick={() => {
+                  setPreviewNFTCLass(nftClass);
+                  setShowModal(true);
+                }}
+                style={{cursor: "pointer", width: 32}}
+                key={`class${index}`}
+                src={
+                  nftClass?.ipfsMetadata?.imageThumbnail ?? "/imgs/icons/nft.png"
+                }
+                alt=""
+              />
+            </ThumbnailContainer>,
             nftClass?.ipfsMetadata?.name ?? "unrecognized",
             time(nftClass?.indexer?.blockTime),
             <AddressEllipsis

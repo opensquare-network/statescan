@@ -18,6 +18,7 @@ import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Image from "next/image";
+import IpfsLink from "components/ipfsLink";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -54,6 +55,16 @@ const ThumbnailContainer = styled.div`
   align-items: center;
   width: 32px;
   height: 32px;
+`;
+
+const Ipfs = styled.div`
+  display: flex;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(17, 17, 17, 0.65);
+  > :first-child {
+    margin-right: 9.65px;
+  }
 `;
 
 export default function NftClass({node, NFTClass, NFTInstances}) {
@@ -148,7 +159,11 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                     to={`/account/${NFTClass?.details?.issuer}`}
                   />
                 </CopyText>,
-                <Status key="6" status={status}/>
+                ...(status === "Frozen" ? [<Status key="6" status={status}/>] : []),
+                <Ipfs key="7">
+                  <span>IPFS</span>
+                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')} />,
+                </Ipfs>
               ]}
               info={
                 <NftInfo

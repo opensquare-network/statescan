@@ -2,7 +2,15 @@
   "name": "@statescan/nft-scan",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest src"
+    "test": "jest src",
+    "westmint:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-westmint --env production",
+    "statemine:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-statemine --env production",
+    "westmintStaging:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-westmint-staging --env production",
+    "statemineStaging:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-statemine-staging --env production",
+    "westmint:ipfs": "pm2 start ecosystem.config.js --only statescan-ipfsscan-westmint --env production",
+    "statemine:ipfs": "pm2 start ecosystem.config.js --only statescan-ipfsscan-statemine --env production",
+    "westmintStaging:ipfs": "pm2 start ecosystem.config.js --only statescan-ipfsscan-westmint-staging --env production",
+    "statemineStaging:ipfs": "pm2 start ecosystem.config.js --only statescan-ipfsscan-statemine-staging --env production"
   },
   "dependencies": {
     "@polkadot/api": "6.6.2-10",

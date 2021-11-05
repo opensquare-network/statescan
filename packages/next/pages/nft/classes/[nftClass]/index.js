@@ -39,9 +39,12 @@ const Between = styled.div`
 `;
 
 const ImgWrapper = styled.div`
-  position: relative;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   max-width: 480px;
   max-height: 480px;
+  background-color: #555555;
 `
 
 export default function NftClass({node, NFTClass, NFTInstances}) {

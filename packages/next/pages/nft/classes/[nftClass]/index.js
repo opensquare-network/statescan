@@ -72,10 +72,9 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         >
           {instance.instanceId}
         </InLink>,
-        <ThumbnailContainer>
+        <ThumbnailContainer key={`class${index}`}>
           <img
             width={32}
-            key={`class${index}`}
             src={
               instance?.ipfsMetadata?.imageThumbnail ?? (
                 `https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"

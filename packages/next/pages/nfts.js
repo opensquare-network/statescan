@@ -73,14 +73,13 @@ export default function NftClasses({node, nfts, filter}) {
             <InLink key={`id${index}`} to={`/nft/classes/${nftClass.classId}`}>
               {nftClass.classId}
             </InLink>,
-            <ThumbnailContainer>
+            <ThumbnailContainer key={`class${index}`}>
               <img
                 onClick={() => {
                   setPreviewNFTCLass(nftClass);
                   setShowModal(true);
                 }}
                 style={{cursor: "pointer", width: 32}}
-                key={`class${index}`}
                 src={
                   nftClass?.ipfsMetadata?.imageThumbnail ?? "/imgs/icons/nft.png"
                 }

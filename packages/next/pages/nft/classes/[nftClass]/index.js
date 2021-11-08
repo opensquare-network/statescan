@@ -14,7 +14,7 @@ import Pagination from "components/pagination";
 import Timeline from "components/timeline/NFTTimeline";
 import Status from "components/status";
 import styled from "styled-components";
-import { card_border } from "styles/textStyles";
+import { card_border, text_dark_major, text_dark_minor } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Image from "next/image";
@@ -83,10 +83,19 @@ const Ipfs = styled.div`
   font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.65);
+
   > :first-child {
     margin-right: 9.65px;
   }
 `;
+
+const TextDark = styled.span`
+  ${text_dark_major};
+`
+
+const TextDarkMinor = styled.span`
+  ${text_dark_minor};
+`
 
 export default function NftClass({node, NFTClass, NFTInstances}) {
   const tab = {};
@@ -115,8 +124,8 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
             alt=""
           />
         </ThumbnailContainer>,
-        instance?.ipfsMetadata?.name ?? (NFTClass?.ipfsMetadata?.name ?? "unrecognized"),
-        time(instance?.indexer?.blockTime),
+        <TextDark key={`name-${index}`}>{instance?.ipfsMetadata?.name ?? (NFTClass?.ipfsMetadata?.name ?? "unrecognized")}</TextDark>,
+        <TextDarkMinor key={`time-${index}`}>{time(instance?.indexer?.blockTime)}</TextDarkMinor>,
         <AddressEllipsis
           key={`owner-${index}`}
           address={instance?.details?.owner}
@@ -187,7 +196,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                 ...(status === "Frozen" ? [<Status key="6" status={status}/>] : []),
                 <Ipfs key="7">
                   <span>IPFS</span>
-                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')} />
+                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}/>
                 </Ipfs>,
               ]}
               info={
@@ -215,7 +224,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const {nftClass: classId , page} = context.query;
+  const {nftClass: classId, page} = context.query;
   const nPage = parseInt(page) || 1;
   const {result: NFTClass} = await nextApi.fetch(`nftclasses/${classId}`);
   const {result: NFTInstances} = await nextApi.fetch(

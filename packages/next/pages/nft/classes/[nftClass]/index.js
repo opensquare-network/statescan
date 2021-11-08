@@ -39,6 +39,14 @@ const Between = styled.div`
     }
     border: none;
     box-shadow: none;
+
+    // Styled the square box
+    > div {
+      max-width: 480px;
+      @media screen and (min-width: 1064px) {
+        width: 480px;
+      }
+    }
   }
 
   > :nth-child(2) {

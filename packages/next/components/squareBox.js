@@ -2,10 +2,6 @@ import styled from 'styled-components';
 
 const SquareBox = styled.div`
   position: relative;
-  @media screen and (min-width: 1064px) {
-    width: 480px;
-  }
-  max-width: 480px;
   overflow: hidden;
   background-color: #555555;
   :before {

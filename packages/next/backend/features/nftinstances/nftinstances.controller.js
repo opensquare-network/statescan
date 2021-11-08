@@ -173,7 +173,7 @@ async function getNftInstanceById(ctx) {
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.instanceHeight,
+    instanceHeight: nftInstance.indexer.blockHeight,
   }).toArray();
 
   const attrCol = await getInstanceAttributeCollection();
@@ -181,7 +181,7 @@ async function getNftInstanceById(ctx) {
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.instanceHeight,
+    instanceHeight: nftInstance.indexer.blockHeight,
   }).toArray();
 
   const ipfsMetadata = await getIpfsData(nftInstance);
@@ -226,7 +226,7 @@ async function getNftInstance(ctx) {
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.instanceHeight,
+    instanceHeight: nftInstance.indexer.blockHeight,
   }).toArray();
 
   const attrCol = await getInstanceAttributeCollection();
@@ -234,7 +234,7 @@ async function getNftInstance(ctx) {
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.instanceHeight,
+    instanceHeight: nftInstance.indexer.blockHeight,
   }).toArray();
 
   const ipfsMetadata = await getIpfsData(nftInstance);

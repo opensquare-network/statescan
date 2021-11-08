@@ -60,7 +60,7 @@ const ImgWrapper = styled.div`
 
 export default function Preview({NFTClass}) {
   return <Wrapper>
-    <div style={{ width: "100%", paddingBottom: "24px" }}>
+    <div style={{ width: "100%", marginBottom: "24px" }}>
       <SquareBoxComponent>
         <ImgWrapper>
           <Image

@@ -261,7 +261,7 @@ export const getNFTClassInstanceHead = (status) => {
 export const NFTClassInstanceHead = [
   { name: "ID", width: 136 },
   { name: "NFT", width: 100 },
-  { name: "Name", width: 332 },
+  { name: "Name", width: 452 },
   { name: "Created Time", width: 200 },
   { name: "Owner", width: 152 },
   { name: "Status" },

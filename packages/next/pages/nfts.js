@@ -14,6 +14,7 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useOnClickOutside } from "../utils/hooks";
 import Preview from "../components/nft/preview";
+import { text_dark_minor } from "../styles/textStyles";
 
 const MyModal = styled(Modal)`
   > div {
@@ -43,6 +44,10 @@ const ThumbnailContainer = styled.div`
   width: 32px;
   height: 32px;
 `;
+
+const TextDarkMinor = styled.span`
+  ${text_dark_minor};
+`
 
 export default function NftClasses({node, nfts, filter}) {
   const [showModal, setShowModal] = useState(false);
@@ -86,8 +91,10 @@ export default function NftClasses({node, nfts, filter}) {
                 alt=""
               />
             </ThumbnailContainer>,
-            nftClass?.ipfsMetadata?.name ?? "unrecognized",
-            time(nftClass?.indexer?.blockTime),
+            <a key={`owner-${index}`} href={`/nft/class/${nftClass.classId}`}>
+              {nftClass?.ipfsMetadata?.name ?? "unrecognized"}
+            </a>,
+            <TextDarkMinor key={`time-${index}`}>{time(nftClass?.indexer?.blockTime)}</TextDarkMinor>,
             <AddressEllipsis
               key={`owner-${index}`}
               address={nftClass.details?.owner}

@@ -5,10 +5,11 @@ import InLink from "components/inLink";
 import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
 import { assetsHead, EmptyQuery } from "utils/constants";
-import { bigNumber2Locale, fromAssetUnit } from "utils";
+import { abbreviateBigNumber, fromAssetUnit } from "utils";
 import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Name from "../components/account/name";
+import Tooltip from "../components/tooltip";
 
 export default function Assets({ node, assets }) {
   return (
@@ -43,7 +44,9 @@ export default function Assets({ node, assets }) {
               to={`/account/${item.issuer}`}
             />,
             item.accounts,
-            `${bigNumber2Locale(fromAssetUnit(item.supply, item.decimals))}`,
+            <Tooltip key={`${index}-5`} content={fromAssetUnit(item.supply, item.decimals)} isCopy>
+              {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
+            </Tooltip>,
           ])}
           foot={
             <Pagination

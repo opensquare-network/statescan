@@ -1,8 +1,9 @@
+import styled from "styled-components";
 import Image from "next/image";
 import { addressEllipsis, time } from "../../utils";
 import Address from "../address";
 import NftInfo from "../nftInfo";
-import styled from "styled-components";
+import SquareBoxComponent from "../squareBox";
 
 const Wrapper = styled.div`
   display: flex;
@@ -52,24 +53,27 @@ const ImgWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  max-width: 480px;
-  max-height: 480px;
-  height: 480px;
+  height: 100%;
+  width: 100%;
   background-color: #555555;
 `
 
 export default function Preview({NFTClass}) {
   return <Wrapper>
-    <ImgWrapper>
-      <Image
-        src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-        width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
-        height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
-        alt=""
-        placeholder="blur"
-        blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
-      />
-    </ImgWrapper>
+    <div style={{ width: "100%", marginBottom: "24px" }}>
+      <SquareBoxComponent>
+        <ImgWrapper>
+          <Image
+            src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
+            width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
+            height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
+            alt=""
+            placeholder="blur"
+            blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
+          />
+        </ImgWrapper>
+      </SquareBoxComponent>
+    </div>
 
     <NftInfo
       data={{

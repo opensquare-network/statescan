@@ -3,6 +3,7 @@ const {
   getInstanceCollection,
   getInstanceTimelineCollection,
   getInstanceAttributeCollection,
+  getNftTransferCollection,
 } = require("../index");
 const { logger } = require("../../logger");
 
@@ -138,10 +139,44 @@ async function deleteInstanceAttribute(classId, instanceId, key) {
   });
 }
 
+async function insertTransfer(indexer, classId, instanceId, from, to) {
+  const classCol = await getClassCollection();
+  const nftClass = await classCol.findOne({ classId, isDestroyed: false });
+  if (!nftClass) {
+    logger.error(
+      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}`
+    );
+    return;
+  }
+
+  const classHeight = nftClass.indexer.blockHeight;
+
+  const instanceCol = await getInstanceCollection();
+  const nftInstance = await instanceCol.findOne({ classId, classHeight, instanceId, isDestroyed: false });
+  if (!nftInstance) {
+    logger.error(`Can not find instance /${classId}/${instanceId} when set timeline item`);
+    return;
+  }
+
+  const instanceHeight = nftInstance.indexer.blockHeight;
+
+  const nftTransferCol = await getNftTransferCollection();
+  await nftTransferCol.insertOne({
+    indexer,
+    classId,
+    classHeight,
+    instanceId,
+    instanceHeight,
+    from,
+    to,
+  });
+}
+
 module.exports = {
   insertInstance,
   insertInstanceTimelineItem,
   updateInstance,
   insertInstanceAttribute,
   deleteInstanceAttribute,
+  insertTransfer,
 };

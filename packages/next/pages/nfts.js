@@ -91,7 +91,7 @@ export default function NftClasses({node, nfts, filter}) {
                 alt=""
               />
             </ThumbnailContainer>,
-            <a key={`owner-${index}`} href={`/nft/class/${nftClass.classId}`}>
+            <a key={`owner-${index}`} href={`/nft/classes/${nftClass.classId}`}>
               {nftClass?.ipfsMetadata?.name ?? "unrecognized"}
             </a>,
             <TextDarkMinor key={`time-${index}`}>{time(nftClass?.indexer?.blockTime)}</TextDarkMinor>,

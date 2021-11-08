@@ -8,7 +8,6 @@ import {
 
 const Wrapper = styled.div`
   padding-left: 24px;
-  margin-top: 24px;
   ${text_dark_minor};
 
   .title {

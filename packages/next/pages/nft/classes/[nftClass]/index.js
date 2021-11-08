@@ -19,17 +19,31 @@ import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Image from "next/image";
 import IpfsLink from "components/ipfsLink";
+import SquareBoxComponent from "components/squareBox";
 
 const Between = styled.div`
   margin-bottom: 16px;
-  padding: 24px;
+  padding: 24px 0 24px 0;
   display: flex;
+  @media screen and (max-width: 1064px) {
+    flex-flow: column;
+  }
   ${card_border};
   background: white;
+  gap: 16px;
 
-  > div {
-    margin-left: 16px;
-    flex-grow: 1;
+  > :first-child {
+    margin: 0 0 0 24px;
+    @media screen and (max-width: 1064px) {
+      margin: 0 24px 0 24px;
+    }
+    border: none;
+    box-shadow: none;
+  }
+
+  > :nth-child(2) {
+    padding: 0;
+    margin-right: 24px;
     border: none;
     box-shadow: none;
   }
@@ -43,9 +57,8 @@ const ImgWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  max-width: 480px;
-  max-height: 480px;
-  height: 480px;
+  width: 100%;
+  height: 100%;
   background-color: #555555;
 `
 
@@ -129,16 +142,20 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
             node={node}
           />
           <Between>
-            <ImgWrapper>
-              <Image
-                src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-                width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
-                height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
-                alt=""
-                placeholder="blur"
-                blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
-              />
-            </ImgWrapper>
+            <div>
+              <SquareBoxComponent>
+                <ImgWrapper>
+                  <Image
+                    src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
+                    width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
+                    height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
+                    alt=""
+                    placeholder="blur"
+                    blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
+                  />
+                </ImgWrapper>
+              </SquareBoxComponent>
+            </div>
             <DetailTable
               head={getNFTClassHead(status)}
               body={[
@@ -162,8 +179,8 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                 ...(status === "Frozen" ? [<Status key="6" status={status}/>] : []),
                 <Ipfs key="7">
                   <span>IPFS</span>
-                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')} />,
-                </Ipfs>
+                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')} />
+                </Ipfs>,
               ]}
               info={
                 <NftInfo

@@ -3,14 +3,14 @@ const { queryInstanceDetails } = require("../../common/instance/storage");
 const { updateInstance } = require("../../../mongo/service/instance");
 const { queryInstanceMetadata } = require("../../common/instance/metadata");
 
-async function updateMetadata(classId, indexer) {
-  const metadata = await queryInstanceMetadata(classId, indexer);
+async function updateMetadata(classId, instanceId, indexer) {
+  const metadata = await queryInstanceMetadata(classId, instanceId, indexer);
   if (!metadata) {
-    logger.error("class metadata set, but not found.", indexer);
+    logger.error("instance metadata set, but not found.", indexer);
     return;
   }
 
-  await updateInstance(classId, { metadata });
+  await updateInstance(classId, instanceId, { metadata });
 }
 
 async function insertNewInstance(classId, instanceId, indexer) {

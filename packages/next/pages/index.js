@@ -9,6 +9,7 @@ import InLink from "components/inLink";
 import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
 import {
+  abbreviateBigNumber,
   bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
@@ -33,6 +34,7 @@ import AddressCounts from "../components/block/addressCounts";
 import AmountFromTo from "../components/transfer/amountFromTo";
 import Name from "../components/account/name";
 import Status from "../components/status";
+import Tooltip from "../components/tooltip";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -283,7 +285,9 @@ export default function Home({ node, overview: ssrOverview, price }) {
               to={`/account/${item.issuer}`}
             />,
             item.accounts,
-            bigNumber2Locale(fromAssetUnit(item.supply, item.decimals)),
+            <Tooltip key={`${index}-5`} content={fromAssetUnit(item.supply, item.decimals)} isCopy>
+              {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
+            </Tooltip>,
           ])}
           foot={
             <FootWrapper>

@@ -162,14 +162,14 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
             <div>
               <SquareBoxComponent>
                 <ImgWrapper>
-                  <Image
+                  {NFTClass?.ipfsMetadata?.image && <Image
                     src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
                     width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
                     height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
                     alt=""
                     placeholder="blur"
                     blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
-                  />
+                  />}
                 </ImgWrapper>
               </SquareBoxComponent>
             </div>

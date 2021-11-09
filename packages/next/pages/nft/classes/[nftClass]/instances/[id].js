@@ -1,7 +1,7 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { getNFTClassHead, NFTClassInstanceHead } from "utils/constants";
+import { getNFTClassHead, getNFTClassInstanceHead, NFTClassInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
@@ -14,6 +14,7 @@ import styled from "styled-components";
 import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
+import IpfsLink from "../../../../../components/ipfsLink";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -30,24 +31,32 @@ const Between = styled.div`
   }
 `;
 
-export default function NftClass({ node, NFTClass, NFTInstances }) {
-  const assetHolders = {};
-  const asset = {};
-  const tab = {};
+const Ipfs = styled.div`
+  display: flex;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(17, 17, 17, 0.65);
 
+  > :first-child {
+    margin-right: 9.65px;
+  }
+`;
+
+export default function NftClass({node,NFTInstance,  instanceId, }) {
+  const tab = {};
   const tabTableData = [
     {
       name: "Timeline",
-      total: asset?.timeline?.length,
-      component: <Timeline data={NFTClass?.timeline} node={node} />,
+      total: NFTInstance?.timeline?.length,
+      component: <Timeline data={NFTInstance?.timeline} node={node}/>,
     },
   ];
 
   let status = "Active";
-  if (asset.isFrozen) {
+  if (NFTInstance?.details?.isFrozen) {
     status = "Frozen";
   }
-  if (asset.destroyedAt) {
+  if (NFTInstance.destroyedAt) {
     status = "Destroyed";
   }
 
@@ -57,47 +66,45 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
         <div>
           <Nav
             data={[
-              { name: "NFT Classes", path: `/nfts` },
+              {name: "NFT Classes", path: `/nfts`},
               {
-                name: ` ${NFTClass.classId}`,
-                path: `/nft/classes/${NFTClass.classId}`,
+                name: ` ${NFTInstance.classId}`,
+                path: `/nft/classes/${NFTInstance.classId}`,
               },
-              { name: `Instances` },
-              { name: `1` },
+              {name: `Instances`},
+              {name: instanceId},
             ]}
             node={node}
           />
           <Between>
-            <img src="/imgs/nftClass.png" width={480} alt="" />
+            <img src="/imgs/nftClass.png" width={480} alt=""/>
             <DetailTable
-              head={["ClassId", ...getNFTClassHead(status)]}
+              head={["ClassId", ...getNFTClassInstanceHead(status)]}
               body={[
-                <MinorText key="1">{NFTClass?.classId}-1</MinorText>,
-                <MinorText key="1">{NFTClass?.classId}</MinorText>,
+                <MinorText key="1">{NFTInstance?.classId}</MinorText>,
+                <MinorText key="1">{NFTInstance?.instanceId}</MinorText>,
                 <MinorText key="2">
-                  {time(NFTClass?.indexer?.blockTime)}
+                  {time(NFTInstance?.indexer?.blockTime)}
                 </MinorText>,
-                <MinorText key="3">{NFTClass?.details?.instances}</MinorText>,
-                <CopyText key="4" text={NFTClass?.owner}>
+                <CopyText key="4" text={NFTInstance?.details?.owner}>
                   <Address
-                    address={NFTClass?.details?.owner}
-                    to={`/account/${NFTClass?.details?.owner}`}
+                    address={NFTInstance?.details?.owner}
+                    to={`/account/${NFTInstance?.details?.owner}`}
                   />
                 </CopyText>,
-                <CopyText key="5" text={NFTClass?.details?.owner}>
+                <CopyText key="5" text={NFTInstance?.details?.owner}>
                   <Address
-                    address={NFTClass?.details?.owner}
-                    to={`/account/${NFTClass?.details?.owner}`}
+                    address={NFTInstance?.details?.owner}
+                    to={`/account/${NFTInstance?.details?.owner}`}
                   />
                 </CopyText>,
-                `${bigNumber2Locale(
-                  fromAssetUnit(asset?.supply, asset?.decimals)
-                )} ${asset?.symbol}`,
-                asset?.decimals,
+                <Ipfs key="7">
+                  <span>IPFS</span>
+                  <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
+                </Ipfs>,
                 ...(status === "Active"
                   ? []
-                  : [<Status key="6" status={status} />]),
-                <MinorText key="7">{assetHolders?.total}</MinorText>,
+                  : [<Status key="6" status={status}/>]),
               ]}
               info={
                 <NftInfo
@@ -111,7 +118,7 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
             />
           </Between>
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} />
+        <TabTable data={tabTableData} activeTab={tab} collapse={900}/>
       </Section>
     </Layout>
   );
@@ -119,14 +126,13 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { nftClass: classId } = context.query;
-  // todo : query instance data (not ready yet)
-  const { result: NFTClass } = await nextApi.fetch(`nftclasses/${classId}`);
-
+  const {nftClass: classId, id: instanceId} = context.query;
+  const {result: NFTInstance} = await nextApi.fetch(`nftclasses/${classId}/instances/${instanceId}`);
   return {
     props: {
       node,
-      NFTClass,
+      NFTInstance,
+      instanceId,
     },
   };
 }

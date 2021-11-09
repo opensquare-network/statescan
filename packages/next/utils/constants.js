@@ -255,6 +255,7 @@ export const getNFTClassInstanceHead = (status) => {
     "Owner",
     "Issuer",
     ...(status === "Active" ? [] : ["Status"]),
+    "Link"
   ];
 };
 

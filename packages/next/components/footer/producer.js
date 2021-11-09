@@ -32,11 +32,15 @@ export default function Producer() {
         <Text>{`© ${new Date().getFullYear()} Statescan`}</Text>
         <Text>·</Text>
         <Text>Powered by</Text>
-        <img src="/imgs/logo-opensquare.svg" alt="opensquare" />
+        <a href="https://www.opensquare.network/" target="_blank" rel="noreferrer">
+          <img src="/imgs/logo-opensquare.svg" alt="opensquare" />
+        </a>
       </Wrapper>
       <Wrapper>
         <Text>· &nbsp;Funded by</Text>
-        <img src="/imgs/logo-kusamadotreasury.svg" alt="kusama dotreasury" />
+        <a href="https://kusama.network/" target="_blank" rel="noreferrer">
+          <img src="/imgs/logo-kusamadotreasury.svg" alt="kusama dotreasury" />
+        </a>
       </Wrapper>
     </Wrapper>
   );

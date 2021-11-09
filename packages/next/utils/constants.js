@@ -268,6 +268,14 @@ export const NFTClassInstanceHead = [
   { name: "Status" },
 ];
 
+export const addressNFTInstanceHead = [
+  { name: "ID", width: 136 },
+  { name: "NFT", width: 100 },
+  { name: "Name", width: 452 },
+  { name: "Created Time", width: 200, align: "right" },
+  { name: "Status", align: "right" },
+];
+
 export const NFTTransferHead = [
   { name: "Event ID", width: 136 },
   { name: "NFT", width: 100 },

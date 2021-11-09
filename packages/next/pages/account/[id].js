@@ -17,9 +17,9 @@ import {
   addressAssetsHead,
   addressExtrincsHead,
   addressHead,
+  addressNFTInstanceHead,
   addressTransfersHead,
   EmptyQuery,
-  NFTClassInstanceHead,
   NFTTransferHead,
   nodes,
   teleportsHead,
@@ -301,7 +301,7 @@ export default function Address({
       name: "NFT",
       page: addressNftInstances?.page,
       total: addressNftInstances?.total,
-      head: NFTClassInstanceHead,
+      head: addressNFTInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
         const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
         const image = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.image;
@@ -334,11 +334,6 @@ export default function Address({
             </InLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>{time(instance.indexer?.blockTime)}</TextDarkMinor>,
-          <AddressEllipsis
-            key={`owner-${index}`}
-            address={instance.details?.owner}
-            to={`/account/${instance.details?.owner}`}
-          />,
           <Status key={`status-${index}`} status={instance.details?.isFrozen ? "Frozen" : "Active"}/>,
         ];
       }),

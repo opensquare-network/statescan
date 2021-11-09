@@ -3,6 +3,8 @@ const {
   getAssetHolderCollection,
   getAssetTransferCollection,
   getTeleportCollection,
+  getNftInstanceCollection,
+  getNftTransferCollection,
 } = require("../../mongo");
 const { getExtrinsicCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
@@ -318,6 +320,195 @@ async function getAddressTeleports(ctx) {
   };
 }
 
+async function getAddressNftInstances(ctx) {
+  const { address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = {
+    "details.owner": address,
+    isDestroyed: false,
+  };
+
+  const nftInstanceCol = await getNftInstanceCollection();
+  const items = await nftInstanceCol.aggregate([
+    { $match: q },
+    { $sort: { instanceId: 1 } },
+    { $skip: page * pageSize },
+    { $limit: pageSize },
+    {
+      $lookup: {
+        from: "nftClass",
+        let: { classId: "$classId", classHeight: "$classHeight" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$classId", "$$classId"] },
+                  { $eq: ["$indexer.blockHeight", "$$classHeight"] },
+                ],
+              },
+            },
+          },
+          {
+            $lookup: {
+              from: "ipfsMetadata",
+              localField: "metadata.data",
+              foreignField: "dataId",
+              as: "ipfsMetadata",
+            }
+          },
+          {
+            $addFields: {
+              ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+            },
+          },
+        ],
+        as: "class",
+      }
+    },
+    {
+      $lookup: {
+        from: "ipfsMetadata",
+        localField: "metadata.data",
+        foreignField: "dataId",
+        as: "ipfsMetadata",
+      }
+    },
+    {
+      $addFields: {
+        ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+        class: { $arrayElemAt: ["$class", 0] },
+      },
+    },
+  ]).toArray();
+
+  const total = await nftInstanceCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
+async function getAddressNftTransfers(ctx) {
+  const { address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = {
+    $or: [{ from: address }, { to: address }],
+  };
+  const transferCol = await getNftTransferCollection();
+  const items = await transferCol
+    .aggregate([
+      { $match: q },
+      { $sort: { "indexer.blockHeight": -1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      {
+        $lookup: {
+          from: "nftInstance",
+          let: {
+            classId: "$classId",
+            classHeight: "$classHeight",
+            instanceId: "$instanceId",
+            instanceHeight: "$instanceHeight"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$classId", "$$classId"] },
+                    { $eq: ["$classHeight", "$$classHeight"] },
+                    { $eq: ["$instanceId", "$$instanceId"] },
+                    { $eq: ["$indexer.blockHeight", "$$instanceHeight"] },
+                  ],
+                },
+              }
+            },
+            {
+              $lookup: {
+                from: "ipfsMetadata",
+                localField: "metadata.data",
+                foreignField: "dataId",
+                as: "ipfsMetadata",
+              }
+            },
+            {
+              $addFields: {
+                ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+              },
+            },
+            {
+              $lookup: {
+                from: "nftClass",
+                let: { classId: "$classId", classHeight: "$classHeight" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$classId", "$$classId"] },
+                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "ipfsMetadata",
+                      localField: "metadata.data",
+                      foreignField: "dataId",
+                      as: "ipfsMetadata",
+                    }
+                  },
+                  {
+                    $addFields: {
+                      ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+                    },
+                  },
+                ],
+                as: "class",
+              }
+            },
+            {
+              $addFields: {
+                class: { $arrayElemAt: ["$class", 0] },
+              },
+            },
+          ],
+          as: "instance",
+        },
+      },
+      {
+        $addFields: {
+          instance: { $arrayElemAt: ["$instance", 0] },
+        },
+      },
+    ])
+    .toArray();
+
+  const total = await transferCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
 module.exports = {
   getAddress,
   getAddressExtrinsics,
@@ -326,4 +517,6 @@ module.exports = {
   getAddressTransfers,
   getAddressTeleports,
   getAddresses,
+  getAddressNftInstances,
+  getAddressNftTransfers,
 };

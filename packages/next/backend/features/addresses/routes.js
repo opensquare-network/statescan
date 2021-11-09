@@ -20,4 +20,14 @@ router.get(
   addressesController.getAddressTeleports
 );
 
+router.get(
+  "/addresses/:address/nft/instances",
+  addressesController.getAddressNftInstances
+);
+router.get(
+  "/addresses/:address/nft/transfers",
+  addressesController.getAddressNftTransfers
+);
+
+
 module.exports = router;

@@ -28,6 +28,7 @@ const nftInstanceCollectionName = "nftInstance";
 const instanceTimelineCollectionName = "instanceTimeline";
 const instanceAttributeCollectionName = "instanceAttribute";
 const ipfsMetadataCollectionName = "ipfsMetadata";
+const nftTransferCollectionName = "nftTransfer";
 
 let client = null;
 let db = null;
@@ -56,6 +57,7 @@ let nftInstanceCol = null;
 let instanceTimelineCol = null;
 let instanceAttributeCol = null;
 let ipfsMetadataCol = null;
+let nftTransferCol = null;
 
 function getDbName() {
   const dbName = process.env.MONGO_DB_NAME;
@@ -111,6 +113,7 @@ async function initDb() {
   instanceTimelineCol = nftDb.collection(instanceTimelineCollectionName);
   instanceAttributeCol = nftDb.collection(instanceAttributeCollectionName);
   ipfsMetadataCol = nftDb.collection(ipfsMetadataCollectionName);
+  nftTransferCol = nftDb.collection(nftTransferCollectionName);
 
   await _createIndexes();
 }
@@ -296,6 +299,11 @@ async function getIpfsMetadataCollection() {
   return ipfsMetadataCol;
 }
 
+async function getNftTransferCollection() {
+  await tryInit(nftTransferCol);
+  return nftTransferCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -318,4 +326,5 @@ module.exports = {
   getInstanceTimelineCollection,
   getInstanceAttributeCollection,
   getIpfsMetadataCollection,
+  getNftTransferCollection,
 };

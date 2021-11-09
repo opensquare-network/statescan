@@ -1,3 +1,4 @@
+import styled from "styled-components";
 import _ from "lodash";
 
 import { ssrNextApi as nextApi } from "services/nextApi";
@@ -18,6 +19,7 @@ import {
   addressHead,
   addressTransfersHead,
   EmptyQuery,
+  NFTClassInstanceHead,
   nodes,
   teleportsHead,
 } from "utils/constants";
@@ -41,6 +43,26 @@ import BigNumber from "bignumber.js";
 import Source from "../../components/account/source";
 import Symbol from "components/symbol";
 import SymbolLink from "components/symbolLink";
+import { text_dark_major, text_dark_minor } from "styles/textStyles";
+import { time } from "utils";
+import Status from "components/status";
+
+
+const ThumbnailContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+`;
+
+const TextDark = styled.span`
+  ${text_dark_major};
+`
+
+const TextDarkMinor = styled.span`
+  ${text_dark_minor};
+`
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -61,6 +83,8 @@ export default function Address({
   addressExtrinsics,
   addressTeleports,
   addressIdentity,
+  addressNftInstances,
+  addressNftTransfers
 }) {
   if (!addressDetail) {
     return (
@@ -272,6 +296,59 @@ export default function Address({
         />
       ),
     },
+    {
+      name: "NFT",
+      page: addressNftInstances?.page,
+      total: addressNftInstances?.total,
+      head: NFTClassInstanceHead,
+      body: (addressNftInstances?.items || []).map((instance, index) => {
+        const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
+        const image = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.image;
+        const imageThumbnail = instance.ipfsMetadata?.image
+          ? instance.ipfsMetadata.imageThumbnail
+          : instance.class.ipfsMetadata?.imageThumbnail;
+        return [
+          <InLink
+            key={`id${index}`}
+            to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+          >
+            {instance.instanceId}
+          </InLink>,
+          <ThumbnailContainer key={`class${index}`}>
+            <img
+              width={32}
+              src={
+                imageThumbnail ?? (
+                  `https://cloudflare-ipfs.com/ipfs/${image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
+                )
+              }
+              alt=""
+            />
+          </ThumbnailContainer>,
+          <TextDark key={`name-${index}`}>
+            <InLink
+              to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+            >
+              {name ?? "unrecognized"}
+            </InLink>
+          </TextDark>,
+          <TextDarkMinor key={`time-${index}`}>{time(instance.indexer?.blockTime)}</TextDarkMinor>,
+          <AddressEllipsis
+            key={`owner-${index}`}
+            address={instance.details?.owner}
+            to={`/account/${instance.details?.owner}`}
+          />,
+          <Status key={`status-${index}`} status={instance.details?.isFrozen ? "Frozen" : "Active"}/>,
+        ]
+      }),
+      foot: (
+        <Pagination
+          page={addressNftInstances?.page}
+          pageSize={addressNftInstances?.pageSize}
+          total={addressNftInstances?.total}
+        />
+      ),
+    }
   ];
 
   return (
@@ -347,6 +424,8 @@ export async function getServerSideProps(context) {
     { result: addressExtrinsics },
     { result: addressTeleports },
     addressIdentity,
+    { result: addressNftInstances },
+    { result: addressNftTransfers },
   ] = await Promise.all([
     nextApi.fetch(`addresses/${id}`),
     nextApi.fetch(`addresses/${id}/assets`, {
@@ -371,6 +450,12 @@ export async function getServerSideProps(context) {
     )
       .then((res) => res.json())
       .catch(() => null),
+    nextApi.fetch(`addresses/${id}/nft/instances`, {
+      page: activeTab === "nft" ? nPage - 1 : 0,
+    }),
+    nextApi.fetch(`addresses/${id}/nft/transfers`, {
+      page: activeTab === "nft-transfers" ? nPage - 1 : 0,
+    }),
   ]);
 
   return {
@@ -388,6 +473,8 @@ export async function getServerSideProps(context) {
       addressExtrinsics: addressExtrinsics ?? EmptyQuery,
       addressTeleports: addressTeleports ?? EmptyQuery,
       addressIdentity: _.isEmpty(addressIdentity) ? null : addressIdentity[0],
+      addressNftInstances: addressNftInstances ?? EmptyQuery,
+      addressNftTransfers: addressNftTransfers ?? EmptyQuery,
     },
   };
 }

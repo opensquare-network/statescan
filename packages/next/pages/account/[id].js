@@ -389,16 +389,16 @@ export default function Address({
             </InLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
-          <AddressEllipsis
-            key={`from-${index}`}
-            address={item?.from}
-            to={`/account/${item?.from}`}
-          />,
-          <AddressEllipsis
-            key={`to-${index}`}
-            address={item?.to}
-            to={`/account/${item?.to}`}
-          />,
+          item.from !== id ? (
+            <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />
+          ) : (
+            <AddressEllipsis key={`from-${index}`} address={item.from} />
+          ),
+          item.to !== id ? (
+            <AddressEllipsis key={`to-${index}`} address={item.to} to={`/account/${item.to}`} />
+          ) : (
+            <AddressEllipsis key={`to-${index}`} address={item.to} />
+          ),
         ];
       }),
       foot: (

@@ -10,7 +10,6 @@ import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
 import {
   abbreviateBigNumber,
-  bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
   time,
@@ -20,7 +19,6 @@ import {
   blocksLatestHead,
   transfersLatestHead,
   assetsHead,
-  nftsHead,
 } from "utils/constants";
 import { getSymbol, useWindowSize } from "utils/hooks";
 import { useSelector } from "react-redux";
@@ -33,7 +31,6 @@ import TransferHeightAge from "../components/transfer/heightAge";
 import AddressCounts from "../components/block/addressCounts";
 import AmountFromTo from "../components/transfer/amountFromTo";
 import Name from "../components/account/name";
-import Status from "../components/status";
 import Tooltip from "../components/tooltip";
 
 const Wrapper = styled.section`
@@ -312,7 +309,6 @@ export async function getServerSideProps() {
     { result: transfersCount },
     { result: holdersCount },
     { result: price },
-    { result: nftclasses },
   ] = await Promise.all([
     nextApi.fetch(`blocks/latest`),
     nextApi.fetch(`assets/popular`),
@@ -321,7 +317,6 @@ export async function getServerSideProps() {
     nextApi.fetch(`transfers/count`),
     nextApi.fetch(`holders/count`),
     nextApi.fetch(`${node}/prices/daily`),
-    nextApi.fetch(`nftclasses`, { page: 0, pageSize: 5 }),
   ]);
 
   return {
@@ -334,7 +329,6 @@ export async function getServerSideProps() {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
-        nftclasses: nftclasses ?? {},
       },
       price: price ?? [],
     },

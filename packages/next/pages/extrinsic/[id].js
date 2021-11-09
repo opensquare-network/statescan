@@ -22,7 +22,6 @@ import MonoText from "components/monoText";
 import PageNotFound from "components/pageNotFound";
 import JsonAttributes from "components/jsonAttributes";
 import Address from "components/address";
-import { makeEventArgs } from "utils/eventArgs";
 import ModuleItem from "components/moduleItem";
 import CallItem from "components/callItem";
 

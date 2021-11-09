@@ -20,6 +20,7 @@ import {
   addressTransfersHead,
   EmptyQuery,
   NFTClassInstanceHead,
+  NFTTransferHead,
   nodes,
   teleportsHead,
 } from "utils/constants";
@@ -339,13 +340,72 @@ export default function Address({
             to={`/account/${instance.details?.owner}`}
           />,
           <Status key={`status-${index}`} status={instance.details?.isFrozen ? "Frozen" : "Active"}/>,
-        ]
+        ];
       }),
       foot: (
         <Pagination
           page={addressNftInstances?.page}
           pageSize={addressNftInstances?.pageSize}
           total={addressNftInstances?.total}
+        />
+      ),
+    },
+    {
+      name: "NFT Transfer",
+      page: addressNftTransfers?.page,
+      total: addressNftTransfers?.total,
+      head: NFTTransferHead,
+      body: (addressNftTransfers?.items || []).map((item, index) => {
+        const instance = item.instance;
+        const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
+        const image = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.image;
+        const imageThumbnail = instance.ipfsMetadata?.image
+          ? instance.ipfsMetadata.imageThumbnail
+          : instance.class.ipfsMetadata?.imageThumbnail;
+
+        return [
+          <InLink
+            key={index}
+            to={`/event/${item.indexer.blockHeight}-${item.indexer.eventIndex}`}
+          >
+            {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.eventIndex}`}
+          </InLink>,
+          <ThumbnailContainer key={`class${index}`}>
+            <img
+              width={32}
+              src={
+                imageThumbnail ?? (
+                  `https://cloudflare-ipfs.com/ipfs/${image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
+                )
+              }
+              alt=""
+            />
+          </ThumbnailContainer>,
+          <TextDark key={`name-${index}`}>
+            <InLink
+              to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+            >
+              {name ?? "unrecognized"}
+            </InLink>
+          </TextDark>,
+          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
+          <AddressEllipsis
+            key={`from-${index}`}
+            address={item?.from}
+            to={`/account/${item?.from}`}
+          />,
+          <AddressEllipsis
+            key={`to-${index}`}
+            address={item?.to}
+            to={`/account/${item?.to}`}
+          />,
+        ];
+      }),
+      foot: (
+        <Pagination
+          page={addressNftTransfers?.page}
+          pageSize={addressNftTransfers?.pageSize}
+          total={addressNftTransfers?.total}
         />
       ),
     }

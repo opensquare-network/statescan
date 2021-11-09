@@ -15,6 +15,7 @@ import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import IpfsLink from "../../../../../components/ipfsLink";
+import Image from "next/image";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -77,7 +78,20 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
             node={node}
           />
           <Between>
-            <img src="/imgs/nftClass.png" width={480} alt=""/>
+            {NFTInstance?.ipfsMetadata?.image ? <Image
+              src={`https://cloudflare-ipfs.com/ipfs/${NFTInstance?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
+              width={NFTInstance?.ipfsMetadata?.imageMetadata?.width ?? 480}
+              height={NFTInstance?.ipfsMetadata?.imageMetadata.height ?? 480}
+              alt=""
+              placeholder="blur"
+              blurDataURL={NFTInstance?.ipfsMetadata?.imageThumbnail}
+            /> : <Image
+              src={`/imgs/NFTplaceholder.png`}
+              width={480}
+              height={480}
+              alt=""
+            />
+            }
             <DetailTable
               head={["ClassId", ...getNFTClassInstanceHead(status)]}
               body={[

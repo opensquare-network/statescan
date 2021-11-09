@@ -1,11 +1,23 @@
 import Address from "components/account/address";
 import { makeTablePairs } from "utils";
 
-const last = (arr) => arr.length && arr[arr.length - 1] || undefined;
+function cleanTemplateArgs(typeName) {
+  let result = typeName;
+  let next;
+  while ((next = result.replace(/<[^<>]*>/g,"")) !== result) {
+    result = next;
+  }
+  return result;
+}
 
 export function makeEventArgs(node, event) {
   const eventData = makeTablePairs(
-    ["Docs", ...event.meta.fields.map((f, i) => f.typeName && last(f.typeName.split("::")) || event.meta.args[i])],
+    [
+      "Docs",
+      ...event.meta.fields.map((f, i) => {
+        return f.typeName && cleanTemplateArgs(f.typeName).split("::").pop() || event.meta.args[i];
+      })
+    ],
     [
       (event?.meta?.docs || event?.meta?.documentation)?.join("").trim() || "",
       ...event.data,

@@ -20,6 +20,7 @@ import { ssrNextApi as nextApi } from "services/nextApi";
 import Image from "next/image";
 import IpfsLink from "components/ipfsLink";
 import SquareBoxComponent from "components/squareBox";
+import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -173,12 +174,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                     alt=""
                     placeholder="blur"
                     blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
-                  /> : <Image
-                    src={`/imgs/NFTplaceholder.png`}
-                    width={480}
-                    height={480}
-                    alt=""
-                  />
+                  /> : <NFTUnrecognizedSvg width="100%" height="100%" viewBox="0 0 480 480"/>
                   }
                 </ImgWrapper>
               </SquareBoxComponent>

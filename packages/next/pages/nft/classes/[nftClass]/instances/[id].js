@@ -16,6 +16,7 @@ import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import IpfsLink from "../../../../../components/ipfsLink";
 import Image from "next/image";
+import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -85,12 +86,7 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
               alt=""
               placeholder="blur"
               blurDataURL={NFTInstance?.ipfsMetadata?.imageThumbnail}
-            /> : <Image
-              src={`/imgs/NFTplaceholder.png`}
-              width={480}
-              height={480}
-              alt=""
-            />
+            /> : <NFTUnrecognizedSvg width="100%" height="100%" viewBox="0 0 480 480"/>
             }
             <DetailTable
               head={["ClassId", ...getNFTClassInstanceHead(status)]}

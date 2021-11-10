@@ -221,43 +221,36 @@ export const blockHead = [
   "Validator",
 ];
 
-export const getAssetHead = (status) => {
-  return [
-    "Symbol",
-    "Name",
-    "Asset ID",
-    "Owner",
-    "Issuer",
-    "Total Supply",
-    "Decimals",
-    ...(status === "Active" ? [] : ["Status"]),
-    "Holders",
-    "Transfers",
-  ];
-};
+export const assetHead = [
+  "Symbol",
+  "Name",
+  "Asset ID",
+  "Owner",
+  "Issuer",
+  "Total Supply",
+  "Decimals",
+  "Status",
+  "Holders",
+  "Transfers",
+];
 
-export const getNFTClassHead = (status) => {
-  return [
-    "ID",
-    "Created Time",
-    "Instance",
-    "Owner",
-    "Issuer",
-    ...(status === "Frozen" ? ["Status"] : []),
-    "Link"
-  ];
-};
+export const NFTClassHead = [
+  "ID",
+  "Created Time",
+  "Instance",
+  "Owner",
+  "Issuer",
+  "Status",
+  "Link"
+];
 
-export const getNFTClassInstanceHead = (status) => {
-  return [
-    "ID",
-    "Created Time",
-    "Owner",
-    "Issuer",
-    ...(status === "Active" ? [] : ["Status"]),
-    "Link"
-  ];
-};
+export const NFTInstanceHead = [
+  "ID",
+  "Created Time",
+  "Owner",
+  "Status",
+  "Link"
+];
 
 export const NFTClassInstanceHead = [
   { name: "ID", width: 136 },

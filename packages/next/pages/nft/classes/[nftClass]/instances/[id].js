@@ -171,8 +171,8 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
               info={
                 <NftInfo
                   data={{
-                    title: ipfsMetadata.name ?? "",
-                    description: ipfsMetadata.description ?? "",
+                    title: ipfsMetadata?.name ?? "",
+                    description: ipfsMetadata?.description ?? "",
                   }}
                 />
               }

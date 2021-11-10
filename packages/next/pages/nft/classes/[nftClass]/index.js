@@ -23,6 +23,7 @@ import SquareBoxComponent from "components/squareBox";
 import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
+import NFTImage from "../../../../components/nft/NFTImage";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -64,14 +65,6 @@ const Between = styled.div`
   }
 `;
 
-const ImgWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: #555555;
-`
 
 const Ipfs = styled.div`
   display: flex;
@@ -153,17 +146,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
           <Between>
             <div>
               <SquareBoxComponent>
-                <ImgWrapper>
-                  {NFTClass?.ipfsMetadata?.image ? <Image
-                    src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-                    width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
-                    height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
-                    alt=""
-                    placeholder="blur"
-                    blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
-                  /> : <NFTUnrecognizedSvg width="100%" height="100%" viewBox="0 0 480 480"/>
-                  }
-                </ImgWrapper>
+                <NFTImage ipfsMataData={NFTClass.ipfsMetadata}/>
               </SquareBoxComponent>
             </div>
             <DetailTable

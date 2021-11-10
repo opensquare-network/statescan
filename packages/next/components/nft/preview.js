@@ -5,6 +5,7 @@ import Address from "../address";
 import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
 import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
+import NFTImage from "./NFTImage";
 
 const Wrapper = styled.div`
   display: flex;
@@ -63,21 +64,7 @@ export default function Preview({NFTClass}) {
   return <Wrapper>
     <div style={{ width: "100%", marginBottom: "24px" }}>
       <SquareBoxComponent>
-        <ImgWrapper>
-          {
-            NFTClass?.ipfsMetadata?.imageThumbnail
-            ? <Image
-                src={`https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-                width={NFTClass?.ipfsMetadata?.imageMetadata?.width ?? 480}
-                height={NFTClass?.ipfsMetadata?.imageMetadata.height ?? 480}
-                alt=""
-                placeholder="blur"
-                blurDataURL={NFTClass?.ipfsMetadata?.imageThumbnail}
-              />
-            : <NFTUnrecognizedSvg width={"100%"} height={"100%"} viewBox="0 0 480 480" />
-          }
-
-        </ImgWrapper>
+        <NFTImage ipfsMataData={NFTClass.ipfsMetadata}/>
       </SquareBoxComponent>
     </div>
 

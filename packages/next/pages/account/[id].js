@@ -48,6 +48,7 @@ import { text_dark_major, text_dark_minor } from "styles/textStyles";
 import { time } from "utils";
 import Status from "components/status";
 import Thumbnail from "components/nft/thumbnail";
+import NftName from "components/nft/name";
 
 
 const TextDark = styled.span`
@@ -313,7 +314,7 @@ export default function Address({
             <InLink
               to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
             >
-              {name ?? "[Unrecognized]"}
+              <NftName name={name} />
             </InLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>{time(instance.indexer?.blockTime)}</TextDarkMinor>,
@@ -353,7 +354,7 @@ export default function Address({
             <InLink
               to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
             >
-              {name ?? "[Unrecognized]"}
+              <NftName name={name} />
             </InLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,

@@ -51,14 +51,6 @@ const Value = styled.div`
     color: rgba(17, 17, 17, 0.65);
 `
 
-const ImgWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  background-color: #555555;
-`
 
 export default function Preview({NFTClass}) {
   return <Wrapper>

@@ -19,6 +19,7 @@ import Image from "next/image";
 import NFTUnrecognizedSvg from "public/imgs/nft-unrecognized.svg";
 import NFTImage from "../../../../../components/nft/NFTImage";
 import SquareBoxComponent from "../../../../../components/squareBox";
+import NoData from "../../../../../components/table/noData";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -61,6 +62,22 @@ const Ipfs = styled.div`
   }
 `;
 
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+
+  div:first-child {
+    width: 200px;
+  }
+
+  div:last-child {
+    flex-grow: 1;
+  }
+`
+const RowItem = styled.div`
+`
+
 export default function NftClass({node, NFTInstance, instanceId,}) {
   const tab = {};
   const tabTableData = [
@@ -69,7 +86,28 @@ export default function NftClass({node, NFTInstance, instanceId,}) {
       total: NFTInstance?.timeline?.length,
       component: <Timeline data={NFTInstance?.timeline} node={node}/>,
     },
+    {
+      name: "Attributes",
+      total: NFTInstance?.attributes?.length,
+      component: NFTInstance?.attributes?.length > 0 ? <DetailTable
+        head={NFTInstance?.attributes?.map((attr, index) => `#${index + 1}`) ?? []}
+        body={NFTInstance?.attributes?.map((attr, index) => {
+          return <Row key={`row${index}`}>
+            <RowItem>{hex2a(attr.key)}</RowItem>
+            <RowItem>{hex2a(attr.value)}</RowItem>
+          </Row>
+        }) ?? []}
+      /> : <NoData/>,
+    },
   ];
+
+  function hex2a(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+  }
 
   let status = "Active";
   if (NFTInstance?.details?.isFrozen) {
@@ -136,7 +174,7 @@ export default function NftClass({node, NFTInstance, instanceId,}) {
             />
           </Between>
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900}/>
+        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={{nftClass: NFTInstance.classId}}/>
       </Section>
     </Layout>
   );

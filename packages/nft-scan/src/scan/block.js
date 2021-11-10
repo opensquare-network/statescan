@@ -1,3 +1,5 @@
+const { handleBlockIssuance } = require("../business/batch/issuance");
+const { clearIssuance } = require("../store/blockIssuance");
 const { handleEvents } = require("../business/event");
 
 function extractBlockTime(extrinsics) {
@@ -26,6 +28,9 @@ async function scanBlock(block, blockEvents) {
   const blockIndexer = getBlockIndexer(block);
 
   await handleEvents(blockEvents, block.extrinsics, blockIndexer);
+
+  await handleBlockIssuance(blockIndexer);
+  clearIssuance(blockIndexer.blockHeight);
 }
 
 module.exports = {

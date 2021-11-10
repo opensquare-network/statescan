@@ -80,10 +80,21 @@ async function deleteClassAttribute(classId, key) {
   });
 }
 
+async function getClasses(idArr) {
+  const classCol = await getClassCollection();
+  return await classCol
+    .find({
+      classId: { $in: idArr },
+      isDestroyed: false,
+    })
+    .toArray();
+}
+
 module.exports = {
   insertClass,
   updateClass,
   insertClassTimelineItem,
   insertClassAttribute,
   deleteClassAttribute,
+  getClasses,
 };

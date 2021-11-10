@@ -16,7 +16,9 @@ import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import IpfsLink from "../../../../../components/ipfsLink";
 import Image from "next/image";
-import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
+import NFTUnrecognizedSvg from "public/imgs/nft-unrecognized.svg";
+import NFTImage from "../../../../../components/nft/NFTImage";
+import SquareBoxComponent from "../../../../../components/squareBox";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -26,10 +28,25 @@ const Between = styled.div`
   background: white;
 
   > div {
-    margin-left: 16px;
-    flex-grow: 1;
+    border: none;
+    box-shadow: none !important;
+  }
+
+  > :first-child {
+    margin: 0 0 0 24px;
+    @media screen and (max-width: 1064px) {
+      margin: 0 24px 0 24px;
+    }
     border: none;
     box-shadow: none;
+
+    // Styled the square box
+    > div {
+      max-width: 480px;
+      @media screen and (min-width: 1064px) {
+        width: 480px;
+      }
+    }
   }
 `;
 
@@ -44,7 +61,7 @@ const Ipfs = styled.div`
   }
 `;
 
-export default function NftClass({node,NFTInstance,  instanceId, }) {
+export default function NftClass({node, NFTInstance, instanceId,}) {
   const tab = {};
   const tabTableData = [
     {
@@ -79,15 +96,11 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
             node={node}
           />
           <Between>
-            {NFTInstance?.ipfsMetadata?.image ? <Image
-              src={`https://cloudflare-ipfs.com/ipfs/${NFTInstance?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-              width={NFTInstance?.ipfsMetadata?.imageMetadata?.width ?? 480}
-              height={NFTInstance?.ipfsMetadata?.imageMetadata.height ?? 480}
-              alt=""
-              placeholder="blur"
-              blurDataURL={NFTInstance?.ipfsMetadata?.imageThumbnail}
-            /> : <NFTUnrecognizedSvg width="100%" height="100%" viewBox="0 0 480 480"/>
-            }
+            <div>
+              <SquareBoxComponent>
+                <NFTImage ipfsMataData={NFTInstance.ipfsMetadata}/>
+              </SquareBoxComponent>
+            </div>
             <DetailTable
               head={["ClassId", ...NFTInstanceHead]}
               body={[
@@ -106,10 +119,10 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
                   ? undefined
                   : <Status key="6" status={status}/>,
                 NFTInstance?.ipfsMetadata?.image &&
-                  <Ipfs key="7">
-                    <span>IPFS</span>
-                    <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
-                  </Ipfs>,
+                <Ipfs key="7">
+                  <span>IPFS</span>
+                  <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
+                </Ipfs>,
               ]}
               info={
                 <NftInfo

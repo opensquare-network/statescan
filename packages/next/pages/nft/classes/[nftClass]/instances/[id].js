@@ -23,15 +23,14 @@ import NoData from "../../../../../components/table/noData";
 
 const Between = styled.div`
   margin-bottom: 16px;
-  padding: 24px;
+  padding: 24px 0 24px 0;
   display: flex;
+  @media screen and (max-width: 1064px) {
+    flex-flow: column;
+  }
   ${card_border};
   background: white;
-
-  > div {
-    border: none;
-    box-shadow: none !important;
-  }
+  gap: 16px;
 
   > :first-child {
     margin: 0 0 0 24px;
@@ -48,6 +47,17 @@ const Between = styled.div`
         width: 480px;
       }
     }
+  }
+
+  > :nth-child(2) {
+    padding: 0;
+    margin-right: 24px;
+    border: none;
+    box-shadow: none;
+  }
+
+  img {
+    object-fit: contain;
   }
 `;
 
@@ -129,9 +139,9 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
         <div>
           <Nav
             data={[
-              {name: "NFT Classes", path: `/nfts`},
+              {name: "NFT", path: `/nfts`},
               {
-                name: ` ${NFTInstance.classId}`,
+                name: `Class ${NFTInstance.classId}`,
                 path: `/nft/classes/${NFTInstance.classId}`,
               },
               {name: `Instances`},
@@ -171,8 +181,8 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
               info={
                 <NftInfo
                   data={{
-                    title: ipfsMetadata?.name ?? "",
-                    description: ipfsMetadata?.description ?? "",
+                    title: ipfsMetadata?.name ?? "[Unrecognized]",
+                    description: ipfsMetadata?.description ?? "-",
                   }}
                 />
               }

@@ -97,7 +97,7 @@ export default function NftClass({node, NFTInstance, instanceId,}) {
       component: NFTInstance?.attributes?.length > 0 ? <DetailTable
         head={NFTInstance?.attributes?.map((attr, index) => `#${index + 1}`) ?? []}
         body={NFTInstance?.attributes?.map((attr, index) => {
-          return <Row key={`row${index}`} isLast={index === NFTClass?.attributes?.length - 1}>
+          return <Row key={`row${index}`} isLast={index === NFTInstance?.attributes?.length - 1}>
             <RowItem>{hex2a(attr.key)}</RowItem>
             <RowItem>{hex2a(attr.value)}</RowItem>
           </Row>

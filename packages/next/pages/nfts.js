@@ -15,6 +15,7 @@ import styled from "styled-components";
 import { useOnClickOutside } from "../utils/hooks";
 import Preview from "../components/nft/preview";
 import { text_dark_minor } from "../styles/textStyles";
+import Thumbnail from "components/nft/thumbnail";
 
 const MyModal = styled(Modal)`
   > div {
@@ -36,14 +37,6 @@ const MyModal = styled(Modal)`
     text-align: center;
   }
 `
-
-const ThumbnailContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-`;
 
 const TextDarkMinor = styled.span`
   ${text_dark_minor};
@@ -78,21 +71,17 @@ export default function NftClasses({node, nfts, filter}) {
             <InLink key={`id${index}`} to={`/nft/classes/${nftClass.classId}`}>
               {nftClass.classId}
             </InLink>,
-            <ThumbnailContainer key={`class${index}`}>
-              <img
-                onClick={() => {
-                  setPreviewNFTCLass(nftClass);
-                  setShowModal(true);
-                }}
-                style={{cursor: "pointer", width: 32}}
-                src={
-                  nftClass?.ipfsMetadata?.imageThumbnail ?? "/imgs/icons/nft.png"
-                }
-                alt=""
-              />
-            </ThumbnailContainer>,
+            <Thumbnail
+              key={`thumbnail${index}`}
+              imageThumbnail={nftClass?.ipfsMetadata?.imageThumbnail}
+              onClick={() => {
+                setPreviewNFTCLass(nftClass);
+                setShowModal(true);
+              }}
+              style={{ cursor: "pointer" }}
+            />,
             <a key={`owner-${index}`} href={`/nft/classes/${nftClass.classId}`}>
-              {nftClass?.ipfsMetadata?.name ?? "unrecognized"}
+              {nftClass?.ipfsMetadata?.name ?? "[Unrecognized]"}
             </a>,
             <TextDarkMinor key={`time-${index}`}>{time(nftClass?.indexer?.blockTime)}</TextDarkMinor>,
             <AddressEllipsis

@@ -21,6 +21,7 @@ import Image from "next/image";
 import IpfsLink from "components/ipfsLink";
 import SquareBoxComponent from "components/squareBox";
 import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
+import Thumbnail from "components/nft/thumbnail";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -71,14 +72,6 @@ const ImgWrapper = styled.div`
   background-color: #555555;
 `
 
-const ThumbnailContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-`;
-
 const Ipfs = styled.div`
   display: flex;
   font-size: 14px;
@@ -100,6 +93,7 @@ const TextDarkMinor = styled.span`
 
 export default function NftClass({node, NFTClass, NFTInstances}) {
   const tab = {};
+  const imageThumbnail = NFTClass.ipfsMetadata?.imageThumbnail;
 
   const tabTableData = [
     {
@@ -114,18 +108,8 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         >
           {instance.instanceId}
         </InLink>,
-        <ThumbnailContainer key={`class${index}`}>
-          <img
-            width={32}
-            src={
-              instance?.ipfsMetadata?.imageThumbnail ?? (
-                `https://cloudflare-ipfs.com/ipfs/${NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
-              )
-            }
-            alt=""
-          />
-        </ThumbnailContainer>,
-        <TextDark key={`name-${index}`}>{instance?.ipfsMetadata?.name ?? (NFTClass?.ipfsMetadata?.name ?? "unrecognized")}</TextDark>,
+        <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
+        <TextDark key={`name-${index}`}>{instance?.ipfsMetadata?.name ?? (NFTClass?.ipfsMetadata?.name ?? "[Unrecognized]")}</TextDark>,
         <TextDarkMinor key={`time-${index}`}>{time(instance?.indexer?.blockTime)}</TextDarkMinor>,
         <AddressEllipsis
           key={`owner-${index}`}
@@ -208,9 +192,9 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
               info={
                 <NftInfo
                   data={{
-                    title: NFTClass?.ipfsMetadata?.name ?? "Unrecognized",
+                    title: NFTClass?.ipfsMetadata?.name ?? "[Unrecognized]",
                     description:
-                      NFTClass?.ipfsMetadata?.description ?? "Unrecognized",
+                      NFTClass?.ipfsMetadata?.description ?? "-",
                   }}
                 />
               }

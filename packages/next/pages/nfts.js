@@ -75,7 +75,6 @@ export default function NftClasses({node, nfts, filter}) {
               key={`thumbnail${index}`}
               imageThumbnail={nftClass?.ipfsMetadata?.imageThumbnail}
               onClick={() => {
-                console.log(1);
                 setPreviewNFTCLass(nftClass);
                 setShowModal(true);
               }}

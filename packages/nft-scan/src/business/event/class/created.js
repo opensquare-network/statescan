@@ -9,7 +9,7 @@ async function handleCreated(event, indexer) {
 
   const timelineItem = {
     indexer,
-    name: UniquesEvents.ForceCreated,
+    name: UniquesEvents.Created,
     type: TimelineItemTypes.event,
     args: {
       classId,

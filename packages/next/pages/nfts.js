@@ -16,6 +16,7 @@ import { useOnClickOutside } from "../utils/hooks";
 import Preview from "../components/nft/preview";
 import { text_dark_minor } from "../styles/textStyles";
 import Thumbnail from "components/nft/thumbnail";
+import NftName from "components/nft/name";
 
 const MyModal = styled(Modal)`
   > div {
@@ -80,9 +81,9 @@ export default function NftClasses({node, nfts, filter}) {
               }}
               style={{ cursor: "pointer" }}
             />,
-            <a key={`owner-${index}`} href={`/nft/classes/${nftClass.classId}`}>
-              {nftClass?.ipfsMetadata?.name ?? "[Unrecognized]"}
-            </a>,
+            <InLink key={`name${index}`} to={`/nft/classes/${nftClass.classId}`}>
+              <NftName name={nftClass?.ipfsMetadata?.name}/>
+            </InLink>,
             <TextDarkMinor key={`time-${index}`}>{time(nftClass?.indexer?.blockTime)}</TextDarkMinor>,
             <AddressEllipsis
               key={`owner-${index}`}

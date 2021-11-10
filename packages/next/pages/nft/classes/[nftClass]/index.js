@@ -22,6 +22,7 @@ import IpfsLink from "components/ipfsLink";
 import SquareBoxComponent from "components/squareBox";
 import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
 import Thumbnail from "components/nft/thumbnail";
+import NftName from "components/nft/name";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -109,7 +110,9 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
           {instance.instanceId}
         </InLink>,
         <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
-        <TextDark key={`name-${index}`}>{instance?.ipfsMetadata?.name ?? (NFTClass?.ipfsMetadata?.name ?? "[Unrecognized]")}</TextDark>,
+        <InLink key={`name-${index}`} to={`/nft/classes/${NFTClass.classId}/instances/${instance.instanceId}`}>
+          <NftName name={instance?.ipfsMetadata?.name ?? NFTClass?.ipfsMetadata?.name} />
+        </InLink>,
         <TextDarkMinor key={`time-${index}`}>{time(instance?.indexer?.blockTime)}</TextDarkMinor>,
         <AddressEllipsis
           key={`owner-${index}`}

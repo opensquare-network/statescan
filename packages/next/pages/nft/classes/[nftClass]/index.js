@@ -127,8 +127,25 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
       total: NFTClass?.timeline?.length,
       component: <Timeline data={NFTClass?.timeline} node={node}/>,
     },
+    {
+      name: "Attributes",
+      total: NFTClass?.attributes?.length ?? 0,
+      component: <DetailTable
+        head={NFTClass?.attributes?.map(attr => hex2a(attr.key)) ?? []}
+        body={NFTClass?.attributes?.map(attr => hex2a(attr.value)) ?? []}
+      /> ,
+    },
   ];
 
+  function hex2a(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+  }
+
+  console.log(NFTClass)
   const status = NFTClass?.details?.isFrozen ? "Frozen" : "Active";
 
   return (

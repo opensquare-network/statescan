@@ -47,15 +47,8 @@ import SymbolLink from "components/symbolLink";
 import { text_dark_major, text_dark_minor } from "styles/textStyles";
 import { time } from "utils";
 import Status from "components/status";
+import Thumbnail from "components/nft/thumbnail";
 
-
-const ThumbnailContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 32px;
-  height: 32px;
-`;
 
 const TextDark = styled.span`
   ${text_dark_major};
@@ -315,22 +308,12 @@ export default function Address({
           >
             {instance.instanceId}
           </InLink>,
-          <ThumbnailContainer key={`class${index}`}>
-            <img
-              width={32}
-              src={
-                imageThumbnail ?? (
-                  `https://cloudflare-ipfs.com/ipfs/${image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
-                )
-              }
-              alt=""
-            />
-          </ThumbnailContainer>,
+          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
           <TextDark key={`name-${index}`}>
             <InLink
               to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
             >
-              {name ?? "unrecognized"}
+              {name ?? "[Unrecognized]"}
             </InLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>{time(instance.indexer?.blockTime)}</TextDarkMinor>,
@@ -365,22 +348,12 @@ export default function Address({
           >
             {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.eventIndex}`}
           </InLink>,
-          <ThumbnailContainer key={`class${index}`}>
-            <img
-              width={32}
-              src={
-                imageThumbnail ?? (
-                  `https://cloudflare-ipfs.com/ipfs/${image.replace('ipfs://ipfs/', '')}` ?? "/imgs/icons/nft.png"
-                )
-              }
-              alt=""
-            />
-          </ThumbnailContainer>,
+          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
           <TextDark key={`name-${index}`}>
             <InLink
               to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
             >
-              {name ?? "unrecognized"}
+              {name ?? "[Unrecognized]"}
             </InLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,

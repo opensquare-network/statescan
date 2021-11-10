@@ -18,14 +18,11 @@ async function findBlockApi(blockHash) {
   return blockApi;
 }
 
-async function findBlockApiByHeight(height) {
-  const api = await getApi();
-  const blockHash = await api.rpc.chain.getBlockHash(height);
-
-  return await findBlockApi(blockHash);
+function clearBlockApi() {
+  blockApiMap = {};
 }
 
 module.exports = {
   findBlockApi,
-  findBlockApiByHeight,
+  clearBlockApi,
 };

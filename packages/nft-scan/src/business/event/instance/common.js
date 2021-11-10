@@ -1,7 +1,11 @@
-const { insertInstance, insertTransfer } = require("../../../mongo/service/instance");
+const {
+  insertInstance,
+  insertTransfer,
+} = require("../../../mongo/service/instance");
 const { queryInstanceDetails } = require("../../common/instance/storage");
 const { updateInstance } = require("../../../mongo/service/instance");
 const { queryInstanceMetadata } = require("../../common/instance/metadata");
+const { logger } = require("../../../logger");
 
 async function updateMetadata(classId, instanceId, indexer) {
   const metadata = await queryInstanceMetadata(classId, instanceId, indexer);

@@ -10,19 +10,12 @@ async function getApi() {
       throw new Error("WS_ENDPOINT not set");
     }
 
-    console.log(`Connect to endpoint:`, wsEndpoint);
-
     provider = new WsProvider(wsEndpoint, 1000);
     api = await ApiPromise.create({ provider });
+    console.log(`Connected to endpoint:`, wsEndpoint);
   }
 
   return api;
-}
-
-async function disconnect() {
-  if (provider) {
-    provider.disconnect();
-  }
 }
 
 // For test
@@ -30,8 +23,19 @@ function setApi(targetApi) {
   api = targetApi;
 }
 
+// for test
+function setProvider(p) {
+  provider = p;
+}
+
+// for test
+function getProvider() {
+  return provider;
+}
+
 module.exports = {
   getApi,
-  disconnect,
+  setProvider,
+  getProvider,
   setApi,
 };

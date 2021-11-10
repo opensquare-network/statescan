@@ -5,7 +5,7 @@ import {
   assetTransfersHead,
   assetHoldersHead,
   EmptyQuery,
-  getAssetHead,
+  assetHead,
 } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
@@ -156,7 +156,7 @@ export default function Asset({
             node={node}
           />
           <DetailTable
-            head={getAssetHead(status)}
+            head={assetHead}
             body={[
               <MinorText key="1">{asset?.symbol}</MinorText>,
               <MinorText key="2">{asset?.name}</MinorText>,
@@ -175,9 +175,9 @@ export default function Asset({
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
               asset?.decimals,
-              ...(status === "Active"
-                ? []
-                : [<Status key="6" status={status} />]),
+              status === "Active"
+                ? undefined
+                : <Status key="6" status={status} />,
               <MinorText key="7">{assetHolders?.total}</MinorText>,
               <MinorText key="8">{assetTransfers?.total}</MinorText>,
             ]}

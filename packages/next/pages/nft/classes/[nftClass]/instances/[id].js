@@ -1,11 +1,11 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { getNFTClassHead, getNFTClassInstanceHead, NFTClassInstanceHead } from "utils/constants";
+import { NFTInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
-import { bigNumber2Locale, fromAssetUnit, time } from "utils";
+import { time } from "utils";
 import Address from "components/address";
 import TabTable from "components/tabTable";
 import Timeline from "components/timeline/NFTTimeline";
@@ -89,11 +89,11 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
             /> : <NFTUnrecognizedSvg width="100%" height="100%" viewBox="0 0 480 480"/>
             }
             <DetailTable
-              head={["ClassId", ...getNFTClassInstanceHead(status)]}
+              head={["ClassId", ...NFTInstanceHead]}
               body={[
                 <MinorText key="1">{NFTInstance?.classId}</MinorText>,
-                <MinorText key="1">{NFTInstance?.instanceId}</MinorText>,
-                <MinorText key="2">
+                <MinorText key="2">{NFTInstance?.instanceId}</MinorText>,
+                <MinorText key="3">
                   {time(NFTInstance?.indexer?.blockTime)}
                 </MinorText>,
                 <CopyText key="4" text={NFTInstance?.details?.owner}>
@@ -102,19 +102,14 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
                     to={`/account/${NFTInstance?.details?.owner}`}
                   />
                 </CopyText>,
-                <CopyText key="5" text={NFTInstance?.details?.owner}>
-                  <Address
-                    address={NFTInstance?.details?.owner}
-                    to={`/account/${NFTInstance?.details?.owner}`}
-                  />
-                </CopyText>,
-                <Ipfs key="7">
-                  <span>IPFS</span>
-                  <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
-                </Ipfs>,
-                ...(status === "Active"
-                  ? []
-                  : [<Status key="6" status={status}/>]),
+                status === "Active"
+                  ? undefined
+                  : <Status key="6" status={status}/>,
+                NFTInstance?.ipfsMetadata?.image &&
+                  <Ipfs key="7">
+                    <span>IPFS</span>
+                    <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
+                  </Ipfs>,
               ]}
               info={
                 <NftInfo

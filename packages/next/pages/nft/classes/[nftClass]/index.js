@@ -1,7 +1,7 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { getNFTClassHead, NFTClassInstanceHead } from "utils/constants";
+import { NFTClassHead, NFTClassInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
@@ -164,7 +164,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
               </SquareBoxComponent>
             </div>
             <DetailTable
-              head={getNFTClassHead(status)}
+              head={NFTClassHead}
               body={[
                 <MinorText key="1">{NFTClass?.classId}</MinorText>,
                 <MinorText key="2">
@@ -183,11 +183,14 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                     to={`/account/${NFTClass?.details?.issuer}`}
                   />
                 </CopyText>,
-                ...(status === "Frozen" ? [<Status key="6" status={status}/>] : []),
-                <Ipfs key="7">
-                  <span>IPFS</span>
-                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}/>
-                </Ipfs>,
+                status === "Frozen"
+                  ? <Status key="6" status={status}/>
+                  : undefined,
+                NFTClass?.ipfsMetadata?.image &&
+                  <Ipfs key="7">
+                    <span>IPFS</span>
+                    <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}/>
+                  </Ipfs>,
               ]}
               info={
                 <NftInfo

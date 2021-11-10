@@ -83,8 +83,9 @@ const RowItem = styled.div`
   line-height: 20px;
 `
 
-export default function NftClass({node, NFTInstance, instanceId,}) {
+export default function NftClass({node, NFTClass, NFTInstance}) {
   const tab = {};
+  const ipfsMetadata = NFTInstance?.ipfsMetadata ? NFTInstance.ipfsMetadata : NFTClass?.ipfsMetadata;
   const tabTableData = [
     {
       name: "Timeline",
@@ -134,14 +135,14 @@ export default function NftClass({node, NFTInstance, instanceId,}) {
                 path: `/nft/classes/${NFTInstance.classId}`,
               },
               {name: `Instances`},
-              {name: instanceId},
+              {name: NFTInstance?.instanceId},
             ]}
             node={node}
           />
           <Between>
             <div>
               <SquareBoxComponent>
-                <NFTImage ipfsMataData={NFTInstance.ipfsMetadata}/>
+                <NFTImage ipfsMataData={ipfsMetadata}/>
               </SquareBoxComponent>
             </div>
             <DetailTable
@@ -170,9 +171,8 @@ export default function NftClass({node, NFTInstance, instanceId,}) {
               info={
                 <NftInfo
                   data={{
-                    title: "Elementum amet, duis tellus",
-                    description:
-                      "Massa risus faucibus ut neque justo, quis magna rhoncus, rhoncus.",
+                    title: ipfsMetadata.name ?? "",
+                    description: ipfsMetadata.description ?? "",
                   }}
                 />
               }
@@ -188,12 +188,13 @@ export default function NftClass({node, NFTInstance, instanceId,}) {
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const {nftClass: classId, id: instanceId} = context.query;
+  const {result: NFTClass} = await nextApi.fetch(`nftclasses/${classId}`);
   const {result: NFTInstance} = await nextApi.fetch(`nftclasses/${classId}/instances/${instanceId}`);
   return {
     props: {
       node,
+      NFTClass,
       NFTInstance,
-      instanceId,
     },
   };
 }

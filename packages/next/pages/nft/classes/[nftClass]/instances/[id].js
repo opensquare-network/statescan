@@ -10,13 +10,16 @@ import Address from "components/address";
 import TabTable from "components/tabTable";
 import Timeline from "components/timeline/NFTTimeline";
 import Status from "components/status";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import IpfsLink from "../../../../../components/ipfsLink";
 import Image from "next/image";
-import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
+import NFTUnrecognizedSvg from "public/imgs/nft-unrecognized.svg";
+import NFTImage from "../../../../../components/nft/NFTImage";
+import SquareBoxComponent from "../../../../../components/squareBox";
+import NoData from "../../../../../components/table/noData";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -26,10 +29,25 @@ const Between = styled.div`
   background: white;
 
   > div {
-    margin-left: 16px;
-    flex-grow: 1;
+    border: none;
+    box-shadow: none !important;
+  }
+
+  > :first-child {
+    margin: 0 0 0 24px;
+    @media screen and (max-width: 1064px) {
+      margin: 0 24px 0 24px;
+    }
     border: none;
     box-shadow: none;
+
+    // Styled the square box
+    > div {
+      max-width: 480px;
+      @media screen and (min-width: 1064px) {
+        width: 480px;
+      }
+    }
   }
 `;
 
@@ -44,7 +62,28 @@ const Ipfs = styled.div`
   }
 `;
 
-export default function NftClass({node,NFTInstance,  instanceId, }) {
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+
+  div:first-child {
+    margin-bottom: 16px;
+  }
+
+  ${props => !props.isLast && css`
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #F8F8F8;
+  `};
+`
+const RowItem = styled.div`
+  width: 100%;
+  line-height: 20px;
+`
+
+export default function NftClass({node, NFTInstance, instanceId,}) {
   const tab = {};
   const tabTableData = [
     {
@@ -52,7 +91,28 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
       total: NFTInstance?.timeline?.length,
       component: <Timeline data={NFTInstance?.timeline} node={node}/>,
     },
+    {
+      name: "Attributes",
+      total: NFTInstance?.attributes?.length,
+      component: NFTInstance?.attributes?.length > 0 ? <DetailTable
+        head={NFTInstance?.attributes?.map((attr, index) => `#${index + 1}`) ?? []}
+        body={NFTInstance?.attributes?.map((attr, index) => {
+          return <Row key={`row${index}`} isLast={index === NFTInstance?.attributes?.length - 1}>
+            <RowItem>{hex2a(attr.key)}</RowItem>
+            <RowItem>{hex2a(attr.value)}</RowItem>
+          </Row>
+        }) ?? []}
+      /> : <NoData/>,
+    },
   ];
+
+  function hex2a(hexx) {
+    var hex = hexx.toString();//force conversion
+    var str = '';
+    for (var i = 0; i < hex.length; i += 2)
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    return str;
+  }
 
   let status = "Active";
   if (NFTInstance?.details?.isFrozen) {
@@ -79,15 +139,11 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
             node={node}
           />
           <Between>
-            {NFTInstance?.ipfsMetadata?.image ? <Image
-              src={`https://cloudflare-ipfs.com/ipfs/${NFTInstance?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}`}
-              width={NFTInstance?.ipfsMetadata?.imageMetadata?.width ?? 480}
-              height={NFTInstance?.ipfsMetadata?.imageMetadata.height ?? 480}
-              alt=""
-              placeholder="blur"
-              blurDataURL={NFTInstance?.ipfsMetadata?.imageThumbnail}
-            /> : <NFTUnrecognizedSvg width="100%" height="100%" viewBox="0 0 480 480"/>
-            }
+            <div>
+              <SquareBoxComponent>
+                <NFTImage ipfsMataData={NFTInstance.ipfsMetadata}/>
+              </SquareBoxComponent>
+            </div>
             <DetailTable
               head={["ClassId", ...NFTInstanceHead]}
               body={[
@@ -106,10 +162,10 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
                   ? undefined
                   : <Status key="6" status={status}/>,
                 NFTInstance?.ipfsMetadata?.image &&
-                  <Ipfs key="7">
-                    <span>IPFS</span>
-                    <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
-                  </Ipfs>,
+                <Ipfs key="7">
+                  <span>IPFS</span>
+                  <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
+                </Ipfs>,
               ]}
               info={
                 <NftInfo
@@ -123,7 +179,7 @@ export default function NftClass({node,NFTInstance,  instanceId, }) {
             />
           </Between>
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900}/>
+        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={{nftClass: NFTInstance.classId}}/>
       </Section>
     </Layout>
   );

@@ -242,7 +242,8 @@ export default function NFTTimelineItem({data}) {
           isFrozen: timelineItem?.args?.isFrozen?.toString(),
         };
       }
-      case "ClassMetadataSet": {
+      case "ClassMetadataSet":
+      case "MetadataSet": {
         return {
           ...timelineItem.args,
           data: <BreakText>{timelineItem.args.data}</BreakText>,

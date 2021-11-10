@@ -13,17 +13,18 @@ import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import Timeline from "components/timeline/NFTTimeline";
 import Status from "components/status";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { card_border, text_dark_major, text_dark_minor } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Image from "next/image";
 import IpfsLink from "components/ipfsLink";
 import SquareBoxComponent from "components/squareBox";
-import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
+import NFTUnrecognizedSvg from "public/imgs/nft-unrecognized.svg";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
 import NFTImage from "../../../../components/nft/NFTImage";
+import NoData from "../../../../components/table/noData";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -85,6 +86,27 @@ const TextDarkMinor = styled.span`
   ${text_dark_minor};
 `
 
+const Row = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+
+  div:first-child {
+    margin-bottom: 16px;
+  }
+
+  ${props => !props.isLast && css`
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #F8F8F8;
+  `};
+`
+const RowItem = styled.div`
+  width: 100%;
+  line-height: 20px;
+`
+
 export default function NftClass({node, NFTClass, NFTInstances}) {
   const tab = {};
   const imageThumbnail = NFTClass.ipfsMetadata?.imageThumbnail;
@@ -102,9 +124,9 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         >
           {instance.instanceId}
         </InLink>,
-        <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
+        <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}/>,
         <InLink key={`name-${index}`} to={`/nft/classes/${NFTClass.classId}/instances/${instance.instanceId}`}>
-          <NftName name={instance?.ipfsMetadata?.name ?? NFTClass?.ipfsMetadata?.name} />
+          <NftName name={instance?.ipfsMetadata?.name ?? NFTClass?.ipfsMetadata?.name}/>
         </InLink>,
         <TextDarkMinor key={`time-${index}`}>{time(instance?.indexer?.blockTime)}</TextDarkMinor>,
         <AddressEllipsis
@@ -130,10 +152,15 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     {
       name: "Attributes",
       total: NFTClass?.attributes?.length ?? 0,
-      component: <DetailTable
-        head={NFTClass?.attributes?.map(attr => hex2a(attr.key)) ?? []}
-        body={NFTClass?.attributes?.map(attr => hex2a(attr.value)) ?? []}
-      /> ,
+      component: NFTClass?.attributes?.length > 0 ? <DetailTable
+        head={NFTClass?.attributes?.map((attr, index) => `#${index + 1}`) ?? []}
+        body={NFTClass?.attributes?.map((attr, index) => {
+          return <Row key={`row${index}`} isLast={index === NFTClass?.attributes?.length - 1}>
+            <RowItem>{hex2a(attr.key)}</RowItem>
+            <RowItem>{hex2a(attr.value)}</RowItem>
+          </Row>
+        }) ?? []}
+      /> : <NoData/>,
     },
   ];
 
@@ -190,10 +217,10 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                   ? <Status key="6" status={status}/>
                   : undefined,
                 NFTClass?.ipfsMetadata?.image &&
-                  <Ipfs key="7">
-                    <span>IPFS</span>
-                    <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}/>
-                  </Ipfs>,
+                <Ipfs key="7">
+                  <span>IPFS</span>
+                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}/>
+                </Ipfs>,
               ]}
               info={
                 <NftInfo

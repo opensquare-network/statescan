@@ -13,7 +13,7 @@ import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import Timeline from "components/timeline/NFTTimeline";
 import Status from "components/status";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { card_border, text_dark_major, text_dark_minor } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
@@ -89,15 +89,22 @@ const TextDarkMinor = styled.span`
 const Row = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
-  div:first-child{
-    width: 200px;
+  justify-content: start;
+  flex-wrap: wrap;
+
+  div:first-child {
+    margin-bottom: 16px;
   }
-  div:last-child{
-    flex-grow: 1;
-  }
+
+  ${props => !props.isLast && css`
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #F8F8F8;
+  `};
 `
 const RowItem = styled.div`
+  width: 100%;
+  line-height: 20px;
 `
 
 export default function NftClass({node, NFTClass, NFTInstances}) {
@@ -148,7 +155,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
       component: NFTClass?.attributes?.length > 0 ? <DetailTable
         head={NFTClass?.attributes?.map((attr, index) => `#${index + 1}`) ?? []}
         body={NFTClass?.attributes?.map((attr, index) => {
-          return <Row key={`row${index}`}>
+          return <Row key={`row${index}`} isLast={index === NFTClass?.attributes?.length - 1}>
             <RowItem>{hex2a(attr.key)}</RowItem>
             <RowItem>{hex2a(attr.value)}</RowItem>
           </Row>

@@ -58,6 +58,7 @@ export default function Blocks({ node, blocks: ssrBlocks }) {
                 !item?.isFinalized ? "circle-pending" : "check-green"
               }.svg`}
               alt=""
+              width={20}
             />,
             <ThemeText key={`${index}-3`}>
               <HashEllipsis hash={item?.hash} />

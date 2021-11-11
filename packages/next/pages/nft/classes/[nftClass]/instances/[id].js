@@ -144,7 +144,7 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
                 name: `Class ${NFTInstance.classId}`,
                 path: `/nft/classes/${NFTInstance.classId}`,
               },
-              {name: `Instances`},
+              {name: `Instance`},
               {name: NFTInstance?.instanceId},
             ]}
             node={node}

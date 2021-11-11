@@ -64,7 +64,7 @@ export default function NftClasses({node, nfts, filter}) {
         </MyModal>
       </div>
       <section>
-        <Nav data={[{name: "NFT Classes"}]} node={node}/>
+        <Nav data={[{name: "NFT"}]} node={node}/>
         <Filter total={`All ${nfts?.total} nft classes`} data={filter}/>
         <Table
           head={nftsHead}

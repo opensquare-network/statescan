@@ -262,7 +262,8 @@ export const NFTClassInstanceHead = [
 ];
 
 export const addressNFTInstanceHead = [
-  { name: "ID", width: 136 },
+  { name: "Class ID", width: 136 },
+  { name: "Instance ID", width: 136 },
   { name: "NFT", width: 100 },
   { name: "Name", width: 452 },
   { name: "Created Time", width: 200, align: "right" },
@@ -270,10 +271,11 @@ export const addressNFTInstanceHead = [
 ];
 
 export const NFTTransferHead = [
-  { name: "Event ID", width: 136 },
+  { name: "Extrinsic ID", width: 136 },
+  { name: "Instance ID", width: 136 },
+  { name: "Time", type: "time", width: 200 },
   { name: "NFT", width: 100 },
   { name: "Name", width: 452 },
-  { name: "Time", type: "time", width: 200 },
   { name: "From", width: 160 },
   { name: "To", width: 160 },
 ];

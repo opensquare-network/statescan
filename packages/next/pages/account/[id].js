@@ -298,13 +298,18 @@ export default function Address({
       head: addressNFTInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
         const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
-        const image = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.image;
         const imageThumbnail = instance.ipfsMetadata?.image
           ? instance.ipfsMetadata.imageThumbnail
           : instance.class.ipfsMetadata?.imageThumbnail;
         return [
           <InLink
-            key={`id${index}`}
+            key={`classid${index}`}
+            to={`/nft/classes/${instance.classId}`}
+          >
+            {instance.classId}
+          </InLink>,
+          <InLink
+            key={`instanceid${index}`}
             to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
           >
             {instance.instanceId}
@@ -337,7 +342,6 @@ export default function Address({
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.instance;
         const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
-        const image = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.image;
         const imageThumbnail = instance.ipfsMetadata?.image
           ? instance.ipfsMetadata.imageThumbnail
           : instance.class.ipfsMetadata?.imageThumbnail;
@@ -345,10 +349,17 @@ export default function Address({
         return [
           <InLink
             key={index}
-            to={`/event/${item.indexer.blockHeight}-${item.indexer.eventIndex}`}
+            to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
           >
-            {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.eventIndex}`}
+            {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.extrinsicIndex}`}
           </InLink>,
+          <InLink
+            key={`instance${index}`}
+            to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
+          >
+            {`${item.classId}-${item.instanceId}`}
+          </InLink>,
+          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
           <TextDark key={`name-${index}`}>
             <InLink
@@ -357,7 +368,6 @@ export default function Address({
               <NftName name={name} />
             </InLink>
           </TextDark>,
-          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
           item.from !== id ? (
             <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />
           ) : (

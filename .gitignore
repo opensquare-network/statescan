@@ -5,3 +5,4 @@ log
 .idea
 
 *-image.sh
+*.deploy.sh

@@ -1,11 +1,18 @@
-const { insertInstanceTimelineItem } = require("../../../mongo/service/instance");
-const { TimelineItemTypes } = require("../../common/constants");
-const { insertNewInstance } = require("./common");
-const { UniquesEvents } = require("../../common/constants");
 const { updateClassWithDetails } = require("../class/common");
+const {
+  insertInstanceTimelineItem,
+} = require("../../../mongo/service/instance");
+const { insertNewInstance } = require("./common");
+const { UniquesEvents, TimelineItemTypes } = require("../../common/constants");
+const { addIssuance } = require("../../../store/blockIssuance");
 
 async function handleIssued(event, indexer, blockEvents, extrinsic) {
   const [classId, instanceId, owner] = event.data.toJSON();
+  if (handleWithBatch(blockEvents)) {
+    addIssuance(indexer.blockHeight, { classId, instanceId, owner, indexer });
+    return;
+  }
+
   await insertNewInstance(classId, instanceId, indexer);
 
   const timelineItem = {
@@ -21,6 +28,21 @@ async function handleIssued(event, indexer, blockEvents, extrinsic) {
 
   await insertInstanceTimelineItem(classId, instanceId, timelineItem);
   await updateClassWithDetails(classId, indexer);
+}
+
+function handleWithBatch(eventRecords) {
+  const hasNoOtherInstanceEvent = eventRecords.every(({ event }) => {
+    const { method } = event;
+    return ![UniquesEvents.MetadataSet, UniquesEvents.MetadataCleared].includes(
+      method
+    );
+  });
+
+  const issuedEventsCount = eventRecords.filter(
+    ({ event }) => UniquesEvents.Issued === event.method
+  ).length;
+
+  return hasNoOtherInstanceEvent && issuedEventsCount > 1;
 }
 
 module.exports = {

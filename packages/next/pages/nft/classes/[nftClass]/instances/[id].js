@@ -15,8 +15,6 @@ import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import IpfsLink from "../../../../../components/ipfsLink";
-import Image from "next/image";
-import NFTUnrecognizedSvg from "public/imgs/nft-unrecognized.svg";
 import NFTImage from "../../../../../components/nft/NFTImage";
 import SquareBoxComponent from "../../../../../components/squareBox";
 import NoData from "../../../../../components/table/noData";
@@ -172,11 +170,11 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
                 status === "Active"
                   ? undefined
                   : <Status key="6" status={status}/>,
-                NFTInstance?.ipfsMetadata?.image &&
-                <Ipfs key="7">
-                  <span>IPFS</span>
-                  <IpfsLink cid={NFTInstance?.ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
-                </Ipfs>,
+                ipfsMetadata?.image &&
+                  <Ipfs key="7">
+                    <span>IPFS</span>
+                    <IpfsLink cid={ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
+                  </Ipfs>,
               ]}
               info={
                 <NftInfo

@@ -1,10 +1,8 @@
 import styled from "styled-components";
-import Image from "next/image";
 import { addressEllipsis, time } from "../../utils";
 import Address from "../address";
 import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
-import NFTUnrecognizedSvg from  "public/imgs/nft-unrecognized.svg";
 import NFTImage from "./NFTImage";
 
 const Wrapper = styled.div`

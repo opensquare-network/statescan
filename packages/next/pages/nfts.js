@@ -65,7 +65,7 @@ export default function NftClasses({node, nfts, filter}) {
       </div>
       <section>
         <Nav data={[{name: "NFT"}]} node={node}/>
-        <Filter total={`All ${nfts?.total} nft classes`} data={filter}/>
+        <Filter total={`All ${nfts?.total} NFT classes`} data={filter}/>
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [

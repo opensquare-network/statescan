@@ -11,7 +11,7 @@ import {
   fromAssetUnit,
   fromSymbolUnit,
 } from "utils";
-import { getSymbol } from "utils/hooks";
+import { getSymbol, useOnClickOutside } from "utils/hooks";
 import DetailTable from "components/detailTable";
 import {
   addressAssetsHead,
@@ -49,7 +49,30 @@ import { time } from "utils";
 import Status from "components/status";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
+import { useRef, useState } from "react";
+import Preview from "../../components/nft/preview";
+import { Modal } from "semantic-ui-react";
 
+const MyModal = styled(Modal)`
+  > div {
+    box-shadow: none;
+    border: none;
+  }
+
+  padding: 24px;
+
+  a {
+    display: block;
+    background-color: #000000;
+    font-family: Inter,serif ;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 44px;
+    color: #FFFFFF;
+    text-align: center;
+  }
+`
 
 const TextDark = styled.span`
   ${text_dark_major};
@@ -100,6 +123,17 @@ export default function Address({
   if (sendAtCol) {
     sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
   }
+  const [showModal, setShowModal] = useState(false);
+  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
+  const ref = useRef();
+
+  useOnClickOutside(ref, (event) => {
+    // exclude manually
+    if (document?.querySelector(".modal")?.contains(event.target)) {
+      return;
+    }
+    setShowModal(false);
+  });
 
   const tabTableData = [
     {
@@ -191,7 +225,6 @@ export default function Address({
     },
     {
       name: "Extrinsics",
-      type: "extrinsic",
       page: addressExtrinsics?.page,
       total: addressExtrinsics?.total,
       head: addressExtrincsHead,
@@ -314,7 +347,12 @@ export default function Address({
           >
             {instance.instanceId}
           </InLink>,
-          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
+          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
+                     onClick={() => {
+                       setPreviewNFTInstance(instance.ipfsMetadata ? instance : instance.class );
+                       setShowModal(true);
+                     }}
+          />,
           <TextDark key={`name-${index}`}>
             <InLink
               to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
@@ -392,6 +430,11 @@ export default function Address({
 
   return (
     <Layout node={node}>
+      <div ref={ref}>
+        <MyModal open={showModal} size="tiny">
+          <Preview NFTClass={previewNFTInstance}/>
+        </MyModal>
+      </div>
       <Section>
         <div>
           <Nav

@@ -205,11 +205,11 @@ export default function Header({ node }) {
                   Assets
                 </MenuItem>
               </Link>
-              <Link href={`/nfts`} passHref>
+              <Link href={`/nft`} passHref>
                 <MenuItem
                   themecolor={theme.color}
                   onClick={() => setIsActive(false)}
-                  selected={router.pathname === "/nfts"}
+                  selected={router.pathname === "/nft"}
                 >
                   NFT
                 </MenuItem>

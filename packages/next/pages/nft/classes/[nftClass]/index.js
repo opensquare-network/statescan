@@ -161,7 +161,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         </InLink>,
         <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
                    onClick={() => {
-                     setPreviewNFTInstance(instance);
+                     setPreviewNFTInstance(instance.ipfsMetadata ? instance : NFTClass );
                      setShowModal(true);
                    }}
         />,

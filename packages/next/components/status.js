@@ -30,5 +30,8 @@ export default function Status({ status }) {
     default:
       break;
   }
+  if (status === "Active") {
+    return null
+  }
   return <Wrapper bg={bg}>{status}</Wrapper>;
 }

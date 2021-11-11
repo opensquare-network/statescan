@@ -25,6 +25,10 @@ import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
 import NFTImage from "../../../../components/nft/NFTImage";
 import NoData from "../../../../components/table/noData";
+import Preview from "../../../../components/nft/preview";
+import { Modal } from "semantic-ui-react";
+import { useOnClickOutside } from "../../../../utils/hooks";
+import { useRef, useState } from "react";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -66,6 +70,26 @@ const Between = styled.div`
   }
 `;
 
+const MyModal = styled(Modal)`
+  > div {
+    box-shadow: none;
+    border: none;
+  }
+
+  padding: 24px;
+
+  a {
+    display: block;
+    background-color: #000000;
+    font-family: Inter,serif ;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 44px;
+    color: #FFFFFF;
+    text-align: center;
+  }
+`
 
 const Ipfs = styled.div`
   display: flex;
@@ -108,6 +132,17 @@ const RowItem = styled.div`
 `
 
 export default function NftClass({node, NFTClass, NFTInstances}) {
+  const [showModal, setShowModal] = useState(false);
+  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
+  const ref = useRef();
+
+  useOnClickOutside(ref, (event) => {
+    // exclude manually
+    if (document?.querySelector(".modal")?.contains(event.target)) {
+      return;
+    }
+    setShowModal(false);
+  });
   const tab = {};
   const imageThumbnail = NFTClass.ipfsMetadata?.imageThumbnail;
 
@@ -124,7 +159,12 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         >
           {instance.instanceId}
         </InLink>,
-        <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}/>,
+        <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
+                   onClick={() => {
+                     setPreviewNFTInstance(instance);
+                     setShowModal(true);
+                   }}
+        />,
         <InLink key={`name-${index}`} to={`/nft/classes/${NFTClass.classId}/instances/${instance.instanceId}`}>
           <NftName name={instance?.ipfsMetadata?.name ?? NFTClass?.ipfsMetadata?.name}/>
         </InLink>,
@@ -172,11 +212,15 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     return str;
   }
 
-  console.log(NFTClass)
   const status = NFTClass?.details?.isFrozen ? "Frozen" : "Active";
 
   return (
     <Layout node={node}>
+      <div ref={ref}>
+        <MyModal open={showModal} size="tiny">
+          <Preview NFTClass={previewNFTInstance}/>
+        </MyModal>
+      </div>
       <Section>
         <div>
           <Nav

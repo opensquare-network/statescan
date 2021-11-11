@@ -10,6 +10,7 @@ const ThumbnailContainer = styled.div`
   border-radius: 5px;
   overflow: hidden;
   background-color: #555555;
+  cursor: pointer;
 `;
 
 export default function Thumbnail({ imageThumbnail, onClick=()=>{}, style={} }) {

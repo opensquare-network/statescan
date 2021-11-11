@@ -29,7 +29,7 @@ const MyModal = styled(Modal)`
   a {
     display: block;
     background-color: #000000;
-    font-family: Inter;
+    font-family: Inter,serif;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -79,7 +79,6 @@ export default function NftClasses({node, nfts, filter}) {
                 setPreviewNFTCLass(nftClass);
                 setShowModal(true);
               }}
-              style={{ cursor: "pointer" }}
             />,
             <InLink key={`name${index}`} to={`/nft/classes/${nftClass.classId}`}>
               <NftName name={nftClass?.ipfsMetadata?.name}/>

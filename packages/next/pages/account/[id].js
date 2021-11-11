@@ -314,7 +314,7 @@ export default function Address({
           >
             {instance.instanceId}
           </InLink>,
-        <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
+          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`} />,
           <TextDark key={`name-${index}`}>
             <InLink
               to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}

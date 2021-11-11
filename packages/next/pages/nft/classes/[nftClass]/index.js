@@ -225,7 +225,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         <div>
           <Nav
             data={[
-              {name: "NFT", path: `/nfts`},
+              {name: "NFT", path: `/nft`},
               {name: `Class`},
               {name: `${NFTClass.classId}`},
             ]}

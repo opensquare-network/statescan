@@ -1,8 +1,10 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import NFTUnrecognizedThumbnailSvg from "public/imgs/nft-unrecognized-thumbnail.svg";
 
 const Wrapper = styled.div`
-  cursor: pointer;
+  ${props => props.onClick && css`
+    cursor: pointer;
+  `};
 `
 
 const ThumbnailContainer = styled(Wrapper)`
@@ -14,12 +16,12 @@ const ThumbnailContainer = styled(Wrapper)`
   border-radius: 5px;
   overflow: hidden;
   background-color: #555555;
+  ${props => props.onClick && css`
+    cursor: pointer;
+  `};
 `;
 
-export default function Thumbnail({
-                                    imageThumbnail, onClick = () => {
-  }
-                                  }) {
+export default function Thumbnail({imageThumbnail, onClick = false}) {
   return (
     imageThumbnail
       ? (

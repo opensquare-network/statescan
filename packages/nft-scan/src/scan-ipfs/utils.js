@@ -2,6 +2,10 @@ const axios = require("axios");
 const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
 const { getIpfsMetadataCollection } = require("../mongo");
+const { isHex, hexToString } = require("@polkadot/util");
+
+const ipfsGatewayUrl =
+  process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
 
 async function createImageThumbnail(image, width, height) {
   const thumbnail = await image
@@ -12,8 +16,7 @@ async function createImageThumbnail(image, width, height) {
     })
     .png({ compressionLevel: 9, adaptiveFiltering: true, force: true })
     .toBuffer();
-  const thumbnailDataURL = `data:image/png;base64,${thumbnail.toString("base64")}`;
-  return thumbnailDataURL;
+  return `data:image/png;base64,${thumbnail.toString("base64")}`;
 }
 
 async function fetchDataFromIPFS(dataId) {
@@ -21,26 +24,27 @@ async function fetchDataFromIPFS(dataId) {
     throw new Error(`dataId is missing`);
   }
 
-  if (!dataId.startsWith("0x")) {
+  if (!isHex(dataId)) {
     return null;
   }
 
-  const dataStr = Buffer.from(dataId.slice(2), 'hex').toString();
-
-  if (!isIPFS.cid(dataStr)) {
+  const maybeCid = hexToString(dataId);
+  if (!isIPFS.cid(maybeCid)) {
     return null;
   }
 
   // fetch data from ipfs
-  const ipfsData = await axios.get(`https://ipfs.io/ipfs/${dataStr}`);
-  const jsonData = ipfsData.data;
-
-  if (jsonData?.name && jsonData?.description && jsonData?.image) {
+  const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${maybeCid}`)).data;
+  if (
+    maybeJsonData?.name &&
+    maybeJsonData?.description &&
+    maybeJsonData?.image
+  ) {
     return {
-      cid: dataStr,
-      name: jsonData.name,
-      description: jsonData.description,
-      image: jsonData.image,
+      cid: maybeCid,
+      name: maybeJsonData.name,
+      description: maybeJsonData.description,
+      image: maybeJsonData.image,
     };
   }
 
@@ -65,13 +69,11 @@ async function scanMeta(dataId) {
           $set: {
             ...nftIPFSData,
             recognized: true,
-            timestamp: new Date()
-          }
+            timestamp: new Date(),
+          },
         },
         { upsert: true }
       );
-
-      await scanMetaImage(dataId);
     } else {
       await ipfsMetadataCol.updateOne(
         { dataId },
@@ -123,8 +125,8 @@ async function scanMetaImage(dataId) {
 
   // fetch image from ipfs link item.image
   const ipfsImage = await axios({
-    url: `https://ipfs.io/ipfs/${image}`,
-    responseType: "arraybuffer"
+    url: `${ipfsGatewayUrl}${image}`,
+    responseType: "arraybuffer",
   });
   const imageData = ipfsImage.data;
   const sharpImage = sharp(imageData);

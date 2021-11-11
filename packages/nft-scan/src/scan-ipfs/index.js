@@ -1,37 +1,35 @@
-const dotenv = require('dotenv');
-dotenv.config();
+require("dotenv").config();
+
+const { sleep } = require("../utils/sleep");
 
 const {
   getClassCollection,
   getInstanceCollection,
   getIpfsMetadataCollection,
 } = require("../mongo");
-const { scanMeta, scanMetaImage } = require('./utils');
-
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const { scanMeta, scanMetaImage } = require("./utils");
 
 async function queueIpfsTask(nftCol) {
-  const items = await nftCol.find({ "metadata.data": { $ne: null } }).toArray();
-
+  const items =
+    (await nftCol.find({ "metadata.data": { $ne: null } }).toArray()) || [];
   if (items.length === 0) {
     return;
   }
 
   const ipfsMetadataCol = await getIpfsMetadataCollection();
   const batch = ipfsMetadataCol.initializeUnorderedBulkOp();
-
-  items.forEach(item =>
-    batch.find({ dataId: item.metadata.data })
-    .upsert()
-    .update({
-      $set: {
-        dataId: item.metadata.data,
-      },
-    })
-  );
+  for (const item of items) {
+    batch
+      .find({ dataId: item.metadata.data })
+      .upsert()
+      .update({
+        $set: {
+          dataId: item.metadata.data,
+        },
+      });
+  }
 
   await batch.execute();
-
 }
 
 async function main() {
@@ -45,16 +43,23 @@ async function main() {
     await queueIpfsTask(instanceCol);
 
     const ipfsMetadataCol = await getIpfsMetadataCollection();
-    let items = await ipfsMetadataCol.find({ recognized: null }).limit(10).toArray();
-    await Promise.all(items.map(item => scanMeta(item.dataId)));
+    let items =
+      (await ipfsMetadataCol.find({ recognized: null }).limit(10).toArray()) ||
+      [];
+    await Promise.all(items.map((item) => scanMeta(item.dataId)));
 
-    items = await ipfsMetadataCol.find({ recognized: true, imageThumbnail: null }).limit(10).toArray();
-    await Promise.all(items.map(item => scanMetaImage(item.dataId)));
+    items = await ipfsMetadataCol
+      .find({ recognized: true, imageThumbnail: null })
+      .limit(10)
+      .toArray();
+    await Promise.all(items.map((item) => scanMetaImage(item.dataId)));
 
     await sleep(5000);
   }
 }
 
-main().catch(console.error).then(() => {
-  process.exit(0);
-});
+main()
+  .catch(console.error)
+  .then(() => {
+    process.exit(0);
+  });

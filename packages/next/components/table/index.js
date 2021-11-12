@@ -32,6 +32,10 @@ const StyledTable = styled.table`
   }
 
   th {
+    @media screen and (max-width: 1200px) {
+      width: 100% !important;
+    }
+    
     :first-child {
       border-top-left-radius: 8px;
       -moz-border-top-left-radius: 8px;

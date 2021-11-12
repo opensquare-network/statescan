@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
 
-  > div{
+  > div {
     padding: 0;
   }
 
@@ -43,44 +43,49 @@ const Field = styled.div`
 `
 
 const Value = styled.div`
-    margin-top: 4px;
-    font-size: 14px;
-    line-height: 20px;
-    color: rgba(17, 17, 17, 0.65);
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(17, 17, 17, 0.65);
 `
 
 
-export default function Preview({NFTClass}) {
+export default function Preview({NFT, IpfsMeta}) {
   return <Wrapper>
-    <div style={{ width: "100%", marginBottom: "24px" }}>
+    <div style={{width: "100%", marginBottom: "24px"}}>
       <SquareBoxComponent>
-        <NFTImage ipfsMataData={NFTClass.ipfsMetadata}/>
+        <NFTImage ipfsMataData={IpfsMeta}/>
       </SquareBoxComponent>
     </div>
 
     <NftInfo
       data={{
-        title: NFTClass?.ipfsMetadata?.name ?? "[Unrecognized]",
-        description:
-          NFTClass?.ipfsMetadata?.description ?? "-",
+        title: IpfsMeta?.name ?? "[Unrecognized]",
+        description: IpfsMeta?.description ?? "-",
       }}
     />
 
     <Row>
       <Field>Created Time</Field>
-      <Value>{time(NFTClass.indexer.blockTime)}</Value>
+      <Value>{time(NFT?.indexer?.blockTime)}</Value>
     </Row>
 
     <Row>
       <Field>Owner</Field>
-      <Value><Address address={addressEllipsis(NFTClass?.details?.owner)}/></Value>
+      <Value><Address address={addressEllipsis(NFT?.details?.owner)}/></Value>
     </Row>
 
-    <Row>
-      <Field>Instance</Field>
-      <Value>{NFTClass?.details?.instances}</Value>
-    </Row>
+    {
+      NFT?.details?.instances > -1 && <Row>
+        <Field>Instance</Field>
+        <Value>{NFT?.details?.instances}</Value>
+      </Row>
+    }
 
-    <a href={`/nft/classes/${NFTClass?.classId}`}>Detail</a>
+    {
+      NFT?.instanceId ?
+        <a href={`/nft/classes/${NFT?.classId}/instances/${NFT.instanceId}`}>Detail</a> :
+        <a href={`/nft/classes/${NFT?.classId}`}>Detail</a>
+    }
   </Wrapper>
 }

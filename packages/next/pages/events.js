@@ -7,6 +7,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import HashEllipsis from "components/hashEllipsis";
 import Filter from "components/filter";
+import BreakText from "components/breakText";
 
 export default function Events({ node, events, filter, allmodulemethods }) {
   return (
@@ -43,7 +44,7 @@ export default function Events({ node, events, filter, allmodulemethods }) {
             ) : (
               "-"
             ),
-            `${item?.section}(${item?.meta?.name})`,
+            <BreakText key={`${index}-5`}>{`${item?.section}(${item?.meta?.name})`}</BreakText> ,
             item,
           ])}
           foot={

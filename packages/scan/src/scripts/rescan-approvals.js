@@ -1,3 +1,9 @@
+/**
+ * This script is used to update the approval manually by providing asset id, owner and delegate.
+ * Example:
+ *  rescan-approvals.js --assetId=5 --owner=FvokLqZ9DqT67pukJWWWbEi5kvCkjyCoTvhw4RwUJFgpQXn --delegate=EkpakfsFiVEzx5DMGiJ5eNa5VDCdwTk4NrPKkPxUnGXbUQR
+ */
+
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -33,6 +39,7 @@ async function main() {
   const block = await api.rpc.chain.getBlock(blockHash);
   const blockIndexer = getBlockIndexer(block.block);
 
+  console.log(blockIndexer);
   await updateOrCreateApproval(blockIndexer, assetId, owner, delegate);
 }
 

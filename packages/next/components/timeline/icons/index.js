@@ -10,6 +10,8 @@ import Burned from "./burn.svg";
 import AssetFrozen from "./freeze-asset.svg";
 import AssetThawed from "./thaw-asset.svg";
 import Destroyed from "./destroy.svg";
+import AttributeSet from "./set-attribute.svg";
+import AttributeCleared from "./clear-attribute.svg";
 import LinkIcon from "./link.svg";
 
 const icons = {
@@ -32,6 +34,8 @@ const icons = {
   Frozen: AssetFrozen,
   Thawed: AssetThawed,
   Destroyed,
+  AttributeSet,
+  AttributeCleared,
   LinkIcon,
 };
 

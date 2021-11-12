@@ -174,7 +174,7 @@ async function getNftInstanceById(ctx) {
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
     instanceHeight: nftInstance.indexer.blockHeight,
-  }).toArray();
+  }, { sort: { "indexer.blockTime": -1 } }).toArray();
 
   const attrCol = await getInstanceAttributeCollection();
   const attributes = await attrCol.find({
@@ -227,7 +227,7 @@ async function getNftInstance(ctx) {
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
     instanceHeight: nftInstance.indexer.blockHeight,
-  }).toArray();
+  }, { sort: { "indexer.blockTime": -1 } }).toArray();
 
   const attrCol = await getInstanceAttributeCollection();
   const attributes = await attrCol.find({

@@ -205,7 +205,7 @@ async function getNftClassById(ctx) {
   const timeline = await timelineCol.find({
     classId: item.classId,
     classHeight: item.indexer.blockHeight,
-  }).toArray();
+  }, { sort: { "indexer.blockTime": -1 } }).toArray();
 
   const attrCol = await getClassAttributeCollection();
   const attributes = await attrCol.find({
@@ -239,7 +239,7 @@ async function getNftClass(ctx) {
   const timeline = await timelineCol.find({
     classId: item.classId,
     classHeight: item.indexer.blockHeight,
-  }).toArray();
+  }, { sort: { "indexer.blockTime": -1 } }).toArray();
 
   const attrCol = await getClassAttributeCollection();
   const attributes = await attrCol.find({

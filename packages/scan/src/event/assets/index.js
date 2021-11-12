@@ -184,20 +184,32 @@ async function updateOrCreateApproval(blockIndexer, assetId, owner, delegate) {
   }
 
   const col = await getAssetApprovalCollection();
-  const result = await col.updateOne(
-    {
-      asset: asset._id,
-      owner,
-      delegate,
-    },
-    {
-      $set: {
-        ...approval,
-        lastUpdatedAt: blockIndexer,
+
+  if (!approval) {
+    await col.deleteOne(
+      {
+        asset: asset._id,
+        owner,
+        delegate,
       },
-    },
-    { upsert: true, session }
-  );
+      { session }
+    );
+  } else {
+    await col.updateOne(
+      {
+        asset: asset._id,
+        owner,
+        delegate,
+      },
+      {
+        $set: {
+          ...approval,
+          lastUpdatedAt: blockIndexer,
+        },
+      },
+      { upsert: true, session }
+    );
+  }
 }
 
 function isAssetsEvent(section) {

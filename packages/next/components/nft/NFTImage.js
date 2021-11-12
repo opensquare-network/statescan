@@ -11,6 +11,9 @@ const ImgWrapper = styled.div`
   background-color: #555555;
 `
 
+// Smallest data URI image possible for a transparent image
+const transparentThumbnail = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 export default function NFTImage({ipfsMataData}) {
   if (!ipfsMataData?.image) {
     return <ImgWrapper>
@@ -21,10 +24,10 @@ export default function NFTImage({ipfsMataData}) {
     <Image
       src={`https://cloudflare-ipfs.com/ipfs/${ipfsMataData?.image.replace('ipfs://ipfs/', '')}`}
       width={ipfsMataData?.imageMetadata?.width ?? 480}
-      height={ipfsMataData?.imageMetadata.height ?? 480}
+      height={ipfsMataData?.imageMetadata?.height ?? 480}
       alt=""
       placeholder="blur"
-      blurDataURL={ipfsMataData?.imageThumbnail}
+      blurDataURL={ipfsMataData?.imageThumbnail || transparentThumbnail}
     />
   </ImgWrapper>;
 }

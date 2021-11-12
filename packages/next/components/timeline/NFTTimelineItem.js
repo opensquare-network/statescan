@@ -8,7 +8,6 @@ import BreakText from "components/breakText";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import BigNumber from "bignumber.js";
 import Address from "components/address";
-import { Component, useEffect } from "react";
 import placeholder from "lodash/fp/placeholder";
 
 const div = styled.div``;
@@ -183,14 +182,24 @@ const Titles = {
   ForceCreated: "Force Create",
   MetadataSet: "Set Metadata",
   MetadataCleared: "Clear Metadata",
+  ClassMetadataSet: "Set Metadata",
+  ClassMetadataCleared: "Clear Metadata",
   AssetStatusChanged: "Force Asset Status",
+  AttributeSet: "Set Attribute",
+  AttributeCleared: "Clear Attribute",
   TeamChanged: "Set Team",
   OwnerChanged: "Transfer Ownership",
-  AssetFrozen: "Freeze Asset",
-  AssetThawed: "Thaw Asset",
+  Transferred: "Transfer",
+  ApprovedTransfer: "Approve Transfer",
+  ApprovalCancelled: "Cancel Approval",
+  ClassFrozen: "Freeze Class",
+  ClassThawed: "Thaw Class",
+  Frozen: "Freeze Asset",
+  Thawed: "Thaw Asset",
   Destroyed: "Destroy",
   Issued: "Mint",
   Burned: "Burn",
+  Redeposited: "Redeposit",
 };
 
 function formatBalance(balance, asset) {
@@ -216,15 +225,15 @@ export default function NFTTimelineItem({data}) {
 
   const getIcon = (timelineItem) => icons[timelineItem.name] || div;
 
-  const timelinePlaceholder = {
-    "-": "-",
-    "- ": "-",
-    "-  ": "-",
-    "-   ": "-",
-  };
-
   const getFields = (timelineItem) => {
     switch (timelineItem.name) {
+      case "Created": {
+        return {
+          ...timelineItem.args,
+          creator: <CopyText> <Address address={timelineItem.args.creator}/> </CopyText>,
+          owner: <CopyText> <Address address={timelineItem.args.owner}/> </CopyText>,
+        };
+      }
       case "ForceCreated": {
         return {
           ...timelineItem.args,

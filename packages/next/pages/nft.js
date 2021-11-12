@@ -89,7 +89,7 @@ export default function NftClasses({node, nfts, filter}) {
               address={nftClass.details?.owner}
               to={`/account/${nftClass.details?.owner}`}
             />,
-            <TextDarkMinor key={`instance-${index}`}>nftClass.details?.instances</TextDarkMinor>,
+            <TextDarkMinor key={`instance-${index}`}>{nftClass.details?.instances}</TextDarkMinor>,
             <Status
               key={`status-${index}`}
               status={nftClass.details?.isFroze ? "Frozen" : "Active"}

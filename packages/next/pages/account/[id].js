@@ -350,7 +350,7 @@ export default function Address({
           </InLink>,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
             onClick={() => {
-              setPreviewNFTInstance(instance.ipfsMetadata ? instance : instance.class );
+              setPreviewNFTInstance(instance);
               setShowModal(true);
             }}
           />,
@@ -401,7 +401,7 @@ export default function Address({
           <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
             onClick={() => {
-              setPreviewNFTInstance(item.ipfsMetadata ? instance : instance.class );
+              setPreviewNFTInstance(instance);
               setShowModal(true);
             }}
           />,
@@ -438,7 +438,10 @@ export default function Address({
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview NFTClass={previewNFTInstance}/>
+          <Preview
+            NFT={previewNFTInstance}
+            IpfsMeta={previewNFTInstance?.ipfsMetadata ?? previewNFTInstance?.class?.ipfsMetadata}
+          />
         </MyModal>
       </div>
       <Section>

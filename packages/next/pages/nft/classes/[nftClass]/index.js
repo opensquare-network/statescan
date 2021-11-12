@@ -159,12 +159,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         </InLink>,
         <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
                    onClick={() => {
-                     setPreviewNFTInstance(
-                       {
-                         instanceId: instance.instanceId
-                         , ...(instance.ipfsMetadata ? instance : NFTClass)
-                       }
-                     );
+                     setPreviewNFTInstance(instance);
                      setShowModal(true);
                    }}
         />,
@@ -221,7 +216,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview NFTClass={previewNFTInstance} type="instance"/>
+          <Preview NFT={previewNFTInstance} IpfsMeta={previewNFTInstance?.ipfsMetadata ?? NFTClass.ipfsMetadata}/>
         </MyModal>
       </div>
       <Section>

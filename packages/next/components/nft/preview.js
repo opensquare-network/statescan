@@ -50,44 +50,42 @@ const Value = styled.div`
 `
 
 
-export default function Preview({NFTClass, type = "class"}) {
+export default function Preview({NFT, IpfsMeta}) {
   return <Wrapper>
     <div style={{width: "100%", marginBottom: "24px"}}>
       <SquareBoxComponent>
-        <NFTImage ipfsMataData={NFTClass.ipfsMetadata}/>
+        <NFTImage ipfsMataData={IpfsMeta}/>
       </SquareBoxComponent>
     </div>
 
     <NftInfo
       data={{
-        title: NFTClass?.ipfsMetadata?.name ?? "[Unrecognized]",
-        description:
-          NFTClass?.ipfsMetadata?.description ?? "-",
+        title: IpfsMeta?.name ?? "[Unrecognized]",
+        description: IpfsMeta?.description ?? "-",
       }}
     />
 
     <Row>
       <Field>Created Time</Field>
-      <Value>{time(NFTClass.indexer.blockTime)}</Value>
+      <Value>{time(NFT?.indexer?.blockTime)}</Value>
     </Row>
 
     <Row>
       <Field>Owner</Field>
-      <Value><Address address={addressEllipsis(NFTClass?.details?.owner)}/></Value>
+      <Value><Address address={addressEllipsis(NFT?.details?.owner)}/></Value>
     </Row>
 
     {
-      type === "class" && <Row>
+      NFT?.details?.instances > -1 && <Row>
         <Field>Instance</Field>
-        <Value>{NFTClass?.details?.instances}</Value>
+        <Value>{NFT?.details?.instances}</Value>
       </Row>
     }
 
     {
-      type === "class" ?
-        <a href={`/nft/classes/${NFTClass?.classId}`}>Detail</a> :
-        <a href={`/nft/classes/${NFTClass?.classId}/instances/${NFTClass.instanceId}`}>Detail</a>
+      NFT?.instanceId ?
+        <a href={`/nft/classes/${NFT?.classId}/instances/${NFT.instanceId}`}>Detail</a> :
+        <a href={`/nft/classes/${NFT?.classId}`}>Detail</a>
     }
-
   </Wrapper>
 }

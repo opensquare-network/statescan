@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   justify-content: flex-start;
 
-  > div{
+  > div {
     padding: 0;
   }
 
@@ -43,16 +43,16 @@ const Field = styled.div`
 `
 
 const Value = styled.div`
-    margin-top: 4px;
-    font-size: 14px;
-    line-height: 20px;
-    color: rgba(17, 17, 17, 0.65);
+  margin-top: 4px;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(17, 17, 17, 0.65);
 `
 
 
-export default function Preview({NFTClass}) {
+export default function Preview({NFTClass, type = "class"}) {
   return <Wrapper>
-    <div style={{ width: "100%", marginBottom: "24px" }}>
+    <div style={{width: "100%", marginBottom: "24px"}}>
       <SquareBoxComponent>
         <NFTImage ipfsMataData={NFTClass.ipfsMetadata}/>
       </SquareBoxComponent>
@@ -76,11 +76,18 @@ export default function Preview({NFTClass}) {
       <Value><Address address={addressEllipsis(NFTClass?.details?.owner)}/></Value>
     </Row>
 
-    <Row>
-      <Field>Instance</Field>
-      <Value>{NFTClass?.details?.instances}</Value>
-    </Row>
+    {
+      type === "class" && <Row>
+        <Field>Instance</Field>
+        <Value>{NFTClass?.details?.instances}</Value>
+      </Row>
+    }
 
-    <a href={`/nft/classes/${NFTClass?.classId}`}>Detail</a>
+    {
+      type === "class" ?
+        <a href={`/nft/classes/${NFTClass?.classId}`}>Detail</a> :
+        <a href={`/nft/classes/${NFTClass?.classId}/instances/${NFTClass.instanceId}`}>Detail</a>
+    }
+
   </Wrapper>
 }

@@ -79,7 +79,7 @@ const MyModal = styled(Modal)`
   a {
     display: block;
     background-color: #000000;
-    font-family: Inter,serif ;
+    font-family: Inter, serif;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
@@ -159,7 +159,12 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
         </InLink>,
         <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
                    onClick={() => {
-                     setPreviewNFTInstance(instance.ipfsMetadata ? instance : NFTClass );
+                     setPreviewNFTInstance(
+                       {
+                         instanceId: instance.instanceId
+                         , ...(instance.ipfsMetadata ? instance : NFTClass)
+                       }
+                     );
                      setShowModal(true);
                    }}
         />,
@@ -216,7 +221,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview NFTClass={previewNFTInstance}/>
+          <Preview NFTClass={previewNFTInstance} type="instance"/>
         </MyModal>
       </div>
       <Section>

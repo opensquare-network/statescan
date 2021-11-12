@@ -439,8 +439,8 @@ export default function Address({
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
           <Preview
-            NFT={previewNFTInstance}
-            IpfsMeta={previewNFTInstance?.ipfsMetadata ?? previewNFTInstance?.class?.ipfsMetadata}
+            nftClass={previewNFTInstance.class}
+            nftInstance={previewNFTInstance}
           />
         </MyModal>
       </div>

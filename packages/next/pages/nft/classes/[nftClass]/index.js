@@ -216,7 +216,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview NFT={previewNFTInstance} IpfsMeta={previewNFTInstance?.ipfsMetadata ?? NFTClass.ipfsMetadata}/>
+          <Preview nftClass={NFTClass} nftInstance={previewNFTInstance}/>
         </MyModal>
       </div>
       <Section>

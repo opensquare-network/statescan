@@ -31,12 +31,18 @@ export function convertArgsForTableView(args, chain) {
           case "Bytes": {
             return [arg.name, hexToString(arg.value)];
           }
-          case "Balance": case "Compact<Balance>": {
+          case "Balance":
+          case "Compact<Balance>": {
             const value = new BigNumber(arg.value).toString();
             return [arg.name, value];
           }
-          case "LookupSource": {
-            return [arg.name, <Address address={arg.value.id} />];
+          case "LookupSource":
+          case "MultiAddress": {
+            if (arg.value.id) {
+              return [arg.name, <Address address={arg.value.id} />];
+            } else {
+              return [arg.name, arg.value];
+            }
           }
           default: {
             return [arg.name, arg.value];

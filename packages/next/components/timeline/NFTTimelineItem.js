@@ -8,7 +8,6 @@ import BreakText from "components/breakText";
 import { bigNumber2Locale, fromAssetUnit } from "utils";
 import BigNumber from "bignumber.js";
 import Address from "components/address";
-import { Component, useEffect } from "react";
 import placeholder from "lodash/fp/placeholder";
 
 const div = styled.div``;
@@ -183,14 +182,24 @@ const Titles = {
   ForceCreated: "Force Create",
   MetadataSet: "Set Metadata",
   MetadataCleared: "Clear Metadata",
+  ClassMetadataSet: "Set Metadata",
+  ClassMetadataCleared: "Clear Metadata",
   AssetStatusChanged: "Force Asset Status",
+  AttributeSet: "Set Attribute",
+  AttributeCleared: "Clear Attribute",
   TeamChanged: "Set Team",
   OwnerChanged: "Transfer Ownership",
-  AssetFrozen: "Freeze Asset",
-  AssetThawed: "Thaw Asset",
+  Transferred: "Transfer",
+  ApprovedTransfer: "Approve Transfer",
+  ApprovalCancelled: "Cancel Approval",
+  ClassFrozen: "Freeze Class",
+  ClassThawed: "Thaw Class",
+  Frozen: "Freeze Asset",
+  Thawed: "Thaw Asset",
   Destroyed: "Destroy",
   Issued: "Mint",
   Burned: "Burn",
+  Redeposited: "Redeposit",
 };
 
 function formatBalance(balance, asset) {
@@ -216,30 +225,65 @@ export default function NFTTimelineItem({data}) {
 
   const getIcon = (timelineItem) => icons[timelineItem.name] || div;
 
-  const timelinePlaceholder = {
-    "-": "-",
-    "- ": "-",
-    "-  ": "-",
-    "-   ": "-",
-  };
-
   const getFields = (timelineItem) => {
     switch (timelineItem.name) {
+      case "Created": {
+        return {
+          ...timelineItem.args,
+          creator: <CopyText> <Address address={timelineItem.args.creator} to={`/account/${timelineItem.args.creator}`} /> </CopyText>,
+          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`}/> </CopyText>,
+        };
+      }
       case "ForceCreated": {
         return {
           ...timelineItem.args,
-          owner: <CopyText> <Address address={timelineItem.args.owner}/> </CopyText>
+          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>
         };
       }
       case "AssetStatusChanged": {
         return {
           ...timelineItem.args,
-          owner: <CopyText> <Address address={timelineItem.args.owner}/> </CopyText>,
-          issuer: <CopyText> <Address address={timelineItem.args.issuer}/> </CopyText>,
-          admin: <CopyText> <Address address={timelineItem.args.admin}/> </CopyText>,
-          freezer: <CopyText> <Address address={timelineItem.args.freezer}/> </CopyText>,
+          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>,
+          issuer: <CopyText> <Address address={timelineItem.args.issuer} to={`/account/${timelineItem.args.issuer}`} /> </CopyText>,
+          admin: <CopyText> <Address address={timelineItem.args.admin} to={`/account/${timelineItem.args.admin}`} /> </CopyText>,
+          freezer: <CopyText> <Address address={timelineItem.args.freezer} to={`/account/${timelineItem.args.freezer}`} /> </CopyText>,
           freeHolding: timelineItem?.args?.freeHolding?.toString(),
           isFrozen: timelineItem?.args?.isFrozen?.toString(),
+        };
+      }
+      case "TeamChanged": {
+        return {
+          ...timelineItem.args,
+          issuer: <CopyText> <Address address={timelineItem.args.issuer} to={`/account/${timelineItem.args.issuer}`} /> </CopyText>,
+          admin: <CopyText> <Address address={timelineItem.args.admin} to={`/account/${timelineItem.args.admin}`} /> </CopyText>,
+          freezer: <CopyText> <Address address={timelineItem.args.freezer} to={`/account/${timelineItem.args.freezer}`} /> </CopyText>,
+        };
+      }
+      case "OwnerChanged": {
+        return {
+          ...timelineItem.args,
+          newOwner: <CopyText> <Address address={timelineItem.args.newOwner} to={`/account/${timelineItem.args.newOwner}`} /> </CopyText>,
+        };
+      }
+      case "Issued": {
+        return {
+          ...timelineItem.args,
+          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>,
+        };
+      }
+      case "Transferred": {
+        return {
+          ...timelineItem.args,
+          from: <CopyText> <Address address={timelineItem.args.from} to={`/account/${timelineItem.args.from}`} /> </CopyText>,
+          to: <CopyText> <Address address={timelineItem.args.to} to={`/account/${timelineItem.args.to}`} /> </CopyText>,
+        };
+      }
+      case "ApprovedTransfer":
+      case "ApprovalCancelled": {
+          return {
+          ...timelineItem.args,
+          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>,
+          delegate: <CopyText> <Address address={timelineItem.args.delegate} to={`/account/${timelineItem.args.delegate}`} /> </CopyText>,
         };
       }
       case "ClassMetadataSet":

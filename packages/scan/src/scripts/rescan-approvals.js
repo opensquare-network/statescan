@@ -39,7 +39,6 @@ async function main() {
   const block = await api.rpc.chain.getBlock(blockHash);
   const blockIndexer = getBlockIndexer(block.block);
 
-  console.log(blockIndexer);
   await updateOrCreateApproval(blockIndexer, assetId, owner, delegate);
 }
 

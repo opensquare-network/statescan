@@ -31,6 +31,7 @@ const LeftWrapper = styled.div`
     height: 52px;
     margin-right: 16px;
     border-radius: 50%;
+    object-fit: cover;
   }
 `;
 

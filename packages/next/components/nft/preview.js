@@ -4,6 +4,7 @@ import Address from "../address";
 import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
 import NFTImage from "./NFTImage";
+import { Button } from "semantic-ui-react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -16,12 +17,6 @@ const Wrapper = styled.div`
 
   img {
     object-fit: contain;
-  }
-
-  a {
-    margin-top: 8px;
-    width: 100%;
-    border-radius: 8px;
   }
 
   .divider {
@@ -49,8 +44,29 @@ const Value = styled.div`
   color: rgba(17, 17, 17, 0.65);
 `
 
+const ButtonWrapper = styled.div`
+  margin-top: 8px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  button {
+    all: unset;
+    border: 1px solid #DDDDDD;
+  }
+  a{
+    border: 1px solid #000000;
+  }
+  button, a {
+    cursor: pointer;
+    border-radius: 8px;
+    text-align: center;
+    width: 230px;
+    height: 42px;
+  }
+`
 
-export default function Preview({ nftClass, nftInstance }) {
+export default function Preview({ nftClass, nftInstance, closeFn }) {
   const nftObject = nftInstance ?? nftClass;
   const ipfsMetadata = nftInstance?.ipfsMetadata ?? nftClass?.ipfsMetadata;
 
@@ -85,10 +101,13 @@ export default function Preview({ nftClass, nftInstance }) {
       </Row>
     }
 
-    {
-      nftInstance ?
-        <a href={`/nft/classes/${nftInstance?.classId}/instances/${nftInstance.instanceId}`}>Detail</a> :
-        <a href={`/nft/classes/${nftClass?.classId}`}>Detail</a>
-    }
+    <ButtonWrapper>
+      <button onClick={closeFn}>Close</button>
+      {
+        nftInstance ?
+          <a href={`/nft/classes/${nftInstance?.classId}/instances/${nftInstance.instanceId}`}>Detail</a> :
+          <a href={`/nft/classes/${nftClass?.classId}`}>Detail</a>
+      }
+    </ButtonWrapper>
   </Wrapper>
 }

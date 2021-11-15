@@ -55,12 +55,13 @@ const Popup = styled.div`
   background: rgba(0, 0, 0, 0.65);
   border-radius: 4px;
   max-width: 257px;
-  min-width: 120px;
+  min-width: ${(p) => (p.noMinWidth ? "none" : "120px")};
   padding: 6px 12px;
   font-size: 12px;
   line-height: 16px;
   color: #ffffff;
   word-wrap: break-word;
+  text-align: left;
 `;
 
 const Triangle = styled.div`
@@ -90,6 +91,7 @@ const TitleWrapper = styled.div`
   font-size: 12px;
   line-height: 16px;
   color: #ffffff;
+  white-space: nowrap;
 `;
 
 const TooltipIcon = styled.img`
@@ -105,6 +107,7 @@ export default function Tooltip({
   isCopy,
   copyText,
   title,
+  noMinWidth,
 }) {
   const dispatch = useDispatch();
 
@@ -121,7 +124,7 @@ export default function Tooltip({
           {children}
           {content && (
             <PopupWrapper onClick={onCopy} isCopy>
-              <Popup>
+              <Popup noMinWidth={noMinWidth}>
                 {title && <TitleWrapper>{title}</TitleWrapper>}
                 {content}
                 <Triangle />
@@ -135,7 +138,7 @@ export default function Tooltip({
           {!label && <TooltipIcon src="/imgs/icons/tooltip-icon.svg" />}
           {content && (
             <PopupWrapper onClick={onCopy} isCopy>
-              <Popup>
+              <Popup noMinWidth={noMinWidth}>
                 {title && <TitleWrapper>{title}</TitleWrapper>}
                 {content}
                 <Triangle />

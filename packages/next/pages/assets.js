@@ -5,7 +5,7 @@ import InLink from "components/inLink";
 import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
 import { assetsHead, EmptyQuery } from "utils/constants";
-import { abbreviateBigNumber, fromAssetUnit } from "utils";
+import { abbreviateBigNumber, fromAssetUnit, bigNumber2Locale } from "utils";
 import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Name from "../components/account/name";
@@ -44,7 +44,15 @@ export default function Assets({ node, assets }) {
               to={`/account/${item.issuer}`}
             />,
             item.accounts,
-            <Tooltip key={`${index}-5`} content={fromAssetUnit(item.supply, item.decimals)} isCopy>
+            <Tooltip
+              key={`${index}-5`}
+              content={bigNumber2Locale(
+                fromAssetUnit(item.supply, item.decimals)
+              )}
+              title="Total Supply"
+              isCopy
+              noMinWidth={true}
+            >
               {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
             </Tooltip>,
           ])}

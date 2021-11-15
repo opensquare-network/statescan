@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "test": "jest src",
+    "scan": "node src/index.js",
     "westmint:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-westmint --env production",
     "statemine:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-statemine --env production",
     "westmintStaging:nft": "pm2 start ecosystem.config.js --only statescan-nftscan-westmint-staging --env production",

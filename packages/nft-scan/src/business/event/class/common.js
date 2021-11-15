@@ -3,6 +3,7 @@ const { queryClassDetails } = require("../../common/class/storage");
 const { updateClass } = require("../../../mongo/service/class");
 const { queryClassMetadata } = require("../../common/class/metadata");
 const { logger } = require("../../../logger");
+const { md5 } = require("../../../utils");
 
 async function updateMetadata(classId, indexer) {
   const metadata = await queryClassMetadata(classId, indexer);
@@ -11,7 +12,9 @@ async function updateMetadata(classId, indexer) {
     return;
   }
 
-  await updateClass(classId, { metadata });
+  const dataHash = md5(metadata.data);
+
+  await updateClass(classId, { metadata, dataHash });
 }
 
 async function insertNewClassWithDetails(classId, indexer) {

@@ -11,7 +11,12 @@ const { md5 } = require("../../../utils");
 async function updateMetadata(classId, instanceId, indexer) {
   const metadata = await queryInstanceMetadata(classId, instanceId, indexer);
   if (!metadata) {
-    logger.error("instance metadata set, but not found.", indexer);
+    await updateClass(classId, {
+      $unset: {
+        metadata: true,
+        dataHash: true,
+      }
+    });
     return;
   }
 

@@ -53,6 +53,10 @@ async function handleBlockIssuance(blockIndexer) {
     });
 
     timelineBulk.insert({
+      classId,
+      classHeight,
+      instanceId,
+      instanceHeight: indexer.blockHeight,
       indexer,
       name: UniquesEvents.Issued,
       type: TimelineItemTypes.event,

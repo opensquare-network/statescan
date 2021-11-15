@@ -93,7 +93,7 @@ const RowItem = styled.div`
 
 export default function NftClass({node, NFTClass, NFTInstance}) {
   const tab = {};
-  const ipfsMetadata = NFTInstance?.ipfsMetadata ? NFTInstance.ipfsMetadata : NFTClass?.ipfsMetadata;
+  const nftMetadata = NFTInstance?.nftMetadata ? NFTInstance.nftMetadata : NFTClass?.nftMetadata;
   const tabTableData = [
     {
       name: "Timeline",
@@ -150,7 +150,7 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
           <Between>
             <div>
               <SquareBoxComponent>
-                <NFTImage ipfsMataData={ipfsMetadata}/>
+                <NFTImage nftMetadata={nftMetadata}/>
               </SquareBoxComponent>
             </div>
             <DetailTable
@@ -170,17 +170,17 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
                 status === "Active"
                   ? undefined
                   : <Status key="6" status={status}/>,
-                ipfsMetadata?.image &&
+                nftMetadata?.image &&
                   <Ipfs key="7">
                     <span>IPFS</span>
-                    <IpfsLink cid={ipfsMetadata?.image?.replace('ipfs://ipfs/', '')}/>
+                    <IpfsLink cid={nftMetadata?.image?.replace('ipfs://ipfs/', '')}/>
                   </Ipfs>,
               ]}
               info={
                 <NftInfo
                   data={{
-                    title: ipfsMetadata?.name ?? "[Unrecognized]",
-                    description: ipfsMetadata?.description ?? "-",
+                    title: nftMetadata?.name ?? "[Unrecognized]",
+                    description: nftMetadata?.description ?? "-",
                   }}
                 />
               }

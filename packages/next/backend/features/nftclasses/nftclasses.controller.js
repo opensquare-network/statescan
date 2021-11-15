@@ -4,20 +4,20 @@ const {
   getNftClassCollection,
   getClassAttributeCollection,
   getClassTimelineCollection,
-  getIpfsMetadataCollection,
+  getNftMetadataCollection,
 }  = require("../../mongo");
 
-async function getIpfsData(nftObj) {
-  if (!nftObj?.metadata?.data) {
+async function getNftMetadata(nftObj) {
+  if (!nftObj?.dataHash) {
     return undefined;
   }
 
-  const ipfsMetadataCol = await getIpfsMetadataCollection();
-  const ipfsMetadata = await ipfsMetadataCol.findOne({
-    dataId: nftObj.metadata.data,
+  const nftMetadataCol = await getNftMetadataCollection();
+  const nftMetadata = await nftMetadataCol.findOne({
+    dataHash: nftObj.dataHash,
   });
 
-  return ipfsMetadata;
+  return nftMetadata;
 }
 
 async function queryAllClasses(statusQuery, page, pageSize) {
@@ -33,16 +33,16 @@ async function queryAllClasses(statusQuery, page, pageSize) {
           { $limit: pageSize },
           {
             $lookup: {
-              from: "ipfsMetadata",
-              localField: "metadata.data",
-              foreignField: "dataId",
-              as: "ipfsMetadata",
+              from: "nftMetadata",
+              localField: "dataHash",
+              foreignField: "dataHash",
+              as: "nftMetadata",
             }
           },
           {
             $addFields: {
-              ipfsMetadata: {
-                $arrayElemAt: ["$ipfsMetadata", 0]
+              nftMetadata: {
+                $arrayElemAt: ["$nftMetadata", 0]
               }
             }
           }
@@ -64,22 +64,22 @@ async function queryRecognizedClasses(statusQuery, page, pageSize)  {
     { $match: statusQuery },
     {
       $lookup: {
-        from: "ipfsMetadata",
-        localField: "metadata.data",
-        foreignField: "dataId",
-        as: "ipfsMetadata",
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
       }
     },
     {
       $addFields: {
-        ipfsMetadata: {
-          $arrayElemAt: ["$ipfsMetadata", 0]
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0]
         }
       }
     },
     {
       $match: {
-        "ipfsMetadata.recognized": true
+        "nftMetadata.recognized": true
       }
     },
     {
@@ -106,24 +106,24 @@ async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
     { $match: statusQuery },
     {
       $lookup: {
-        from: "ipfsMetadata",
-        localField: "metadata.data",
-        foreignField: "dataId",
-        as: "ipfsMetadata",
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
       }
     },
     {
       $addFields: {
-        ipfsMetadata: {
-          $arrayElemAt: ["$ipfsMetadata", 0]
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0]
         }
       }
     },
     {
       $match: {
         $or: [
-          { "ipfsMetadata.recognized": false },
-          { "ipfsMetadata.recognized": { $exists: false } },
+          { "nftMetadata.recognized": false },
+          { "nftMetadata.recognized": { $exists: false } },
         ]
       }
     },
@@ -213,13 +213,13 @@ async function getNftClassById(ctx) {
     classHeight: item.indexer.blockHeight,
   }).toArray();
 
-  const ipfsMetadata = await getIpfsData(item);
+  const nftMetadata = await getNftMetadata(item);
 
   ctx.body = {
     ...item,
     timeline,
     attributes,
-    ipfsMetadata,
+    nftMetadata,
   };
 }
 
@@ -247,13 +247,13 @@ async function getNftClass(ctx) {
     classHeight: item.indexer.blockHeight,
   }).toArray();
 
-  const ipfsMetadata = await getIpfsData(item);
+  const nftMetadata = await getNftMetadata(item);
 
   ctx.body = {
     ...item,
     timeline,
     attributes,
-    ipfsMetadata,
+    nftMetadata,
   };
 }
 

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
-const { getIpfsMetadataCollection } = require("../mongo");
+const { getNftMetadataCollection } = require("../mongo");
 const { isHex, hexToString } = require("@polkadot/util");
 
 const ipfsGatewayUrl =
@@ -19,16 +19,16 @@ async function createImageThumbnail(image, width, height) {
   return `data:image/png;base64,${thumbnail.toString("base64")}`;
 }
 
-async function fetchDataFromIPFS(dataId) {
-  if (!dataId) {
-    throw new Error(`dataId is missing`);
+async function fetchDataFromIPFS(data) {
+  if (!data) {
+    throw new Error(`data is missing`);
   }
 
-  if (!isHex(dataId)) {
+  if (!isHex(data)) {
     return null;
   }
 
-  const maybeCid = hexToString(dataId);
+  const maybeCid = hexToString(data);
   if (!isIPFS.cid(maybeCid)) {
     return null;
   }
@@ -51,20 +51,20 @@ async function fetchDataFromIPFS(dataId) {
   return null;
 }
 
-async function scanMeta(dataId) {
-  if (!dataId) {
+async function scanMeta(dataHash, data) {
+  if (!data) {
     return;
   }
 
-  console.log(`Scanning ipfs meta data for`, dataId);
+  console.log(`Scanning ipfs meta data for`, dataHash);
 
-  const ipfsMetadataCol = await getIpfsMetadataCollection();
+  const nftMetadataCol = await getNftMetadataCollection();
 
   try {
-    const nftIPFSData = await fetchDataFromIPFS(dataId);
+    const nftIPFSData = await fetchDataFromIPFS(data);
     if (nftIPFSData) {
-      await ipfsMetadataCol.updateOne(
-        { dataId },
+      await nftMetadataCol.updateOne(
+        { dataHash },
         {
           $set: {
             ...nftIPFSData,
@@ -75,8 +75,8 @@ async function scanMeta(dataId) {
         { upsert: true }
       );
     } else {
-      await ipfsMetadataCol.updateOne(
-        { dataId },
+      await nftMetadataCol.updateOne(
+        { dataHash },
         {
           $set: {
             recognized: false,
@@ -91,15 +91,15 @@ async function scanMeta(dataId) {
   }
 }
 
-async function scanMetaImage(dataId) {
-  if (!dataId) {
+async function scanMetaImage(dataHash) {
+  if (!dataHash) {
     return;
   }
 
-  console.log(`Scanning ipfs meta image for`, dataId);
+  console.log(`Scanning ipfs meta image for`, dataHash);
 
-  const ipfsMetadataCol = await getIpfsMetadataCollection();
-  const item = await ipfsMetadataCol.findOne({ dataId });
+  const nftMetadataCol = await getNftMetadataCollection();
+  const item = await nftMetadataCol.findOne({ dataHash });
   if (!item) {
     return;
   }
@@ -135,8 +135,8 @@ async function scanMetaImage(dataId) {
 
   // create image thumbnail from image data
   const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
-  await ipfsMetadataCol.updateOne(
-    { dataId },
+  await nftMetadataCol.updateOne(
+    { dataHash },
     {
       $set: {
         imageMetadata,

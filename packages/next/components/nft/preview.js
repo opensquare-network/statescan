@@ -68,19 +68,19 @@ const ButtonWrapper = styled.div`
 
 export default function Preview({ nftClass, nftInstance, closeFn }) {
   const nftObject = nftInstance ?? nftClass;
-  const ipfsMetadata = nftInstance?.ipfsMetadata ?? nftClass?.ipfsMetadata;
+  const nftMetadata = nftInstance?.nftMetadata ?? nftClass?.nftMetadata;
 
   return <Wrapper>
     <div style={{width: "100%", marginBottom: "24px"}}>
       <SquareBoxComponent>
-        <NFTImage ipfsMataData={ipfsMetadata}/>
+        <NFTImage nftMetadata={nftMetadata}/>
       </SquareBoxComponent>
     </div>
 
     <NftInfo
       data={{
-        title: ipfsMetadata?.name ?? "[Unrecognized]",
-        description: ipfsMetadata?.description ?? "-",
+        title: nftMetadata?.name ?? "[Unrecognized]",
+        description: nftMetadata?.description ?? "-",
       }}
     />
 

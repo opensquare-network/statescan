@@ -43,6 +43,7 @@ export default function Extrinsic({
   event,
   extrinsicDetail,
   extrinsicTransfer,
+  extrinsicNftTransfer,
   extrinsicEvents,
 }) {
   if (!extrinsicDetail) {
@@ -85,6 +86,8 @@ export default function Extrinsic({
     },
   ];
 
+  const transfersCount = (extrinsicTransfer?.length || 0) + (extrinsicNftTransfer?.length || 0);
+
   return (
     <Layout node={node}>
       <Section>
@@ -108,7 +111,7 @@ export default function Extrinsic({
               null,
               null,
               null,
-              extrinsicTransfer?.length,
+              transfersCount,
               null,
             ]}
             body={[
@@ -158,8 +161,8 @@ export default function Extrinsic({
               ) : (
                 "-"
               ),
-              extrinsicTransfer?.length > 0 ? (
-                <TransfersList node={node} assetTransfers={extrinsicTransfer} />
+              transfersCount > 0 ? (
+                <TransfersList node={node} assetTransfers={extrinsicTransfer} nftTransfers={extrinsicNftTransfer} />
               ) : undefined,
               extrinsicDetail?.nonce === undefined ? undefined : (
                 <MinorText>{extrinsicDetail?.nonce}</MinorText>
@@ -194,12 +197,12 @@ export async function getServerSideProps(context) {
   const [
     { result: extrinsicDetail },
     { result: extrinsicTransfer },
+    { result: extrinsicNftTransfer },
     { result: extrinsicEvents },
   ] = await Promise.all([
     nextApi.fetch(`extrinsics/${id}`),
-    nextApi.fetch(`extrinsics/${id}/transfers`, {
-      page: activeTab === "transfers" ? nPage - 1 : 0,
-    }),
+    nextApi.fetch(`extrinsics/${id}/transfers`),
+    nextApi.fetch(`extrinsics/${id}/nft-transfers`),
     nextApi.fetch(`extrinsics/${id}/events`, {
       page: activeTab === "events" ? nPage - 1 : 0,
     }),
@@ -212,7 +215,8 @@ export async function getServerSideProps(context) {
       tab: activeTab,
       event: event ?? null,
       extrinsicDetail: extrinsicDetail ?? null,
-      extrinsicTransfer: extrinsicTransfer ?? EmptyQuery,
+      extrinsicTransfer: extrinsicTransfer ?? [],
+      extrinsicNftTransfer: extrinsicNftTransfer ?? [],
       extrinsicEvents: extrinsicEvents ?? EmptyQuery,
     },
   };

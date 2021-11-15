@@ -206,7 +206,7 @@ export const extrinsicHead = [
   "Module",
   "Call",
   "Signer",
-  "Tokens Transferred",
+  "Assets Transferred",
   "Nonce",
   "Result",
 ];

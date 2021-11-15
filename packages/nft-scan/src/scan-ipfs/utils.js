@@ -136,7 +136,7 @@ async function scanMetaImage(dataHash) {
   const imageData = ipfsImage.data;
   const sharpImage = sharp(imageData);
   const { format, size, width, height } = await sharpImage.metadata();
-  const background = await getAverageColor(imageData);
+  const { hex: background } = await getAverageColor(imageData);
   const imageMetadata = { format, size, width, height, background };
 
   // create image thumbnail from image data

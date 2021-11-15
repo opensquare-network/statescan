@@ -312,7 +312,7 @@ export async function getServerSideProps(context) {
   const {result: NFTClass} = await nextApi.fetch(`nftclasses/${classId}`);
   const {result: NFTInstances} = await nextApi.fetch(
     `nftclasses/${classId}/instances`,
-    {page: nPage - 1},
+    { page: nPage - 1, pageSize: 25 },
   );
 
   return {

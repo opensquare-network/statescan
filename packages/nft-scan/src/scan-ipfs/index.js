@@ -5,26 +5,26 @@ const { sleep } = require("../utils/sleep");
 const {
   getClassCollection,
   getInstanceCollection,
-  getIpfsMetadataCollection,
+  getNftMetadataCollection,
 } = require("../mongo");
 const { scanMeta, scanMetaImage } = require("./utils");
 
 async function queueIpfsTask(nftCol) {
   const items =
-    (await nftCol.find({ "metadata.data": { $ne: null } }).toArray()) || [];
+    (await nftCol.find({ "dataHash": { $ne: null } }).toArray()) || [];
   if (items.length === 0) {
     return;
   }
 
-  const ipfsMetadataCol = await getIpfsMetadataCollection();
-  const batch = ipfsMetadataCol.initializeUnorderedBulkOp();
+  const nftMetadataCol = await getNftMetadataCollection();
+  const batch = nftMetadataCol.initializeUnorderedBulkOp();
   for (const item of items) {
     batch
-      .find({ dataId: item.metadata.data })
+      .find({ dataHash: item.dataHash })
       .upsert()
       .update({
-        $set: {
-          dataId: item.metadata.data,
+        $setOnInsert: {
+          data: item.metadata.data,
         },
       });
   }
@@ -42,17 +42,17 @@ async function main() {
     await queueIpfsTask(classCol);
     await queueIpfsTask(instanceCol);
 
-    const ipfsMetadataCol = await getIpfsMetadataCollection();
+    const nftMetadataCol = await getNftMetadataCollection();
     let items =
-      (await ipfsMetadataCol.find({ recognized: null }).limit(10).toArray()) ||
+      (await nftMetadataCol.find({ recognized: null }).limit(10).toArray()) ||
       [];
-    await Promise.all(items.map((item) => scanMeta(item.dataId)));
+    await Promise.all(items.map((item) => scanMeta(item.dataHash, item.data)));
 
-    items = await ipfsMetadataCol
+    items = await nftMetadataCol
       .find({ recognized: true, imageThumbnail: null })
       .limit(10)
       .toArray();
-    await Promise.all(items.map((item) => scanMetaImage(item.dataId)));
+    await Promise.all(items.map((item) => scanMetaImage(item.dataHash)));
 
     await sleep(5000);
   }

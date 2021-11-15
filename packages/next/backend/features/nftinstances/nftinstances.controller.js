@@ -5,20 +5,20 @@ const {
   getNftInstanceCollection,
   getInstanceAttributeCollection,
   getInstanceTimelineCollection,
-  getIpfsMetadataCollection,
+  getNftMetadataCollection,
 }  = require("../../mongo");
 
-async function getIpfsData(nftObj) {
-  if (!nftObj?.metadata?.data) {
+async function getNftMetadata(nftObj) {
+  if (!nftObj?.dataHash) {
     return undefined;
   }
 
-  const ipfsMetadataCol = await getIpfsMetadataCollection();
-  const ipfsMetadata = await ipfsMetadataCol.findOne({
-    dataId: nftObj.metadata.data,
+  const nftMetadataCol = await getNftMetadataCollection();
+  const nftMetadata = await nftMetadataCol.findOne({
+    dataHash: nftObj.dataHash,
   });
 
-  return ipfsMetadata;
+  return nftMetadata;
 }
 
 async function getNftInstancesByClassId(ctx) {
@@ -57,16 +57,16 @@ async function getNftInstancesByClassId(ctx) {
     { $limit: pageSize },
     {
       $lookup: {
-        from: "ipfsMetadata",
-        localField: "metadata.data",
-        foreignField: "dataId",
-        as: "ipfsMetadata",
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
       }
     },
     {
       $addFields: {
-        ipfsMetadata: {
-          $arrayElemAt: ["$ipfsMetadata", 0],
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0],
         },
       }
     }
@@ -119,16 +119,16 @@ async function getNftInstancesByClass(ctx) {
     { $limit: pageSize },
     {
       $lookup: {
-        from: "ipfsMetadata",
-        localField: "metadata.data",
-        foreignField: "dataId",
-        as: "ipfsMetadata",
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
       }
     },
     {
       $addFields: {
-        ipfsMetadata: {
-          $arrayElemAt: ["$ipfsMetadata", 0],
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0],
         },
       }
     }
@@ -184,13 +184,13 @@ async function getNftInstanceById(ctx) {
     instanceHeight: nftInstance.indexer.blockHeight,
   }).toArray();
 
-  const ipfsMetadata = await getIpfsData(nftInstance);
+  const nftMetadata = await getNftMetadata(nftInstance);
 
   ctx.body = {
     ...nftInstance,
     timeline,
     attributes,
-    ipfsMetadata,
+    nftMetadata,
   };
 }
 
@@ -237,13 +237,13 @@ async function getNftInstance(ctx) {
     instanceHeight: nftInstance.indexer.blockHeight,
   }).toArray();
 
-  const ipfsMetadata = await getIpfsData(nftInstance);
+  const nftMetadata = await getNftMetadata(nftInstance);
 
   ctx.body = {
     ...nftInstance,
     timeline,
     attributes,
-    ipfsMetadata,
+    nftMetadata,
   };
 }
 

@@ -356,15 +356,15 @@ async function getAddressNftInstances(ctx) {
           },
           {
             $lookup: {
-              from: "ipfsMetadata",
-              localField: "metadata.data",
-              foreignField: "dataId",
-              as: "ipfsMetadata",
+              from: "nftMetadata",
+              localField: "dataHash",
+              foreignField: "dataHash",
+              as: "nftMetadata",
             }
           },
           {
             $addFields: {
-              ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+              nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
             },
           },
         ],
@@ -373,15 +373,15 @@ async function getAddressNftInstances(ctx) {
     },
     {
       $lookup: {
-        from: "ipfsMetadata",
-        localField: "metadata.data",
-        foreignField: "dataId",
-        as: "ipfsMetadata",
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
       }
     },
     {
       $addFields: {
-        ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+        nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
         class: { $arrayElemAt: ["$class", 0] },
       },
     },
@@ -439,15 +439,15 @@ async function getAddressNftTransfers(ctx) {
             },
             {
               $lookup: {
-                from: "ipfsMetadata",
-                localField: "metadata.data",
-                foreignField: "dataId",
-                as: "ipfsMetadata",
+                from: "nftMetadata",
+                localField: "dataHash",
+                foreignField: "dataHash",
+                as: "nftMetadata",
               }
             },
             {
               $addFields: {
-                ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
               },
             },
             {
@@ -467,15 +467,15 @@ async function getAddressNftTransfers(ctx) {
                   },
                   {
                     $lookup: {
-                      from: "ipfsMetadata",
-                      localField: "metadata.data",
-                      foreignField: "dataId",
-                      as: "ipfsMetadata",
+                      from: "nftMetadata",
+                      localField: "dataHash",
+                      foreignField: "dataHash",
+                      as: "nftMetadata",
                     }
                   },
                   {
                     $addFields: {
-                      ipfsMetadata: { $arrayElemAt: ["$ipfsMetadata", 0] },
+                      nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
                     },
                   },
                 ],

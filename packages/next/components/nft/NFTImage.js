@@ -14,20 +14,20 @@ const ImgWrapper = styled.div`
 // Smallest data URI image possible for a transparent image
 const transparentThumbnail = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-export default function NFTImage({ipfsMataData}) {
-  if (!ipfsMataData?.image) {
+export default function NFTImage({nftMetadata}) {
+  if (!nftMetadata?.image) {
     return <ImgWrapper>
       <NFTUnrecognizedSvg width={"100%"} height={"100%"} viewBox="0 0 480 480"/>
     </ImgWrapper>;
   }
   return <ImgWrapper>
     <Image
-      src={`https://cloudflare-ipfs.com/ipfs/${ipfsMataData?.image.replace('ipfs://ipfs/', '')}`}
-      width={ipfsMataData?.imageMetadata?.width ?? 480}
-      height={ipfsMataData?.imageMetadata?.height ?? 480}
+      src={`https://cloudflare-ipfs.com/ipfs/${nftMetadata?.image.replace('ipfs://ipfs/', '')}`}
+      width={nftMetadata?.imageMetadata?.width ?? 480}
+      height={nftMetadata?.imageMetadata?.height ?? 480}
       alt=""
       placeholder="blur"
-      blurDataURL={ipfsMataData?.imageThumbnail || transparentThumbnail}
+      blurDataURL={nftMetadata?.imageThumbnail || transparentThumbnail}
     />
   </ImgWrapper>;
 }

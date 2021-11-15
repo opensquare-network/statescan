@@ -331,10 +331,10 @@ export default function Address({
       total: addressNftInstances?.total,
       head: addressNFTInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
-        const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
-        const imageThumbnail = instance.ipfsMetadata?.image
-          ? instance.ipfsMetadata.imageThumbnail
-          : instance.class.ipfsMetadata?.imageThumbnail;
+        const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
+        const imageThumbnail = instance.nftMetadata?.image
+          ? instance.nftMetadata.imageThumbnail
+          : instance.class.nftMetadata?.imageThumbnail;
         return [
           <InLink
             key={`classid${index}`}
@@ -380,10 +380,10 @@ export default function Address({
       head: NFTTransferHead,
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.instance;
-        const name = (instance.ipfsMetadata ?? instance.class.ipfsMetadata)?.name;
-        const imageThumbnail = instance.ipfsMetadata?.image
-          ? instance.ipfsMetadata.imageThumbnail
-          : instance.class.ipfsMetadata?.imageThumbnail;
+        const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
+        const imageThumbnail = instance.nftMetadata?.image
+          ? instance.nftMetadata.imageThumbnail
+          : instance.class.nftMetadata?.imageThumbnail;
 
         return [
           <InLink
@@ -439,7 +439,7 @@ export default function Address({
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
           <Preview
-            nftClass={previewNFTInstance.class}
+            nftClass={previewNFTInstance?.class}
             nftInstance={previewNFTInstance}
             closeFn={()=>{setShowModal(false)}}
           />

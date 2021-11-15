@@ -150,7 +150,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     setShowModal(false);
   });
   const tab = {};
-  const imageThumbnail = NFTClass.ipfsMetadata?.imageThumbnail;
+  const imageThumbnail = NFTClass.nftMetadata?.imageThumbnail;
 
   const tabTableData = [
     {
@@ -172,7 +172,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                    }}
         />,
         <InLink key={`name-${index}`} to={`/nft/classes/${NFTClass.classId}/instances/${instance.instanceId}`}>
-          <NftName name={instance?.ipfsMetadata?.name ?? NFTClass?.ipfsMetadata?.name}/>
+          <NftName name={instance?.nftMetadata?.name ?? NFTClass?.nftMetadata?.name}/>
         </InLink>,
         <TextDarkMinor key={`time-${index}`}>{time(instance?.indexer?.blockTime)}</TextDarkMinor>,
         <AddressEllipsis
@@ -244,7 +244,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
           <Between>
             <div>
               <SquareBoxComponent>
-                <NFTImage ipfsMataData={NFTClass.ipfsMetadata}/>
+                <NFTImage nftMetadata={NFTClass.nftMetadata}/>
               </SquareBoxComponent>
             </div>
             <DetailTable
@@ -270,18 +270,18 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                 status === "Frozen"
                   ? <Status key="6" status={status}/>
                   : undefined,
-                NFTClass?.ipfsMetadata?.image &&
+                NFTClass?.nftMetadata?.image &&
                 <Ipfs key="7">
                   <span>IPFS</span>
-                  <IpfsLink cid={NFTClass?.ipfsMetadata?.image.replace('ipfs://ipfs/', '')}/>
+                  <IpfsLink cid={NFTClass?.nftMetadata?.image.replace('ipfs://ipfs/', '')}/>
                 </Ipfs>,
               ]}
               info={
                 <NftInfo
                   data={{
-                    title: NFTClass?.ipfsMetadata?.name ?? "[Unrecognized]",
+                    title: NFTClass?.nftMetadata?.name ?? "[Unrecognized]",
                     description:
-                      NFTClass?.ipfsMetadata?.description ?? "-",
+                      NFTClass?.nftMetadata?.description ?? "-",
                   }}
                 />
               }

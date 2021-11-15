@@ -74,14 +74,14 @@ export default function NftClasses({node, nfts, filter}) {
             </InLink>,
             <Thumbnail
               key={`thumbnail${index}`}
-              imageThumbnail={nftClass?.ipfsMetadata?.imageThumbnail}
+              imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
               onClick={() => {
                 setPreviewNFTCLass(nftClass);
                 setShowModal(true);
               }}
             />,
             <InLink key={`name${index}`} to={`/nft/classes/${nftClass.classId}`}>
-              <NftName name={nftClass?.ipfsMetadata?.name}/>
+              <NftName name={nftClass?.nftMetadata?.name}/>
             </InLink>,
             <TextDarkMinor key={`time-${index}`}>{time(nftClass?.indexer?.blockTime)}</TextDarkMinor>,
             <AddressEllipsis

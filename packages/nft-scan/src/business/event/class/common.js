@@ -2,7 +2,6 @@ const { insertClass } = require("../../../mongo/service/class");
 const { queryClassDetails } = require("../../common/class/storage");
 const { updateClass } = require("../../../mongo/service/class");
 const { queryClassMetadata } = require("../../common/class/metadata");
-const { logger } = require("../../../logger");
 const { md5 } = require("../../../utils");
 
 async function updateMetadata(classId, indexer) {
@@ -12,7 +11,7 @@ async function updateMetadata(classId, indexer) {
       $unset: {
         metadata: true,
         dataHash: true,
-      }
+      },
     });
     return;
   }

@@ -58,38 +58,41 @@ async function scanMeta(dataHash, data) {
   }
 
   console.log(`Scanning ipfs meta data for`, dataHash);
+  let nftIPFSData;
+  try {
+    nftIPFSData = await fetchDataFromIPFS(data);
+  } catch (e) {
+    console.error("Error with fetching data from ipfs", e);
+  }
 
   const nftMetadataCol = await getNftMetadataCollection();
-
-  try {
-    const nftIPFSData = await fetchDataFromIPFS(data);
-    if (nftIPFSData) {
-      await nftMetadataCol.updateOne(
-        { dataHash },
-        {
-          $set: {
-            ...nftIPFSData,
-            recognized: true,
-            timestamp: new Date(),
-          },
+  if (!nftIPFSData) {
+    await nftMetadataCol.updateOne(
+      { dataHash },
+      {
+        $set: {
+          recognized: false,
+          timestamp: new Date(),
         },
-        { upsert: true }
-      );
-    } else {
-      await nftMetadataCol.updateOne(
-        { dataHash },
-        {
-          $set: {
-            recognized: false,
-            timestamp: new Date(),
-          },
-        },
-        { upsert: true }
-      );
-    }
-  } catch (e) {
-    console.error(e);
+      },
+      { upsert: true }
+    );
+    console.log(`Result: unrecognized.`);
+    return;
   }
+
+  await nftMetadataCol.updateOne(
+    { dataHash },
+    {
+      $set: {
+        ...nftIPFSData,
+        recognized: true,
+        timestamp: new Date(),
+      },
+    },
+    { upsert: true }
+  );
+  console.log("Result: recognized. data:", nftIPFSData);
 }
 
 async function scanMetaImage(dataHash) {

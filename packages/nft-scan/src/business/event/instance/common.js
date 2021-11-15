@@ -12,10 +12,8 @@ async function updateMetadata(classId, instanceId, indexer) {
   const metadata = await queryInstanceMetadata(classId, instanceId, indexer);
   if (!metadata) {
     await updateClass(classId, {
-      $unset: {
-        metadata: true,
-        dataHash: true,
-      }
+      metadata: null,
+      dataHash: null,
     });
     return;
   }

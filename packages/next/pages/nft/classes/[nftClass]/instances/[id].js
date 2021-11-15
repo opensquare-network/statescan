@@ -80,44 +80,63 @@ const Row = styled.div`
     margin-bottom: 16px;
   }
 
-  ${props => !props.isLast && css`
-    padding-bottom: 24px;
-    margin-bottom: 24px;
-    border-bottom: 1px solid #F8F8F8;
-  `};
-`
+  ${(props) =>
+    !props.isLast &&
+    css`
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid #f8f8f8;
+    `};
+`;
 const RowItem = styled.div`
   width: 100%;
   line-height: 20px;
-`
+`;
 
-export default function NftClass({node, NFTClass, NFTInstance}) {
+export default function NftClass({ node, NFTClass, NFTInstance }) {
   const tab = {};
-  const nftMetadata = NFTInstance?.nftMetadata ? NFTInstance.nftMetadata : NFTClass?.nftMetadata;
+  const nftMetadata = NFTInstance?.nftMetadata
+    ? NFTInstance.nftMetadata
+    : NFTClass?.nftMetadata;
   const tabTableData = [
     {
       name: "Timeline",
       total: NFTInstance?.timeline?.length,
-      component: <Timeline data={NFTInstance?.timeline} node={node}/>,
+      component: <Timeline data={NFTInstance?.timeline} node={node} />,
     },
     {
       name: "Attributes",
       total: NFTInstance?.attributes?.length,
-      component: NFTInstance?.attributes?.length > 0 ? <DetailTable
-        head={NFTInstance?.attributes?.map((attr, index) => `#${index + 1}`) ?? []}
-        body={NFTInstance?.attributes?.map((attr, index) => {
-          return <Row key={`row${index}`} isLast={index === NFTInstance?.attributes?.length - 1}>
-            <RowItem>{hex2a(attr.key)}</RowItem>
-            <RowItem>{hex2a(attr.value)}</RowItem>
-          </Row>
-        }) ?? []}
-      /> : <NoData/>,
+      component:
+        NFTInstance?.attributes?.length > 0 ? (
+          <DetailTable
+            head={
+              NFTInstance?.attributes?.map((attr, index) => `#${index + 1}`) ??
+              []
+            }
+            body={
+              NFTInstance?.attributes?.map((attr, index) => {
+                return (
+                  <Row
+                    key={`row${index}`}
+                    isLast={index === NFTInstance?.attributes?.length - 1}
+                  >
+                    <RowItem>{hex2a(attr.key)}</RowItem>
+                    <RowItem>{hex2a(attr.value)}</RowItem>
+                  </Row>
+                );
+              }) ?? []
+            }
+          />
+        ) : (
+          <NoData />
+        ),
     },
   ];
 
   function hex2a(hexx) {
-    var hex = hexx.toString();//force conversion
-    var str = '';
+    var hex = hexx.toString(); //force conversion
+    var str = "";
     for (var i = 0; i < hex.length; i += 2)
       str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     return str;
@@ -142,20 +161,20 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
         <div>
           <Nav
             data={[
-              {name: "NFT", path: `/nft`},
+              { name: "NFT", path: `/nft` },
               {
                 name: `Class ${NFTInstance.classId}`,
                 path: `/nft/classes/${NFTInstance.classId}`,
               },
-              {name: `Instance`},
-              {name: NFTInstance?.instanceId},
+              { name: `Instance` },
+              { name: NFTInstance?.instanceId },
             ]}
             node={node}
           />
           <Between>
             <div>
-              <SquareBoxComponent>
-                <NFTImage nftMetadata={nftMetadata}/>
+              <SquareBoxComponent background={nftMetadata?.background}>
+                <NFTImage nftMetadata={nftMetadata} />
               </SquareBoxComponent>
             </div>
             <DetailTable
@@ -172,13 +191,13 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
                     to={`/account/${NFTInstance?.details?.owner}`}
                   />
                 </CopyText>,
-                status === "Active"
-                  ? undefined
-                  : <Status key="6" status={status}/>,
+                status === "Active" ? undefined : (
+                  <Status key="6" status={status} />
+                ),
                 imageCid && (
                   <Ipfs key="7">
                     <span>IPFS</span>
-                    <IpfsLink cid={imageCid}/>
+                    <IpfsLink cid={imageCid} />
                   </Ipfs>
                 ),
               ]}
@@ -193,7 +212,12 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
             />
           </Between>
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={{nftClass: NFTInstance.classId}}/>
+        <TabTable
+          data={tabTableData}
+          activeTab={tab}
+          collapse={900}
+          query={{ nftClass: NFTInstance.classId }}
+        />
       </Section>
     </Layout>
   );
@@ -201,9 +225,11 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const {nftClass: classId, id: instanceId} = context.query;
-  const {result: NFTClass} = await nextApi.fetch(`nftclasses/${classId}`);
-  const {result: NFTInstance} = await nextApi.fetch(`nftclasses/${classId}/instances/${instanceId}`);
+  const { nftClass: classId, id: instanceId } = context.query;
+  const { result: NFTClass } = await nextApi.fetch(`nftclasses/${classId}`);
+  const { result: NFTInstance } = await nextApi.fetch(
+    `nftclasses/${classId}/instances/${instanceId}`
+  );
   return {
     props: {
       node,

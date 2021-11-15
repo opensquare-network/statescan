@@ -29,21 +29,21 @@ const MyModal = styled(Modal)`
   a {
     display: block;
     background-color: #000000;
-    font-family: Inter,serif;
+    font-family: Inter, serif;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
     line-height: 44px;
-    color: #FFFFFF;
+    color: #ffffff;
     text-align: center;
   }
-`
+`;
 
 const TextDarkMinor = styled.span`
   ${text_dark_minor};
-`
+`;
 
-export default function NftClasses({node, nfts, filter}) {
+export default function NftClasses({ node, nfts, filter }) {
   const [showModal, setShowModal] = useState(false);
   const [previewNFTClass, setPreviewNFTCLass] = useState(null);
   const ref = useRef();
@@ -60,12 +60,17 @@ export default function NftClasses({node, nfts, filter}) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview nftClass={previewNFTClass} closeFn={()=>{setShowModal(false)}}/>
+          <Preview
+            nftClass={previewNFTClass}
+            closeFn={() => {
+              setShowModal(false);
+            }}
+          />
         </MyModal>
       </div>
       <section>
-        <Nav data={[{name: "NFT"}]} node={node}/>
-        <Filter total={`All ${nfts?.total} NFT classes`} data={filter}/>
+        <Nav data={[{ name: "NFT" }]} node={node} />
+        <Filter total={`All ${nfts?.total} NFT classes`} data={filter} />
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
@@ -75,21 +80,29 @@ export default function NftClasses({node, nfts, filter}) {
             <Thumbnail
               key={`thumbnail${index}`}
               imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
+              background={nftClass?.nftMetadata?.imageMetadata?.background}
               onClick={() => {
                 setPreviewNFTCLass(nftClass);
                 setShowModal(true);
               }}
             />,
-            <InLink key={`name${index}`} to={`/nft/classes/${nftClass.classId}`}>
-              <NftName name={nftClass?.nftMetadata?.name}/>
+            <InLink
+              key={`name${index}`}
+              to={`/nft/classes/${nftClass.classId}`}
+            >
+              <NftName name={nftClass?.nftMetadata?.name} />
             </InLink>,
-            <TextDarkMinor key={`time-${index}`}>{time(nftClass?.indexer?.blockTime)}</TextDarkMinor>,
+            <TextDarkMinor key={`time-${index}`}>
+              {time(nftClass?.indexer?.blockTime)}
+            </TextDarkMinor>,
             <AddressEllipsis
               key={`owner-${index}`}
               address={nftClass.details?.owner}
               to={`/account/${nftClass.details?.owner}`}
             />,
-            <TextDarkMinor key={`instance-${index}`}>{nftClass.details?.instances}</TextDarkMinor>,
+            <TextDarkMinor key={`instance-${index}`}>
+              {nftClass.details?.instances}
+            </TextDarkMinor>,
             <Status
               key={`status-${index}`}
               status={nftClass.details?.isFroze ? "Frozen" : "Active"}
@@ -111,15 +124,15 @@ export default function NftClasses({node, nfts, filter}) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const {page, recognized, status} = context.query;
+  const { page, recognized, status } = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const {result: nfts} = await nextApi.fetch(`nftclasses`, {
+  const { result: nfts } = await nextApi.fetch(`nftclasses`, {
     page: nPage - 1,
     pageSize: 25,
-    ...(recognized ? {recognized} : {}),
-    ...(status ? {status} : {}),
+    ...(recognized ? { recognized } : {}),
+    ...(status ? { status } : {}),
   });
 
   const filter = [
@@ -128,7 +141,7 @@ export async function getServerSideProps(context) {
       name: "Category",
       query: "recognized",
       options: [
-        {text: "All", value: ""},
+        { text: "All", value: "" },
         {
           text: "Recognized",
           value: "true",
@@ -144,10 +157,10 @@ export async function getServerSideProps(context) {
       name: "Status",
       query: "status",
       options: [
-        {text: "All", value: ""},
-        {text: "Active", value: "active"},
-        {text: "Frozen", value: "frozen"},
-        {text: "Destroyed", value: "destroyed"},
+        { text: "All", value: "" },
+        { text: "Active", value: "active" },
+        { text: "Frozen", value: "frozen" },
+        { text: "Destroyed", value: "destroyed" },
       ],
     },
   ];

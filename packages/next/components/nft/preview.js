@@ -24,25 +24,25 @@ const Wrapper = styled.div`
     margin-right: 0;
     width: 100%;
   }
-`
+`;
 
 const Row = styled.div`
   margin-bottom: 16px;
   width: 50%;
-`
+`;
 
 const Field = styled.div`
   font-size: 14px;
   line-height: 16px;
   color: rgba(17, 17, 17, 0.35);
-`
+`;
 
 const Value = styled.div`
   margin-top: 4px;
   font-size: 14px;
   line-height: 20px;
   color: rgba(17, 17, 17, 0.65);
-`
+`;
 
 const ButtonWrapper = styled.div`
   margin-top: 8px;
@@ -52,62 +52,71 @@ const ButtonWrapper = styled.div`
   align-items: center;
   button {
     all: unset;
-    border: 1px solid #DDDDDD;
+    border: 1px solid #dddddd;
   }
-  a{
+  a {
     border: 1px solid #000000;
   }
-  button, a {
+  button,
+  a {
     cursor: pointer;
     border-radius: 8px;
     text-align: center;
     width: 230px;
     height: 42px;
   }
-`
+`;
 
 export default function Preview({ nftClass, nftInstance, closeFn }) {
   const nftObject = nftInstance ?? nftClass;
   const nftMetadata = nftInstance?.nftMetadata ?? nftClass?.nftMetadata;
 
-  return <Wrapper>
-    <div style={{width: "100%", marginBottom: "24px"}}>
-      <SquareBoxComponent>
-        <NFTImage nftMetadata={nftMetadata}/>
-      </SquareBoxComponent>
-    </div>
+  return (
+    <Wrapper>
+      <div style={{ width: "100%", marginBottom: "24px" }}>
+        <SquareBoxComponent background={nftMetadata?.background}>
+          <NFTImage nftMetadata={nftMetadata} />
+        </SquareBoxComponent>
+      </div>
 
-    <NftInfo
-      data={{
-        title: nftMetadata?.name ?? "[Unrecognized]",
-        description: nftMetadata?.description ?? "-",
-      }}
-    />
+      <NftInfo
+        data={{
+          title: nftMetadata?.name ?? "[Unrecognized]",
+          description: nftMetadata?.description ?? "-",
+        }}
+      />
 
-    <Row>
-      <Field>Created Time</Field>
-      <Value>{time(nftObject?.indexer?.blockTime)}</Value>
-    </Row>
-
-    <Row>
-      <Field>Owner</Field>
-      <Value><Address address={addressEllipsis(nftObject?.details?.owner)}/></Value>
-    </Row>
-
-    {
-      !nftInstance && <Row>
-        <Field>Instance</Field>
-        <Value>{nftClass?.details?.instances}</Value>
+      <Row>
+        <Field>Created Time</Field>
+        <Value>{time(nftObject?.indexer?.blockTime)}</Value>
       </Row>
-    }
 
-    <ButtonWrapper>
-      <button onClick={closeFn}>Close</button>
-      {
-        nftInstance ?
-          <a href={`/nft/classes/${nftInstance?.classId}/instances/${nftInstance.instanceId}`}>Detail</a> :
+      <Row>
+        <Field>Owner</Field>
+        <Value>
+          <Address address={addressEllipsis(nftObject?.details?.owner)} />
+        </Value>
+      </Row>
+
+      {!nftInstance && (
+        <Row>
+          <Field>Instance</Field>
+          <Value>{nftClass?.details?.instances}</Value>
+        </Row>
+      )}
+
+      <ButtonWrapper>
+        <button onClick={closeFn}>Close</button>
+        {nftInstance ? (
+          <a
+            href={`/nft/classes/${nftInstance?.classId}/instances/${nftInstance.instanceId}`}
+          >
+            Detail
+          </a>
+        ) : (
           <a href={`/nft/classes/${nftClass?.classId}`}>Detail</a>
-      }
-    </ButtonWrapper>
-  </Wrapper>
+        )}
+      </ButtonWrapper>
+    </Wrapper>
+  );
 }

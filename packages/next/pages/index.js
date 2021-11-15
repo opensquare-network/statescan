@@ -10,6 +10,7 @@ import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
 import {
   abbreviateBigNumber,
+  bigNumber2Locale,
   fromAssetUnit,
   fromSymbolUnit,
   time,

@@ -13,7 +13,7 @@
     "statemineStaging:ipfs": "pm2 start ecosystem.config.js --only statescan-ipfsscan-statemine-staging --env production"
   },
   "dependencies": {
-    "@polkadot/api": "6.7.1",
+    "@polkadot/api": "6.8.1",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "is-ipfs": "^6.0.2",

@@ -61,7 +61,7 @@ async function scanMeta(dataHash, data) {
   try {
     nftIPFSData = await fetchDataFromIPFS(data);
   } catch (e) {
-    console.error(e);
+    console.error("Error with fetching data from ipfs", e);
   }
 
   const nftMetadataCol = await getNftMetadataCollection();

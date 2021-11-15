@@ -27,6 +27,7 @@ import Preview from "../../../../components/nft/preview";
 import { Modal } from "semantic-ui-react";
 import { useOnClickOutside } from "../../../../utils/hooks";
 import { useRef, useState } from "react";
+import { shadow_100 } from "../../../../styles/shadows";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -129,6 +130,13 @@ const RowItem = styled.div`
   line-height: 20px;
 `
 
+const BgWhite = styled.div`
+  background-color: white;
+  padding: 8px;
+  ${shadow_100};
+  border-radius: 8px;
+`
+
 export default function NftClass({node, NFTClass, NFTInstances}) {
   const [showModal, setShowModal] = useState(false);
   const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
@@ -198,7 +206,7 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
             <RowItem>{hex2a(attr.value)}</RowItem>
           </Row>
         }) ?? []}
-      /> : <NoData/>,
+      /> : <BgWhite><NoData/></BgWhite>,
     },
   ];
 
@@ -216,7 +224,11 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview nftClass={NFTClass} nftInstance={previewNFTInstance}/>
+          <Preview
+            nftClass={NFTClass}
+            nftInstance={previewNFTInstance}
+            closeFn={()=>{setShowModal(false)}}
+          />
         </MyModal>
       </div>
       <Section>

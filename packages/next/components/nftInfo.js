@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   ${text_dark_minor};
 
   .title {
+    margin-top: 8px;
     ${h4_24_bold};
     ${text_dark_major};
   }

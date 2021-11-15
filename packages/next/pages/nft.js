@@ -60,7 +60,7 @@ export default function NftClasses({node, nfts, filter}) {
     <Layout node={node}>
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
-          <Preview nftClass={previewNFTClass} />
+          <Preview nftClass={previewNFTClass} closeFn={()=>{setShowModal(false)}}/>
         </MyModal>
       </div>
       <section>

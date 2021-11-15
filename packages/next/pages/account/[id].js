@@ -441,6 +441,7 @@ export default function Address({
           <Preview
             nftClass={previewNFTInstance.class}
             nftInstance={previewNFTInstance}
+            closeFn={()=>{setShowModal(false)}}
           />
         </MyModal>
       </div>

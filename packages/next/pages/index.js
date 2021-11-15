@@ -204,7 +204,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
   const [transferTableData, setTransferTableData] = useState(null);
 
   useEffect(() => {
-    if (!size.width) return;
+    if (!size.width || time) return;
     if (collapseSize > size.width) {
       setBlockTableHead(blocksLatestHead);
       setBlockTableData(mobileViewBlockTableData());
@@ -219,6 +219,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
   }, [
     size,
     overview,
+    time,
     mobileViewBlockTableData,
     mobileViewTransferTableData,
     pcViewBlockTableData,

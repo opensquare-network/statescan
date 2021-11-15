@@ -219,7 +219,6 @@ export default function Home({ node, overview: ssrOverview, price }) {
   }, [
     size,
     overview,
-    time,
     mobileViewBlockTableData,
     mobileViewTransferTableData,
     pcViewBlockTableData,

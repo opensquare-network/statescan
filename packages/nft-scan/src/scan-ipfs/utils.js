@@ -3,6 +3,7 @@ const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
 const { getNftMetadataCollection } = require("../mongo");
 const { isHex, hexToString } = require("@polkadot/util");
+const { getAverageColor } = require("fast-average-color-node");
 
 const ipfsGatewayUrl =
   process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
@@ -135,7 +136,8 @@ async function scanMetaImage(dataHash) {
   const imageData = ipfsImage.data;
   const sharpImage = sharp(imageData);
   const { format, size, width, height } = await sharpImage.metadata();
-  const imageMetadata = { format, size, width, height };
+  const background = await getAverageColor(imageData);
+  const imageMetadata = { format, size, width, height, background };
 
   // create image thumbnail from image data
   const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);

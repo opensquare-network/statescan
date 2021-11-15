@@ -34,7 +34,7 @@ export default function HeightAge({ node, height, age, isFinalized = true }) {
           <Link>{height.toLocaleString()}</Link>
         </InLink>
         <FlexWrapper style={{ width: 160, marginTop: 4 }}>
-          <img src={imgUrl} alt="" style={{ marginRight: 6 }} width={20} />
+          <img src={imgUrl} alt="" style={{ marginRight: 6 }} width={16} />
           <MinorText>{timeDuration(age)}</MinorText>
         </FlexWrapper>
       </FlexWrapper>

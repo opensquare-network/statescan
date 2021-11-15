@@ -282,7 +282,15 @@ export default function Home({ node, overview: ssrOverview, price }) {
               to={`/account/${item.issuer}`}
             />,
             item.accounts,
-            <Tooltip key={`${index}-5`} content={fromAssetUnit(item.supply, item.decimals)} isCopy>
+            <Tooltip
+              key={`${index}-5`}
+              content={bigNumber2Locale(
+                fromAssetUnit(item.supply, item.decimals)
+              )}
+              isCopy
+              noMinWidth={true}
+              title="Total Supply"
+            >
               {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
             </Tooltip>,
           ])}

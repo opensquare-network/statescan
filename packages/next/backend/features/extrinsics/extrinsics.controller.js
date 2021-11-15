@@ -3,8 +3,10 @@ const {
   getExtrinsicCollection,
   getEventCollection,
   getAssetTransferCollection,
+  getNftTransferCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
+const { HttpError } = require("../../exc");
 
 const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 
@@ -134,6 +136,114 @@ async function getExtrinsicEvents(ctx) {
   };
 }
 
+async function getExtrinsicNftTransfers(ctx) {
+  const { indexOrHash } = ctx.params;
+
+  let q;
+
+  const match = indexOrHash.match(/(\d+)-(\d+)/);
+  if (match) {
+    const [, blockHeight, extrinsicIndex] = match;
+    q = {
+      "indexer.blockHeight": parseInt(blockHeight),
+      "indexer.extrinsicIndex": parseInt(extrinsicIndex),
+    };
+  } else {
+    throw new HttpError("Extrinsic hash is not support yet");
+  }
+
+  const col = await getNftTransferCollection();
+  const items = await col
+    .aggregate([
+      { $match: q },
+      { $sort: { "indexer.eventIndex": 1 } },
+      {
+        $lookup: {
+          from: "nftInstance",
+          let: {
+            classId: "$classId",
+            classHeight: "$classHeight",
+            instanceId: "$instanceId",
+            instanceHeight: "$instanceHeight"
+          },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$classId", "$$classId"] },
+                    { $eq: ["$classHeight", "$$classHeight"] },
+                    { $eq: ["$instanceId", "$$instanceId"] },
+                    { $eq: ["$indexer.blockHeight", "$$instanceHeight"] },
+                  ],
+                },
+              }
+            },
+            {
+              $lookup: {
+                from: "nftMetadata",
+                localField: "dataHash",
+                foreignField: "dataHash",
+                as: "nftMetadata",
+              }
+            },
+            {
+              $addFields: {
+                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
+              },
+            },
+            {
+              $lookup: {
+                from: "nftClass",
+                let: { classId: "$classId", classHeight: "$classHeight" },
+                pipeline: [
+                  {
+                    $match: {
+                      $expr: {
+                        $and: [
+                          { $eq: ["$classId", "$$classId"] },
+                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
+                        ],
+                      },
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "nftMetadata",
+                      localField: "dataHash",
+                      foreignField: "dataHash",
+                      as: "nftMetadata",
+                    }
+                  },
+                  {
+                    $addFields: {
+                      nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
+                    },
+                  },
+                ],
+                as: "class",
+              }
+            },
+            {
+              $addFields: {
+                class: { $arrayElemAt: ["$class", 0] },
+              },
+            },
+          ],
+          as: "instance",
+        },
+      },
+      {
+        $addFields: {
+          instance: { $arrayElemAt: ["$instance", 0] },
+        },
+      },
+    ])
+    .toArray();
+
+  ctx.body = items;
+}
+
 async function getExtrinsicTransfers(ctx) {
   const { indexOrHash } = ctx.params;
 
@@ -256,6 +366,7 @@ module.exports = {
   getExtrinsic,
   getExtrinsicEvents,
   getExtrinsicTransfers,
+  getExtrinsicNftTransfers,
   getExtrinsicModules,
   getExtrinsicModuleMethods,
   getAllExtrinsicModuleMethods,

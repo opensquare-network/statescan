@@ -24,5 +24,9 @@ router.get(
   "/extrinsics/:indexOrHash/transfers",
   extrinsicsController.getExtrinsicTransfers
 );
+router.get(
+  "/extrinsics/:indexOrHash/nft-transfers",
+  extrinsicsController.getExtrinsicNftTransfers
+);
 
 module.exports = router;

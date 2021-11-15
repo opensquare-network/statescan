@@ -2,7 +2,7 @@
   "name": "@statescan/scan",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "westmint": "pm2 start ecosystem.config.js --only statescan-scan-westmint --env production",
     "statemine": "pm2 start ecosystem.config.js --only statescan-scan-statemine --env production",

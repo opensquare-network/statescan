@@ -34,7 +34,7 @@ export default function Thumbnail({imageThumbnail, size = 32, onClick = false}) 
         </ThumbnailContainer>
       ) : (
         <Wrapper onClick={onClick}>
-          <NFTUnrecognizedThumbnailSvg/>
+          <NFTUnrecognizedThumbnailSvg width={size} height={size} viewBox="0 0 32 32" />
         </Wrapper>
       )
   );

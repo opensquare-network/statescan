@@ -1,9 +1,9 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const SquareBox = styled.div`
   position: relative;
   overflow: hidden;
-  background-color: #555555;
+  background-color: ${(props) => props.background ?? "#555555"};
   :before {
     content: "";
     display: block;
@@ -12,7 +12,7 @@ const SquareBox = styled.div`
 `;
 
 const SquareContent = styled.div`
-  position:  absolute;
+  position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
@@ -21,12 +21,10 @@ const SquareContent = styled.div`
   text-align: center;
 `;
 
-export default function SquareBoxComponent({ children }) {
+export default function SquareBoxComponent({ children, background }) {
   return (
-    <SquareBox>
-      <SquareContent>
-        {children}
-      </SquareContent>
+    <SquareBox background={background}>
+      <SquareContent>{children}</SquareContent>
     </SquareBox>
   );
 }

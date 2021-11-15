@@ -8,13 +8,14 @@ const ImgWrapper = styled.div`
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: #555555;
-`
+  background-color: ${(props) => props.background ?? "#555555"};
+`;
 
 // Smallest data URI image possible for a transparent image
-const transparentThumbnail = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+const transparentThumbnail =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-export default function NFTImage({nftMetadata}) {
+export default function NFTImage({ nftMetadata }) {
   let imageCid;
   if (nftMetadata?.image?.startsWith("ipfs://")) {
     imageCid = nftMetadata?.image.split("/").pop();
@@ -22,19 +23,25 @@ export default function NFTImage({nftMetadata}) {
 
   if (!imageCid) {
     return (
-      <ImgWrapper>
-        <NFTUnrecognizedSvg width={"100%"} height={"100%"} viewBox="0 0 480 480"/>
+      <ImgWrapper background={nftMetadata?.imageMetadata?.background}>
+        <NFTUnrecognizedSvg
+          width={"100%"}
+          height={"100%"}
+          viewBox="0 0 480 480"
+        />
       </ImgWrapper>
     );
   }
-  return <ImgWrapper>
-    <Image
-      src={`https://cloudflare-ipfs.com/ipfs/${imageCid}`}
-      width={nftMetadata?.imageMetadata?.width ?? 480}
-      height={nftMetadata?.imageMetadata?.height ?? 480}
-      alt=""
-      placeholder="blur"
-      blurDataURL={nftMetadata?.imageThumbnail || transparentThumbnail}
-    />
-  </ImgWrapper>;
+  return (
+    <ImgWrapper background={nftMetadata?.imageMetadata?.background}>
+      <Image
+        src={`https://cloudflare-ipfs.com/ipfs/${imageCid}`}
+        width={nftMetadata?.imageMetadata?.width ?? 480}
+        height={nftMetadata?.imageMetadata?.height ?? 480}
+        alt=""
+        placeholder="blur"
+        blurDataURL={nftMetadata?.imageThumbnail || transparentThumbnail}
+      />
+    </ImgWrapper>
+  );
 }

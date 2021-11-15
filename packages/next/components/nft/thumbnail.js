@@ -11,8 +11,8 @@ const ThumbnailContainer = styled(Wrapper)`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 32px;
-  height: 32px;
+  width: ${p => p.size}px;
+  height: ${p => p.size}px;
   border-radius: 5px;
   overflow: hidden;
   background-color: #555555;
@@ -21,13 +21,13 @@ const ThumbnailContainer = styled(Wrapper)`
   `};
 `;
 
-export default function Thumbnail({imageThumbnail, onClick = false}) {
+export default function Thumbnail({imageThumbnail, size = 32, onClick = false}) {
   return (
     imageThumbnail
       ? (
-        <ThumbnailContainer onClick={onClick}>
+        <ThumbnailContainer size={size} onClick={onClick}>
           <img
-            width={32}
+            width={size}
             src={imageThumbnail}
             alt=""
           />

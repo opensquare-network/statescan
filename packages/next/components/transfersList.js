@@ -88,7 +88,7 @@ const NftTransferItem = styled.div`
     margin-right: 8px;
   }
   & > :nth-child(6) {
-    margin-right: 4px;
+    margin-right: 8px;
   }
 `;
 
@@ -176,6 +176,7 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
               <AddressEllipsis address={item.to} to={`/account/${item?.to}`} />
               <MinorText>For</MinorText>
               <Thumbnail
+                size={20}
                 imageThumbnail={imageThumbnail}
                 onClick={() => {
                   setPreviewNFTInstance(instance);

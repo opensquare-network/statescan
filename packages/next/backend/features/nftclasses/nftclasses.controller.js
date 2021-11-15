@@ -194,7 +194,7 @@ async function getNftClasses(ctx) {
 async function getNftClassById(ctx) {
   const { classId } = ctx.params;
   const col = await getNftClassCollection();
-  const option = { sort: { "createdAt.blockHeight": -1 } };
+  const option = { sort: { "indexer.blockHeight": -1 } };
   const item = await col.findOne({ classId: parseInt(classId) }, option);
 
   if (!item) {

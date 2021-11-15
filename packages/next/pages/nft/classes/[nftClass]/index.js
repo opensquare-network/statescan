@@ -220,6 +220,11 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
 
   const status = NFTClass?.details?.isFrozen ? "Frozen" : "Active";
 
+  let imageCid;
+  if (NFTClass?.nftMetadata?.image?.startsWith("ipfs://")) {
+    imageCid = NFTClass?.nftMetadata?.image.split("/").pop();
+  }
+
   return (
     <Layout node={node}>
       <div ref={ref}>
@@ -270,11 +275,12 @@ export default function NftClass({node, NFTClass, NFTInstances}) {
                 status === "Frozen"
                   ? <Status key="6" status={status}/>
                   : undefined,
-                NFTClass?.nftMetadata?.image &&
-                <Ipfs key="7">
-                  <span>IPFS</span>
-                  <IpfsLink cid={NFTClass?.nftMetadata?.image.replace('ipfs://ipfs/', '')}/>
-                </Ipfs>,
+                imageCid && (
+                  <Ipfs key="7">
+                    <span>IPFS</span>
+                    <IpfsLink cid={imageCid}/>
+                  </Ipfs>
+                ),
               ]}
               info={
                 <NftInfo

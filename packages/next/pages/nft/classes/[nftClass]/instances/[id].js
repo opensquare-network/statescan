@@ -131,6 +131,11 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
     status = "Destroyed";
   }
 
+  let imageCid;
+  if (nftMetadata?.image?.startsWith("ipfs://")) {
+    imageCid = nftMetadata?.image.split("/").pop();
+  }
+
   return (
     <Layout node={node}>
       <Section>
@@ -170,11 +175,12 @@ export default function NftClass({node, NFTClass, NFTInstance}) {
                 status === "Active"
                   ? undefined
                   : <Status key="6" status={status}/>,
-                nftMetadata?.image &&
+                imageCid && (
                   <Ipfs key="7">
                     <span>IPFS</span>
-                    <IpfsLink cid={nftMetadata?.image?.replace('ipfs://ipfs/', '')}/>
-                  </Ipfs>,
+                    <IpfsLink cid={imageCid}/>
+                  </Ipfs>
+                ),
               ]}
               info={
                 <NftInfo

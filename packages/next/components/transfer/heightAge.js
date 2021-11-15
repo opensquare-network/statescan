@@ -44,7 +44,7 @@ export default function HeightAge({
             src="/imgs/icons/check-green.svg"
             alt=""
             style={{ marginRight: 6 }}
-            width={20}
+            width={16}
           />
           <MinorText>{timeDuration(age)}</MinorText>
         </FlexWrapper>

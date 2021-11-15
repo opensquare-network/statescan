@@ -112,6 +112,10 @@ async function scanMetaImage(dataHash) {
     return;
   }
 
+  if (!item.image.startsWith("ipfs://")) {
+    return;
+  }
+
   const image = item.image.split("/").pop();
   if (!image) {
     return;

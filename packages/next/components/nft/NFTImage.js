@@ -15,14 +15,21 @@ const ImgWrapper = styled.div`
 const transparentThumbnail = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 export default function NFTImage({nftMetadata}) {
-  if (!nftMetadata?.image) {
-    return <ImgWrapper>
-      <NFTUnrecognizedSvg width={"100%"} height={"100%"} viewBox="0 0 480 480"/>
-    </ImgWrapper>;
+  let imageCid;
+  if (nftMetadata?.image?.startsWith("ipfs://")) {
+    imageCid = nftMetadata?.image.split("/").pop();
+  }
+
+  if (!imageCid) {
+    return (
+      <ImgWrapper>
+        <NFTUnrecognizedSvg width={"100%"} height={"100%"} viewBox="0 0 480 480"/>
+      </ImgWrapper>
+    );
   }
   return <ImgWrapper>
     <Image
-      src={`https://cloudflare-ipfs.com/ipfs/${nftMetadata?.image.replace('ipfs://ipfs/', '')}`}
+      src={`https://cloudflare-ipfs.com/ipfs/${imageCid}`}
       width={nftMetadata?.imageMetadata?.width ?? 480}
       height={nftMetadata?.imageMetadata?.height ?? 480}
       alt=""

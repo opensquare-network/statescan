@@ -12,6 +12,9 @@ import AssetThawed from "./thaw-asset.svg";
 import Destroyed from "./destroy.svg";
 import AttributeSet from "./set-attribute.svg";
 import AttributeCleared from "./clear-attribute.svg";
+import Redeposited from "./redeposit.svg";
+import ApprovedTransfer from "./approve-transfer.svg";
+import ApprovalCancelled from "./cancel-approval.svg";
 import LinkIcon from "./link.svg";
 
 const icons = {
@@ -36,6 +39,9 @@ const icons = {
   Destroyed,
   AttributeSet,
   AttributeCleared,
+  Redeposited,
+  ApprovedTransfer,
+  ApprovalCancelled,
   LinkIcon,
 };
 

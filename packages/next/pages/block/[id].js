@@ -263,6 +263,7 @@ export async function getServerSideProps(context) {
     }),
     nextApi.fetch(`blocks/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
+      pageSize: 25
     }),
   ]);
 

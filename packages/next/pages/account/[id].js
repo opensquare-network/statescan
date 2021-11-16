@@ -522,15 +522,19 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`addresses/${id}`),
     nextApi.fetch(`addresses/${id}/assets`, {
       page: activeTab === "assets" ? nPage - 1 : 0,
+      pageSize: 25
     }),
     nextApi.fetch(`addresses/${id}/transfers`, {
       page: activeTab === "transfers" ? nPage - 1 : 0,
+      pageSize: 25
     }),
     nextApi.fetch(`addresses/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
+      pageSize: 25
     }),
     nextApi.fetch(`addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
+      pageSize: 25
     }),
     fetch(
       `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
@@ -544,9 +548,11 @@ export async function getServerSideProps(context) {
       .catch(() => null),
     nextApi.fetch(`addresses/${id}/nft/instances`, {
       page: activeTab === "nft" ? nPage - 1 : 0,
+      pageSize: 25
     }),
     nextApi.fetch(`addresses/${id}/nft/transfers`, {
       page: activeTab === "nft transfers" ? nPage - 1 : 0,
+      pageSize: 25
     }),
   ]);
 

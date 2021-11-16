@@ -205,6 +205,7 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`extrinsics/${id}/nft-transfers`),
     nextApi.fetch(`extrinsics/${id}/events`, {
       page: activeTab === "events" ? nPage - 1 : 0,
+      pageSize: 25
     }),
   ]);
 

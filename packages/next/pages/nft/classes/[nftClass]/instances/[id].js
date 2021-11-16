@@ -336,7 +336,9 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { nftClass: classId, id: instanceId } = context.query;
+  const { nftClass: classId, id: instanceId, page } = context.query;
+  const nPage = parseInt(page) || 1;
+
   const [
     { result: nftClass },
     { result: nftInstance },
@@ -362,7 +364,8 @@ export async function getServerSideProps(context) {
     { result: nftTransfers },
   ] = await Promise.all([
     nextApi.fetch(
-      `nftclasses/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`
+      `nftclasses/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
+      { page: nPage - 1, pageSize: 25 }
     ),
   ]);
   return {

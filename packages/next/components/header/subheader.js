@@ -27,7 +27,7 @@ const Container = styled.div`
   margin: 0 auto;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   font-weight: bold;
   font-size: 32px;
   line-height: 32px;

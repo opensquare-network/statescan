@@ -64,23 +64,23 @@ const MyModal = styled(Modal)`
   a {
     display: block;
     background-color: #000000;
-    font-family: Inter,serif ;
+    font-family: Inter, serif;
     font-style: normal;
     font-weight: 600;
     font-size: 15px;
     line-height: 44px;
-    color: #FFFFFF;
+    color: #ffffff;
     text-align: center;
   }
-`
+`;
 
 const TextDark = styled.span`
   ${text_dark_major};
-`
+`;
 
 const TextDarkMinor = styled.span`
   ${text_dark_minor};
-`
+`;
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
@@ -102,7 +102,7 @@ export default function Address({
   addressTeleports,
   addressIdentity,
   addressNftInstances,
-  addressNftTransfers
+  addressNftTransfers,
 }) {
   const [showModal, setShowModal] = useState(false);
   const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
@@ -348,7 +348,9 @@ export default function Address({
           >
             {instance.instanceId}
           </InLink>,
-          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
+          <Thumbnail
+            imageThumbnail={imageThumbnail}
+            key={`thumbnail${index}`}
             onClick={() => {
               setPreviewNFTInstance(instance);
               setShowModal(true);
@@ -361,8 +363,13 @@ export default function Address({
               <NftName name={name} />
             </InLink>
           </TextDark>,
-          <TextDarkMinor key={`time-${index}`}>{time(instance.indexer?.blockTime)}</TextDarkMinor>,
-          <Status key={`status-${index}`} status={instance.details?.isFrozen ? "Frozen" : "Active"}/>,
+          <TextDarkMinor key={`time-${index}`}>
+            {time(instance.indexer?.blockTime)}
+          </TextDarkMinor>,
+          <Status
+            key={`status-${index}`}
+            status={instance.details?.isFrozen ? "Frozen" : "Active"}
+          />,
         ];
       }),
       foot: (
@@ -390,7 +397,9 @@ export default function Address({
             key={index}
             to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
           >
-            {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.extrinsicIndex}`}
+            {`${item.indexer.blockHeight.toLocaleString()}-${
+              item.indexer.extrinsicIndex
+            }`}
           </InLink>,
           <InLink
             key={`instance${index}`}
@@ -398,8 +407,12 @@ export default function Address({
           >
             {`${item.classId}-${item.instanceId}`}
           </InLink>,
-          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
-          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
+          <TextDarkMinor key={`time-${index}`}>
+            {time(item.indexer?.blockTime)}
+          </TextDarkMinor>,
+          <Thumbnail
+            imageThumbnail={imageThumbnail}
+            key={`thumbnail${index}`}
             onClick={() => {
               setPreviewNFTInstance(instance);
               setShowModal(true);
@@ -413,12 +426,20 @@ export default function Address({
             </InLink>
           </TextDark>,
           item.from !== id ? (
-            <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />
+            <AddressEllipsis
+              key={`from-${index}`}
+              address={item.from}
+              to={`/account/${item.from}`}
+            />
           ) : (
             <AddressEllipsis key={`from-${index}`} address={item.from} />
           ),
           item.to !== id ? (
-            <AddressEllipsis key={`to-${index}`} address={item.to} to={`/account/${item.to}`} />
+            <AddressEllipsis
+              key={`to-${index}`}
+              address={item.to}
+              to={`/account/${item.to}`}
+            />
           ) : (
             <AddressEllipsis key={`to-${index}`} address={item.to} />
           ),
@@ -431,7 +452,7 @@ export default function Address({
           total={addressNftTransfers?.total}
         />
       ),
-    }
+    },
   ];
 
   return (
@@ -441,7 +462,9 @@ export default function Address({
           <Preview
             nftClass={previewNFTInstance?.class}
             nftInstance={previewNFTInstance}
-            closeFn={()=>{setShowModal(false)}}
+            closeFn={() => {
+              setShowModal(false);
+            }}
           />
         </MyModal>
       </div>

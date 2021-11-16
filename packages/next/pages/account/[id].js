@@ -335,6 +335,10 @@ export default function Address({
         const imageThumbnail = instance.nftMetadata?.image
           ? instance.nftMetadata.imageThumbnail
           : instance.class.nftMetadata?.imageThumbnail;
+        const background = instance.nftMetadata?.image
+          ? instance.nftMetadata.imageMetadata?.background
+          : instance.class.nftMetadata?.imageMetadata?.background;
+
         return [
           <InLink
             key={`classid${index}`}
@@ -355,6 +359,7 @@ export default function Address({
               setPreviewNFTInstance(instance);
               setShowModal(true);
             }}
+            background={background}
           />,
           <TextDark key={`name-${index}`}>
             <InLink
@@ -391,6 +396,9 @@ export default function Address({
         const imageThumbnail = instance.nftMetadata?.image
           ? instance.nftMetadata.imageThumbnail
           : instance.class.nftMetadata?.imageThumbnail;
+        const background = instance.nftMetadata?.image
+          ? instance.nftMetadata.imageMetadata?.background
+          : instance.class.nftMetadata?.imageMetadata?.background;
 
         return [
           <InLink
@@ -417,6 +425,7 @@ export default function Address({
               setPreviewNFTInstance(instance);
               setShowModal(true);
             }}
+            background={background}
           />,
           <TextDark key={`name-${index}`}>
             <InLink

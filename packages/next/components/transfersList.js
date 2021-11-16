@@ -164,6 +164,9 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
           const imageThumbnail = instance.nftMetadata?.image
             ? instance.nftMetadata.imageThumbnail
             : instance.class.nftMetadata?.imageThumbnail;
+          const background = instance.nftMetadata?.image
+            ? instance.nftMetadata.imageMetadata?.background
+            : instance.class.nftMetadata?.imageMetadata?.background;
 
           return (
             <NftTransferItem key={index}>
@@ -182,6 +185,7 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
                   setPreviewNFTInstance(instance);
                   setShowModal(true);
                 }}
+                background={background}
               />
               <InLink
                 to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}

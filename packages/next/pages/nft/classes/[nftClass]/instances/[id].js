@@ -193,6 +193,9 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
         const imageThumbnail = nftInstance.nftMetadata?.image
           ? nftInstance.nftMetadata.imageThumbnail
           : nftClass.nftMetadata?.imageThumbnail;
+        const background = instance.nftMetadata?.image
+          ? instance.nftMetadata.imageMetadata?.background
+          : instance.class.nftMetadata?.imageMetadata?.background;
 
         return [
           <InLink
@@ -213,6 +216,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
               setPreviewNFTInstance(nftInstance);
               setShowModal(true);
             }}
+            background={background}
           />,
           <TextDark key={`name-${index}`}>
           <InLink

@@ -10,6 +10,7 @@ import InLink from "components/inLink";
 import Thumbnail from "components/nft/thumbnail";
 import Preview from "components/nft/preview";
 import NftName from "./nft/name";
+import NftLink from "./nft/nftLink";
 
 const MyModal = styled(Modal)`
   > div {
@@ -187,11 +188,12 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
                 }}
                 background={background}
               />
-              <InLink
-                to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+              <NftLink
+                nftClass={instance.class}
+                nftInstance={instance}
               >
                 <NftName name={name} />
-              </InLink>
+              </NftLink>
             </NftTransferItem>
           );
         }

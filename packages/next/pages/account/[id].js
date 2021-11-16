@@ -52,6 +52,7 @@ import NftName from "components/nft/name";
 import { useRef, useState } from "react";
 import Preview from "components/nft/preview";
 import { Modal } from "semantic-ui-react";
+import NftLink from "components/nft/nftLink";
 
 const MyModal = styled(Modal)`
   > div {
@@ -340,18 +341,19 @@ export default function Address({
           : instance.class.nftMetadata?.imageMetadata?.background;
 
         return [
-          <InLink
+          <NftLink
             key={`classid${index}`}
-            to={`/nft/classes/${instance.classId}`}
+            nftClass={instance.class}
           >
             {instance.classId}
-          </InLink>,
-          <InLink
+          </NftLink>,
+          <NftLink
             key={`instanceid${index}`}
-            to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+            nftClass={instance.class}
+            nftInstance={instance}
           >
             {instance.instanceId}
-          </InLink>,
+          </NftLink>,
           <Thumbnail
             imageThumbnail={imageThumbnail}
             key={`thumbnail${index}`}
@@ -362,11 +364,12 @@ export default function Address({
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <InLink
-              to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+            <NftLink
+              nftClass={instance.class}
+              nftInstance={instance}
             >
               <NftName name={name} />
-            </InLink>
+            </NftLink>
           </TextDark>,
           <TextDarkMinor key={`time-${index}`}>
             {time(instance.indexer?.blockTime)}
@@ -409,12 +412,13 @@ export default function Address({
               item.indexer.extrinsicIndex
             }`}
           </InLink>,
-          <InLink
+          <NftLink
             key={`instance${index}`}
-            to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
+            nftClass={instance.class}
+            nftInstance={instance}
           >
             {`${item.classId}-${item.instanceId}`}
-          </InLink>,
+          </NftLink>,
           <TextDarkMinor key={`time-${index}`}>
             {time(item.indexer?.blockTime)}
           </TextDarkMinor>,
@@ -428,11 +432,12 @@ export default function Address({
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <InLink
-              to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
+            <NftLink
+              nftClass={instance.class}
+              nftInstance={instance}
             >
               <NftName name={name} />
-            </InLink>
+            </NftLink>
           </TextDark>,
           item.from !== id ? (
             <AddressEllipsis

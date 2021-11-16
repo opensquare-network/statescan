@@ -241,7 +241,7 @@ export const NFTClassHead = [
   "Owner",
   "Issuer",
   "Status",
-  "Link"
+  "Link",
 ];
 
 export const NFTInstanceHead = [
@@ -249,7 +249,7 @@ export const NFTInstanceHead = [
   "Created Time",
   "Owner",
   "Status",
-  "Link"
+  "Link",
 ];
 
 export const NFTClassInstanceHead = [
@@ -275,7 +275,7 @@ export const NFTTransferHead = [
   { name: "Instance ID", width: 136 },
   { name: "Time", type: "time", width: 200 },
   { name: "NFT", width: 100 },
-  { name: "Name", width: 452 },
+  { name: "Name" },
   { name: "From", width: 160 },
   { name: "To", width: 160 },
 ];

@@ -14,6 +14,7 @@ const Wrapper = styled.div`
     margin-top: 8px;
     ${h4_24_bold};
     ${text_dark_major};
+    word-break: break-all;
   }
   .content {
     margin-top: 16px;

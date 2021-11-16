@@ -50,6 +50,7 @@ const ButtonWrapper = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   button {
     all: unset;
     border: 1px solid #dddddd;

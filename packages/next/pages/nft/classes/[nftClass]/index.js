@@ -1,7 +1,7 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { NFTClassHead, NFTClassInstanceHead } from "utils/constants";
+import { EmptyQuery, NFTClassHead, NFTClassInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
@@ -143,7 +143,7 @@ const BgWhite = styled.div`
   border-radius: 8px;
 `;
 
-export default function NftClass({ node, NFTClass, NFTInstances }) {
+export default function NftClass({ node, nftClass, nftInstances }) {
   const [showModal, setShowModal] = useState(false);
   const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
   const ref = useRef();
@@ -156,18 +156,18 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
     setShowModal(false);
   });
   const tab = {};
-  const imageThumbnail = NFTClass.nftMetadata?.imageThumbnail;
+  const imageThumbnail = nftClass?.nftMetadata?.imageThumbnail;
 
   const tabTableData = [
     {
       name: "Instance",
-      page: NFTInstances?.page,
-      total: NFTInstances?.total,
+      page: nftInstances?.page,
+      total: nftInstances?.total,
       head: NFTClassInstanceHead,
-      body: (NFTInstances?.items || []).map((instance, index) => [
+      body: (nftInstances?.items || []).map((instance, index) => [
         <InLink
           key={`id${index}`}
-          to={`/nft/classes/${NFTClass.classId}/instances/${instance.instanceId}`}
+          to={`/nft/classes/${nftClass?.classId}/instances/${instance.instanceId}`}
         >
           {instance.instanceId}
         </InLink>,
@@ -178,14 +178,14 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
             setPreviewNFTInstance(instance);
             setShowModal(true);
           }}
-          background={NFTClass.nftMetadata?.imageMetadata?.background}
+          background={nftClass?.nftMetadata?.imageMetadata?.background}
         />,
         <InLink
           key={`name-${index}`}
-          to={`/nft/classes/${NFTClass.classId}/instances/${instance.instanceId}`}
+          to={`/nft/classes/${nftClass?.classId}/instances/${instance.instanceId}`}
         >
           <NftName
-            name={instance?.nftMetadata?.name ?? NFTClass?.nftMetadata?.name}
+            name={instance?.nftMetadata?.name ?? nftClass?.nftMetadata?.name}
           />
         </InLink>,
         <TextDarkMinor key={`time-${index}`}>
@@ -203,32 +203,32 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
       ]),
       foot: (
         <Pagination
-          page={NFTInstances?.page}
-          pageSize={NFTInstances?.pageSize}
-          total={NFTInstances?.total}
+          page={nftInstances?.page}
+          pageSize={nftInstances?.pageSize}
+          total={nftInstances?.total}
         />
       ),
     },
     {
       name: "Timeline",
-      total: NFTClass?.timeline?.length,
-      component: <Timeline data={NFTClass?.timeline} node={node} />,
+      total: nftClass?.timeline?.length,
+      component: <Timeline data={nftClass?.timeline} node={node} />,
     },
     {
       name: "Attributes",
-      total: NFTClass?.attributes?.length ?? 0,
+      total: nftClass?.attributes?.length ?? 0,
       component:
-        NFTClass?.attributes?.length > 0 ? (
+        nftClass?.attributes?.length > 0 ? (
           <DetailTable
             head={
-              NFTClass?.attributes?.map((attr, index) => `#${index + 1}`) ?? []
+              nftClass?.attributes?.map((attr, index) => `#${index + 1}`) ?? []
             }
             body={
-              NFTClass?.attributes?.map((attr, index) => {
+              nftClass?.attributes?.map((attr, index) => {
                 return (
                   <Row
                     key={`row${index}`}
-                    isLast={index === NFTClass?.attributes?.length - 1}
+                    isLast={index === nftClass?.attributes?.length - 1}
                   >
                     <RowItem>{hex2a(attr.key)}</RowItem>
                     <RowItem>{hex2a(attr.value)}</RowItem>
@@ -253,11 +253,11 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
     return str;
   }
 
-  const status = NFTClass?.details?.isFrozen ? "Frozen" : "Active";
+  const status = nftClass?.details?.isFrozen ? "Frozen" : "Active";
 
   let imageCid;
-  if (NFTClass?.nftMetadata?.image?.startsWith("ipfs://")) {
-    imageCid = NFTClass?.nftMetadata?.image.split("/").pop();
+  if (nftClass?.nftMetadata?.image?.startsWith("ipfs://")) {
+    imageCid = nftClass?.nftMetadata?.image.split("/").pop();
   }
 
   return (
@@ -265,7 +265,7 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
       <div ref={ref}>
         <MyModal open={showModal} size="tiny">
           <Preview
-            nftClass={NFTClass}
+            nftClass={nftClass}
             nftInstance={previewNFTInstance}
             closeFn={() => {
               setShowModal(false);
@@ -279,34 +279,34 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
             data={[
               { name: "NFT", path: `/nft` },
               { name: `Class` },
-              { name: `${NFTClass.classId}` },
+              { name: `${nftClass?.classId}` },
             ]}
             node={node}
           />
           <Between>
             <div>
-              <SquareBoxComponent background={NFTClass.nftMetadata?.background}>
-                <NFTImage nftMetadata={NFTClass.nftMetadata} />
+              <SquareBoxComponent background={nftClass?.nftMetadata?.background}>
+                <NFTImage nftMetadata={nftClass?.nftMetadata} />
               </SquareBoxComponent>
             </div>
             <DetailTable
               head={NFTClassHead}
               body={[
-                <MinorText key="1">{NFTClass?.classId}</MinorText>,
+                <MinorText key="1">{nftClass?.classId}</MinorText>,
                 <MinorText key="2">
-                  {time(NFTClass?.indexer?.blockTime)}
+                  {time(nftClass?.indexer?.blockTime)}
                 </MinorText>,
-                <MinorText key="3">{NFTClass?.details?.instances}</MinorText>,
-                <CopyText key="4" text={NFTClass?.owner}>
+                <MinorText key="3">{nftClass?.details?.instances}</MinorText>,
+                <CopyText key="4" text={nftClass?.owner}>
                   <Address
-                    address={NFTClass?.details?.owner}
-                    to={`/account/${NFTClass?.details?.owner}`}
+                    address={nftClass?.details?.owner}
+                    to={`/account/${nftClass?.details?.owner}`}
                   />
                 </CopyText>,
-                <CopyText key="5" text={NFTClass?.details?.issuer}>
+                <CopyText key="5" text={nftClass?.details?.issuer}>
                   <Address
-                    address={NFTClass?.details?.issuer}
-                    to={`/account/${NFTClass?.details?.issuer}`}
+                    address={nftClass?.details?.issuer}
+                    to={`/account/${nftClass?.details?.issuer}`}
                   />
                 </CopyText>,
                 status === "Frozen" ? (
@@ -322,8 +322,8 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
               info={
                 <NftInfo
                   data={{
-                    title: NFTClass?.nftMetadata?.name ?? "[Unrecognized]",
-                    description: NFTClass?.nftMetadata?.description ?? "-",
+                    title: nftClass?.nftMetadata?.name ?? "[Unrecognized]",
+                    description: nftClass?.nftMetadata?.description ?? "-",
                   }}
                 />
               }
@@ -334,7 +334,7 @@ export default function NftClass({ node, NFTClass, NFTInstances }) {
           data={tabTableData}
           activeTab={tab}
           collapse={900}
-          query={{ nftClass: NFTClass.classId }}
+          query={{ nftClass: nftClass?.classId }}
         />
       </Section>
     </Layout>
@@ -345,8 +345,8 @@ export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const { nftClass: classId, page } = context.query;
   const nPage = parseInt(page) || 1;
-  const { result: NFTClass } = await nextApi.fetch(`nftclasses/${classId}`);
-  const { result: NFTInstances } = await nextApi.fetch(
+  const { result: nftClass } = await nextApi.fetch(`nftclasses/${classId}`);
+  const { result: nftInstances } = await nextApi.fetch(
     `nftclasses/${classId}/instances`,
     { page: nPage - 1, pageSize: 25 }
   );
@@ -354,8 +354,8 @@ export async function getServerSideProps(context) {
   return {
     props: {
       node,
-      NFTClass: NFTClass ?? null,
-      NFTInstances: NFTInstances ?? [],
+      nftClass: nftClass ?? null,
+      nftInstances: nftInstances ?? EmptyQuery,
     },
   };
 }

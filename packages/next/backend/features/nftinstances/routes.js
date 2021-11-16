@@ -10,5 +10,9 @@ router.get(
   "/nftclasses/:classId(\\d+)_:classHeight(\\d+)/instances/:instanceId(\\d+)_:instanceHeight(\\d+)",
   nftinstancesController.getNftInstance
 );
+router.get(
+  "/nftclasses/:classId(\\d+)_:classHeight(\\d+)/instances/:instanceId(\\d+)_:instanceHeight(\\d+)/transfers",
+  nftinstancesController.getNftInstanceTransfers
+);
 
 module.exports = router;

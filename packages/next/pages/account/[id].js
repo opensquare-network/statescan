@@ -407,7 +407,7 @@ export default function Address({
           />,
           <TextDark key={`name-${index}`}>
             <InLink
-              to={`/nft/classes/${instance.classId}/instances/${instance.instanceId}`}
+              to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
             >
               <NftName name={name} />
             </InLink>

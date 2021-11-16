@@ -8,7 +8,6 @@ import Filter from "../components/filter";
 import Status from "../components/status";
 import { ssrNextApi as nextApi } from "../services/nextApi";
 import { time } from "../utils";
-import { Modal } from "semantic-ui-react";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useOnClickOutside } from "../utils/hooks";
@@ -17,27 +16,6 @@ import { text_dark_minor } from "../styles/textStyles";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
 import NftLink from "components/nft/nftLink";
-
-const MyModal = styled(Modal)`
-  > div {
-    box-shadow: none;
-    border: none;
-  }
-
-  padding: 24px;
-
-  a {
-    display: block;
-    background-color: #000000;
-    font-family: Inter, serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 44px;
-    color: #ffffff;
-    text-align: center;
-  }
-`;
 
 const TextDarkMinor = styled.span`
   ${text_dark_minor};
@@ -70,14 +48,13 @@ export default function NftClasses({ node, nfts, filter }) {
   return (
     <Layout node={node}>
       <div ref={ref}>
-        <MyModal open={showModal} size="tiny">
-          <Preview
-            nftClass={previewNFTClass}
-            closeFn={() => {
-              setShowModal(false);
-            }}
-          />
-        </MyModal>
+        <Preview
+          open={showModal}
+          nftClass={previewNFTClass}
+          closeFn={() => {
+            setShowModal(false);
+          }}
+        />
       </div>
       <section>
         <Nav data={[{ name: "NFT" }]} node={node} />

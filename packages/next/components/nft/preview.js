@@ -1,3 +1,4 @@
+import { Modal } from "semantic-ui-react";
 import styled from "styled-components";
 import { addressEllipsis, time } from "../../utils";
 import Address from "../address";
@@ -5,6 +6,30 @@ import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
 import NFTImage from "./NFTImage";
 import NftLink from "./nftLink";
+
+const MyModal = styled(Modal)`
+  > div {
+    box-shadow: none;
+    border: none;
+  }
+
+  padding: 24px;
+
+  a {
+    display: block;
+    background-color: #000000;
+    font-family: Inter, serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 44px;
+    color: #ffffff;
+    :hover {
+      color: #ffffff;
+    }
+    text-align: center;
+  }
+`;
 
 const Wrapper = styled.div`
   display: flex;
@@ -68,53 +93,55 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-export default function Preview({ nftClass, nftInstance, closeFn }) {
+export default function Preview({ open, nftClass, nftInstance, closeFn }) {
   const nftObject = nftInstance ?? nftClass;
   const nftMetadata = nftInstance?.nftMetadata ?? nftClass?.nftMetadata;
 
   return (
-    <Wrapper>
-      <div style={{ width: "100%", marginBottom: "24px" }}>
-        <SquareBoxComponent background={nftMetadata?.background}>
-          <NFTImage nftMetadata={nftMetadata} />
-        </SquareBoxComponent>
-      </div>
+    <MyModal open={open} size="tiny">
+      <Wrapper>
+        <div style={{ width: "100%", marginBottom: "24px" }}>
+          <SquareBoxComponent background={nftMetadata?.background}>
+            <NFTImage nftMetadata={nftMetadata} />
+          </SquareBoxComponent>
+        </div>
 
-      <NftInfo
-        data={{
-          title: nftMetadata?.name ?? "[Unrecognized]",
-          description: nftMetadata?.description ?? "-",
-        }}
-      />
+        <NftInfo
+          data={{
+            title: nftMetadata?.name ?? "[Unrecognized]",
+            description: nftMetadata?.description ?? "-",
+          }}
+        />
 
-      <Row>
-        <Field>Created Time</Field>
-        <Value>{time(nftObject?.indexer?.blockTime)}</Value>
-      </Row>
-
-      <Row>
-        <Field>Owner</Field>
-        <Value>
-          <Address address={addressEllipsis(nftObject?.details?.owner)} />
-        </Value>
-      </Row>
-
-      {!nftInstance && (
         <Row>
-          <Field>Instance</Field>
-          <Value>{nftClass?.details?.instances}</Value>
+          <Field>Created Time</Field>
+          <Value>{time(nftObject?.indexer?.blockTime)}</Value>
         </Row>
-      )}
 
-      <ButtonWrapper>
-        <button onClick={closeFn}>Close</button>
-        <NftLink
-          nftClass={nftClass}
-          nftInstance={nftInstance}
-        >
-          Detail
-        </NftLink>
-      </ButtonWrapper>
-    </Wrapper>
+        <Row>
+          <Field>Owner</Field>
+          <Value>
+            <Address address={addressEllipsis(nftObject?.details?.owner)} />
+          </Value>
+        </Row>
+
+        {!nftInstance && (
+          <Row>
+            <Field>Instance</Field>
+            <Value>{nftClass?.details?.instances}</Value>
+          </Row>
+        )}
+
+        <ButtonWrapper>
+          <button onClick={closeFn}>Close</button>
+          <NftLink
+            nftClass={nftClass}
+            nftInstance={nftInstance}
+          >
+            Detail
+          </NftLink>
+        </ButtonWrapper>
+      </Wrapper>
+    </MyModal>
   );
 }

@@ -21,32 +21,11 @@ import NoData from "../../../../../components/table/noData";
 import Thumbnail from "components/nft/thumbnail";
 import AddressEllipsis from "components/addressEllipsis";
 import NftName from "components/nft/name";
-import { Modal } from "semantic-ui-react";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { text_dark_major, text_dark_minor } from "styles/textStyles";
 import NftLink from "components/nft/nftLink";
 
-const MyModal = styled(Modal)`
-  > div {
-    box-shadow: none;
-    border: none;
-  }
-
-  padding: 24px;
-
-  a {
-    display: block;
-    background-color: #000000;
-    font-family: Inter,serif ;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 44px;
-    color: #FFFFFF;
-    text-align: center;
-  }
-`
 
 const Between = styled.div`
   margin-bottom: 16px;

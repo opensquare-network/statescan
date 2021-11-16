@@ -27,7 +27,6 @@ import NftName from "components/nft/name";
 import NFTImage from "../../../../components/nft/NFTImage";
 import NoData from "../../../../components/table/noData";
 import Preview from "../../../../components/nft/preview";
-import { Modal } from "semantic-ui-react";
 import { useOnClickOutside } from "../../../../utils/hooks";
 import { useRef, useState } from "react";
 import { shadow_100 } from "../../../../styles/shadows";
@@ -71,27 +70,6 @@ const Between = styled.div`
 
   img {
     object-fit: contain;
-  }
-`;
-
-const MyModal = styled(Modal)`
-  > div {
-    box-shadow: none;
-    border: none;
-  }
-
-  padding: 24px;
-
-  a {
-    display: block;
-    background-color: #000000;
-    font-family: Inter, serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 44px;
-    color: #ffffff;
-    text-align: center;
   }
 `;
 
@@ -271,15 +249,14 @@ export default function NftClass({ node, nftClass, nftInstances }) {
   return (
     <Layout node={node}>
       <div ref={ref}>
-        <MyModal open={showModal} size="tiny">
-          <Preview
-            nftClass={nftClass}
-            nftInstance={previewNFTInstance}
-            closeFn={() => {
-              setShowModal(false);
-            }}
-          />
-        </MyModal>
+        <Preview
+          open={showModal}
+          nftClass={nftClass}
+          nftInstance={previewNFTInstance}
+          closeFn={() => {
+            setShowModal(false);
+          }}
+        />
       </div>
       <Section>
         <div>

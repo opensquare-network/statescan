@@ -51,29 +51,7 @@ import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
 import { useRef, useState } from "react";
 import Preview from "components/nft/preview";
-import { Modal } from "semantic-ui-react";
 import NftLink from "components/nft/nftLink";
-
-const MyModal = styled(Modal)`
-  > div {
-    box-shadow: none;
-    border: none;
-  }
-
-  padding: 24px;
-
-  a {
-    display: block;
-    background-color: #000000;
-    font-family: Inter, serif;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 44px;
-    color: #ffffff;
-    text-align: center;
-  }
-`;
 
 const TextDark = styled.span`
   ${text_dark_major};
@@ -472,15 +450,14 @@ export default function Address({
   return (
     <Layout node={node}>
       <div ref={ref}>
-        <MyModal open={showModal} size="tiny">
-          <Preview
-            nftClass={previewNFTInstance?.class}
-            nftInstance={previewNFTInstance}
-            closeFn={() => {
-              setShowModal(false);
-            }}
-          />
-        </MyModal>
+        <Preview
+          open={showModal}
+          nftClass={previewNFTInstance?.class}
+          nftInstance={previewNFTInstance}
+          closeFn={() => {
+            setShowModal(false);
+          }}
+        />
       </div>
       <Section>
         <div>

@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { Modal } from "semantic-ui-react";
 import styled from "styled-components";
 import MinorText from "components/minorText";
 import MajorText from "components/majorText";
@@ -11,27 +10,6 @@ import Thumbnail from "components/nft/thumbnail";
 import Preview from "components/nft/preview";
 import NftName from "./nft/name";
 import NftLink from "./nft/nftLink";
-
-const MyModal = styled(Modal)`
-  > div {
-    box-shadow: none;
-    border: none;
-  }
-
-  padding: 24px;
-
-  a {
-    display: block;
-    background-color: #000000;
-    font-family: Inter,serif ;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 15px;
-    line-height: 44px;
-    color: #FFFFFF;
-    text-align: center;
-  }
-`
 
 const Wrapper = styled.div`
   padding: 8px 0;
@@ -149,13 +127,12 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
   return (
     <Wrapper>
       <div ref={ref}>
-        <MyModal open={showModal} size="tiny">
-          <Preview
-            nftClass={previewNFTInstance?.class}
-            nftInstance={previewNFTInstance}
-            closeFn={()=>{setShowModal(false)}}
-          />
-        </MyModal>
+        <Preview
+          open={showModal}
+          nftClass={previewNFTInstance?.class}
+          nftInstance={previewNFTInstance}
+          closeFn={()=>{setShowModal(false)}}
+        />
       </div>
 
       {showNftTransfers.map(

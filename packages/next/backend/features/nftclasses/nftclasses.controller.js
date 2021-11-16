@@ -28,9 +28,6 @@ async function queryAllClasses(statusQuery, page, pageSize) {
     {
       $facet: {
         items: [
-          { $sort: { classId: 1 } },
-          { $skip: page * pageSize },
-          { $limit: pageSize },
           {
             $lookup: {
               from: "nftMetadata",
@@ -45,7 +42,15 @@ async function queryAllClasses(statusQuery, page, pageSize) {
                 $arrayElemAt: ["$nftMetadata", 0]
               }
             }
-          }
+          },
+          {
+            $sort: {
+              "nftMetadata.recognized": -1,
+              classId: 1,
+            }
+          },
+          { $skip: page * pageSize },
+          { $limit: pageSize },
         ],
         total: [
           { $count: "count" }

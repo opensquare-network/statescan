@@ -1,7 +1,7 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { NFTInstanceHead } from "utils/constants";
+import { NFTInstanceHead, NFTTransferHead, EmptyQuery } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
@@ -18,6 +18,37 @@ import IpfsLink from "../../../../../components/ipfsLink";
 import NFTImage from "../../../../../components/nft/NFTImage";
 import SquareBoxComponent from "../../../../../components/squareBox";
 import NoData from "../../../../../components/table/noData";
+import Thumbnail from "components/nft/thumbnail";
+import AddressEllipsis from "components/addressEllipsis";
+import NftName from "components/nft/name";
+import { useRef, useState } from "react";
+import Preview from "components/nft/preview";
+import { Modal } from "semantic-ui-react";
+import { useOnClickOutside } from "utils/hooks";
+import Pagination from "components/pagination";
+import InLink from "components/inLink";
+import { text_dark_major, text_dark_minor } from "styles/textStyles";
+
+const MyModal = styled(Modal)`
+  > div {
+    box-shadow: none;
+    border: none;
+  }
+
+  padding: 24px;
+
+  a {
+    display: block;
+    background-color: #000000;
+    font-family: Inter,serif ;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 44px;
+    color: #FFFFFF;
+    text-align: center;
+  }
+`
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -93,33 +124,53 @@ const RowItem = styled.div`
   line-height: 20px;
 `;
 
-export default function NftClass({ node, NFTClass, NFTInstance }) {
+const TextDark = styled.span`
+  ${text_dark_major};
+`
+
+const TextDarkMinor = styled.span`
+  ${text_dark_minor};
+`
+
+export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) {
+  const [showModal, setShowModal] = useState(false);
+  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
+  const ref = useRef();
+
+  useOnClickOutside(ref, (event) => {
+    // exclude manually
+    if (document?.querySelector(".modal")?.contains(event.target)) {
+      return;
+    }
+    setShowModal(false);
+  });
+
   const tab = {};
-  const nftMetadata = NFTInstance?.nftMetadata
-    ? NFTInstance.nftMetadata
-    : NFTClass?.nftMetadata;
+  const nftMetadata = nftInstance?.nftMetadata
+    ? nftInstance?.nftMetadata
+    : nftClass?.nftMetadata;
   const tabTableData = [
     {
       name: "Timeline",
-      total: NFTInstance?.timeline?.length,
-      component: <Timeline data={NFTInstance?.timeline} node={node} />,
+      total: nftInstance?.timeline?.length,
+      component: <Timeline data={nftInstance?.timeline} node={node} />,
     },
     {
       name: "Attributes",
-      total: NFTInstance?.attributes?.length,
+      total: nftInstance?.attributes?.length,
       component:
-        NFTInstance?.attributes?.length > 0 ? (
+        nftInstance?.attributes?.length > 0 ? (
           <DetailTable
             head={
-              NFTInstance?.attributes?.map((attr, index) => `#${index + 1}`) ??
+              nftInstance?.attributes?.map((attr, index) => `#${index + 1}`) ??
               []
             }
             body={
-              NFTInstance?.attributes?.map((attr, index) => {
+              nftInstance?.attributes?.map((attr, index) => {
                 return (
                   <Row
                     key={`row${index}`}
-                    isLast={index === NFTInstance?.attributes?.length - 1}
+                    isLast={index === nftInstance?.attributes?.length - 1}
                   >
                     <RowItem>{hex2a(attr.key)}</RowItem>
                     <RowItem>{hex2a(attr.value)}</RowItem>
@@ -132,6 +183,56 @@ export default function NftClass({ node, NFTClass, NFTInstance }) {
           <NoData />
         ),
     },
+    {
+      name: "NFT Transfer",
+      page: nftTransfers?.page,
+      total: nftTransfers?.total,
+      head: NFTTransferHead,
+      body: (nftTransfers?.items || []).map((item, index) => {
+        const name = (nftInstance.nftMetadata ?? nftClass.nftMetadata)?.name;
+        const imageThumbnail = nftInstance.nftMetadata?.image
+          ? nftInstance.nftMetadata.imageThumbnail
+          : nftClass.nftMetadata?.imageThumbnail;
+
+        return [
+          <InLink
+            key={index}
+            to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
+          >
+            {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.extrinsicIndex}`}
+          </InLink>,
+          <InLink
+            key={`instance${index}`}
+            to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
+          >
+            {`${item.classId}-${item.instanceId}`}
+          </InLink>,
+          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
+          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
+            onClick={() => {
+              setPreviewNFTInstance(nftInstance);
+              setShowModal(true);
+            }}
+          />,
+          <TextDark key={`name-${index}`}>
+          <InLink
+            to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
+          >
+            <NftName name={name} />
+          </InLink>
+          </TextDark>,
+          <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />,
+          <AddressEllipsis key={`to-${index}`} address={item.to} to={`/account/${item.to}`} />,
+        ];
+      }),
+      foot: (
+        <Pagination
+          page={nftTransfers?.page}
+          pageSize={nftTransfers?.pageSize}
+          total={nftTransfers?.total}
+        />
+      ),
+    }
   ];
 
   function hex2a(hexx) {
@@ -143,10 +244,10 @@ export default function NftClass({ node, NFTClass, NFTInstance }) {
   }
 
   let status = "Active";
-  if (NFTInstance?.details?.isFrozen) {
+  if (nftInstance?.details?.isFrozen) {
     status = "Frozen";
   }
-  if (NFTInstance.destroyedAt) {
+  if (nftInstance?.isDestroyed) {
     status = "Destroyed";
   }
 
@@ -157,17 +258,27 @@ export default function NftClass({ node, NFTClass, NFTInstance }) {
 
   return (
     <Layout node={node}>
+      <div ref={ref}>
+        <MyModal open={showModal} size="tiny">
+          <Preview
+            nftClass={previewNFTInstance?.class}
+            nftInstance={previewNFTInstance}
+            closeFn={()=>{setShowModal(false)}}
+          />
+        </MyModal>
+      </div>
+
       <Section>
         <div>
           <Nav
             data={[
               { name: "NFT", path: `/nft` },
               {
-                name: `Class ${NFTInstance.classId}`,
-                path: `/nft/classes/${NFTInstance.classId}`,
+                name: `Class ${nftInstance?.classId}`,
+                path: `/nft/classes/${nftInstance?.classId}`,
               },
               { name: `Instance` },
-              { name: NFTInstance?.instanceId },
+              { name: nftInstance?.instanceId },
             ]}
             node={node}
           />
@@ -180,15 +291,15 @@ export default function NftClass({ node, NFTClass, NFTInstance }) {
             <DetailTable
               head={["ClassId", ...NFTInstanceHead]}
               body={[
-                <MinorText key="1">{NFTInstance?.classId}</MinorText>,
-                <MinorText key="2">{NFTInstance?.instanceId}</MinorText>,
+                <MinorText key="1">{nftInstance?.classId}</MinorText>,
+                <MinorText key="2">{nftInstance?.instanceId}</MinorText>,
                 <MinorText key="3">
-                  {time(NFTInstance?.indexer?.blockTime)}
+                  {time(nftInstance?.indexer?.blockTime)}
                 </MinorText>,
-                <CopyText key="4" text={NFTInstance?.details?.owner}>
+                <CopyText key="4" text={nftInstance?.details?.owner}>
                   <Address
-                    address={NFTInstance?.details?.owner}
-                    to={`/account/${NFTInstance?.details?.owner}`}
+                    address={nftInstance?.details?.owner}
+                    to={`/account/${nftInstance?.details?.owner}`}
                   />
                 </CopyText>,
                 status === "Active" ? undefined : (
@@ -216,7 +327,7 @@ export default function NftClass({ node, NFTClass, NFTInstance }) {
           data={tabTableData}
           activeTab={tab}
           collapse={900}
-          query={{ nftClass: NFTInstance.classId }}
+          query={{ nftClass: nftInstance?.classId }}
         />
       </Section>
     </Layout>
@@ -226,15 +337,40 @@ export default function NftClass({ node, NFTClass, NFTInstance }) {
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const { nftClass: classId, id: instanceId } = context.query;
-  const { result: NFTClass } = await nextApi.fetch(`nftclasses/${classId}`);
-  const { result: NFTInstance } = await nextApi.fetch(
-    `nftclasses/${classId}/instances/${instanceId}`
-  );
+  const [
+    { result: nftClass },
+    { result: nftInstance },
+  ] = await Promise.all([
+    nextApi.fetch(`nftclasses/${classId}`),
+    nextApi.fetch(
+      `nftclasses/${classId}/instances/${instanceId}`
+    ),
+  ]);
+  if (!nftClass || !nftInstance) {
+    return {
+      props: {
+        node,
+        nftClass: null,
+        nftInstance: null,
+        nftTransfers: EmptyQuery,
+      }
+    };
+  }
+
+  const { classHeight, indexer: { blockHeight: instanceHeight } } = nftInstance;
+  const [
+    { result: nftTransfers },
+  ] = await Promise.all([
+    nextApi.fetch(
+      `nftclasses/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`
+    ),
+  ]);
   return {
     props: {
       node,
-      NFTClass,
-      NFTInstance,
+      nftClass: nftClass,
+      nftInstance: nftInstance,
+      nftTransfers: nftTransfers ?? EmptyQuery,
     },
   };
 }

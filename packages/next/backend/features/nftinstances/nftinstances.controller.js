@@ -6,6 +6,7 @@ const {
   getInstanceAttributeCollection,
   getInstanceTimelineCollection,
   getNftMetadataCollection,
+  getNftTransferCollection,
 }  = require("../../mongo");
 
 async function getNftMetadata(nftObj) {
@@ -247,9 +248,48 @@ async function getNftInstance(ctx) {
   };
 }
 
+async function getNftInstanceTransfers(ctx) {
+  const { classId, classHeight, instanceId, instanceHeight } = ctx.params;
+
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const transferCol = await getNftTransferCollection();
+  const q = {
+    classId: parseInt(classId),
+    classHeight: parseInt(classHeight),
+    instanceId: parseInt(instanceId),
+    instanceHeight: parseInt(instanceHeight),
+  };
+  const items = await transferCol.aggregate([
+    { $match: q },
+    {
+      $sort: {
+        "indexer.blockHeight": -1,
+      },
+    },
+    { $skip: page * pageSize },
+    { $limit: pageSize },
+  ]).toArray();
+
+  const total = await transferCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
+
 module.exports = {
   getNftInstancesByClassId,
   getNftInstancesByClass,
   getNftInstanceById,
   getNftInstance,
+  getNftInstanceTransfers,
 };

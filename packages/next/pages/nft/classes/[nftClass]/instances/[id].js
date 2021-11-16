@@ -357,7 +357,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const { classHeight, instanceHeight } = nftInstance;
+  const { classHeight, indexer: { blockHeight: instanceHeight } } = nftInstance;
   const [
     { result: nftTransfers },
   ] = await Promise.all([

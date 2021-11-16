@@ -194,7 +194,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
         ),
     },
     {
-      name: "NFT Transfer",
+      name: "Transfers",
       page: nftTransfers?.page,
       total: nftTransfers?.total,
       head: NFTTransferHead,

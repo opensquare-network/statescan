@@ -156,7 +156,6 @@ export default function NftClass({ node, nftClass, nftInstances }) {
     setShowModal(false);
   });
   const tab = {};
-  const imageThumbnail = nftClass?.nftMetadata?.imageThumbnail;
 
   const tabTableData = [
     {
@@ -172,13 +171,19 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           {instance.instanceId}
         </InLink>,
         <Thumbnail
-          imageThumbnail={imageThumbnail}
+          imageThumbnail={
+            instance.nftMetadata?.imageThumbnail ??
+            nftClass?.nftMetadata?.imageThumbnail
+          }
           key={`thumbnail${index}`}
           onClick={() => {
             setPreviewNFTInstance(instance);
             setShowModal(true);
           }}
-          background={nftClass?.nftMetadata?.imageMetadata?.background}
+          background={
+            instance?.nftMetadata?.imageMetadata?.background ??
+            nftClass?.nftMetadata?.imageMetadata?.background
+          }
         />,
         <InLink
           key={`name-${index}`}

@@ -6,6 +6,7 @@ const Name = styled.span`
   font-weight: normal;
   font-size: 14px;
   line-height: 20px;
+  word-break: break-all;
   ${(props) =>
     props.unrecognized
       ? css`

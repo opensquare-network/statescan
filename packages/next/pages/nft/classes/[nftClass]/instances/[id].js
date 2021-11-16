@@ -84,6 +84,7 @@ const Between = styled.div`
     margin-right: 24px;
     border: none;
     box-shadow: none;
+    flex-grow: 1;
   }
 
   img {

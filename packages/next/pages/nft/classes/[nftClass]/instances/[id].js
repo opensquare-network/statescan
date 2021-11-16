@@ -84,6 +84,7 @@ const Between = styled.div`
     margin-right: 24px;
     border: none;
     box-shadow: none;
+    flex-grow: 1;
   }
 
   img {
@@ -193,7 +194,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
         ),
     },
     {
-      name: "NFT Transfer",
+      name: "Transfers",
       page: nftTransfers?.page,
       total: nftTransfers?.total,
       head: NFTTransferHead,

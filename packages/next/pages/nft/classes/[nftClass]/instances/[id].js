@@ -310,16 +310,16 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { nftClass: classId, id: instanceId, page } = context.query;
+  const { nftClass: paramClassId, id: paramInstanceId, page } = context.query;
   const nPage = parseInt(page) || 1;
 
   const [
     { result: nftClass },
     { result: nftInstance },
   ] = await Promise.all([
-    nextApi.fetch(`nftclasses/${classId}`),
+    nextApi.fetch(`nftclasses/${paramClassId}`),
     nextApi.fetch(
-      `nftclasses/${classId}/instances/${instanceId}`
+      `nftclasses/${paramClassId}/instances/${paramInstanceId}`
     ),
   ]);
   if (!nftClass || !nftInstance) {
@@ -333,7 +333,14 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const { classHeight, indexer: { blockHeight: instanceHeight } } = nftInstance;
+  const {
+    classId,
+    classHeight,
+    instanceId,
+    indexer: {
+      blockHeight: instanceHeight
+    }
+  } = nftInstance;
   const [
     { result: nftTransfers },
   ] = await Promise.all([

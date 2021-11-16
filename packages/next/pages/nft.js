@@ -56,6 +56,17 @@ export default function NftClasses({ node, nfts, filter }) {
     setShowModal(false);
   });
 
+  const getStatus = (nftObject) => {
+    let status = "Active";
+    if (nftObject?.details?.isFrozen) {
+      status = "Frozen";
+    }
+    if (nftObject?.isDestroyed) {
+      status = "Destroyed";
+    }
+    return status;
+  }
+
   return (
     <Layout node={node}>
       <div ref={ref}>
@@ -108,7 +119,7 @@ export default function NftClasses({ node, nfts, filter }) {
             </TextDarkMinor>,
             <Status
               key={`status-${index}`}
-              status={nftClass.details?.isFroze ? "Frozen" : "Active"}
+              status={getStatus(nftClass)}
             />,
           ])}
           foot={

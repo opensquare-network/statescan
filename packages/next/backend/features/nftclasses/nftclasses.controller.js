@@ -156,7 +156,7 @@ async function getNftClasses(ctx) {
   // Return active classes by default
   const statusQuery = { isDestroyed: false };
   if (status === "all") {
-    statusQuery.isDestroyed = undefined;
+    delete statusQuery.isDestroyed;
   }
   if (status === "destroyed") {
     statusQuery.isDestroyed = true;

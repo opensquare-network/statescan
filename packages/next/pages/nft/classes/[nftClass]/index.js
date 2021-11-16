@@ -353,11 +353,17 @@ export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const { nftClass: classId, page } = context.query;
   const nPage = parseInt(page) || 1;
-  const { result: nftClass } = await nextApi.fetch(`nftclasses/${classId}`);
-  const { result: nftInstances } = await nextApi.fetch(
-    `nftclasses/${classId}/instances`,
-    { page: nPage - 1, pageSize: 25 }
-  );
+
+  const [
+    { result: nftClass },
+    { result: nftInstances }
+  ] = await Promise.all([
+    nextApi.fetch(`nftclasses/${classId}`),
+    nextApi.fetch(
+      `nftclasses/${classId}/instances`,
+      { page: nPage - 1, pageSize: 25 }
+    ),
+  ]);
 
   return {
     props: {

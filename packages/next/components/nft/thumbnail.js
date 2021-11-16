@@ -29,14 +29,14 @@ export default function Thumbnail({
   imageThumbnail,
   background,
   size = 32,
-  onClick = false,
+  onClick,
 }) {
   return imageThumbnail ? (
     <ThumbnailContainer size={size} onClick={onClick} background={background}>
       <img width={size} src={imageThumbnail} alt="" />
     </ThumbnailContainer>
   ) : (
-    <Wrapper onClick={onClick}>
+    <Wrapper onClick={onClick ?? (()=>{})}>
       <NFTUnrecognizedThumbnailSvg
         width={size}
         height={size}

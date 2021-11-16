@@ -4,6 +4,9 @@ import { useTheme } from "utils/hooks";
 
 const StyledLink = styled.a`
   color: ${(p) => p.themecolor};
+  :hover {
+    color: ${(p) => p.themecolor};
+  }
   cursor: pointer;
   text-decoration: none;
 `;

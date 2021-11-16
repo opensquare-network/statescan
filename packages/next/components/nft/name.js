@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import { useTheme } from "utils/hooks";
 
 const Name = styled.span`
   font-style: normal;
@@ -21,10 +20,8 @@ const Name = styled.span`
 `;
 
 export default function NftName({ name }) {
-  const theme = useTheme();
-
   return (
-    <Name color={theme?.color} unrecognized={name}>
+    <Name unrecognized={name}>
       {name || "[Unrecognized]"}
     </Name>
   );

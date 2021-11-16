@@ -21,10 +21,7 @@ import NoData from "../../../../../components/table/noData";
 import Thumbnail from "components/nft/thumbnail";
 import AddressEllipsis from "components/addressEllipsis";
 import NftName from "components/nft/name";
-import { useRef, useState } from "react";
-import Preview from "components/nft/preview";
 import { Modal } from "semantic-ui-react";
-import { useOnClickOutside } from "utils/hooks";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { text_dark_major, text_dark_minor } from "styles/textStyles";
@@ -135,18 +132,6 @@ const TextDarkMinor = styled.span`
 `
 
 export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) {
-  const [showModal, setShowModal] = useState(false);
-  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
-  const ref = useRef();
-
-  useOnClickOutside(ref, (event) => {
-    // exclude manually
-    if (document?.querySelector(".modal")?.contains(event.target)) {
-      return;
-    }
-    setShowModal(false);
-  });
-
   const name = (nftInstance.nftMetadata ?? nftClass.nftMetadata)?.name;
   const imageThumbnail = nftInstance.nftMetadata?.image
     ? nftInstance.nftMetadata.imageThumbnail
@@ -215,19 +200,10 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
           </NftLink>,
           <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
-            onClick={() => {
-              setPreviewNFTInstance(nftInstance);
-              setShowModal(true);
-            }}
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <NftLink
-              nftClass={nftClass}
-              nftInstance={nftInstance}
-            >
-              <NftName name={name} />
-            </NftLink>
+            <NftName name={name} />
           </TextDark>,
           <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />,
           <AddressEllipsis key={`to-${index}`} address={item.to} to={`/account/${item.to}`} />,
@@ -266,16 +242,6 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
 
   return (
     <Layout node={node}>
-      <div ref={ref}>
-        <MyModal open={showModal} size="tiny">
-          <Preview
-            nftClass={previewNFTInstance?.class}
-            nftInstance={previewNFTInstance}
-            closeFn={()=>{setShowModal(false)}}
-          />
-        </MyModal>
-      </div>
-
       <Section>
         <div>
           <Nav

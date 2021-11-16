@@ -16,7 +16,7 @@ const Name = styled.span`
           color: rgba(17, 17, 17, 0.65);
         `};
   :hover {
-    color: ${(props) => props.color ?? "inherit"};
+    color: inherit;
   }
 `;
 

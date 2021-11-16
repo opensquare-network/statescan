@@ -7,7 +7,6 @@ import Section from "components/section";
 import MinorText from "components/minorText";
 import AddressEllipsis from "components/addressEllipsis";
 import { time } from "utils";
-import InLink from "components/inLink";
 import Address from "components/address";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
@@ -32,6 +31,7 @@ import { Modal } from "semantic-ui-react";
 import { useOnClickOutside } from "../../../../utils/hooks";
 import { useRef, useState } from "react";
 import { shadow_100 } from "../../../../styles/shadows";
+import NftLink from "components/nft/nftLink";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -164,12 +164,13 @@ export default function NftClass({ node, nftClass, nftInstances }) {
       total: nftInstances?.total,
       head: NFTClassInstanceHead,
       body: (nftInstances?.items || []).map((instance, index) => [
-        <InLink
+        <NftLink
           key={`id${index}`}
-          to={`/nft/classes/${nftClass?.classId}/instances/${instance.instanceId}`}
+          nftClass={nftClass}
+          nftInstance={instance}
         >
           {instance.instanceId}
-        </InLink>,
+        </NftLink>,
         <Thumbnail
           imageThumbnail={
             instance.nftMetadata?.imageThumbnail ??
@@ -181,29 +182,30 @@ export default function NftClass({ node, nftClass, nftInstances }) {
             setShowModal(true);
           }}
           background={
-            instance?.nftMetadata?.imageMetadata?.background ??
+            instance.nftMetadata?.imageMetadata?.background ??
             nftClass?.nftMetadata?.imageMetadata?.background
           }
         />,
-        <InLink
+        <NftLink
           key={`name-${index}`}
-          to={`/nft/classes/${nftClass?.classId}/instances/${instance.instanceId}`}
+          nftClass={nftClass}
+          nftInstance={instance}
         >
           <NftName
-            name={instance?.nftMetadata?.name ?? nftClass?.nftMetadata?.name}
+            name={instance.nftMetadata?.name ?? nftClass?.nftMetadata?.name}
           />
-        </InLink>,
+        </NftLink>,
         <TextDarkMinor key={`time-${index}`}>
-          {time(instance?.indexer?.blockTime)}
+          {time(instance.indexer?.blockTime)}
         </TextDarkMinor>,
         <AddressEllipsis
           key={`owner-${index}`}
-          address={instance?.details?.owner}
-          to={`/account/${instance?.details?.owner}`}
+          address={instance.details?.owner}
+          to={`/account/${instance.details?.owner}`}
         />,
         <Status
           key={`status-${index}`}
-          status={instance?.details?.isFrozen ? "Frozen" : "Active"}
+          status={instance.details?.isFrozen ? "Frozen" : "Active"}
         />,
       ]),
       foot: (

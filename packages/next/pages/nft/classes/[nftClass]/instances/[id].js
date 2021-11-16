@@ -28,6 +28,7 @@ import { useOnClickOutside } from "utils/hooks";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { text_dark_major, text_dark_minor } from "styles/textStyles";
+import NftLink from "components/nft/nftLink";
 
 const MyModal = styled(Modal)`
   > div {
@@ -145,6 +146,14 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
     setShowModal(false);
   });
 
+  const name = (nftInstance.nftMetadata ?? nftClass.nftMetadata)?.name;
+  const imageThumbnail = nftInstance.nftMetadata?.image
+    ? nftInstance.nftMetadata.imageThumbnail
+    : nftClass.nftMetadata?.imageThumbnail;
+  const background = nftInstance.nftMetadata?.image
+    ? nftInstance.nftMetadata.imageMetadata?.background
+    : nftClass.nftMetadata?.imageMetadata?.background;
+
   const tab = {};
   const nftMetadata = nftInstance?.nftMetadata
     ? nftInstance?.nftMetadata
@@ -189,14 +198,6 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
       total: nftTransfers?.total,
       head: NFTTransferHead,
       body: (nftTransfers?.items || []).map((item, index) => {
-        const name = (nftInstance.nftMetadata ?? nftClass.nftMetadata)?.name;
-        const imageThumbnail = nftInstance.nftMetadata?.image
-          ? nftInstance.nftMetadata.imageThumbnail
-          : nftClass.nftMetadata?.imageThumbnail;
-        const background = instance.nftMetadata?.image
-          ? instance.nftMetadata.imageMetadata?.background
-          : instance.class.nftMetadata?.imageMetadata?.background;
-
         return [
           <InLink
             key={index}
@@ -204,12 +205,13 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
           >
             {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.extrinsicIndex}`}
           </InLink>,
-          <InLink
+          <NftLink
             key={`instance${index}`}
-            to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
+            nftClass={nftClass}
+            nftInstance={nftInstance}
           >
             {`${item.classId}-${item.instanceId}`}
-          </InLink>,
+          </NftLink>,
           <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
             onClick={() => {
@@ -219,11 +221,12 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-          <InLink
-            to={`/nft/classes/${item.classId}/instances/${item.instanceId}`}
-          >
-            <NftName name={name} />
-          </InLink>
+            <NftLink
+              nftClass={nftClass}
+              nftInstance={nftInstance}
+            >
+              <NftName name={name} />
+            </NftLink>
           </TextDark>,
           <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />,
           <AddressEllipsis key={`to-${index}`} address={item.to} to={`/account/${item.to}`} />,

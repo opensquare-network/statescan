@@ -4,7 +4,7 @@ import Address from "../address";
 import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
 import NFTImage from "./NFTImage";
-import { Button } from "semantic-ui-react";
+import NftLink from "./nftLink";
 
 const Wrapper = styled.div`
   display: flex;
@@ -107,15 +107,12 @@ export default function Preview({ nftClass, nftInstance, closeFn }) {
 
       <ButtonWrapper>
         <button onClick={closeFn}>Close</button>
-        {nftInstance ? (
-          <a
-            href={`/nft/classes/${nftInstance?.classId}/instances/${nftInstance.instanceId}`}
-          >
-            Detail
-          </a>
-        ) : (
-          <a href={`/nft/classes/${nftClass?.classId}`}>Detail</a>
-        )}
+        <NftLink
+          nftClass={nftClass}
+          nftInstance={nftInstance}
+        >
+          Detail
+        </NftLink>
       </ButtonWrapper>
     </Wrapper>
   );

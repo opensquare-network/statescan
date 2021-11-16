@@ -6,7 +6,6 @@ import { nftsHead } from "utils/constants";
 import Pagination from "components/pagination";
 import Filter from "../components/filter";
 import Status from "../components/status";
-import InLink from "../components/inLink";
 import { ssrNextApi as nextApi } from "../services/nextApi";
 import { time } from "../utils";
 import { Modal } from "semantic-ui-react";
@@ -17,6 +16,7 @@ import Preview from "../components/nft/preview";
 import { text_dark_minor } from "../styles/textStyles";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
+import NftLink from "components/nft/nftLink";
 
 const MyModal = styled(Modal)`
   > div {
@@ -74,9 +74,12 @@ export default function NftClasses({ node, nfts, filter }) {
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
-            <InLink key={`id${index}`} to={`/nft/classes/${nftClass.classId}`}>
+            <NftLink
+              key={`id${index}`}
+              nftClass={nftClass}
+            >
               {nftClass.classId}
-            </InLink>,
+            </NftLink>,
             <Thumbnail
               key={`thumbnail${index}`}
               imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
@@ -86,12 +89,12 @@ export default function NftClasses({ node, nfts, filter }) {
                 setShowModal(true);
               }}
             />,
-            <InLink
+            <NftLink
               key={`name${index}`}
-              to={`/nft/classes/${nftClass.classId}`}
+              nftClass={nftClass}
             >
               <NftName name={nftClass?.nftMetadata?.name} />
-            </InLink>,
+            </NftLink>,
             <TextDarkMinor key={`time-${index}`}>
               {time(nftClass?.indexer?.blockTime)}
             </TextDarkMinor>,

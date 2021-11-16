@@ -26,6 +26,8 @@ import Preview from "components/nft/preview";
 import { Modal } from "semantic-ui-react";
 import { useOnClickOutside } from "utils/hooks";
 import Pagination from "components/pagination";
+import InLink from "components/inLink";
+import { text_dark_major, text_dark_minor } from "styles/textStyles";
 
 const MyModal = styled(Modal)`
   > div {
@@ -121,6 +123,14 @@ const RowItem = styled.div`
   width: 100%;
   line-height: 20px;
 `;
+
+const TextDark = styled.span`
+  ${text_dark_major};
+`
+
+const TextDarkMinor = styled.span`
+  ${text_dark_minor};
+`
 
 export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) {
   const [showModal, setShowModal] = useState(false);

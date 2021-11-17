@@ -5,6 +5,7 @@ const {
   getAssetTransferCollection,
   getAssetCollection,
   getAddressCollection,
+  getNftClassCollection,
 } = require("../mongo");
 const { getLatestBlocks } = require("../common/latestBlocks");
 
@@ -30,6 +31,7 @@ async function calcOverview() {
   const transferCol = await getAssetTransferCollection();
   const addressCol = await getAddressCollection();
   const assetCol = await getAssetCollection();
+  const nftClassCol = await getNftClassCollection();
 
   // Load latest 5 blocks
   const latestBlocks = await getLatestBlocks(5);
@@ -77,6 +79,31 @@ async function calcOverview() {
     .limit(5)
     .toArray();
 
+  const popularNftClasses = await nftClassCol.aggregate([
+    {
+      $lookup: {
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
+      }
+    },
+    {
+      $addFields: {
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0]
+        }
+      }
+    },
+    {
+      $sort: {
+        "nftMetadata.recognized": -1,
+        "details.instances": -1,
+      }
+    },
+    { $limit: 5 },
+  ]).toArray();
+
   // Calculate counts
   const assetsCount = await assetCol.countDocuments();
   const holdersCount = await addressCol.countDocuments({
@@ -88,6 +115,7 @@ async function calcOverview() {
     latestBlocks,
     latestTransfers,
     popularAssets,
+    popularNftClasses,
     assetsCount,
     holdersCount,
     transfersCount,

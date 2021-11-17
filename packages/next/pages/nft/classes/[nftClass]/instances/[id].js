@@ -25,6 +25,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { text_dark_major, text_dark_minor } from "styles/textStyles";
 import NftLink from "components/nft/nftLink";
+import PageNotFound from "components/pageNotFound";
 
 
 const Between = styled.div`
@@ -111,13 +112,21 @@ const TextDarkMinor = styled.span`
 `
 
 export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) {
-  const name = (nftInstance.nftMetadata ?? nftClass.nftMetadata)?.name;
-  const imageThumbnail = nftInstance.nftMetadata?.image
+  if (!nftClass || !nftInstance) {
+    return (
+      <Layout node={node}>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
+  const name = (nftInstance?.nftMetadata ?? nftClass?.nftMetadata)?.name;
+  const imageThumbnail = nftInstance?.nftMetadata?.image
     ? nftInstance.nftMetadata.imageThumbnail
-    : nftClass.nftMetadata?.imageThumbnail;
-  const background = nftInstance.nftMetadata?.image
+    : nftClass?.nftMetadata?.imageThumbnail;
+  const background = nftInstance?.nftMetadata?.image
     ? nftInstance.nftMetadata.imageMetadata?.background
-    : nftClass.nftMetadata?.imageMetadata?.background;
+    : nftClass?.nftMetadata?.imageMetadata?.background;
 
   const tab = {};
   const nftMetadata = nftInstance?.nftMetadata

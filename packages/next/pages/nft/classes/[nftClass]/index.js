@@ -31,6 +31,7 @@ import { useOnClickOutside } from "../../../../utils/hooks";
 import { useRef, useState } from "react";
 import { shadow_100 } from "../../../../styles/shadows";
 import NftLink from "components/nft/nftLink";
+import PageNotFound from "components/pageNotFound";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -134,6 +135,15 @@ export default function NftClass({ node, nftClass, nftInstances }) {
     }
     setShowModal(false);
   });
+
+  if (!nftClass) {
+    return (
+      <Layout node={node}>
+        <PageNotFound />
+      </Layout>
+    );
+  }
+
   const tab = {};
 
   const tabTableData = [

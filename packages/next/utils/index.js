@@ -1,7 +1,7 @@
 import moment from "moment";
 import BigNumber from "bignumber.js";
 
-BigNumber.config({EXPONENTIAL_AT: 36});
+BigNumber.config({ EXPONENTIAL_AT: 36 });
 
 export const encodeURIQuery = (q) =>
   Object.keys(q)
@@ -133,24 +133,24 @@ export function fromAssetUnit(value, decimals) {
 export function abbreviateBigNumber(x) {
   const n = new BigNumber(x);
   const fmt = {
-    decimalSeparator: '.',
-    groupSeparator: ',',
+    decimalSeparator: ".",
+    groupSeparator: ",",
     groupSize: 3,
   };
   let divideBy = new BigNumber("1");
   const bigNumbers = [
-    {bigNumber: new BigNumber("1000000000"), abbr:"B"},
-    {bigNumber: new BigNumber("1000000000000"), abbr:"T"},
-    {bigNumber: new BigNumber("1000000000000000"), abbr:"Q"},
-  ]
-  bigNumbers.forEach(data => {
+    { bigNumber: new BigNumber("1000000000"), abbr: "B" },
+    { bigNumber: new BigNumber("1000000000000"), abbr: "T" },
+    { bigNumber: new BigNumber("1000000000000000"), abbr: "Q" },
+  ];
+  bigNumbers.forEach((data) => {
     if (n.isGreaterThan(data.bigNumber)) {
       divideBy = data.bigNumber;
       fmt.suffix = data.abbr;
     }
-  })
-  BigNumber.config({FORMAT: fmt});
-  return (new BigNumber(n.dividedBy(divideBy).toFixed(0))).toFormat();
+  });
+  BigNumber.config({ FORMAT: fmt });
+  return new BigNumber(n.dividedBy(divideBy).toFixed(0)).toFormat();
 }
 
 export function bigNumber2Locale(x) {
@@ -176,4 +176,15 @@ export function makeTablePairs(keys, vals) {
 
 export function isNoIdentity(identity) {
   return !identity || identity?.info?.status === "NO_ID";
+}
+
+export function getNftStatus(nftObject) {
+  let status = "Active";
+  if (nftObject?.details?.isFrozen) {
+    status = "Frozen";
+  }
+  if (nftObject?.isDestroyed) {
+    status = "Destroyed";
+  }
+  return status;
 }

@@ -114,6 +114,11 @@ export default function Filter({ total, data, allmodulemethods }) {
   const [show, setShow] = useState(false);
   const { width } = useWindowSize();
   const router = useRouter();
+
+  useEffect(() => {
+    setSelectData(data);
+  }, [router, data]);
+
   useEffect(() => {
     if (width > 1100) {
       setShow(false);

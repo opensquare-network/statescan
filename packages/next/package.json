@@ -29,6 +29,7 @@
     "koa-router": "^10.0.0",
     "lodash": "^4.17.21",
     "lodash.omit": "^4.5.0",
+    "lodash.pick": "^4.4.0",
     "moment": "^2.29.1",
     "mongodb": "4.1.2",
     "next": "^11.1.1",

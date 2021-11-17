@@ -506,7 +506,7 @@ export default function Address({
             ]}
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} />
+        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={["id"]} />
       </Section>
     </Layout>
   );

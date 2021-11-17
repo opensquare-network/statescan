@@ -329,7 +329,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           data={tabTableData}
           activeTab={tab}
           collapse={900}
-          query={{ nftClass: nftClass?.classId }}
+          query={["nftClass"]}
         />
       </Section>
     </Layout>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 
 import Layout from "components/layout";
 import Overview from "components/overview";
@@ -15,11 +15,13 @@ import {
   fromSymbolUnit,
   time,
   timeDuration,
+  getNftStatus,
 } from "utils";
 import {
   blocksLatestHead,
   transfersLatestHead,
   assetsHead,
+  nftsHead,
 } from "utils/constants";
 import { getSymbol, useWindowSize } from "utils/hooks";
 import { useSelector } from "react-redux";
@@ -33,6 +35,13 @@ import AddressCounts from "../components/block/addressCounts";
 import AmountFromTo from "../components/transfer/amountFromTo";
 import Name from "../components/account/name";
 import Tooltip from "../components/tooltip";
+import NftLink from "components/nft/nftLink";
+import Thumbnail from "components/nft/thumbnail";
+import NftName from "components/nft/name";
+import { text_dark_minor } from "styles/textStyles";
+import Status from "components/status";
+import Preview from "components/nft/preview";
+import { useOnClickOutside } from "utils/hooks";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -57,15 +66,22 @@ const FootWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
 const FlexWrapper = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const TextDarkMinor = styled.span`
+  ${text_dark_minor};
 `;
 
 export default function Home({ node, overview: ssrOverview, price }) {
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
   const [currentTime, setTime] = useState(Date.now());
+  const [previewNFTClass, setPreviewNFTCLass] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     connect();
     const interval = setInterval(() => setTime(Date.now()), 1000);
@@ -73,6 +89,16 @@ export default function Home({ node, overview: ssrOverview, price }) {
       clearInterval(interval);
     };
   }, []);
+
+  const ref = useRef();
+
+  useOnClickOutside(ref, (event) => {
+    // exclude manually
+    if (document?.querySelector(".modal")?.contains(event.target)) {
+      return;
+    }
+    setShowModal(false);
+  });
 
   const overview = pushedOverview || ssrOverview;
 
@@ -229,6 +255,15 @@ export default function Home({ node, overview: ssrOverview, price }) {
 
   return (
     <Layout node={node}>
+      <div ref={ref}>
+        <Preview
+          open={showModal}
+          nftClass={previewNFTClass}
+          closeFn={() => {
+            setShowModal(false);
+          }}
+        />
+      </div>
       <Wrapper>
         <Overview node={node} overviewData={overview} price={price} />
         <TableWrapper>
@@ -302,6 +337,45 @@ export default function Home({ node, overview: ssrOverview, price }) {
           }
           collapse={collapseSize}
         />
+        <Table
+          title="NFT"
+          head={nftsHead}
+          body={(overview?.popularNftClasses || []).map((nftClass, index) => [
+            <NftLink key={`id${index}`} nftClass={nftClass}>
+              {nftClass.classId}
+            </NftLink>,
+            <Thumbnail
+              key={`thumbnail${index}`}
+              imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
+              background={nftClass?.nftMetadata?.imageMetadata?.background}
+              onClick={() => {
+                setPreviewNFTCLass(nftClass);
+                setShowModal(true);
+              }}
+            />,
+            <NftLink key={`name${index}`} nftClass={nftClass}>
+              <NftName name={nftClass?.nftMetadata?.name} />
+            </NftLink>,
+            <TextDarkMinor key={`time-${index}`}>
+              {time(nftClass?.indexer?.blockTime)}
+            </TextDarkMinor>,
+            <AddressEllipsis
+              key={`owner-${index}`}
+              address={nftClass.details?.owner}
+              to={`/account/${nftClass.details?.owner}`}
+            />,
+            <TextDarkMinor key={`instance-${index}`}>
+              {nftClass.details?.instances}
+            </TextDarkMinor>,
+            <Status key={`status-${index}`} status={getNftStatus(nftClass)} />,
+          ])}
+          foot={
+            <FootWrapper>
+              <InLink to={`/nft`}>View all</InLink>
+            </FootWrapper>
+          }
+          collapse={collapseSize}
+        />
       </Wrapper>
     </Layout>
   );
@@ -318,6 +392,7 @@ export async function getServerSideProps() {
     { result: transfersCount },
     { result: holdersCount },
     { result: price },
+    { result: popularNftClasses },
   ] = await Promise.all([
     nextApi.fetch(`blocks/latest`),
     nextApi.fetch(`assets/popular`),
@@ -326,6 +401,7 @@ export async function getServerSideProps() {
     nextApi.fetch(`transfers/count`),
     nextApi.fetch(`holders/count`),
     nextApi.fetch(`${node}/prices/daily`),
+    nextApi.fetch(`nftclasses/popular`),
   ]);
 
   return {
@@ -338,6 +414,7 @@ export async function getServerSideProps() {
         assetsCount: assetsCount ?? 0,
         transfersCount: transfersCount ?? 0,
         holdersCount: holdersCount ?? 0,
+        popularNftClasses: popularNftClasses ?? [],
       },
       price: price ?? [],
     },

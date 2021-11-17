@@ -53,11 +53,11 @@ export const assetsHead = [
 export const nftsHead = [
   { name: "ID", width: 136 },
   { name: "Class", width: 100 },
-  { name: "Name", width: 332 },
+  { name: "Name" },
   { name: "Created Time", width: 200 },
   { name: "Owner", width: 152 },
   { name: "Instance", width: 120 },
-  { name: "Status" },
+  { name: "Status", width: 160 },
 ];
 
 export const addressExtrincsHead = [

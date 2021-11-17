@@ -7,7 +7,7 @@ import Pagination from "components/pagination";
 import Filter from "../components/filter";
 import Status from "../components/status";
 import { ssrNextApi as nextApi } from "../services/nextApi";
-import { time } from "../utils";
+import { time, getNftStatus } from "../utils";
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useOnClickOutside } from "../utils/hooks";
@@ -33,17 +33,6 @@ export default function NftClasses({ node, nfts, filter }) {
     }
     setShowModal(false);
   });
-
-  const getStatus = (nftObject) => {
-    let status = "Active";
-    if (nftObject?.details?.isFrozen) {
-      status = "Frozen";
-    }
-    if (nftObject?.isDestroyed) {
-      status = "Destroyed";
-    }
-    return status;
-  };
 
   return (
     <Layout node={node}>
@@ -88,7 +77,7 @@ export default function NftClasses({ node, nfts, filter }) {
             <TextDarkMinor key={`instance-${index}`}>
               {nftClass.details?.instances}
             </TextDarkMinor>,
-            <Status key={`status-${index}`} status={getStatus(nftClass)} />,
+            <Status key={`status-${index}`} status={getNftStatus(nftClass)} />,
           ])}
           foot={
             <Pagination

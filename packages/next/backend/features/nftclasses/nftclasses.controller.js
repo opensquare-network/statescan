@@ -266,8 +266,40 @@ async function getNftClass(ctx) {
   };
 }
 
+async function getPopularNftClasses(ctx) {
+  const col = await getNftClassCollection();
+
+  const items = await col.aggregate([
+    {
+      $lookup: {
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
+      }
+    },
+    {
+      $addFields: {
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0]
+        }
+      }
+    },
+    {
+      $sort: {
+        "nftMetadata.recognized": -1,
+        "details.instances": -1,
+      }
+    },
+    { $limit: 5 },
+  ]).toArray();
+
+  ctx.body = items;
+}
+
 module.exports = {
   getNftClasses,
   getNftClassById,
   getNftClass,
+  getPopularNftClasses,
 };

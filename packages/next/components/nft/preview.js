@@ -73,9 +73,8 @@ const ButtonWrapper = styled.div`
   margin-top: 8px;
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 16px;
   button {
     all: unset;
     border: 1px solid #dddddd;
@@ -90,6 +89,9 @@ const ButtonWrapper = styled.div`
     text-align: center;
     width: 230px;
     height: 42px;
+  }
+  > :not(:first-child) {
+    margin-left: 16px;
   }
 `;
 
@@ -134,10 +136,7 @@ export default function Preview({ open, nftClass, nftInstance, closeFn }) {
 
         <ButtonWrapper>
           <button onClick={closeFn}>Close</button>
-          <NftLink
-            nftClass={nftClass}
-            nftInstance={nftInstance}
-          >
+          <NftLink nftClass={nftClass} nftInstance={nftInstance}>
             Detail
           </NftLink>
         </ButtonWrapper>

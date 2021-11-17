@@ -43,7 +43,7 @@ export default function NftClasses({ node, nfts, filter }) {
       status = "Destroyed";
     }
     return status;
-  }
+  };
 
   return (
     <Layout node={node}>
@@ -62,10 +62,7 @@ export default function NftClasses({ node, nfts, filter }) {
         <Table
           head={nftsHead}
           body={(nfts?.items || []).map((nftClass, index) => [
-            <NftLink
-              key={`id${index}`}
-              nftClass={nftClass}
-            >
+            <NftLink key={`id${index}`} nftClass={nftClass}>
               {nftClass.classId}
             </NftLink>,
             <Thumbnail
@@ -77,10 +74,7 @@ export default function NftClasses({ node, nfts, filter }) {
                 setShowModal(true);
               }}
             />,
-            <NftLink
-              key={`name${index}`}
-              nftClass={nftClass}
-            >
+            <NftLink key={`name${index}`} nftClass={nftClass}>
               <NftName name={nftClass?.nftMetadata?.name} />
             </NftLink>,
             <TextDarkMinor key={`time-${index}`}>
@@ -94,10 +88,7 @@ export default function NftClasses({ node, nfts, filter }) {
             <TextDarkMinor key={`instance-${index}`}>
               {nftClass.details?.instances}
             </TextDarkMinor>,
-            <Status
-              key={`status-${index}`}
-              status={getStatus(nftClass)}
-            />,
+            <Status key={`status-${index}`} status={getStatus(nftClass)} />,
           ])}
           foot={
             <Pagination
@@ -128,7 +119,7 @@ export async function getServerSideProps(context) {
 
   const filter = [
     {
-      value: "",
+      value: recognized ?? "",
       name: "Category",
       query: "recognized",
       options: [
@@ -144,7 +135,7 @@ export async function getServerSideProps(context) {
       ],
     },
     {
-      value: "",
+      value: status ?? "",
       name: "Status",
       query: "status",
       options: [

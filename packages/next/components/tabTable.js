@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Table from "components/table";
 import { useTheme } from "utils/hooks";
 import { useEffect, useState } from "react";
+import pick from "lodash.pick";
 
 const TabWrapper = styled.div`
   display: flex;
@@ -70,7 +71,7 @@ const TabTag = styled.div`
   color: ${(p) => p.themecolor};
 `;
 
-export default function TabTable({ data, activeTab, collapse, query = {} }) {
+export default function TabTable({ data, activeTab, collapse, query = [] }) {
   const router = useRouter();
   const theme = useTheme();
   const activeTabIndex = data
@@ -97,8 +98,7 @@ export default function TabTable({ data, activeTab, collapse, query = {} }) {
               router.push(
                 {
                   query: {
-                    ...query,
-                    id: router.query.id,
+                    ...pick(router.query, query),
                     tab: item.name.toLowerCase(),
                     ...(item.page > 0 ? { page: item.page + 1 } : {}),
                   },

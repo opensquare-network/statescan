@@ -36,7 +36,7 @@ export default function Asset({
   if (!asset) {
     return (
       <Layout node={node}>
-        <PageNotFound />
+        <PageNotFound resource="asset"/>
       </Layout>
     );
   }

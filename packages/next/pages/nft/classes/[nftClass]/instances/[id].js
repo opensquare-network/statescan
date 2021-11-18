@@ -115,7 +115,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
   if (!nftClass || !nftInstance) {
     return (
       <Layout node={node}>
-        <PageNotFound />
+        <PageNotFound resource="NFT instance"/>
       </Layout>
     );
   }

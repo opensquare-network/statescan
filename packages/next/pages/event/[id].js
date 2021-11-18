@@ -37,7 +37,7 @@ export default function Block({ node, id, eventDetail }) {
   if (!eventDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound />
+        <PageNotFound resource="event"/>
       </Layout>
     );
   }

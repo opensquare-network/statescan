@@ -38,7 +38,7 @@ const Button = styled.div`
   cursor: pointer;
 `;
 
-export default function PageNotFound() {
+export default function PageNotFound({resource = "URL"}) {
   const router = useRouter();
   const node = useNode();
 
@@ -47,7 +47,7 @@ export default function PageNotFound() {
       <img src="/imgs/404.svg" alt="404" />
       <TextWrapper>
         <div>Page not found</div>
-        <div>The requested URL was not found in our server.</div>
+        <div>The requested {resource} not found in our server.</div>
       </TextWrapper>
       <Button
         onClick={() => {

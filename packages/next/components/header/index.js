@@ -143,6 +143,49 @@ const MenuItem = styled.div`
   }
 `;
 
+const menusBlockchain = [
+  {
+    name: "Blocks",
+    value: "blocks",
+  },
+  {
+    name: "Extrinsics",
+    value: "extrinsics",
+  },
+  {
+    name: "Events",
+    value: "events",
+  },
+  {
+    name: "Transfers",
+    value: "transfers",
+  },
+  {
+    name: "Teleports",
+    value: "teleports",
+  },
+  {
+    name: "Accounts",
+    value: "accounts",
+  },
+];
+
+const menusAssets = [
+  {
+    name: "Assets",
+    value: "assets",
+  },
+  {
+    name: "NFT",
+    value: "nft",
+  },
+  {
+    name: "Destroyed",
+    value: "",
+  }
+];
+
+
 export default function Header({ node }) {
   const router = useRouter();
   const isHomePage = useHomePage();
@@ -195,25 +238,10 @@ export default function Header({ node }) {
                   Home
                 </MenuItem>
               </Link>
-              <SubMenu closeMenu={() => setIsActive(false)} />
-              <Link href={`/assets`} passHref>
-                <MenuItem
-                  themecolor={theme.color}
-                  onClick={() => setIsActive(false)}
-                  selected={router.pathname === "/assets"}
-                >
-                  Assets
-                </MenuItem>
-              </Link>
-              <Link href={`/nft`} passHref>
-                <MenuItem
-                  themecolor={theme.color}
-                  onClick={() => setIsActive(false)}
-                  selected={router.pathname === "/nft"}
-                >
-                  NFT
-                </MenuItem>
-              </Link>
+              <SubMenu category="BlockChain" menus={menusBlockchain} closeMenu={() => setIsActive(false)} />
+              <SubMenu category="Assets" menus={menusAssets} closeMenu={() => setIsActive(false)}
+              divideIndex={1}
+              />
             </MenuWrapper>
           )}
         </FlexWrapper>

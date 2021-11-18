@@ -6,7 +6,7 @@ import Link from "next/link";
 import ArrowDown from "./arrow-down.svg";
 import { useWindowSize } from "utils/hooks";
 import { useTheme } from "utils/hooks";
-import { card_border } from "styles/textStyles";
+import { card_border, text_dark_placeholder } from "styles/textStyles";
 
 const Wrapper = styled.div`
   position: relative;
@@ -103,6 +103,13 @@ const MenuItem = styled.div`
     css`
       background: #fafafa;
     `}
+  ${(p) =>
+      p.disabled &&
+      css`
+        cursor: not-allowed;
+        ${text_dark_placeholder};
+        pointer-events: none;
+    `}
 `;
 
 const Divider = styled.div`
@@ -114,37 +121,11 @@ const Divider = styled.div`
   }
 `;
 
-const menus = [
-  {
-    name: "Blocks",
-    value: "blocks",
-  },
-  {
-    name: "Extrinsics",
-    value: "extrinsics",
-  },
-  {
-    name: "Events",
-    value: "events",
-  },
-  {
-    name: "Transfers",
-    value: "transfers",
-  },
-  {
-    name: "Teleports",
-    value: "teleports",
-  },
-  {
-    name: "Accounts",
-    value: "accounts",
-  },
-];
 
-export default function SubMenu({ closeMenu }) {
+export default function SubMenu({ category, menus, closeMenu, divideIndex=2 }) {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
-  const { width } = useWindowSize();
+  const {width} = useWindowSize();
   const ref = useRef();
   const theme = useTheme();
 
@@ -169,8 +150,8 @@ export default function SubMenu({ closeMenu }) {
   return (
     <Wrapper onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
       <TitleWrapper isActive={isActive} themecolor={theme.color}>
-        BlockChain
-        <ArrowDown />
+        {category}
+        <ArrowDown/>
       </TitleWrapper>
       {(isActive || width <= 900) && (
         <MouseWrapper>
@@ -184,11 +165,12 @@ export default function SubMenu({ closeMenu }) {
                       setIsActive(false);
                     }}
                     selected={router.pathname === `/${item.value}`}
+                    disabled={item.value === ""}
                   >
                     {item.name}
                   </MenuItem>
                 </Link>
-                {index === 2 && <Divider />}
+                {index === divideIndex && <Divider/>}
               </Fragment>
             ))}
           </MenuWrapper>

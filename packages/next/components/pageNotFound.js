@@ -47,7 +47,7 @@ export default function PageNotFound({resource = "URL"}) {
       <img src="/imgs/404.svg" alt="404" />
       <TextWrapper>
         <div>Page not found</div>
-        <div>The requested {resource} was not found in our server.</div>
+        <div>The requested {resource} not found in our server.</div>
       </TextWrapper>
       <Button
         onClick={() => {

@@ -98,7 +98,7 @@ export default function Address({
   if (!addressDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="account"/>
+        <PageNotFound resource="Account"/>
       </Layout>
     );
   }

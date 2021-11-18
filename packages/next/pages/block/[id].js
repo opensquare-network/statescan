@@ -53,7 +53,7 @@ export default function Block({
   if (!blockDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="block"/>
+        <PageNotFound resource="Block"/>
       </Layout>
     );
   }

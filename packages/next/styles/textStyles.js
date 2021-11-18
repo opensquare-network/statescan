@@ -33,6 +33,10 @@ export const text_dark_minor = css`
   color: rgba(17, 17, 17, 0.65);
 `;
 
+export const text_dark_placeholder = css`
+  color: rgba(17, 17, 17, 0.2);
+`;
+
 export const card_border = css`
   border: 1px solid rgb(244, 244, 244);
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),

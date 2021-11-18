@@ -6,6 +6,8 @@ import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
 import NFTImage from "./NFTImage";
 import NftLink from "./nftLink";
+import { useKeyPress } from "utils/hooks";
+import { useEffect } from "react";
 
 const MyModal = styled(Modal)`
   > div {
@@ -98,6 +100,14 @@ const ButtonWrapper = styled.div`
 export default function Preview({ open, nftClass, nftInstance, closeFn }) {
   const nftObject = nftInstance ?? nftClass;
   const nftMetadata = nftInstance?.nftMetadata ?? nftClass?.nftMetadata;
+
+  const pressEscape = useKeyPress("Escape");
+
+  useEffect(() => {
+    if (pressEscape) {
+      closeFn();
+    }
+  }, [pressEscape, closeFn]);
 
   return (
     <MyModal open={open} size="tiny">

@@ -139,7 +139,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
   if (!nftClass) {
     return (
       <Layout node={node}>
-        <PageNotFound />
+        <PageNotFound resource="NFT class"/>
       </Layout>
     );
   }

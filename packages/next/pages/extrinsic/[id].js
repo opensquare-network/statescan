@@ -49,7 +49,7 @@ export default function Extrinsic({
   if (!extrinsicDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="extrinsic"/>
+        <PageNotFound resource="Extrinsic"/>
       </Layout>
     );
   }

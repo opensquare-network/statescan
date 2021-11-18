@@ -112,7 +112,7 @@ export default function Address({
   const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img src={nodeInfo.icon} alt="" />;
+    sendAtCol.name = <img style={{position: "absolute", top: 12}} src={nodeInfo.icon} alt="" />;
   }
 
   const tabTableData = [

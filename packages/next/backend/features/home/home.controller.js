@@ -189,50 +189,6 @@ async function findNftClassesById({ prefix }) {
         }
       }
     },
-    {
-      $lookup: {
-        from: "nftClass",
-        let: { classId: "$classId" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $eq: ["$classId", "$$classId"],
-              }
-            }
-          },
-          {
-            $lookup: {
-              from: "nftMetadata",
-              localField: "dataHash",
-              foreignField: "dataHash",
-              as: "nftMetadata",
-            }
-          },
-          {
-            $addFields: {
-              nftMetadata: {
-                $arrayElemAt: [
-                  "$nftMetadata",
-                  0,
-                ],
-              }
-            }
-          },
-        ],
-        as: "nftClass",
-      }
-    },
-    {
-      $addFields: {
-        nftClass: {
-          $arrayElemAt: [
-            "$nftClass",
-            0,
-          ],
-        }
-      }
-    },
     { $project: { timeline: 0 } },
     { $sort: { "nftMetadata.name": 1 } },
     { $limit: 10 },
@@ -303,6 +259,53 @@ async function findNftInstancesByPrefix({ prefix, prefixPattern, isNum }) {
           { "nftMetadata.name": prefixPattern },
           ...(isNum ? [{ classId: Number(prefix) }] : []),
         ],
+      }
+    },
+    {
+      $lookup: {
+        from: "nftClass",
+        let: { classId: "$classId", classHeight: "$classHeight" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$classId", "$$classId"] },
+                  { $eq: ["$classHeight", "$$classHeight"] },
+                ],
+              }
+            }
+          },
+          {
+            $lookup: {
+              from: "nftMetadata",
+              localField: "dataHash",
+              foreignField: "dataHash",
+              as: "nftMetadata",
+            }
+          },
+          {
+            $addFields: {
+              nftMetadata: {
+                $arrayElemAt: [
+                  "$nftMetadata",
+                  0,
+                ],
+              }
+            }
+          },
+        ],
+        as: "class",
+      }
+    },
+    {
+      $addFields: {
+        class: {
+          $arrayElemAt: [
+            "$class",
+            0,
+          ],
+        }
       }
     },
     { $project: { timeline: 0 } },

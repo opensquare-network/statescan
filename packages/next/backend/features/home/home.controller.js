@@ -189,6 +189,50 @@ async function findNftClassesById({ prefix }) {
         }
       }
     },
+    {
+      $lookup: {
+        from: "nftClass",
+        let: { classId: "$classId" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $eq: ["$classId", "$$classId"],
+              }
+            }
+          },
+          {
+            $lookup: {
+              from: "nftMetadata",
+              localField: "dataHash",
+              foreignField: "dataHash",
+              as: "nftMetadata",
+            }
+          },
+          {
+            $addFields: {
+              nftMetadata: {
+                $arrayElemAt: [
+                  "$nftMetadata",
+                  0,
+                ],
+              }
+            }
+          },
+        ],
+        as: "nftClass",
+      }
+    },
+    {
+      $addFields: {
+        nftClass: {
+          $arrayElemAt: [
+            "$nftClass",
+            0,
+          ],
+        }
+      }
+    },
     { $project: { timeline: 0 } },
     { $sort: { "nftMetadata.name": 1 } },
     { $limit: 10 },

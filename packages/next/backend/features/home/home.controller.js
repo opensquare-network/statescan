@@ -145,26 +145,9 @@ async function findBlockByHashPrefix({ prefixPattern }) {
   ).toArray();
 }
 
-async function findNftClassesByPrefix({ prefix, prefixPattern, isNum }) {
-  const assetCol = await getAssetCollection();
-  return await assetCol.find(
-    {
-      $or: [
-        { name: prefixPattern },
-        { symbol: prefixPattern },
-        ...(isNum ? [{ assetId: Number(prefix) }] : []),
-      ],
-    },
-    { projection: { timeline: 0 } }
-  )
-  .sort({ name: 1 })
-  .limit(10)
-  .toArray();
-}
-
 async function findNftClassesById({ prefix }) {
-  const nftClasses = await getNftClassCollection();
-  return await nftClasses.aggregate([
+  const nftClassCol = await getNftClassCollection();
+  return await nftClassCol.aggregate([
     {
       $match: {
         classId: Number(prefix),
@@ -196,8 +179,8 @@ async function findNftClassesById({ prefix }) {
 }
 
 async function findNftClassesByPrefix({ prefix, prefixPattern, isNum }) {
-  const nftClasses = await getNftClassCollection();
-  return await nftClasses.aggregate([
+  const nftClassCol = await getNftClassCollection();
+  return await nftClassCol.aggregate([
     {
       $lookup: {
         from: "nftMetadata",
@@ -232,8 +215,8 @@ async function findNftClassesByPrefix({ prefix, prefixPattern, isNum }) {
 }
 
 async function findNftInstancesByPrefix({ prefix, prefixPattern, isNum }) {
-  const nftInstances = await getNftInstanceCollection();
-  return await nftInstances.aggregate([
+  const nftInstanceCol = await getNftInstanceCollection();
+  return await nftInstanceCol.aggregate([
     {
       $lookup: {
         from: "nftMetadata",
@@ -271,7 +254,7 @@ async function findNftInstancesByPrefix({ prefix, prefixPattern, isNum }) {
               $expr: {
                 $and: [
                   { $eq: ["$classId", "$$classId"] },
-                  { $eq: ["$classHeight", "$$classHeight"] },
+                  { $eq: ["$indexer.blockHeight", "$$classHeight"] },
                 ],
               }
             }

@@ -251,7 +251,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
               </SquareBoxComponent>
             </div>
             <DetailTable
-              head={["ClassId", ...NFTInstanceHead]}
+              head={["Class ID  ", ...NFTInstanceHead]}
               body={[
                 <MinorText key="1">{nftInstance?.classId}</MinorText>,
                 <MinorText key="2">{nftInstance?.instanceId}</MinorText>,

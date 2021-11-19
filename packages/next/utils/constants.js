@@ -235,7 +235,7 @@ export const assetHead = [
 ];
 
 export const NFTClassHead = [
-  "ID",
+  "Class ID",
   "Created Time",
   "Instance",
   "Owner",
@@ -245,7 +245,7 @@ export const NFTClassHead = [
 ];
 
 export const NFTInstanceHead = [
-  "ID",
+  "Instance ID",
   "Created Time",
   "Owner",
   "Status",

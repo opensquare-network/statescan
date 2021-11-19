@@ -175,7 +175,7 @@ export default function SearchL({ node }) {
           onKeyDown={onKeyDown}
           value={searchKeyword}
           onChange={onInput}
-          placeholder="Block / Address / Extrinsic / Asset /..."
+          placeholder="Block / Address / Extrinsic / Asset / NFT /..."
           onFocus={() => setFocus(true)}
           onBlur={() => setTimeout(() => setFocus(false), 200)}
         />

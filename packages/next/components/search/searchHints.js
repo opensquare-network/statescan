@@ -2,6 +2,7 @@ import styled, { css } from "styled-components";
 
 import Symbol from "components/symbol";
 import { card_border } from "styles/textStyles";
+import Thumbnail from "../nft/thumbnail";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -144,6 +145,24 @@ export default function SearchHints({ hints, focus, selected, toPage }) {
               </AssetWrapper>
               <AssetName>{item.name}</AssetName>
               <IndexWrapper>{`#${item.assetId}`}</IndexWrapper>
+            </AssetItem>
+          ))}
+        </>
+      )}
+      {hints.nftClasses?.length > 0 && (
+        <>
+          <Title>CLASS</Title>
+          {hints.nftClasses.map((item, index) => (
+            <AssetItem
+              key={index}
+              selected={selected === (hints?.nftClasses?.length ?? 0) + index}
+              onClick={() => toPage((hints?.nftClasses?.length ?? 0) + index)}
+            >
+              <BlockWrapper>
+                <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
+                <div style={{marginLeft:8, fontWeight:400}}>{item?.nftMetadata?.name}</div>
+              </BlockWrapper>
+              <IndexWrapper>{`#${item.classId}`}</IndexWrapper>
             </AssetItem>
           ))}
         </>

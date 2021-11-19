@@ -129,17 +129,24 @@ export default function SearchS() {
     const currentHint = hintMap.get(searchKeyword);
     const blocksLength = currentHint?.blocks?.length ?? 0;
     const assetsLength = currentHint?.assets?.length ?? 0;
-    const maxLength = blocksLength + assetsLength;
+    const NFTClassLength = currentHint?.nftClasses?.length ?? 0;
+    const maxLength = blocksLength + assetsLength + NFTClassLength;
     if (index < 0 || index >= maxLength) return;
     if (index + 1 <= blocksLength) {
       router.push(`/block/${currentHint.blocks[index].header?.number}`);
       return true;
     }
-    if (index + 1 > blocksLength && index + 1 <= maxLength) {
+    if (index + 1 > blocksLength && index + 1 <= maxLength - NFTClassLength) {
       router.push(
         `/asset/${currentHint.assets[index - blocksLength].assetId}_${
           currentHint.assets[index - blocksLength].createdAt.blockHeight
         }`
+      );
+      return true;
+    }
+    if (index + 1 > blocksLength + assetsLength && index + 1 <= maxLength) {
+      router.push(
+        `/nft/classes/${currentHint.nftClasses[index - blocksLength - assetsLength].classId}`
       );
       return true;
     }

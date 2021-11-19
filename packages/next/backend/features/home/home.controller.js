@@ -189,9 +189,9 @@ async function findNftClassesById({ prefix }) {
         }
       }
     },
-    { project: { timeline: 0 } },
-    { sort: { "nftMetadata.name": 1 } },
-    { limit: 10 },
+    { $project: { timeline: 0 } },
+    { $sort: { "nftMetadata.name": 1 } },
+    { $limit: 10 },
   ]).toArray();
 }
 

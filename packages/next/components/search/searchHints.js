@@ -7,6 +7,8 @@ const Wrapper = styled.div`
   width: 100%;
   position: absolute;
   margin-top: 4px;
+  padding-top: 8px;
+  padding-bottom: 8px;
   max-height: 292px;
   background: #ffffff;
   ${card_border};
@@ -97,8 +99,11 @@ const IndexWrapper = styled.div`
   margin-left: auto;
 `;
 
+const Divider = styled.div`
+  height: 4px;
+`
+
 export default function SearchHints({ hints, focus, selected, toPage }) {
-  const iconMap = new Map([["osn", "osn"]]);
   if (!focus) return null;
   if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0))
     return null;
@@ -123,6 +128,7 @@ export default function SearchHints({ hints, focus, selected, toPage }) {
           ))}
         </>
       )}
+      {(hints.blocks?.length > 0 && hints.assets?.length > 0) && <Divider/>}
       {hints.assets?.length > 0 && (
         <>
           <Title>ASSETS</Title>

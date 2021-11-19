@@ -61,6 +61,73 @@ async function searchExtriniscs({ isHash, lowerQuery }) {
   return null;
 }
 
+async function searchNftClass({ q, icaseQuery, isNum }) {
+  const nftClassCol = await getNftClassCollection();
+  return await nftClassCol.aggregate([
+    {
+      $lookup: {
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
+      }
+    },
+    {
+      $addFields: {
+        nftMetadata: {
+          $arrayElemAt: [
+            "$nftMetadata",
+            0,
+          ],
+        }
+      }
+    },
+    {
+      $match: {
+        isDestroyed: false,
+        $or: [
+          { "nftMetadata.name": icaseQuery },
+          ...(isNum ? [{ classId: Number(q) }] : []),
+        ]
+      }
+    },
+    { $project: { timeline: 0 } }
+  ]).toArray()[0];
+}
+
+async function searchNftInstance({ icaseQuery }) {
+  const nftInstanceCol = await getNftInstanceCollection();
+  return await nftInstanceCol.aggregate([
+    {
+      $lookup: {
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
+      }
+    },
+    {
+      $addFields: {
+        nftMetadata: {
+          $arrayElemAt: [
+            "$nftMetadata",
+            0,
+          ],
+        }
+      }
+    },
+    {
+      $match: {
+        isDestroyed: false,
+        $or: [
+          { "nftMetadata.name": icaseQuery },
+        ]
+      }
+    },
+    { $project: { timeline: 0 } }
+  ]).toArray()[0];
+}
+
 async function search(ctx) {
   const { q } = ctx.query;
 
@@ -85,6 +152,8 @@ async function search(ctx) {
     searchAddresses({ icaseQuery, isAddr }),
     searchBlocks({ isNum, isHash, q, lowerQuery }),
     searchExtriniscs({ isHash, lowerQuery }),
+    searchNftClass({ q, icaseQuery, isNum }),
+    searchNftInstance({ icaseQuery }),
   ]);
 
   ctx.body = {
@@ -214,7 +283,7 @@ async function findNftClassesByPrefix({ prefix, prefixPattern, isNum }) {
   ]).toArray();
 }
 
-async function findNftInstancesByPrefix({ prefix, prefixPattern, isNum }) {
+async function findNftInstancesByPrefix({ prefixPattern }) {
   const nftInstanceCol = await getNftInstanceCollection();
   return await nftInstanceCol.aggregate([
     {
@@ -240,55 +309,7 @@ async function findNftInstancesByPrefix({ prefix, prefixPattern, isNum }) {
         isDestroyed: false,
         $or: [
           { "nftMetadata.name": prefixPattern },
-          ...(isNum ? [{ classId: Number(prefix) }] : []),
         ],
-      }
-    },
-    {
-      $lookup: {
-        from: "nftClass",
-        let: { classId: "$classId", classHeight: "$classHeight" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: ["$classId", "$$classId"] },
-                  { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                ],
-              }
-            }
-          },
-          {
-            $lookup: {
-              from: "nftMetadata",
-              localField: "dataHash",
-              foreignField: "dataHash",
-              as: "nftMetadata",
-            }
-          },
-          {
-            $addFields: {
-              nftMetadata: {
-                $arrayElemAt: [
-                  "$nftMetadata",
-                  0,
-                ],
-              }
-            }
-          },
-        ],
-        as: "class",
-      }
-    },
-    {
-      $addFields: {
-        class: {
-          $arrayElemAt: [
-            "$class",
-            0,
-          ],
-        }
       }
     },
     { $project: { timeline: 0 } },
@@ -333,9 +354,9 @@ function autoCompleteNftClasses({ prefix, prefixPattern, isNum }) {
   return [];
 }
 
-function autoCompleteNftInstances({ prefix, prefixPattern, isNum }) {
+function autoCompleteNftInstances({ prefix, prefixPattern }) {
   if (prefix.length >= 2) {
-    return findNftInstancesByPrefix({ prefix, prefixPattern, isNum });
+    return findNftInstancesByPrefix({ prefixPattern });
   }
   return [];
 }
@@ -363,7 +384,7 @@ async function searchAutoComplete(ctx) {
     autoCompleteAddresses({ prefix, prefixPattern }),
     autoCompleteBlocks({ prefix, prefixPattern, isNum, isHash }),
     autoCompleteNftClasses({ prefix, prefixPattern, isNum }),
-    autoCompleteNftInstances({ prefix, prefixPattern, isNum }),
+    autoCompleteNftInstances({ prefix, prefixPattern }),
   ]);
 
   ctx.body = {

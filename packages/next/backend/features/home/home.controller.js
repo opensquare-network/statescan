@@ -147,7 +147,7 @@ async function search(ctx) {
   const isAddr = q.match(/^[0-9a-zA-Z]{47,48}$/);
   const icaseQuery = new RegExp(`^${escapeRegex(q)}$`, "i");
 
-  const [asset, address, block, extrinsic] = await Promise.all([
+  const [asset, address, block, extrinsic, nftClass, nftInstance] = await Promise.all([
     searchAssets({ icaseQuery, q, isNum }),
     searchAddresses({ icaseQuery, isAddr }),
     searchBlocks({ isNum, isHash, q, lowerQuery }),
@@ -161,6 +161,8 @@ async function search(ctx) {
     address,
     block,
     extrinsic,
+    nftClass,
+    nftInstance,
   };
 }
 

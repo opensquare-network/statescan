@@ -63,7 +63,7 @@ async function searchExtriniscs({ isHash, lowerQuery }) {
 
 async function searchNftClass({ q, icaseQuery, isNum }) {
   const nftClassCol = await getNftClassCollection();
-  return (await nftClassCol.aggregate([
+  const [result] = await nftClassCol.aggregate([
     {
       $lookup: {
         from: "nftMetadata",
@@ -92,12 +92,14 @@ async function searchNftClass({ q, icaseQuery, isNum }) {
       }
     },
     { $project: { timeline: 0 } }
-  ]).toArray())[0];
+  ]).toArray();
+
+  return result ?? null;
 }
 
 async function searchNftInstance({ icaseQuery }) {
   const nftInstanceCol = await getNftInstanceCollection();
-  return (await nftInstanceCol.aggregate([
+  const [result] = await nftInstanceCol.aggregate([
     {
       $lookup: {
         from: "nftMetadata",
@@ -125,7 +127,9 @@ async function searchNftInstance({ icaseQuery }) {
       }
     },
     { $project: { timeline: 0 } }
-  ]).toArray())[0];
+  ]).toArray();
+
+  return result ?? null;
 }
 
 async function search(ctx) {

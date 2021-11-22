@@ -171,15 +171,25 @@ export default function Asset({
                 address={asset?.issuer}
                 to={`/account/${asset?.issuer}`}
               />,
+              <Address
+                key="6"
+                address={asset?.admin}
+                to={`/account/${asset?.admin}`}
+              />,
+              <Address
+                key="7"
+                address={asset?.freezer}
+                to={`/account/${asset?.freezer}`}
+              />,
               `${bigNumber2Locale(
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
               asset?.decimals,
               status === "Active"
                 ? undefined
-                : <Status key="6" status={status} />,
-              <MinorText key="7">{assetHolders?.total}</MinorText>,
-              <MinorText key="8">{assetTransfers?.total}</MinorText>,
+                : <Status key="8" status={status} />,
+              <MinorText key="9">{assetHolders?.total}</MinorText>,
+              <MinorText key="10">{assetTransfers?.total}</MinorText>,
             ]}
             info={
               <AssetInfo

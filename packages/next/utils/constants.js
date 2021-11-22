@@ -227,6 +227,8 @@ export const assetHead = [
   "Asset ID",
   "Owner",
   "Issuer",
+  "Admin",
+  "Freezer",
   "Total Supply",
   "Decimals",
   "Status",

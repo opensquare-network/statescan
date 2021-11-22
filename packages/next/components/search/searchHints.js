@@ -33,14 +33,16 @@ const BlockItem = styled.div`
   justify-content: space-between;
   background-color: #ffffff;
   cursor: pointer;
+
   :hover {
     background-color: #fafafa;
   }
+
   ${(p) =>
-    p.selected &&
-    css`
-      background-color: #fafafa;
-    `}
+          p.selected &&
+          css`
+            background-color: #fafafa;
+          `}
 `;
 
 const BlockWrapper = styled.div`
@@ -49,6 +51,7 @@ const BlockWrapper = styled.div`
   font-weight: 600;
   font-size: 15px;
   line-height: 20px;
+
   > img {
     width: 24px;
     height: 24px;
@@ -63,14 +66,16 @@ const AssetItem = styled.div`
   align-items: center;
   background-color: #ffffff;
   cursor: pointer;
+
   :hover {
     background-color: #fafafa;
   }
+
   ${(p) =>
-    p.selected &&
-    css`
-      background-color: #fafafa;
-    `}
+          p.selected &&
+          css`
+            background-color: #fafafa;
+          `}
 `;
 
 const AssetWrapper = styled.div`
@@ -80,6 +85,7 @@ const AssetWrapper = styled.div`
   font-size: 15px;
   line-height: 20px;
   flex-basis: 112px;
+
   > img {
     width: 24px;
     height: 24px;
@@ -104,9 +110,9 @@ const Divider = styled.div`
   height: 4px;
 `
 
-export default function SearchHints({ hints, focus, selected, toPage }) {
+export default function SearchHints({hints, focus, selectedHint, toPage}) {
   if (!focus) return null;
-  if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0))
+  if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0 && hints.nftClasses.length === 0 && hints.nftInstances.length === 0))
     return null;
 
   return (
@@ -116,12 +122,12 @@ export default function SearchHints({ hints, focus, selected, toPage }) {
           <Title>BLOCKS</Title>
           {hints.blocks.map((item, index) => (
             <BlockItem
-              selected={selected === index}
+              selected={selectedHint?._id === item._id}
               key={index}
-              onClick={() => toPage(index)}
+              onClick={() => toPage({type: "blocks", ...item})}
             >
               <BlockWrapper>
-                <img src="/imgs/icons/latest-blocks.svg" alt="" />
+                <img src="/imgs/icons/latest-blocks.svg" alt=""/>
                 <div>Block</div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.header?.number}`}</IndexWrapper>
@@ -136,11 +142,11 @@ export default function SearchHints({ hints, focus, selected, toPage }) {
           {hints.assets.map((item, index) => (
             <AssetItem
               key={index}
-              selected={selected === (hints?.blocks?.length ?? 0) + index}
-              onClick={() => toPage((hints?.blocks?.length ?? 0) + index)}
+              selected={selectedHint?._id === item._id}
+              onClick={() => toPage({type: "assets", ...item})}
             >
               <AssetWrapper>
-                <Symbol assetId={item.assetId} />
+                <Symbol assetId={item.assetId}/>
                 <div>{item.symbol}</div>
               </AssetWrapper>
               <AssetName>{item.name}</AssetName>
@@ -151,18 +157,36 @@ export default function SearchHints({ hints, focus, selected, toPage }) {
       )}
       {hints.nftClasses?.length > 0 && (
         <>
-          <Title>CLASS</Title>
+          <Title>NFT CLASS</Title>
           {hints.nftClasses.map((item, index) => (
             <AssetItem
               key={index}
-              selected={selected === (hints?.nftClasses?.length ?? 0) + index}
-              onClick={() => toPage((hints?.nftClasses?.length ?? 0) + index)}
+              selected={selectedHint?._id === item._id}
+              onClick={() => toPage({type: "nftClasses", ...item})}
             >
               <BlockWrapper>
                 <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
-                <div style={{marginLeft:8, fontWeight:400}}>{item?.nftMetadata?.name}</div>
+                <div style={{marginLeft: 8, fontWeight: 400}}>{item?.nftMetadata?.name}</div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.classId}`}</IndexWrapper>
+            </AssetItem>
+          ))}
+        </>
+      )}
+      {hints.nftInstances?.length > 0 && (
+        <>
+          <Title>NFT Instance</Title>
+          {hints.nftInstances.map((item, index) => (
+            <AssetItem
+              key={index}
+              selected={selectedHint?._id === item._id}
+              onClick={() => toPage( {type: "nftInstances", ...item})}
+            >
+              <BlockWrapper>
+                <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
+                <div style={{marginLeft: 8, fontWeight: 400}}>{item?.nftMetadata?.name}</div>
+              </BlockWrapper>
+              <IndexWrapper>{`#${item.instanceId}`}</IndexWrapper>
             </AssetItem>
           ))}
         </>

@@ -159,6 +159,7 @@ export default function SearchL({ node }) {
   };
 
   const toPage = (selectedHint) => {
+    if(!selectedHint) return;
     const {type} = selectedHint;
     if (type === "blocks") {
       router.push(`/block/${selectedHint?.header?.number}`);

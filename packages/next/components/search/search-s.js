@@ -137,6 +137,7 @@ export default function SearchS() {
   };
 
   const toPage = (selectedHint) => {
+    if(!selectedHint) return;
     const {type} = selectedHint;
     if (type === "blocks") {
       router.push(`/block/${selectedHint?.header?.number}`);

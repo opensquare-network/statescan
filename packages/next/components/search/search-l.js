@@ -77,23 +77,42 @@ export default function SearchL({ node }) {
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState("");
   const [focus, setFocus] = useState(false);
-  const hintMap = useMemo(() => new Map(), []);
+  const hintCache = useMemo(() => new Map(), []);
   const theme = useTheme();
   const forceUpdate = useForceUpdate();
-  const [selected, setSelected] = useState(0);
+  const [selectedHint, setSelectedHint] = useState(null);
 
   useEffect(() => {
-    if (hintMap.has(searchKeyword)) return;
+    if (hintCache.has(searchKeyword)) return;
     nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
-      hintMap.set(searchKeyword, res?.result);
+      const categories = [ 'blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
+      const linkedList = {head:null, current:null, tail:null};
+      categories.forEach(category => {
+        res.result[category].forEach(hint => {
+          const node = {type:category, ...hint};
+          if (!linkedList.head) {
+            linkedList.head = node;
+            linkedList.current = node;
+            linkedList.tail = node;
+          } else {
+            node.previous = linkedList.current;
+            node.next = linkedList.head;//loop linked list
+            linkedList.current.next = node;
+            linkedList.current = node;
+            linkedList.tail = node;
+            linkedList.head.previous = node;
+          }
+        });
+      });
+      setSelectedHint(linkedList.head);
+      hintCache.set(searchKeyword, res?.result);
       forceUpdate();
     });
-  }, [searchKeyword, hintMap, forceUpdate]);
+  }, [searchKeyword, hintCache, forceUpdate]);
 
   const onInput = (e) => {
     const value = e.target.value;
     setSearchKeyword(value);
-    setSelected(0);
   };
 
   const onSearch = () => {
@@ -123,53 +142,38 @@ export default function SearchL({ node }) {
       return;
     }
     if (e.code === "Enter") {
-      if (!toPage(selected)) {
+      if (!toPage(selectedHint)) {
         onSearch();
       }
       return;
     }
     if (e.code === "ArrowUp") {
       e.preventDefault();
-      if (selected > 0) {
-        setSelected(selected - 1);
-      }
+      selectedHint?.previous && setSelectedHint(selectedHint?.previous);
       return;
     }
     if (e.code === "ArrowDown") {
       e.preventDefault();
-      const max =
-        (hintMap.get(searchKeyword)?.blocks?.length ?? 0) +
-        (hintMap.get(searchKeyword)?.assets?.length ?? 0);
-      if (selected < max - 1) {
-        setSelected(selected + 1);
-      }
-      return;
+      selectedHint?.next && setSelectedHint(selectedHint?.next);
     }
   };
 
-  const toPage = (index) => {
-    const currentHint = hintMap.get(searchKeyword);
-    const blocksLength = currentHint?.blocks?.length ?? 0;
-    const assetsLength = currentHint?.assets?.length ?? 0;
-    const NFTClassLength = currentHint?.nftClasses?.length ?? 0;
-    const maxLength = blocksLength + assetsLength + NFTClassLength;
-    if (index < 0 || index >= maxLength) return;
-    if (index + 1 <= blocksLength) {
-      router.push(`/block/${currentHint.blocks[index].header?.number}`);
+  const toPage = (selectedHint) => {
+    const {type} = selectedHint;
+    if (type === "blocks") {
+      router.push(`/block/${selectedHint?.header?.number}`);
       return true;
     }
-    if (index + 1 > blocksLength && index + 1 <= maxLength - NFTClassLength) {
-      router.push(
-        `/asset/${currentHint.assets[index - blocksLength].assetId}_${
-          currentHint.assets[index - blocksLength].createdAt.blockHeight
-        }`
-      );
+    if (type === "assets") {
+      router.push(`/asset/${selectedHint.assetId}_${selectedHint.createdAt.blockHeight}`);
       return true;
     }
-    if (index + 1 > blocksLength + assetsLength && index + 1 <= maxLength) {
-      router.push(
-        `/nft/classes/${currentHint.nftClasses[index - blocksLength - assetsLength].classId}`
-      );
+    if (type === "nftClasses") {
+      router.push(`/nft/classes/${selectedHint?.classId}`);
+      return true;
+    }
+    if (type === "nftInstances") {
+      router.push(`/nft/classes/${selectedHint?.classId}/instances/${selectedHint.nftInstances[index].instanceId}`);
       return true;
     }
     return false;
@@ -184,12 +188,12 @@ export default function SearchL({ node }) {
           onChange={onInput}
           placeholder="Block / Address / Extrinsic / Asset / NFT /..."
           onFocus={() => setFocus(true)}
-          // onBlur={() => setTimeout(() => setFocus(false), 200)}
+          onBlur={() => setTimeout(() => setFocus(false), 200)}
         />
         <SearchHints
-          hints={hintMap.get(searchKeyword)}
+          hints={hintCache.get(searchKeyword)}
           focus={focus}
-          selected={selected}
+          selectedHint={selectedHint}
           toPage={toPage}
         />
       </SearchWrapper>

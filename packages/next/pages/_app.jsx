@@ -32,7 +32,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Head>
-        <title>Kusama | Polkadot Asset Explorer</title>
+        <title>Kusama & Polkadot Asset Explorer</title>
         <meta
           name="description"
           content="Statescan allows you to explorer and search the Kusama | Polkadot blockchain for assets."

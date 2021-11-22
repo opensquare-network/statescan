@@ -24,6 +24,7 @@ import AnalyticsChart from "components/analyticsChart";
 import { getAssetInfo } from "utils/assetInfoData";
 import AssetInfo from "components/assetInfo";
 import Status from "../../components/status";
+import CopyText from "../../components/copyText";
 
 export default function Asset({
   node,
@@ -161,26 +162,30 @@ export default function Asset({
               <MinorText key="1">{asset?.symbol}</MinorText>,
               <MinorText key="2">{asset?.name}</MinorText>,
               <MinorText key="3">{`#${asset?.assetId}`}</MinorText>,
-              <Address
-                key="4"
-                address={asset?.owner}
-                to={`/account/${asset?.owner}`}
-              />,
-              <Address
-                key="5"
-                address={asset?.issuer}
-                to={`/account/${asset?.issuer}`}
-              />,
-              <Address
-                key="6"
-                address={asset?.admin}
-                to={`/account/${asset?.admin}`}
-              />,
-              <Address
-                key="7"
-                address={asset?.freezer}
-                to={`/account/${asset?.freezer}`}
-              />,
+              <CopyText key="4" text={asset?.owner}>
+                <Address
+                  address={asset?.owner}
+                  to={`/account/${asset?.owner}`}
+                />
+              </CopyText>,
+              <CopyText key="5" text={asset?.issuer}>
+                <Address
+                  address={asset?.issuer}
+                  to={`/account/${asset?.issuer}`}
+                />
+              </CopyText>,
+              <CopyText key="6" text={asset?.admin}>
+                <Address
+                  address={asset?.admin}
+                  to={`/account/${asset?.admin}`}
+                />
+              </CopyText>,
+              <CopyText key="7" text={asset?.freezer}>
+                <Address
+                  address={asset?.freezer}
+                  to={`/account/${asset?.freezer}`}
+                />
+              </CopyText>,
               `${bigNumber2Locale(
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,

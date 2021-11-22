@@ -304,11 +304,23 @@ export default function NftClass({ node, nftClass, nftInstances }) {
                     to={`/account/${nftClass?.details?.issuer}`}
                   />
                 </CopyText>,
+                <CopyText key="6" text={nftClass?.details?.admin}>
+                  <Address
+                    address={nftClass?.details?.admin}
+                    to={`/account/${nftClass?.details?.admin}`}
+                  />
+                </CopyText>,
+                <CopyText key="7" text={nftClass?.details?.freezer}>
+                  <Address
+                    address={nftClass?.details?.freezer}
+                    to={`/account/${nftClass?.details?.freezer}`}
+                  />
+                </CopyText>,
                 status === "Frozen" ? (
-                  <Status key="6" status={status} />
+                  <Status key="8" status={status} />
                 ) : undefined,
                 imageCid && (
-                  <Ipfs key="7">
+                  <Ipfs key="9">
                     <span>IPFS</span>
                     <IpfsLink cid={imageCid} />
                   </Ipfs>

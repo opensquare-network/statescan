@@ -242,6 +242,8 @@ export const NFTClassHead = [
   "Instance",
   "Owner",
   "Issuer",
+  "Admin",
+  "Freezer",
   "Status",
   "Link",
 ];

@@ -166,7 +166,9 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
             >
               <BlockWrapper>
                 <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
-                <div style={{marginLeft: 8, fontWeight: 400}}>{item?.nftMetadata?.name}</div>
+                <div style={{marginLeft: 8, fontWeight: 400}}>{
+                  item?.nftMetadata?.name ?? `[Unrecognized]`
+                }</div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.classId}`}</IndexWrapper>
             </AssetItem>
@@ -184,7 +186,9 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
             >
               <BlockWrapper>
                 <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
-                <div style={{marginLeft: 8, fontWeight: 400}}>{item?.nftMetadata?.name}</div>
+                <div style={{marginLeft: 8, fontWeight: 400}}>{
+                  item?.nftMetadata?.name ?? `[Unrecognized]`
+                }</div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.instanceId}`}</IndexWrapper>
             </AssetItem>

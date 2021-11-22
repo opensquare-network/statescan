@@ -160,7 +160,7 @@ export default function SearchS() {
       return true;
     }
     if (type === "nftInstances") {
-      router.push(`/nft/classes/${selectedHint?.classId}/instances/${selectedHint.nftInstances[index].instanceId}`);
+      router.push(`/nft/classes/${selectedHint?.classId}/instances/${selectedHint?.instanceId}`);
       return true;
     }
     return false;

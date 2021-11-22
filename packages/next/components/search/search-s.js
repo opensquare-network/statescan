@@ -6,6 +6,14 @@ import { addToast } from "../../store/reducers/toastSlice";
 import { useDispatch } from "react-redux";
 import nextApi from "services/nextApi";
 import SearchHints from "./searchHints";
+import ClearIcon from "../../public/imgs/icons/clear.svg";
+
+const Clear = styled(ClearIcon)`
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+`;
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -163,6 +171,9 @@ export default function SearchS() {
   return (
     <ExploreWrapper>
       <SearchWrapper>
+        {searchKeyword && <Clear onClick={() => {
+          setSearchKeyword('')
+        }}/>}
         <Input
           value={searchKeyword}
           onChange={onInput}

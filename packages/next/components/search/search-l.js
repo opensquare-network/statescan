@@ -6,6 +6,14 @@ import { useDispatch } from "react-redux";
 import nextApi from "services/nextApi";
 import { useTheme, useForceUpdate } from "utils/hooks";
 import SearchHints from "./searchHints";
+import ClearIcon from "../../public/imgs/icons/clear.svg";
+
+const Clear = styled(ClearIcon)`
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+`
 
 const ExploreWrapper = styled.div`
   position: relative;
@@ -60,10 +68,10 @@ const ExploreButton = styled.div`
   text-align: center;
   cursor: pointer;
   ${(p) =>
-    p.node === "kusama" &&
-    css`
-      background: #000000;
-    `}
+          p.node === "kusama" &&
+          css`
+            background: #000000;
+          `}
 `;
 
 const SearchWrapper = styled.div`
@@ -72,7 +80,7 @@ const SearchWrapper = styled.div`
   width: 480px;
 `;
 
-export default function SearchL({ node }) {
+export default function SearchL({node}) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -85,11 +93,11 @@ export default function SearchL({ node }) {
   useEffect(() => {
     if (hintCache.has(searchKeyword)) return;
     nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
-      const categories = [ 'blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
-      const linkedList = {head:null, current:null, tail:null};
+      const categories = ['blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
+      const linkedList = {head: null, current: null, tail: null};
       categories.forEach(category => {
         res.result[category].forEach(hint => {
-          const node = {type:category, ...hint};
+          const node = {type: category, ...hint};
           if (!linkedList.head) {
             linkedList.head = node;
             linkedList.current = node;
@@ -117,13 +125,13 @@ export default function SearchL({ node }) {
 
   const onSearch = () => {
     nextApi.fetch(`search?q=${searchKeyword}`).then((res) => {
-      const { asset, extrinsic, block, address } = res.result || {};
+      const {asset, extrinsic, block, address} = res.result || {};
       if (asset) {
-        const { blockHeight } = asset.createdAt;
+        const {blockHeight} = asset.createdAt;
         return router.push(`/asset/${asset.assetId}_${blockHeight}`);
       }
       if (extrinsic) {
-        const { blockHeight, index } = extrinsic.indexer;
+        const {blockHeight, index} = extrinsic.indexer;
         return router.push(`/extrinsic/${blockHeight}-${index}`);
       }
       if (block) {
@@ -133,7 +141,7 @@ export default function SearchL({ node }) {
       if (address) {
         return router.push(`/account/${address.address}`);
       }
-      dispatch(addToast({ type: "error", message: "No result found" }));
+      dispatch(addToast({type: "error", message: "No result found"}));
     });
   };
 
@@ -159,7 +167,7 @@ export default function SearchL({ node }) {
   };
 
   const toPage = (selectedHint) => {
-    if(!selectedHint) return;
+    if (!selectedHint) return;
     const {type} = selectedHint;
     if (type === "blocks") {
       router.push(`/block/${selectedHint?.header?.number}`);
@@ -183,6 +191,9 @@ export default function SearchL({ node }) {
   return (
     <ExploreWrapper>
       <SearchWrapper>
+        {searchKeyword && <Clear onClick={() => {
+          setSearchKeyword('')
+        }}/>}
         <ExploreInput
           onKeyDown={onKeyDown}
           value={searchKeyword}

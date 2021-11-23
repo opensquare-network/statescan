@@ -2,8 +2,9 @@ import styled, { css } from "styled-components";
 
 const Wrapper = styled.div`
   display: inline-block;
-  padding: 4px 12px;
-  font-size: 14px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 600;
   line-height: 16px;
   color: #ffffff;
   border-radius: 4px;
@@ -31,7 +32,7 @@ export default function Status({ status }) {
       break;
   }
   if (status === "Active") {
-    return null
+    return null;
   }
   return <Wrapper bg={bg}>{status}</Wrapper>;
 }

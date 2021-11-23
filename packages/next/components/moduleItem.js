@@ -3,9 +3,10 @@ import styled from "styled-components";
 import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div`
-  padding: 4px 12px;
+  padding: 2px 8px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 600;
   line-height: 16px;
   color: #ffffff;
   background-color: ${(p) => p.bg ?? "#F22279;"};

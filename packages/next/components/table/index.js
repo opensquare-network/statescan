@@ -210,7 +210,9 @@ const CollapseFoot = styled.div`
 const IconWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: right;
+  @media screen and (min-width: 900px) {
+    justify-content: right;
+  }
 `;
 
 const DataImg = styled.img`

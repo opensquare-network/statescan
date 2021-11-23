@@ -7,7 +7,8 @@ import { addToast } from "store/reducers/toastSlice";
 const Wrapper = styled.div`
   display: inline-block;
   position: relative;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 400;
   line-height: 16px;
   color: rgba(17, 17, 17, 0.65);
   > svg {
@@ -25,7 +26,7 @@ const Wrapper = styled.div`
   ${(p) =>
     p.bg &&
     css`
-      padding: 6px 12px;
+      padding: 2px 8px;
       background: #f4f4f4;
       border-radius: 4px;
       :hover {

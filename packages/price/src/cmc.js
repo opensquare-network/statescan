@@ -34,7 +34,7 @@ async function getLatest(symbol, startTime = 0) {
     clearTimeout(timeout);
   }
 
-  return testData;
+  return;
 }
 
 module.exports = {

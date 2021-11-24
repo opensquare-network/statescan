@@ -35,7 +35,7 @@ async function _createIndexes() {
 
   ksmUsdtDailyCol.createIndex({ openTime: 1 });
   dotUsdtDailyCol.createIndex({ openTime: 1 });
-  rmrkUsdtDailyCol.createIndex({ openTime: 1 });
+  rmrkUsdtDailyCol.createIndex({ time: 1 });
 }
 
 async function tryInit(col) {

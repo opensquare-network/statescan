@@ -1,10 +1,7 @@
 const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
 
-const cmcToken =
-  process.env.CMC_TOKEN || "35706415-330b-4054-906c-6b5fd57c1192";
-
-async function getLatest(symbol, startTime = 0) {
+async function getLatest(symbol) {
   const url = new URL(
     "v1/cryptocurrency/quotes/latest",
     "https://pro-api.coinmarketcap.com"
@@ -21,7 +18,7 @@ async function getLatest(symbol, startTime = 0) {
     const res = await fetch(url, {
       signal: controller.signal,
       headers: {
-        "X-CMC_PRO_API_KEY": cmcToken,
+        "X-CMC_PRO_API_KEY": process.env.CMC_TOKEN,
       },
     });
     const json = await res.json();

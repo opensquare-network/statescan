@@ -65,10 +65,9 @@ async function saveKlines(col, klines) {
 async function saveLatest(col, latest) {
   const price = latest.quote.USDT.price;
   const time = latest.quote.USDT.last_updated;
-  console.log({ price, time });
   await col.insertOne({
     price,
-    time,
+    time: new Date(time).getTime(),
   });
 }
 
@@ -95,14 +94,15 @@ async function tickEveryMinute(symbol) {
   const col = await getCollection(symbol);
 
   const latestItem = (
-    await col.find({}).sort({ openTime: -1 }).limit(1).toArray()
+    await col.find({}).sort({ time: -1 }).limit(1).toArray()
   )[0];
 
   const latest = await getLatest(symbol);
 
   if (
     latest &&
-    (!latestItem || latestItem.time !== latest.quote.USDT.last_updated)
+    (!latestItem ||
+      latestItem.time !== new Date(latest.quote.USDT.last_updated).getTime())
   ) {
     await saveLatest(col, latest);
   }

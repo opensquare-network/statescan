@@ -16,21 +16,38 @@ const Wrapper = styled.div`
 const Img = styled.img`
   width: 24px;
   height: 24px;
-  margin-right: 8px;
   display: initial !important;
   border-radius: 50%;
   object-fit: cover;
 `;
 
+const ImgWrapper = styled.div`
+  position: relative;
+  display: flex;
+  margin-right: 8px;
+`;
+
+const DestroyedIcon = styled.img`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+`;
+
 export default function Symbol({ symbol, assetId, destroyedAt }) {
   const node = useNode();
   let iconSrc = getAssetInfo(node, assetId)?.icon ?? `/imgs/icons/default.svg`;
-  let Icon = <Img src={iconSrc} />;
+  let Icon = (
+    <ImgWrapper>
+      <Img src={iconSrc} />
+    </ImgWrapper>
+  );
   if (destroyedAt) {
-    iconSrc = `/imgs/icons/destroyed.svg`;
     Icon = (
       <Tooltip content={"Asset has been destroyed"}>
-        <Img src={iconSrc} style={{ marginTop: 4 }} />
+        <ImgWrapper>
+          <Img src={iconSrc} />
+          <DestroyedIcon src="/imgs/icons/sub-destroyed.svg" />
+        </ImgWrapper>
       </Tooltip>
     );
   }

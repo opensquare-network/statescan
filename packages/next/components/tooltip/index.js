@@ -60,7 +60,7 @@ const Popup = styled.div`
   padding: 6px 12px;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color: #ffffff !important;
   word-wrap: break-word;
   text-align: left;
 `;

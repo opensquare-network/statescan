@@ -22,8 +22,9 @@ const Img = styled.img`
 `;
 
 const ImgWrapper = styled.div`
+  width: 24px;
+  height: 24px;
   position: relative;
-  display: flex;
   margin-right: 8px;
 `;
 

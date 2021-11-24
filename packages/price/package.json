@@ -7,7 +7,8 @@
   },
   "scripts": {
     "deploy:priceKsm": "pm2 start ecosystem.config.js --only ksm-daily-price-tracker",
-    "deploy:priceDot": "pm2 start ecosystem.config.js --only dot-daily-price-tracker"
+    "deploy:priceDot": "pm2 start ecosystem.config.js --only dot-daily-price-tracker",
+    "deploy:priceRmrk": "pm2 start ecosystem.config.js --only rmrk-daily-price-tracker"
   },
   "dependencies": {
     "abort-controller": "^3.0.0",

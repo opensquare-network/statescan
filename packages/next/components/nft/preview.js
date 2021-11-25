@@ -89,8 +89,8 @@ const ButtonWrapper = styled.div`
     cursor: pointer;
     border-radius: 8px;
     text-align: center;
-    width: 230px;
     height: 42px;
+    flex-grow: 1;
   }
   > :not(:first-child) {
     margin-left: 16px;

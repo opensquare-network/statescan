@@ -45,17 +45,29 @@ async function getAssets(ctx) {
     return;
   }
 
+  const { status } = ctx.query;
+
+  // Return non-destroyed assets by default
+  const q = { destroyedAt: null };
+  if (status === "all") {
+    delete q.destroyedAt;
+  }
+  else if (status === "destroyed") {
+    q.destroyedAt = { $ne: null };
+  }
+
+
   const col = await getAssetCollection();
 
   const items = await col
-    .find({})
+    .find(q)
     .sort({
       assetId: 1,
     })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
-  const total = await col.estimatedDocumentCount();
+  const total = await col.countDocuments(q);
 
   ctx.body = {
     items,

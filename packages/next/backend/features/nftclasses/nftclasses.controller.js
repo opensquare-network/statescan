@@ -54,7 +54,7 @@ async function queryAllClasses(statusQuery, page, pageSize) {
           {
             $lookup: {
               from: "classTimeline",
-              let: { classId: "$classId", classHeight: "$classHeight" },
+              let: { classId: "$classId", classHeight: "$indexer.blockHeight" },
               pipeline: [
                 {
                   $match: {
@@ -128,7 +128,7 @@ async function queryRecognizedClasses(statusQuery, page, pageSize)  {
           {
             $lookup: {
               from: "classTimeline",
-              let: { classId: "$classId", classHeight: "$classHeight" },
+              let: { classId: "$classId", classHeight: "$indexer.blockHeight" },
               pipeline: [
                 {
                   $match: {
@@ -205,7 +205,7 @@ async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
           {
             $lookup: {
               from: "classTimeline",
-              let: { classId: "$classId", classHeight: "$classHeight" },
+              let: { classId: "$classId", classHeight: "$indexer.blockHeight" },
               pipeline: [
                 {
                   $match: {

@@ -51,6 +51,38 @@ async function queryAllClasses(statusQuery, page, pageSize) {
           },
           { $skip: page * pageSize },
           { $limit: pageSize },
+          {
+            $lookup: {
+              from: "classTimeline",
+              let: { classId: "$classId", classHeight: "$classHeight" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$classId", "$$classId"] },
+                        { $eq: ["$classHeight", "$$classHeight"] },
+                        { $eq: ["$name", "Destroyed"] },
+                      ]
+                    }
+                  }
+                },
+              ],
+              as: "destroyedAt",
+            }
+          },
+          {
+            $addFields: {
+              destroyedAt: {
+                $arrayElemAt: ["$destroyedAt", 0]
+              }
+            }
+          },
+          {
+            $addFields: {
+              destroyedAt: "$destroyedAt.indexer"
+            }
+          }
         ],
         total: [
           { $count: "count" }
@@ -93,6 +125,38 @@ async function queryRecognizedClasses(statusQuery, page, pageSize)  {
           { $sort: { classId: 1 } },
           { $skip: page * pageSize },
           { $limit: pageSize },
+          {
+            $lookup: {
+              from: "classTimeline",
+              let: { classId: "$classId", classHeight: "$classHeight" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$classId", "$$classId"] },
+                        { $eq: ["$classHeight", "$$classHeight"] },
+                        { $eq: ["$name", "Destroyed"] },
+                      ]
+                    }
+                  }
+                },
+              ],
+              as: "destroyedAt",
+            }
+          },
+          {
+            $addFields: {
+              destroyedAt: {
+                $arrayElemAt: ["$destroyedAt", 0]
+              }
+            }
+          },
+          {
+            $addFields: {
+              destroyedAt: "$destroyedAt.indexer"
+            }
+          }
         ],
         total: [
           { $count: "count" }
@@ -138,6 +202,38 @@ async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
           { $sort: { classId: 1 } },
           { $skip: page * pageSize },
           { $limit: pageSize },
+          {
+            $lookup: {
+              from: "classTimeline",
+              let: { classId: "$classId", classHeight: "$classHeight" },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        { $eq: ["$classId", "$$classId"] },
+                        { $eq: ["$classHeight", "$$classHeight"] },
+                        { $eq: ["$name", "Destroyed"] },
+                      ]
+                    }
+                  }
+                },
+              ],
+              as: "destroyedAt",
+            }
+          },
+          {
+            $addFields: {
+              destroyedAt: {
+                $arrayElemAt: ["$destroyedAt", 0]
+              }
+            }
+          },
+          {
+            $addFields: {
+              destroyedAt: "$destroyedAt.indexer"
+            }
+          }
         ],
         total: [
           { $count: "count" }

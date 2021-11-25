@@ -106,11 +106,16 @@ const MenuItem = styled.div`
   ${(p) =>
       p.disabled &&
       css`
+        background: #ffffff;
         cursor: not-allowed;
         ${text_dark_placeholder};
         pointer-events: none;
     `}
 `;
+
+const SubMenuItem = styled(MenuItem)`
+  padding: 8px 24px;
+`
 
 const Divider = styled.div`
   margin: 8px 0;
@@ -171,6 +176,24 @@ export default function SubMenu({ category, menus, closeMenu, divideIndex=2 }) {
                   </MenuItem>
                 </Link>
                 {index === divideIndex && <Divider/>}
+                {
+                  (item.children ?? []).map(child=>{
+                    return <Fragment key={index}>
+                      <Link href={`/${child.value}`} passHref>
+                        <SubMenuItem
+                          onClick={() => {
+                            closeMenu();
+                            setIsActive(false);
+                          }}
+                          selected={router.pathname === `/${child.value}`}
+                          disabled={child.value === ""}
+                        >
+                          {child.name}
+                        </SubMenuItem>
+                      </Link>
+                    </Fragment>
+                  })
+                }
               </Fragment>
             ))}
           </MenuWrapper>

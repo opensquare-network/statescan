@@ -179,10 +179,20 @@ const menusAssets = [
     name: "NFT",
     value: "nft",
   },
-  // {
-  //   name: "Destroyed",
-  //   value: "",
-  // }
+  {
+    name: "Destroyed",
+    value: "",
+    children:[
+      {
+        name: "Assets",
+        value: "destroyedAssets",
+      },
+      {
+        name: "NFT",
+        value: "destroyedNft",
+      },
+    ],
+  }
 ];
 
 
@@ -239,8 +249,7 @@ export default function Header({ node }) {
                 </MenuItem>
               </Link>
               <SubMenu category="BlockChain" menus={menusBlockchain} closeMenu={() => setIsActive(false)} />
-              <SubMenu category="Assets" menus={menusAssets} closeMenu={() => setIsActive(false)}
-              // divideIndex={1}
+              <SubMenu category="Assets" menus={menusAssets} closeMenu={() => setIsActive(false)} divideIndex={1}
               />
             </MenuWrapper>
           )}

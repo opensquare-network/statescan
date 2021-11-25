@@ -20,7 +20,10 @@ export default function Assets({ node, assets, isDestroyed }) {
   return (
     <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Asset Tracker" }]} node={node} />
+        <Nav
+          data={[{ name: isDestroyed ? "Destoyed Assets" : "Asset Tracker" }]}
+          node={node}
+        />
         {!isDestroyed && (
           <Table
             head={assetsHead}

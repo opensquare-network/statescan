@@ -59,6 +59,15 @@ export const destroyedAssetsHead = [
   { name: "Total Destroyed", align: "right" },
 ];
 
+export const destroyedNftHead = [
+  { name: "ID", width: 136 },
+  { name: "Class", width: 100 },
+  { name: "Name" },
+  { name: "Destroyed Time", width: 200 },
+  { name: "Owner", width: 152 },
+  { name: "Instance", width: 120 },
+];
+
 export const nftsHead = [
   { name: "ID", width: 136 },
   { name: "Class", width: 100 },

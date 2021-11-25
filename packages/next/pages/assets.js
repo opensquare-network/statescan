@@ -104,7 +104,7 @@ export default function Assets({ node, assets, isDestroyed }) {
                 content={bigNumber2Locale(
                   fromAssetUnit(item.supply, item.decimals)
                 )}
-                title="Total Supply"
+                title="Total Destroyed"
                 isCopy
                 noMinWidth={true}
               >

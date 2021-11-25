@@ -50,6 +50,15 @@ export const assetsHead = [
   { name: "Total Supply", align: "right" },
 ];
 
+export const destroyedAssetsHead = [
+  { name: "Asset ID", width: 136 },
+  { name: "Symbol", width: 152 },
+  { name: "Name", width: 200 },
+  { name: "Destroyed Time", width: 200 },
+  { name: "Owner", width: 200 },
+  { name: "Total Destroyed", align: "right" },
+];
+
 export const nftsHead = [
   { name: "ID", width: 136 },
   { name: "Class", width: 100 },

@@ -189,7 +189,7 @@ const menusAssets = [
       },
       {
         name: "NFT",
-        value: "nft?status=destroyed",
+        value: "destroyedNft",
       },
     ],
   }

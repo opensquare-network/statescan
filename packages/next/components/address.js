@@ -7,7 +7,7 @@ import IdentityLink from "./account/identityLink";
 import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { nodes } from "utils/constants";
-import {isNoIdentity} from "utils";
+import { isNoIdentity } from "utils";
 
 const StyledLink = styled.div`
   word-break: break-all;
@@ -25,48 +25,68 @@ export default function Address({ address, to }) {
   const theme = useTheme();
   const [identity, setIdentity] = useState(null);
 
-  const relayChain = nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
+  const relayChain =
+    nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   useEffect(() => {
     setIdentity(null);
-    fetchIdentity(relayChain, address).then(identity => setIdentity(identity));
+    fetchIdentity(relayChain, address).then((identity) =>
+      setIdentity(identity)
+    );
   }, [relayChain, address]);
 
   const styledLink = (
-    <StyledLink themecolor={theme.color} cursor={to ? "true" : "false"}>
-      {address}
+    <StyledLink
+      themecolor={theme.color}
+      cursor={to ? "true" : "false"}
+      passHref
+    >
+      <a>{address}</a>
     </StyledLink>
   );
 
   if (isNoIdentity(identity)) {
-    return (
-      to ? (
-        <Link href={to} passHref>
+    return to ? (
+      <Link href={to} passHref>
+        <a>
           <MonoText>{styledLink}</MonoText>
-        </Link>
-      ) : (
-        <MonoText>{styledLink}</MonoText>
-      )
+        </a>
+      </Link>
+    ) : (
+      <MonoText>{styledLink}</MonoText>
     );
   }
 
   const identityDisplay = (
     <span>
-      {identity && <b>
-        {identity?.info?.displayParent ? `${identity?.info?.displayParent}/`:''}{identity?.info?.display}
-        <br/>
-      </b>}
+      {identity && (
+        <b>
+          {identity?.info?.displayParent
+            ? `${identity?.info?.displayParent}/`
+            : ""}
+          {identity?.info?.display}
+          <br />
+        </b>
+      )}
       {address}
     </span>
   );
 
-  const identityLink = <IdentityLink identity={identity} width={"auto"} cursor={to ? "true" : "false"} />;
+  const identityLink = (
+    <IdentityLink
+      identity={identity}
+      width={"auto"}
+      cursor={to ? "true" : "false"}
+    />
+  );
 
   return (
     <Tooltip content={identityDisplay} isCopy copyText={address}>
       {to ? (
         <Link href={to} passHref>
-          <MonoText>{identityLink}</MonoText>
+          <a>
+            <MonoText>{identityLink}</MonoText>
+          </a>
         </Link>
       ) : (
         <MonoText>{identityLink}</MonoText>

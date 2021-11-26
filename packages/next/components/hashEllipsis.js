@@ -21,18 +21,16 @@ export default function HashEllipsis({ hash, to }) {
     <Tooltip content={hash} isCopy>
       {to ? (
         <Link href={to} passHref>
-          <MonoText>
+          <a>
             <StyledLink themecolor={theme.color} cursor={"true"}>
-              {hashEllipsis(hash)}
+              <MonoText>{hashEllipsis(hash)}</MonoText>
             </StyledLink>
-          </MonoText>
+          </a>
         </Link>
       ) : (
-        <MonoText>
-          <StyledLink themecolor={theme.color} cursor={"false"}>
-            {hashEllipsis(hash)}
-          </StyledLink>
-        </MonoText>
+        <StyledLink themecolor={theme.color} cursor={"false"}>
+          <MonoText>{hashEllipsis(hash)}</MonoText>
+        </StyledLink>
       )}
     </Tooltip>
   );

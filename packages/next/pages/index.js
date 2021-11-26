@@ -317,7 +317,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
               address={item.issuer}
               to={`/account/${item.issuer}`}
             />,
-            <AssetPrice price={null} key={`${index}-6`} />,
+            <AssetPrice price={item.price?.value} key={`${index}-6`} />,
             item.accounts,
             <Tooltip
               key={`${index}-7`}

@@ -175,7 +175,7 @@ export default function Asset({
                   to={`/account/${asset?.issuer}`}
                 />
               </CopyText>,
-              <AssetPrice price={null} key="6" />,
+              <AssetPrice price={asset?.price?.value} key="6" />,
               <CopyText key="7" text={asset?.admin}>
                 <Address
                   address={asset?.admin}

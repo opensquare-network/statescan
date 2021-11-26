@@ -42,6 +42,7 @@ import { text_dark_minor } from "styles/textStyles";
 import Status from "components/status";
 import Preview from "components/nft/preview";
 import { useOnClickOutside } from "utils/hooks";
+import AssetPrice from "components/assetPrice";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -316,9 +317,10 @@ export default function Home({ node, overview: ssrOverview, price }) {
               address={item.issuer}
               to={`/account/${item.issuer}`}
             />,
+            <AssetPrice price={null} key={`${index}-6`} />,
             item.accounts,
             <Tooltip
-              key={`${index}-5`}
+              key={`${index}-7`}
               content={bigNumber2Locale(
                 fromAssetUnit(item.supply, item.decimals)
               )}

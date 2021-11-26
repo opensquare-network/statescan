@@ -25,6 +25,7 @@ import { getAssetInfo } from "utils/assetInfoData";
 import AssetInfo from "components/assetInfo";
 import Status from "../../components/status";
 import CopyText from "../../components/copyText";
+import AssetPrice from "components/assetPrice";
 
 export default function Asset({
   node,
@@ -37,7 +38,7 @@ export default function Asset({
   if (!asset) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Asset"/>
+        <PageNotFound resource="Asset" />
       </Layout>
     );
   }
@@ -174,13 +175,14 @@ export default function Asset({
                   to={`/account/${asset?.issuer}`}
                 />
               </CopyText>,
-              <CopyText key="6" text={asset?.admin}>
+              <AssetPrice price={null} key="6" />,
+              <CopyText key="7" text={asset?.admin}>
                 <Address
                   address={asset?.admin}
                   to={`/account/${asset?.admin}`}
                 />
               </CopyText>,
-              <CopyText key="7" text={asset?.freezer}>
+              <CopyText key="8" text={asset?.freezer}>
                 <Address
                   address={asset?.freezer}
                   to={`/account/${asset?.freezer}`}
@@ -190,11 +192,11 @@ export default function Asset({
                 fromAssetUnit(asset?.supply, asset?.decimals)
               )} ${asset?.symbol}`,
               asset?.decimals,
-              status === "Active"
-                ? undefined
-                : <Status key="8" status={status} />,
-              <MinorText key="9">{assetHolders?.total}</MinorText>,
-              <MinorText key="10">{assetTransfers?.total}</MinorText>,
+              status === "Active" ? undefined : (
+                <Status key="9" status={status} />
+              ),
+              <MinorText key="10">{assetHolders?.total}</MinorText>,
+              <MinorText key="11">{assetTransfers?.total}</MinorText>,
             ]}
             info={
               <AssetInfo
@@ -205,7 +207,12 @@ export default function Asset({
             }
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={["id"]} />
+        <TabTable
+          data={tabTableData}
+          activeTab={tab}
+          collapse={900}
+          query={["id"]}
+        />
       </Section>
     </Layout>
   );

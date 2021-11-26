@@ -41,12 +41,13 @@ export const transfersLatestHead = [
 ];
 
 export const assetsHead = [
-  { name: "Asset ID", width: 136 },
+  { name: "Asset ID", width: 120 },
   { name: "Symbol", width: 152 },
-  { name: "Name", width: 200 },
+  { name: "Name", width: 168 },
   { name: "Owner", width: 152 },
   { name: "Issuer", width: 152 },
-  { name: "Holders", width: 152, align: "right" },
+  { name: "Price", width: 120, align: "right" },
+  { name: "Holders", width: 120, align: "right" },
   { name: "Total Supply", align: "right" },
 ];
 
@@ -245,6 +246,7 @@ export const assetHead = [
   "Asset ID",
   "Owner",
   "Issuer",
+  "Price",
   "Admin",
   "Freezer",
   "Total Supply",

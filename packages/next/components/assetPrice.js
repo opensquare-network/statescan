@@ -9,6 +9,6 @@ export default function AssetPrice({ price }) {
   if (price === undefined || price === null || isNaN(Number(price))) {
     return <NonePrice>-</NonePrice>;
   } else {
-    return <div>{`$${bigNumber2Locale(Number(price).toFixed(2) + "")}`}</div>;
+    return <div>{`$${bigNumber2Locale(Number(price).toFixed(2))}`}</div>;
   }
 }

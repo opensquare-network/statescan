@@ -61,6 +61,12 @@ const TextDarkMinor = styled.span`
   ${text_dark_minor};
 `;
 
+const AssetPrice = styled.div`
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(17, 17, 17, 0.35);
+`;
+
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
   if (direction === "in") {
@@ -98,7 +104,7 @@ export default function Address({
   if (!addressDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Account"/>
+        <PageNotFound resource="Account" />
       </Layout>
     );
   }
@@ -112,7 +118,13 @@ export default function Address({
   const customTeleportHead = _.cloneDeep(teleportsHead);
   const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
   if (sendAtCol) {
-    sendAtCol.name = <img style={{position: "absolute", top: 12}} src={nodeInfo.icon} alt="" />;
+    sendAtCol.name = (
+      <img
+        style={{ position: "absolute", top: 12 }}
+        src={nodeInfo.icon}
+        alt=""
+      />
+    );
   }
 
   const tabTableData = [
@@ -135,9 +147,23 @@ export default function Address({
           assetId={item.assetId}
         />,
         item.assetName,
-        bigNumber2Locale(
-          fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)
-        ),
+        <div key={`${index}-3`}>
+          {bigNumber2Locale(
+            fromAssetUnit(item.balance?.$numberDecimal, item.assetDecimals)
+          )}
+          {item.price?.value && item.balance && (
+            <AssetPrice>{`$${bigNumber2Locale(
+              (
+                Number(
+                  fromAssetUnit(
+                    item.balance?.$numberDecimal,
+                    item.assetDecimals
+                  )
+                ) * Number(item.price.value)
+              ).toFixed(2)
+            )}`}</AssetPrice>
+          )}
+        </div>,
         bigNumber2Locale(fromAssetUnit(item.approved || 0, item.assetDecimals)),
         item.isFrozen?.toString(),
         item.transfers || 0,
@@ -319,10 +345,7 @@ export default function Address({
           : instance.class.nftMetadata?.imageMetadata?.background;
 
         return [
-          <NftLink
-            key={`classid${index}`}
-            nftClass={instance.class}
-          >
+          <NftLink key={`classid${index}`} nftClass={instance.class}>
             {instance.classId}
           </NftLink>,
           <NftLink
@@ -342,10 +365,7 @@ export default function Address({
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <NftLink
-              nftClass={instance.class}
-              nftInstance={instance}
-            >
+            <NftLink nftClass={instance.class} nftInstance={instance}>
               <NftName name={name} />
             </NftLink>
           </TextDark>,
@@ -383,7 +403,7 @@ export default function Address({
 
         return [
           <InLink
-            key={index}
+            key={`link${index}`}
             to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
           >
             {`${item.indexer.blockHeight.toLocaleString()}-${
@@ -410,10 +430,7 @@ export default function Address({
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <NftLink
-              nftClass={instance.class}
-              nftInstance={instance}
-            >
+            <NftLink nftClass={instance.class} nftInstance={instance}>
               <NftName name={name} />
             </NftLink>
           </TextDark>,
@@ -506,7 +523,12 @@ export default function Address({
             ]}
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={["id"]} />
+        <TabTable
+          data={tabTableData}
+          activeTab={tab}
+          collapse={900}
+          query={["id"]}
+        />
       </Section>
     </Layout>
   );
@@ -536,19 +558,19 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`addresses/${id}`),
     nextApi.fetch(`addresses/${id}/assets`, {
       page: activeTab === "assets" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/transfers`, {
       page: activeTab === "transfers" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/teleports`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
     fetch(
       `${process.env.NEXT_PUBLIC_IDENTITY_SERVER_HOST}/${relayChain}/short-ids`,
@@ -562,11 +584,11 @@ export async function getServerSideProps(context) {
       .catch(() => null),
     nextApi.fetch(`addresses/${id}/nft/instances`, {
       page: activeTab === "nft" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/nft/transfers`, {
       page: activeTab === "nft transfers" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
   ]);
 

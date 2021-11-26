@@ -10,6 +10,7 @@ import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Name from "../components/account/name";
 import Tooltip from "../components/tooltip";
+import AssetPrice from "components/assetPrice";
 
 export default function Assets({ node, assets }) {
   return (
@@ -43,9 +44,10 @@ export default function Assets({ node, assets }) {
               address={item.issuer}
               to={`/account/${item.issuer}`}
             />,
+            <AssetPrice price={item.price?.value} key={`${index}-6`} />,
             item.accounts,
             <Tooltip
-              key={`${index}-5`}
+              key={`${index}-7`}
               content={bigNumber2Locale(
                 fromAssetUnit(item.supply, item.decimals)
               )}

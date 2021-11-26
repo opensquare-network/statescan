@@ -3,11 +3,9 @@ const AbortController = require("abort-controller");
 
 async function getLatest(symbol) {
   const url = new URL(
-    "v1/cryptocurrency/quotes/latest",
-    "https://pro-api.coinmarketcap.com"
+    `api2/1/ticker/${symbol}_USDT`,
+    "https://data.gateapi.io"
   );
-  url.searchParams.set("symbol", symbol);
-  url.searchParams.set("convert", "USDT");
 
   const controller = new AbortController();
   const timeout = setTimeout(() => {
@@ -17,12 +15,9 @@ async function getLatest(symbol) {
   try {
     const res = await fetch(url, {
       signal: controller.signal,
-      headers: {
-        "X-CMC_PRO_API_KEY": process.env.CMC_TOKEN,
-      },
     });
     const json = await res.json();
-    return json.data[symbol];
+    return json.data;
   } catch (error) {
     if (error.name === "AbortError") {
       console.log("request was aborted");

@@ -5,7 +5,7 @@ const dayjs = require("dayjs");
 const { MongoClient } = require("mongodb");
 const { getRmrkUsdtDailyCollection } = require("./mongo");
 
-const RMRK_ASSET_ID = 5;
+const RMRK_ASSET_ID = 8;
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost:27017";
 
 function getScanDbName() {

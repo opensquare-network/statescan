@@ -14,6 +14,7 @@ async function insertInstance(indexer, classId, instanceId, details) {
     logger.error(
       `Can not find class ${classId} when inserting new instance ${instanceId}, ${indexer}`
     );
+    return;
   }
 
   const classHeight = nftClass.indexer.blockHeight;
@@ -57,6 +58,7 @@ async function insertInstanceTimelineItem(
     logger.error(
       `Can not find instance /${classId}/${instanceId} when set timeline item, ${indexer}`
     );
+    return;
   }
 
   const instanceHeight = nftInstance.indexer.blockHeight;
@@ -78,6 +80,7 @@ async function updateInstance(classId, instanceId, updates, indexer) {
     logger.error(
       `Can not find class ${classId} when set timeline item, ${indexer}`
     );
+    return;
   }
 
   const classHeight = nftClass.indexer.blockHeight;
@@ -107,6 +110,7 @@ async function insertInstanceAttribute(
     logger.error(
       `Can not find class ${classId} when set attribute key: ${key}, value: ${value}, ${indexer}`
     );
+    return;
   }
 
   const classHeight = nftClass.indexer.blockHeight;
@@ -122,6 +126,7 @@ async function insertInstanceAttribute(
     logger.error(
       `Can not find instance /${classId}/${instanceId} when set instance attribute, ${indexer}`
     );
+    return;
   }
 
   const instanceHeight = nftInstance.indexer.blockHeight;

@@ -98,6 +98,9 @@ async function tickEveryMinute(symbol) {
   )[0];
 
   const latest = await getLatest(symbol);
+  if (latest) {
+    console.log(`rmrk price got`);
+  }
 
   if (
     latest &&
@@ -105,6 +108,7 @@ async function tickEveryMinute(symbol) {
       latestItem.time !== new Date(latest.quote.USDT.last_updated).getTime())
   ) {
     await saveLatest(col, latest);
+    console.log(`rmrk price saved!`);
   }
 }
 
@@ -146,7 +150,7 @@ async function main() {
         await sleep(2 * 1000);
       }
     } else if (["RMRK"].includes(args.symbol)) {
-      tickEveryMinute(args.symbol);
+      await tickEveryMinute(args.symbol);
       await sleep(60 * 1000);
     }
   }

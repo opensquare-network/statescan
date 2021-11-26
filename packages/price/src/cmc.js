@@ -30,8 +30,6 @@ async function getLatest(symbol) {
   } finally {
     clearTimeout(timeout);
   }
-
-  return;
 }
 
 module.exports = {

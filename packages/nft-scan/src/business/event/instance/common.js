@@ -1,3 +1,4 @@
+const { updateClass } = require("../../../mongo/service/class");
 const {
   insertInstance,
   insertTransfer,
@@ -5,7 +6,6 @@ const {
 const { queryInstanceDetails } = require("../../common/instance/storage");
 const { updateInstance } = require("../../../mongo/service/instance");
 const { queryInstanceMetadata } = require("../../common/instance/metadata");
-const { logger } = require("../../../logger");
 const { md5 } = require("../../../utils");
 
 async function updateMetadata(classId, instanceId, indexer) {
@@ -20,7 +20,7 @@ async function updateMetadata(classId, instanceId, indexer) {
 
   const dataHash = md5(metadata.data);
 
-  await updateInstance(classId, instanceId, { metadata, dataHash });
+  await updateInstance(classId, instanceId, { metadata, dataHash }, indexer);
 }
 
 async function insertNewInstance(classId, instanceId, indexer) {
@@ -30,7 +30,7 @@ async function insertNewInstance(classId, instanceId, indexer) {
 
 async function updateInstanceWithDetails(classId, instanceId, indexer) {
   const details = await queryInstanceDetails(classId, instanceId, indexer);
-  await updateInstance(classId, instanceId, { details });
+  await updateInstance(classId, instanceId, { details }, indexer);
 }
 
 async function insertNewTransfer(classId, instanceId, indexer, from, to) {

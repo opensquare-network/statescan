@@ -1,4 +1,6 @@
-const { insertInstanceTimelineItem } = require("../../../mongo/service/instance");
+const {
+  insertInstanceTimelineItem,
+} = require("../../../mongo/service/instance");
 const { TimelineItemTypes } = require("../../common/constants");
 const { UniquesEvents } = require("../../common/constants");
 const { updateClassWithDetails } = require("../class/common");
@@ -18,7 +20,7 @@ async function handleMetadataCleared(event, indexer) {
     },
   };
 
-  await insertInstanceTimelineItem(classId, instanceId, timelineItem);
+  await insertInstanceTimelineItem(classId, instanceId, timelineItem, indexer);
   await updateClassWithDetails(classId, indexer);
 }
 

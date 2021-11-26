@@ -1,4 +1,6 @@
-const { insertInstanceTimelineItem } = require("../../../mongo/service/instance");
+const {
+  insertInstanceTimelineItem,
+} = require("../../../mongo/service/instance");
 const { TimelineItemTypes } = require("../../common/constants");
 const { UniquesEvents } = require("../../common/constants");
 const { updateInstanceWithDetails } = require("./common");
@@ -16,8 +18,7 @@ async function handleThawed(event, indexer, blockEvents, extrinsic) {
       instanceId,
     },
   };
-  await insertInstanceTimelineItem(classId, instanceId, timelineItem);
-
+  await insertInstanceTimelineItem(classId, instanceId, timelineItem, indexer);
 }
 
 module.exports = {

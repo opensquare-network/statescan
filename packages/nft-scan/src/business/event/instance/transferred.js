@@ -1,4 +1,6 @@
-const { insertInstanceTimelineItem } = require("../../../mongo/service/instance");
+const {
+  insertInstanceTimelineItem,
+} = require("../../../mongo/service/instance");
 const { TimelineItemTypes } = require("../../common/constants");
 const { insertNewTransfer, updateInstanceWithDetails } = require("./common");
 const { UniquesEvents } = require("../../common/constants");
@@ -19,7 +21,7 @@ async function handleTransferred(event, indexer, blockEvents, extrinsic) {
     },
   };
 
-  await insertInstanceTimelineItem(classId, instanceId, timelineItem);
+  await insertInstanceTimelineItem(classId, instanceId, timelineItem, indexer);
   await updateInstanceWithDetails(classId, instanceId, indexer);
 }
 

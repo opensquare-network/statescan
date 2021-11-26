@@ -26,7 +26,7 @@ async function handleIssued(event, indexer, blockEvents, extrinsic) {
     },
   };
 
-  await insertInstanceTimelineItem(classId, instanceId, timelineItem);
+  await insertInstanceTimelineItem(classId, instanceId, timelineItem, indexer);
   await updateClassWithDetails(classId, indexer);
 }
 

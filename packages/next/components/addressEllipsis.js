@@ -49,7 +49,9 @@ export default function AddressEllipsis({ address, to }) {
       <Tooltip content={address} isCopy>
         {to ? (
           <Link href={to} passHref>
-            <MonoText>{styledLink}</MonoText>
+            <a>
+              <MonoText>{styledLink}</MonoText>
+            </a>
           </Link>
         ) : (
           <MonoText>{styledLink}</MonoText>
@@ -81,7 +83,9 @@ export default function AddressEllipsis({ address, to }) {
     <Tooltip content={identityDisplay} isCopy copyText={address}>
       {to ? (
         <Link href={to} passHref>
-          <MonoText>{identityLink}</MonoText>
+          <a>
+            <MonoText>{identityLink}</MonoText>
+          </a>
         </Link>
       ) : (
         <MonoText>{identityLink}</MonoText>

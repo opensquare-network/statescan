@@ -4,7 +4,7 @@ import Table from "components/table";
 import InLink from "components/inLink";
 import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
-import { assetsHead, destroyedAssetsHead, EmptyQuery } from "utils/constants";
+import { destroyedAssetsHead, EmptyQuery } from "utils/constants";
 import {
   abbreviateBigNumber,
   fromAssetUnit,
@@ -13,8 +13,8 @@ import {
 } from "utils";
 import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import Name from "../components/account/name";
-import Tooltip from "../components/tooltip";
+import Name from "components/account/name";
+import Tooltip from "components/tooltip";
 
 export default function Assets({node, assets}) {
   return (

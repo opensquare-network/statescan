@@ -185,11 +185,11 @@ const menusAssets = [
     children:[
       {
         name: "Assets",
-        value: "destroyedAssets",
+        value: "destroyed/assets",
       },
       {
         name: "NFT",
-        value: "destroyedNft",
+        value: "destroyed/nft",
       },
     ],
   }

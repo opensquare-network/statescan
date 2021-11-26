@@ -4,7 +4,7 @@ dotenv.config();
 const minimist = require("minimist");
 const dayjs = require("dayjs");
 const { getKlines } = require("./binance");
-const { getLatest } = require("./cmc");
+const { getLatest } = require("./gate");
 const {
   getKsmUsdtDailyCollection,
   getDotUsdtDailyCollection,
@@ -63,11 +63,11 @@ async function saveKlines(col, klines) {
 }
 
 async function saveLatest(col, latest) {
-  const price = latest.quote.USDT.price;
-  const time = latest.quote.USDT.last_updated;
+  const price = latest.last;
+  const time = new Date().getTime();
   await col.insertOne({
     price,
-    time: new Date(time).getTime(),
+    time,
   });
 }
 
@@ -93,20 +93,9 @@ async function tick(symbol) {
 async function tickEveryMinute(symbol) {
   const col = await getCollection(symbol);
 
-  const latestItem = (
-    await col.find({}).sort({ time: -1 }).limit(1).toArray()
-  )[0];
-
   const latest = await getLatest(symbol);
-  if (latest) {
-    console.log(`rmrk price got`);
-  }
 
-  if (
-    latest &&
-    (!latestItem ||
-      latestItem.time !== new Date(latest.quote.USDT.last_updated).getTime())
-  ) {
+  if (latest?.last) {
     await saveLatest(col, latest);
     console.log(`rmrk price saved!`);
   }

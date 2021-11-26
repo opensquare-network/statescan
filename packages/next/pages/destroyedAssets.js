@@ -4,20 +4,28 @@ import Table from "components/table";
 import InLink from "components/inLink";
 import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
-import { assetsHead, EmptyQuery } from "utils/constants";
-import { abbreviateBigNumber, fromAssetUnit, bigNumber2Locale } from "utils";
+import { assetsHead, destroyedAssetsHead, EmptyQuery } from "utils/constants";
+import {
+  abbreviateBigNumber,
+  fromAssetUnit,
+  bigNumber2Locale,
+  time,
+} from "utils";
 import Pagination from "components/pagination";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import Name from "../components/account/name";
 import Tooltip from "../components/tooltip";
 
-export default function Assets({ node, assets }) {
+export default function Assets({node, assets}) {
   return (
     <Layout node={node}>
       <section>
-        <Nav data={[{ name: "Asset Tracker" }]} node={node} />
+        <Nav
+          data={[{name: "Destroyed"}, {name: "Assets"}]}
+          node={node}
+        />
         <Table
-          head={assetsHead}
+          head={destroyedAssetsHead}
           body={(assets?.items || []).map((item, index) => [
             <InLink
               key={`${index}-1`}
@@ -32,24 +40,19 @@ export default function Assets({ node, assets }) {
               assetId={item.assetId}
               destroyedAt={item.destroyedAt}
             />,
-            <Name key={`${index}-3`} name={item.name} />,
+            <Name key={`${index}-3`} name={item.name}/>,
+            time(item.destroyedAt.blockTime),
             <AddressEllipsis
               key={`${index}-4`}
               address={item.owner}
               to={`/account/${item.owner}`}
             />,
-            <AddressEllipsis
-              key={`${index}-5`}
-              address={item.issuer}
-              to={`/account/${item.issuer}`}
-            />,
-            item.accounts,
             <Tooltip
               key={`${index}-5`}
               content={bigNumber2Locale(
                 fromAssetUnit(item.supply, item.decimals)
               )}
-              title="Total Supply"
+              title="Total Destroyed"
               isCopy
               noMinWidth={true}
             >
@@ -72,13 +75,14 @@ export default function Assets({ node, assets }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { page } = context.query;
+  const {page} = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const { result: assets } = await nextApi.fetch(`assets`, {
+  const {result: assets} = await nextApi.fetch(`assets`, {
     page: nPage - 1,
     pageSize: 25,
+    status: "destroyed",
   });
 
   return {

@@ -21,7 +21,7 @@ const TextDarkMinor = styled.span`
   ${text_dark_minor};
 `;
 
-export default function NftClasses({ node, nfts, filter }) {
+export default function NftClasses({node, nfts, filter}) {
   const [showModal, setShowModal] = useState(false);
   const [previewNFTClass, setPreviewNFTCLass] = useState(null);
   const ref = useRef();
@@ -46,8 +46,8 @@ export default function NftClasses({ node, nfts, filter }) {
         />
       </div>
       <section>
-        <Nav data={[{ name: "Destroyed"}, { name: "NFT" }]} node={node} />
-        <Filter total={`All ${nfts?.total} NFT classes`} data={filter} />
+        <Nav data={[{name: "Destroyed"}, {name: "NFT"}]} node={node}/>
+        <Filter total={`All ${nfts?.total} NFT classes`} data={filter}/>
         <Table
           head={destroyedNftHead}
           body={(nfts?.items || []).map((nftClass, index) => [
@@ -64,7 +64,7 @@ export default function NftClasses({ node, nfts, filter }) {
               }}
             />,
             <NftLink key={`name${index}`} nftClass={nftClass}>
-              <NftName name={nftClass?.nftMetadata?.name} />
+              <NftName name={nftClass?.nftMetadata?.name}/>
             </NftLink>,
             <TextDarkMinor key={`time-${index}`}>
               {time(nftClass?.destroyedAt?.blockTime)}
@@ -94,15 +94,15 @@ export default function NftClasses({ node, nfts, filter }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { page, recognized, status } = context.query;
+  const {page, recognized, status} = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const { result: nfts } = await nextApi.fetch(`nftclasses`, {
+  const {result: nfts} = await nextApi.fetch(`nftclasses`, {
     page: nPage - 1,
     pageSize: 25,
     status: "destroyed",
-    ...(recognized ? { recognized } : {}),
+    ...(recognized ? {recognized} : {}),
   });
 
   const filter = [
@@ -111,7 +111,7 @@ export async function getServerSideProps(context) {
       name: "Category",
       query: "recognized",
       options: [
-        { text: "All", value: "" },
+        {text: "All", value: ""},
         {
           text: "Recognized",
           value: "true",

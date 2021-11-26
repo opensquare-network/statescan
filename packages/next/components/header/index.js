@@ -185,7 +185,7 @@ const menusAssets = [
     children:[
       {
         name: "Assets",
-        value: "assets?status=destroyed",
+        value: "destroyedAssets",
       },
       {
         name: "NFT",

@@ -36,5 +36,18 @@ module.exports = {
         NODE_ENV: "production",
       },
     },
+    {
+      name: "asset-price-sync",
+      script: "src/set-asset-price.js",
+      cron_restart: "*/1 * * * *",
+      autorestart: false,
+      log_date_format: "YYYY-MM-DD HH:mm Z",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      },
+    },
   ],
 };

@@ -6,11 +6,18 @@ const { getLatestHeight } = require("../chain/finalizedHead");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const { logger } = require("../logger");
 const last = require("lodash.last");
+const { scanKnownHeights } = require("./known");
+const { firstScanKnowHeights } = require("../env");
 const { clearBlockApi } = require("../chain/blockApi");
 const { getSpecHeights, updateSpecs } = require("../chain/specs");
 
 async function beginRoutineScan() {
   await updateSpecs();
+
+  if (firstScanKnowHeights()) {
+    await scanKnownHeights();
+  }
+
   let scanHeight = await getNextScanHeight();
   while (true) {
     clearBlockApi();
@@ -47,6 +54,8 @@ async function oneStepScan(startHeight) {
     } catch (e) {
       await sleep(1000);
       logger.error(`Error with block scan ${item.height}`, e);
+      console.error(`Error with block scan ${item.height}`, e);
+      throw e;
     }
 
     if (item.height % 100000 === 0) {

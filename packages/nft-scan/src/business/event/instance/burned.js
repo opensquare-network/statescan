@@ -21,7 +21,7 @@ async function handleBurned(event, indexer, blockEvents, extrinsic) {
   };
   await insertInstanceTimelineItem(classId, instanceId, timelineItem, indexer);
 
-  await updateInstance(classId, instanceId, { isDestroyed: true });
+  await updateInstance(classId, instanceId, { isDestroyed: true }, indexer);
   await updateClassWithDetails(classId, indexer);
 }
 

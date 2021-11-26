@@ -134,7 +134,12 @@ async function getNftTransferCollection() {
   return nftTransferCol;
 }
 
+async function closeDataDbClient() {
+  await client.close();
+}
+
 module.exports = {
+  closeDataDbClient,
   initDb,
   getStatusCollection,
   getClassCollection,

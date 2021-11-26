@@ -6,7 +6,7 @@ async function handleAttributeCleared(event, indexer) {
     return;
   }
 
-  await deleteInstanceAttribute(classId, maybeInstanceId, key);
+  await deleteInstanceAttribute(classId, maybeInstanceId, key, indexer);
 }
 
 module.exports = {

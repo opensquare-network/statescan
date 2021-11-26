@@ -12,10 +12,8 @@ async function insertInstance(indexer, classId, instanceId, details) {
   const nftClass = await classCol.findOne({ classId, isDestroyed: false });
   if (!nftClass) {
     logger.error(
-      `Can not find class ${classId} when inserting new instance ${instanceId}`,
-      indexer
+      `Can not find class ${classId} when inserting new instance ${instanceId}, ${indexer}`
     );
-    return;
   }
 
   const classHeight = nftClass.indexer.blockHeight;
@@ -57,10 +55,8 @@ async function insertInstanceTimelineItem(
   });
   if (!nftInstance) {
     logger.error(
-      `Can not find instance /${classId}/${instanceId} when set timeline item`,
-      indexer
+      `Can not find instance /${classId}/${instanceId} when set timeline item, ${indexer}`
     );
-    return;
   }
 
   const instanceHeight = nftInstance.indexer.blockHeight;
@@ -75,12 +71,13 @@ async function insertInstanceTimelineItem(
   });
 }
 
-async function updateInstance(classId, instanceId, updates) {
+async function updateInstance(classId, instanceId, updates, indexer) {
   const classCol = await getClassCollection();
   const nftClass = await classCol.findOne({ classId, isDestroyed: false });
   if (!nftClass) {
-    logger.error(`Can not find class ${classId} when set timeline item`);
-    return;
+    logger.error(
+      `Can not find class ${classId} when set timeline item, ${indexer}`
+    );
   }
 
   const classHeight = nftClass.indexer.blockHeight;
@@ -108,9 +105,8 @@ async function insertInstanceAttribute(
   const nftClass = await classCol.findOne({ classId, isDestroyed: false });
   if (!nftClass) {
     logger.error(
-      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}`
+      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}, ${indexer}`
     );
-    return;
   }
 
   const classHeight = nftClass.indexer.blockHeight;
@@ -124,9 +120,8 @@ async function insertInstanceAttribute(
   });
   if (!nftInstance) {
     logger.error(
-      `Can not find instance /${classId}/${instanceId} when set timeline item`
+      `Can not find instance /${classId}/${instanceId} when set instance attribute, ${indexer}`
     );
-    return;
   }
 
   const instanceHeight = nftInstance.indexer.blockHeight;
@@ -144,12 +139,13 @@ async function insertInstanceAttribute(
   });
 }
 
-async function deleteInstanceAttribute(classId, instanceId, key) {
+async function deleteInstanceAttribute(classId, instanceId, key, indexer) {
   const classCol = await getClassCollection();
   const nftClass = await classCol.findOne({ classId, isDestroyed: false });
   if (!nftClass) {
     logger.error(
-      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}`
+      `Can not find class ${classId} when deleting instance attribute`,
+      indexer
     );
     return;
   }
@@ -165,7 +161,8 @@ async function deleteInstanceAttribute(classId, instanceId, key) {
   });
   if (!nftInstance) {
     logger.error(
-      `Can not find instance /${classId}/${instanceId} when set timeline item`
+      `Can not find instance /${classId}/${instanceId} when set timeline item`,
+      indexer
     );
     return;
   }
@@ -187,7 +184,8 @@ async function insertTransfer(indexer, classId, instanceId, from, to) {
   const nftClass = await classCol.findOne({ classId, isDestroyed: false });
   if (!nftClass) {
     logger.error(
-      `Can not find class ${classId} when set attribute key: ${key}, value: ${value}`
+      `Can not find class ${classId} when inserting instance transfer`,
+      indexer
     );
     return;
   }
@@ -203,7 +201,8 @@ async function insertTransfer(indexer, classId, instanceId, from, to) {
   });
   if (!nftInstance) {
     logger.error(
-      `Can not find instance /${classId}/${instanceId} when set timeline item`
+      `Can not find instance /${classId}/${instanceId} when set timeline item`,
+      indexer
     );
     return;
   }

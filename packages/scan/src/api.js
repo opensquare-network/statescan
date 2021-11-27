@@ -30,12 +30,24 @@ function setApi(targetApi) {
   api = targetApi;
 }
 
+// for test
+function setProvider(p) {
+  provider = p;
+}
+
+// for test
+function getProvider() {
+  return provider;
+}
+
 function isApiConnected() {
   return provider && provider.isConnected;
 }
 
 module.exports = {
   getApi,
+  setProvider,
+  getProvider,
   disconnect,
   setApi,
   isApiConnected,

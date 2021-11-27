@@ -1,39 +1,61 @@
-const { getAllVersionChangeHeights } = require("./mongo/meta");
-const { getRegistryByHeight } = require("./utils/registry");
+const { getAllVersionChangeHeights, getScanHeight } = require("./mongo/meta");
 const findLast = require("lodash.findlast");
+const { getProvider, getApi } = require("./api");
+const { hexToU8a, isHex } = require("@polkadot/util");
 
 let versionChangedHeights = [];
-let registryMap = {};
+let metaScanHeight = 1;
 
 async function updateSpecs() {
   versionChangedHeights = await getAllVersionChangeHeights();
+  metaScanHeight = await getScanHeight();
 }
 
 function getSpecHeights() {
   return versionChangedHeights;
 }
 
-// For test
-function setSpecHeights(heights = []) {
-  versionChangedHeights = heights;
+function getMetaScanHeight() {
+  return metaScanHeight;
 }
 
-async function findRegistry(height) {
-  const mostRecentChangeHeight = findLast(
-    versionChangedHeights,
-    (h) => h <= height
-  );
-  if (!mostRecentChangeHeight) {
-    throw new Error(`Can not find registry for height ${height}`);
+// For test
+async function setSpecHeights(heights = []) {
+  const api = await getApi();
+  for (const height of heights) {
+    const blockHash = await api.rpc.chain.getBlockHash(height);
+    const provider = getProvider();
+    const runtimeVersion = await provider.send("chain_getRuntimeVersion", [
+      blockHash,
+    ]);
+    versionChangedHeights.push({
+      height,
+      runtimeVersion,
+    });
   }
 
-  let registry = registryMap[mostRecentChangeHeight];
-  if (!registry) {
-    registry = await getRegistryByHeight(mostRecentChangeHeight);
-    registryMap[mostRecentChangeHeight] = registry;
+  metaScanHeight = heights[heights.length - 1];
+}
+
+async function findRegistry({ blockHash, blockHeight: height }) {
+  const spec = findMostRecentSpec(height);
+  const api = await getApi();
+
+  let u8aHash = blockHash;
+  if (isHex(blockHash)) {
+    u8aHash = hexToU8a(u8aHash);
   }
 
-  return registry;
+  return (await api.getBlockRegistry(u8aHash, spec.runtimeVersion)).registry;
+}
+
+function findMostRecentSpec(height) {
+  const spec = findLast(versionChangedHeights, (h) => h.height <= height);
+  if (!spec) {
+    throw new Error(`Can not find height ${height}`);
+  }
+
+  return spec;
 }
 
 module.exports = {
@@ -41,4 +63,5 @@ module.exports = {
   getSpecHeights,
   findRegistry,
   setSpecHeights,
+  getMetaScanHeight,
 };

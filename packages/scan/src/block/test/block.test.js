@@ -1,3 +1,4 @@
+const { findBlockHash } = require("../findBlockHash");
 const {
   height,
   blockData,
@@ -7,7 +8,7 @@ const {
 } = require("../../testCommon/data");
 const { extractBlock } = require("../index");
 const { setSpecHeights } = require("../../specs");
-const { setApi } = require("../../api");
+const { setApi, setProvider } = require("../../api");
 jest.setTimeout(3000000);
 
 const { findRegistry } = require("../../specs");
@@ -21,6 +22,7 @@ describe("Block", () => {
   beforeAll(async () => {
     provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
     api = await ApiPromise.create({ provider });
+    setProvider(provider);
     setApi(api);
   });
 
@@ -29,8 +31,12 @@ describe("Block", () => {
   });
 
   test("Extract", async () => {
-    setSpecHeights([height]);
-    const registry = await findRegistry(height);
+    await setSpecHeights([height]);
+    const blockHash = await findBlockHash(height);
+    const registry = await findRegistry({
+      blockHeight: height,
+      blockHash,
+    });
     const block = new GenericBlock(registry, blockData.block);
 
     const blockEvents = registry.createType(

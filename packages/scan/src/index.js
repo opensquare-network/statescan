@@ -7,16 +7,14 @@ const { sleep } = require("./utils/sleep");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
-const { withSession } = require("./mongo");
-const last = require("lodash.last");
 const { isUseMeta } = require("./env");
 const { fetchBlocks } = require("./service/fetchBlocks");
-const { initDb } = require("./mongo");
+const { initDb, withSession } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
-const { updateSpecs, getSpecHeights } = require("./specs");
+const { updateSpecs, getSpecHeights, getMetaScanHeight } = require("./specs");
 const { updateUnFinalized } = require("./unFinalized");
 
 const scanStep = parseInt(process.env.SCAN_STEP) || 100;
@@ -56,8 +54,7 @@ async function main() {
       targetHeight = scanFinalizedHeight + scanStep;
     }
 
-    const specHeights = getSpecHeights();
-    if (targetHeight > last(specHeights)) {
+    if (targetHeight > getMetaScanHeight()) {
       await updateSpecs();
     }
 
@@ -108,7 +105,7 @@ async function main() {
 
         scanFinalizedHeight = block.height + 1;
 
-        if (block.height % 10000 === 0) {
+        if (block.height % 100000 === 0) {
           process.exit(0);
         }
       });

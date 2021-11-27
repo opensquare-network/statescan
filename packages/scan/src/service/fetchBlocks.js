@@ -18,7 +18,10 @@ async function fetchBlocks(heights = []) {
 }
 
 async function constructBlockFromDbData(blockInDb) {
-  const registry = await findRegistry(blockInDb.height);
+  const registry = await findRegistry({
+    blockHeight: blockInDb.height,
+    blockHash: blockInDb.blockHash,
+  });
   const block = new GenericBlock(registry, blockInDb.block.block);
   const allEvents = registry.createType(
     "Vec<EventRecord>",
@@ -47,7 +50,11 @@ async function fetchBlocksFromDb(heights = []) {
         `can not construct block from db data at ${blockInDb.height}`,
         e
       );
+      console.log(
+        `can not construct block from db data at ${blockInDb.height}`
+      );
       block = await makeSureFetch(blockInDb.height);
+      blockLogger.error(`but fetched from node at ${blockInDb.height}`);
     }
 
     blocks.push(block);

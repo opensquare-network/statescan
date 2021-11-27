@@ -1,4 +1,4 @@
-const { setApi, setProvider } = require("../../../api");
+const { setApi, setProvider } = require("@statescan/utils");
 const { findRegistry } = require("../../../specs");
 const { setSpecHeights } = require("../../../specs");
 const { normalizeExtrinsics } = require("../extrinsic");

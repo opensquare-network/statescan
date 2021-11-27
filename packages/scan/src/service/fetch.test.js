@@ -1,6 +1,6 @@
 const { fetchOneBlockFromNode } = require("./fetchBlocks");
 const { elaraStatemine } = require("../testCommon/constants");
-const { setApi } = require("../api");
+const { setApi } = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(3000000);
 

@@ -1,5 +1,5 @@
 const { getOnChainAccounts } = require("./getOnChainAccounts");
-const { setApi } = require("../api");
+const { setApi } = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(3000000);
 

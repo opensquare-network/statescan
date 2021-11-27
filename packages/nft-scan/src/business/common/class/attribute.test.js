@@ -1,6 +1,6 @@
 const { queryClassAttributeByHeight } = require("./attribute");
 const { elaraWestmint, testTimeout } = require("../../../testCommon/constants");
-const { setApi } = require("../../../api");
+const { setApi } = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
 

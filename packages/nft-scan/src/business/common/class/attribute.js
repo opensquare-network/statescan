@@ -1,4 +1,4 @@
-const { getApi } = require("../../../api");
+const { getApi } = require("@statescan/utils");
 const { findBlockApi } = require("../../../chain/blockApi");
 
 async function queryClassAttribute(classId, key, indexer) {

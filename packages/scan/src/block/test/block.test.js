@@ -8,7 +8,7 @@ const {
 } = require("../../testCommon/data");
 const { extractBlock } = require("../index");
 const { setSpecHeights } = require("../../specs");
-const { setApi, setProvider } = require("../../api");
+const { setApi, setProvider } = require("@statescan/utils");
 jest.setTimeout(3000000);
 
 const { findRegistry } = require("../../specs");

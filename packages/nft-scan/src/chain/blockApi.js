@@ -1,4 +1,4 @@
-const { getApi } = require("../api");
+const { getApi } = require("@statescan/utils");
 let blockApiMap = {};
 
 function setBlockApi(blockHash, api) {

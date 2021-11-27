@@ -4,7 +4,7 @@ const { block66710 } = require("../../testCommon/block66710");
 const { GenericBlock } = require("@polkadot/types");
 const { setSpecHeights } = require("../../specs");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
-const { setApi, setProvider } = require("../../api");
+const { setApi, setProvider } = require("@statescan/utils");
 jest.setTimeout(3000000);
 
 describe("XCM", () => {

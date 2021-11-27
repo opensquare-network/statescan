@@ -1,5 +1,5 @@
 const { queryClassMetadataByHeight } = require("./metadata");
-const { setApi } = require("../../../api");
+const { setApi } = require("@statescan/utils");
 const {
   elaraStatemine,
   testTimeout,

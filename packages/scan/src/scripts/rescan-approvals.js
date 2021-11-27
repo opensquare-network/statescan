@@ -8,7 +8,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const minimist = require("minimist");
-const { getApi } = require("../api");
+const { getApi } = require("@statescan/utils");
 const { getBlockIndexer } = require("../block/getBlockIndexer");
 const { updateOrCreateApproval } = require("../event/assets/db");
 
@@ -42,4 +42,6 @@ async function main() {
   await updateOrCreateApproval(blockIndexer, assetId, owner, delegate);
 }
 
-main().catch(console.error).then(() => process.exit(0));
+main()
+  .catch(console.error)
+  .then(() => process.exit(0));

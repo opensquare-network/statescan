@@ -3,7 +3,7 @@ const { isUseMeta } = require("../env");
 const { findRegistry } = require("../specs");
 const { getBlocksByHeights } = require("../mongo/meta");
 const { findBlockApi } = require("../spec/blockApi");
-const { getApi } = require("../api");
+const { getApi } = require("@statescan/utils");
 const { extractAuthor } = require("@polkadot/api-derive/type/util");
 const { GenericBlock } = require("@polkadot/types");
 

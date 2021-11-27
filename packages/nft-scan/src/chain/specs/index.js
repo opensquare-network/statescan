@@ -1,6 +1,6 @@
 const findLast = require("lodash.findlast");
 const { getAllVersionChangeHeights } = require("../../mongo/meta");
-const { getApi, getProvider } = require("../../api");
+const { getApi, getProvider } = require("@statescan/utils");
 const { hexToU8a, isHex } = require("@polkadot/util");
 
 let versionChangedHeights = [];

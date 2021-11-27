@@ -1,9 +1,8 @@
 const { queryInstanceMetadata } = require("./metadata");
 const { setApi } = require("@statescan/utils");
 const {
-  elaraStatemine,
-  testTimeout,
-} = require("../../../testCommon/constants");
+  testConsts: { elaraStatemine, testTimeout },
+} = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
 

@@ -1,4 +1,6 @@
-const { testTimeout } = require("@statescan/nft-scan/src/testCommon/constants");
+const {
+  testConsts: { testTimeout },
+} = require("@statescan/utils");
 const { getBlockFromNode } = require("../fetchBlock");
 const { setApi } = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");

@@ -1,7 +1,6 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
-const { TimelineItemTypes } = require("../../common/constants");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/utils");
 const { insertNewClassWithDetails } = require("./common");
-const { UniquesEvents } = require("../../common/constants");
 
 async function handleCreated(event, indexer) {
   const [classId, creator, owner] = event.data.toJSON();

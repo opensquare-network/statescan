@@ -3,7 +3,7 @@ const {
   insertInstanceTimelineItem,
 } = require("../../../mongo/service/instance");
 const { insertNewInstance } = require("./common");
-const { UniquesEvents, TimelineItemTypes } = require("../../common/constants");
+const { UniquesEvents, TimelineItemTypes } = require("@statescan/utils");
 const { addIssuance } = require("../../../store/blockIssuance");
 
 async function handleIssued(event, indexer, blockEvents, extrinsic) {

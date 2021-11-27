@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { scanNormalizedBlock } = require("../scan");
-const { getBlockIndexer } = require("../block/getBlockIndexer");
+const { getBlockIndexer } = require("@statescan/utils");
 const { getApi } = require("@statescan/utils");
 const {
   specs: { setSpecHeights },

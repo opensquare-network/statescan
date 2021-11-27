@@ -1,4 +1,4 @@
-const { extractBlockTime } = require("./extractBlockTime");
+const { extractBlockTime } = require("./time");
 
 function getBlockIndexer(block) {
   const blockHash = block.hash.toHex();

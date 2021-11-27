@@ -9,7 +9,7 @@ dotenv.config();
 
 const minimist = require("minimist");
 const { getApi } = require("@statescan/utils");
-const { getBlockIndexer } = require("../block/getBlockIndexer");
+const { getBlockIndexer } = require("@statescan/utils");
 const { updateOrCreateApproval } = require("../event/assets/db");
 
 async function main() {

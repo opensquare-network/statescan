@@ -1,5 +1,5 @@
 const { getUpdateAddrStep } = require("../env");
-const { getBlockIndexer } = require("../block/getBlockIndexer");
+const { getBlockIndexer } = require("@statescan/utils");
 const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");

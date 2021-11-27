@@ -1,5 +1,5 @@
 const omit = require("lodash.omit");
-const { extractBlockTime } = require("../../block/extractBlockTime");
+const { extractBlockTime } = require("@statescan/utils");
 
 function normalizeBlock({ block, events, author }) {
   const hash = block.block.hash.toHex();

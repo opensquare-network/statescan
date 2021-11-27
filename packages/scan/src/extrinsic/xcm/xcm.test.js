@@ -1,4 +1,4 @@
-const { getBlockIndexer } = require("../../block/getBlockIndexer");
+const { getBlockIndexer } = require("@statescan/utils");
 const { extractTeleportFromOneMsg } = require("./index");
 const { block66710 } = require("../../testCommon/block66710");
 const { GenericBlock } = require("@polkadot/types");

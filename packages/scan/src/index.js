@@ -5,7 +5,7 @@ const {
   chainHeight: { updateHeight, getLatestFinalizedHeight },
 } = require("@statescan/utils");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
-const { getBlockIndexer } = require("./block/getBlockIndexer");
+const { getBlockIndexer } = require("@statescan/utils");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { isUseMeta } = require("./env");

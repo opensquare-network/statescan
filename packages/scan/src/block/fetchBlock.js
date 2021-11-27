@@ -1,6 +1,5 @@
-const { findBlockApi } = require("../spec/blockApi");
+const { findBlockApi, getApi } = require("@statescan/utils");
 const { extractAuthor } = require("@polkadot/api-derive/type/util");
-const { getApi } = require("@statescan/utils");
 
 async function getBlockFromNode(height) {
   const api = await getApi();

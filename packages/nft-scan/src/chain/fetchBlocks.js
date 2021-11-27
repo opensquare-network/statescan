@@ -1,7 +1,7 @@
 const { findRegistry } = require("./specs");
 const { getBlocksByHeights } = require("../mongo/meta");
 const { blockLogger } = require("../logger");
-const { findBlockApi } = require("./blockApi");
+const { findBlockApi } = require("@statescan/utils");
 const { getApi } = require("@statescan/utils");
 const { GenericBlock } = require("@polkadot/types");
 

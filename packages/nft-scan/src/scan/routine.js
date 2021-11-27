@@ -8,7 +8,7 @@ const { logger } = require("../logger");
 const last = require("lodash.last");
 const { scanKnownHeights } = require("./known");
 const { firstScanKnowHeights } = require("../env");
-const { clearBlockApi } = require("../chain/blockApi");
+const { clearBlockApi } = require("@statescan/utils");
 const { getSpecHeights, updateSpecs } = require("../chain/specs");
 
 async function beginRoutineScan() {

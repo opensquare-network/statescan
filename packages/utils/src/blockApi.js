@@ -1,4 +1,4 @@
-const { getApi } = require("@statescan/utils");
+const { getApi } = require("./api");
 let blockApiMap = {};
 
 function setBlockApi(blockHash, api) {
@@ -22,7 +22,11 @@ function removeBlockApi(blockHash) {
   delete blockApiMap[blockHash];
 }
 
+function clearBlockApi() {
+  blockApiMap = {};
+}
 module.exports = {
   findBlockApi,
   removeBlockApi,
+  clearBlockApi,
 };

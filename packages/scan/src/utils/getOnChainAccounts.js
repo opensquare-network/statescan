@@ -1,4 +1,4 @@
-const { findBlockApi } = require("../spec/blockApi");
+const { findBlockApi } = require("@statescan/utils");
 const { getApi } = require("@statescan/utils");
 const { getAccountStorageKey } = require("./accountStorageKey");
 

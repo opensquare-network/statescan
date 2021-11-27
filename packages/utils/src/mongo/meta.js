@@ -108,10 +108,18 @@ async function getAllVersionChangeHeights() {
   });
 }
 
+async function getScanHeight() {
+  const col = await getStatusCollection();
+  const status = await col.findOne({ name: "main-scan-height" });
+
+  return status?.value || 1;
+}
+
 module.exports = {
   getStatusCollection,
   getBlockCollection,
   getBlocks,
   getAllVersionChangeHeights,
   getBlocksByHeights,
+  getScanHeight,
 };

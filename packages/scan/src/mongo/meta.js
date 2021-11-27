@@ -116,9 +116,6 @@ async function getScanHeight() {
 }
 
 module.exports = {
-  getStatusCollection,
-  getBlockCollection,
-  getBlocks,
   getAllVersionChangeHeights,
   getBlocksByHeights,
   getScanHeight,

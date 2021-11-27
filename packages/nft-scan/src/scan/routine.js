@@ -2,7 +2,9 @@ const { scanBlock } = require("./block");
 const { fetchBlocks } = require("../chain/fetchBlocks");
 const { getScanStep } = require("../env");
 const { sleep } = require("@statescan/utils");
-const { getLatestHeight } = require("../chain/finalizedHead");
+const {
+  chainHeight: { getLatestFinalizedHeight },
+} = require("@statescan/utils");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const { logger } = require("../logger");
 const last = require("lodash.last");
@@ -28,7 +30,7 @@ async function beginRoutineScan() {
 }
 
 async function oneStepScan(startHeight) {
-  const chainHeight = getLatestHeight();
+  const chainHeight = getLatestFinalizedHeight();
   if (startHeight > chainHeight) {
     // Just wait if the to scan height greater than current chain height
     await sleep(3000);
@@ -70,7 +72,7 @@ async function oneStepScan(startHeight) {
 }
 
 function getTargetHeight(startHeight) {
-  const chainHeight = getLatestHeight();
+  const chainHeight = getLatestFinalizedHeight();
 
   let targetHeight = chainHeight;
   const step = getScanStep();

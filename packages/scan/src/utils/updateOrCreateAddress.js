@@ -1,7 +1,9 @@
 const { getAddressCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
 const { getRawAddressCollection } = require("../mongo");
-const { getLatestFinalizedHeight } = require("../chain");
+const {
+  chainHeight: { getLatestFinalizedHeight },
+} = require("@statescan/utils");
 const { getOnChainAccounts } = require("./getOnChainAccounts");
 const { logger } = require("../logger");
 const { toDecimal128, bigAdd } = require(".");

@@ -1,4 +1,4 @@
-const { getApi } = require("@statescan/utils");
+const { getApi } = require("../api");
 
 let latestFinalizedHeight = null;
 let latestUnFinalizedHeight = null;

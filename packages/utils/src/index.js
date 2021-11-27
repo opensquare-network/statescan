@@ -4,6 +4,7 @@ const apiRelated = require("./api");
 const blockApiObj = require("./blockApi");
 const meta = require("./mongo/meta");
 const specs = require("./chain/specs");
+const chainHeight = require("./chain/height");
 
 module.exports = {
   sleep,
@@ -12,4 +13,5 @@ module.exports = {
   ...blockApiObj,
   meta,
   specs,
+  chainHeight,
 };

@@ -1,7 +1,9 @@
 require("dotenv").config();
 
 const { disconnect, isApiConnected } = require("@statescan/utils");
-const { updateHeight, getLatestFinalizedHeight } = require("./chain");
+const {
+  chainHeight: { updateHeight, getLatestFinalizedHeight },
+} = require("@statescan/utils");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { logger } = require("./logger");

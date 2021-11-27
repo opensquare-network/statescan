@@ -13,7 +13,9 @@ const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
-const { updateSpecs, getSpecHeights, getMetaScanHeight } = require("./specs");
+const {
+  specs: { updateSpecs, getSpecHeights, getMetaScanHeight },
+} = require("@statescan/utils");
 const { updateUnFinalized } = require("./unFinalized");
 const { sleep } = require("@statescan/utils");
 

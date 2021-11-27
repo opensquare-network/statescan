@@ -1,6 +1,8 @@
 const { blockLogger } = require("../logger");
 const { isUseMeta } = require("../env");
-const { findRegistry } = require("../specs");
+const {
+  specs: { findRegistry },
+} = require("@statescan/utils");
 const {
   meta: { getBlocksByHeights },
 } = require("@statescan/utils");

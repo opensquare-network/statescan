@@ -9,7 +9,9 @@ const last = require("lodash.last");
 const { scanKnownHeights } = require("./known");
 const { firstScanKnowHeights } = require("../env");
 const { clearBlockApi } = require("@statescan/utils");
-const { getSpecHeights, updateSpecs } = require("../chain/specs");
+const {
+  specs: { updateSpecs, getMetaScanHeight },
+} = require("@statescan/utils");
 
 async function beginRoutineScan() {
   await updateSpecs();
@@ -34,8 +36,7 @@ async function oneStepScan(startHeight) {
   }
 
   const targetHeight = getTargetHeight(startHeight);
-  const specHeights = getSpecHeights();
-  if (targetHeight > last(specHeights).height) {
+  if (targetHeight > getMetaScanHeight()) {
     await updateSpecs();
   }
 

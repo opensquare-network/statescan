@@ -7,7 +7,8 @@
   "dependencies": {
     "@polkadot/api": "6.9.2",
     "mongodb": "4.1.2",
-    "lodash.omit": "^4.5.0"
+    "lodash.omit": "^4.5.0",
+    "lodash.last": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^16.10.1",

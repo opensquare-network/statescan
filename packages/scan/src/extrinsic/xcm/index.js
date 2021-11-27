@@ -1,7 +1,9 @@
 const { blake2AsHex } = require("@polkadot/util-crypto");
 const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
-const { findRegistry } = require("../../specs");
+const {
+  specs: { findRegistry },
+} = require("@statescan/utils");
 const { bigAdd } = require("../../utils");
 const { addAddress } = require("../../store/blockAddresses");
 const { logger, teleportLogger } = require("../../logger");

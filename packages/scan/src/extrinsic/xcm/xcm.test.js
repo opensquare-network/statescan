@@ -2,7 +2,9 @@ const { getBlockIndexer } = require("../../block/getBlockIndexer");
 const { extractTeleportFromOneMsg } = require("./index");
 const { block66710 } = require("../../testCommon/block66710");
 const { GenericBlock } = require("@polkadot/types");
-const { setSpecHeights } = require("../../specs");
+const {
+  specs: { setSpecHeights },
+} = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 const { setApi, setProvider } = require("@statescan/utils");
 jest.setTimeout(3000000);

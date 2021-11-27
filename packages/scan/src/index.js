@@ -3,7 +3,6 @@ require("dotenv").config();
 const { disconnect, isApiConnected } = require("./api");
 const { updateHeight, getLatestFinalizedHeight } = require("./chain");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
-const { sleep } = require("./utils/sleep");
 const { getBlockIndexer } = require("./block/getBlockIndexer");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
@@ -16,6 +15,7 @@ const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
 const { updateSpecs, getSpecHeights, getMetaScanHeight } = require("./specs");
 const { updateUnFinalized } = require("./unFinalized");
+const { sleep } = require("@statescan/utils");
 
 const scanStep = parseInt(process.env.SCAN_STEP) || 100;
 

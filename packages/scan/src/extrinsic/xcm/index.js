@@ -1,9 +1,9 @@
 const { blake2AsHex } = require("@polkadot/util-crypto");
 const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
+const { findRegistry } = require("../../specs");
 const { bigAdd } = require("../../utils");
 const { addAddress } = require("../../store/blockAddresses");
-const { getRegistryByHeight } = require("../../utils/registry");
 const { logger, teleportLogger } = require("../../logger");
 
 async function saveNewTeleportAssetOut(
@@ -139,7 +139,7 @@ async function handleTeleportAssetDownwardMessage(extrinsic, extrinsicIndexer) {
     return;
   }
 
-  const registry = await getRegistryByHeight(extrinsicIndexer.blockHeight);
+  const registry = await findRegistry(extrinsicIndexer);
   const teleports = extractTeleportAssets(
     registry,
     downwardMessages,

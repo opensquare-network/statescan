@@ -1,0 +1,17 @@
+{
+  "name": "@statescan/utils",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "license": "Apache-2.0",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^16.10.1",
+    "jest": "^27.1.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@polkadot|@babel)/)"
+    ]
+  }
+}

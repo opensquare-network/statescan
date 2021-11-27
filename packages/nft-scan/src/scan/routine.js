@@ -1,7 +1,7 @@
 const { scanBlock } = require("./block");
 const { fetchBlocks } = require("../chain/fetchBlocks");
 const { getScanStep } = require("../env");
-const { sleep } = require("../utils/sleep");
+const { sleep } = require("@statescan/utils");
 const { getLatestHeight } = require("../chain/finalizedHead");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const { logger } = require("../logger");

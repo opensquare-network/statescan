@@ -20,7 +20,8 @@
     "lodash.omit": "^4.5.0",
     "log4js": "^6.3.0",
     "moment-timezone": "^0.5.33",
-    "mongodb": "4.1.2"
+    "mongodb": "4.1.2",
+    "@statescan/utils": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^16.10.1",

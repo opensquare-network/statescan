@@ -1,4 +1,4 @@
-const { Modules, AssetsEvents } = require("../../utils/constants");
+const { Modules, AssetsEvents } = require("@statescan/common");
 const { addAddresses } = require("../../store/blockAddresses");
 const { addAddress } = require("../../store/blockAddresses");
 const {
@@ -7,7 +7,7 @@ const {
   saveNewAssetTransfer,
   updateOrCreateAsset,
   saveAssetTimeline,
-  destroyAsset
+  destroyAsset,
 } = require("./db");
 
 function isAssetsEvent(section) {

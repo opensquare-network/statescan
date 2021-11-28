@@ -1,7 +1,8 @@
-const { testTimeout } = require("../../../testCommon/constants");
+const {
+  testConsts: { testTimeout, elaraStatemine },
+} = require("@statescan/common");
 const { queryInstanceDetails } = require("./storage");
-const { setApi } = require("../../../api");
-const { elaraStatemine } = require("../../../testCommon/constants");
+const { setApi } = require("@statescan/common");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
 

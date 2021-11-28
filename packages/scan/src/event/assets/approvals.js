@@ -1,4 +1,4 @@
-const { findBlockApi } = require("../../spec/blockApi");
+const { findBlockApi } = require("@statescan/common");
 
 async function getAssetsApprovals(blockHash, assetId, owner, delegate) {
   const blockApi = await findBlockApi(blockHash);

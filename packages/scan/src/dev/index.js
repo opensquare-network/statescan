@@ -1,16 +1,18 @@
 require("dotenv").config();
 
 const { scanNormalizedBlock } = require("../scan");
-const { getBlockIndexer } = require("../block/getBlockIndexer");
-const { getApi } = require("../api");
-const { setSpecHeights } = require("../specs");
+const {
+  getBlockIndexer,
+  getApi,
+  specs: { setSpecHeights },
+} = require("@statescan/common");
 const { initDb, withSession } = require("../mongo");
 
 async function test() {
   await initDb();
   const height = 1062098;
   // const height = 917004;
-  setSpecHeights([height]);
+  await setSpecHeights([height]);
 
   const api = await getApi();
   const blockHash = await api.rpc.chain.getBlockHash(height);

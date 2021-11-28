@@ -1,8 +1,7 @@
 const { normalizeBlock } = require("../utils/normalize/block");
 const {
-  getLatestFinalizedHeight,
-  getLatestUnFinalizedHeight,
-} = require("../chain");
+  chainHeight: { getLatestFinalizedHeight, getLatestUnFinalizedHeight },
+} = require("@statescan/common");
 const { getUnFinalizedBlockCollection } = require("../mongo");
 const { getBlockFromNode } = require("../block/fetchBlock");
 const { saveBlocksEventData } = require("./events");

@@ -1,4 +1,4 @@
-const { getApi } = require("../api");
+const { getApi } = require("@statescan/common");
 
 async function findBlockHash(height) {
   const api = await getApi();

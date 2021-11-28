@@ -2,7 +2,9 @@ require("dotenv").config();
 
 const { beginRoutineScan } = require("./scan/routine");
 const { initDb } = require("./mongo");
-const { subscribeFinalizedHeight } = require("./chain/finalizedHead");
+const {
+  chainHeight: { updateHeight: subscribeFinalizedHeight },
+} = require("@statescan/common");
 
 async function main() {
   await initDb();

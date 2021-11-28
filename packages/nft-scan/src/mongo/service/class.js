@@ -1,6 +1,6 @@
 const { getClassAttributeCollection } = require("../index");
 const { getClassCollection, getClassTimelineCollection } = require("../index");
-const { logger } = require("../../logger");
+const { logger } = require("@statescan/common");
 
 async function insertClass(indexer, classId, details) {
   const classCol = await getClassCollection();

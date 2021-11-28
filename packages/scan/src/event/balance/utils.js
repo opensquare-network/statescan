@@ -1,4 +1,4 @@
-const { Modules } = require("../../utils/constants");
+const { Modules } = require("@statescan/common");
 
 function isBalancesEvent(section) {
   return section === Modules.Balances;

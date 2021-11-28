@@ -1,6 +1,5 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
-const { TimelineItemTypes } = require("../../common/constants");
-const { UniquesEvents } = require("../../common/constants");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { updateClassWithDetails } = require("./common");
 
 async function handleThawed(event, indexer) {

@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { sleep } = require("../utils/sleep");
+const { sleep } = require("@statescan/common");
 
 const {
   getClassCollection,
@@ -11,7 +11,7 @@ const { scanMeta, scanMetaImage } = require("./utils");
 
 async function queueIpfsTask(nftCol) {
   const items =
-    (await nftCol.find({ "dataHash": { $ne: null } }).toArray()) || [];
+    (await nftCol.find({ dataHash: { $ne: null } }).toArray()) || [];
   if (items.length === 0) {
     return;
   }

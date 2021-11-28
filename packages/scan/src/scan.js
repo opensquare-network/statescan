@@ -1,4 +1,4 @@
-const { removeBlockApi } = require("./spec/blockApi");
+const { removeBlockApi } = require("@statescan/common");
 const { setLastBlockIndexer } = require("./statistic/date");
 const { saveData } = require("./service");
 const { handleEvents } = require("./event");

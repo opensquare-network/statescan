@@ -1,4 +1,4 @@
-const { BalancesEvents } = require("@statescan/utils");
+const { BalancesEvents } = require("@statescan/common");
 const { handleTransfer } = require("./transfer");
 const { isBalancesEvent } = require("../utils");
 

@@ -11,7 +11,7 @@ const { handleTeamChanged } = require("./teamChanged");
 const { handleAssetStatusChanged } = require("./assetStatusChanged");
 const { handleOwnerChanged } = require("./ownerChanged");
 const { handleRedeposited } = require("./redeposited");
-const { Modules, UniquesEvents } = require("@statescan/utils");
+const { Modules, UniquesEvents } = require("@statescan/common");
 
 async function handleEvent(event, indexer, blockEvents, extrinsic) {
   const { section, method } = event;

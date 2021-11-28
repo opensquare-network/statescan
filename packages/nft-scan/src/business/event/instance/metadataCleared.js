@@ -1,7 +1,7 @@
 const {
   insertInstanceTimelineItem,
 } = require("../../../mongo/service/instance");
-const { TimelineItemTypes, UniquesEvents } = require("@statescan/utils");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { updateClassWithDetails } = require("../class/common");
 const { updateMetadata } = require("./common");
 

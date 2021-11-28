@@ -1,5 +1,4 @@
-const { findBlockApi } = require("@statescan/utils");
-const { getApi } = require("@statescan/utils");
+const { findBlockApi, getApi } = require("@statescan/common");
 const { getAccountStorageKey } = require("./accountStorageKey");
 
 async function getOnChainAccounts(indexer, addrs = []) {

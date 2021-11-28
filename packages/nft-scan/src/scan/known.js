@@ -1,4 +1,4 @@
-const { sleep } = require("@statescan/utils");
+const { sleep } = require("@statescan/common");
 const { updateScanHeight } = require("../mongo/scanHeight");
 const { fetchBlocks } = require("../chain/fetchBlocks");
 const { getNextKnownHeights } = require("../mongo/service/known");

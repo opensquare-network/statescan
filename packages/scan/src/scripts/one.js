@@ -2,10 +2,9 @@ require("dotenv").config();
 
 const { normalizeEvents } = require("../utils/normalize/event");
 const { normalizeExtrinsics } = require("../utils/normalize/extrinsic");
-const { getBlockIndexer } = require("@statescan/utils");
+const { getBlockIndexer, getApi } = require("@statescan/common");
 const { normalizeBlock } = require("../utils/normalize/block");
 const { getBlockFromNode } = require("../block/fetchBlock");
-const { getApi } = require("@statescan/utils");
 const { updateHeight, getLatestFinalizedHeight } = require("../chain");
 const {
   getBlockCollection,

@@ -1,8 +1,9 @@
 const { findBlockHash } = require("../../../block/findBlockHash");
-const { setApi, setProvider } = require("@statescan/utils");
 const {
+  setApi,
+  setProvider,
   specs: { findRegistry, setSpecHeights },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const {
   height,
   blockData,

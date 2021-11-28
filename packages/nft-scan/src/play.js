@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { scanBlock } = require("./scan/block");
-const { getApi } = require("@statescan/utils");
+const { getApi } = require("@statescan/common");
 const { initDb } = require("./mongo");
 
 async function test() {

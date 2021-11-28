@@ -1,8 +1,8 @@
 const {
+  setApi,
   testConsts: { testTimeout },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const { getBlockFromNode } = require("../fetchBlock");
-const { setApi } = require("@statescan/utils");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
 

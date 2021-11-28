@@ -1,4 +1,4 @@
-const { Modules, SystemEvents, BalancesEvents } = require("@statescan/utils");
+const { Modules, SystemEvents, BalancesEvents } = require("@statescan/common");
 
 function ignoreInExtrinsicList(call) {
   const { section, method } = call;

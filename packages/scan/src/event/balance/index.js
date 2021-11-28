@@ -1,4 +1,4 @@
-const { BalancesEvents } = require("@statescan/utils");
+const { BalancesEvents } = require("@statescan/common");
 const { isBalancesEvent } = require("./utils");
 const { addNativeTransfer } = require("../../store/blockNativeTokenTransfers");
 const { addAddresses } = require("../../store/blockAddresses");

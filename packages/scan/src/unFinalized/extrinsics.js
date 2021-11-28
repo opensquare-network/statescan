@@ -1,5 +1,5 @@
 const { normalizeExtrinsics } = require("../utils/normalize/extrinsic");
-const { getBlockIndexer } = require("@statescan/utils");
+const { getBlockIndexer } = require("@statescan/common");
 const { getUnFinalizedExrinsicCollection } = require("../mongo/index");
 
 async function saveBlocksExtrinsicData(blockDataArr = []) {

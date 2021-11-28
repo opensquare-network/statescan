@@ -1,4 +1,4 @@
-const { getBlockIndexer } = require("@statescan/utils");
+const { getBlockIndexer } = require("@statescan/common");
 const { normalizeEvents } = require("../utils/normalize/event");
 const { getUnFinalizedEventCollection } = require("../mongo/index");
 

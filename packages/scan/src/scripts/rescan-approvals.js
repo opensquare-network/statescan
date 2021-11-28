@@ -8,8 +8,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const minimist = require("minimist");
-const { getApi } = require("@statescan/utils");
-const { getBlockIndexer } = require("@statescan/utils");
+const { getApi, getBlockIndexer } = require("@statescan/common");
 const { updateOrCreateApproval } = require("../event/assets/db");
 
 async function main() {

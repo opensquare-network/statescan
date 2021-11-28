@@ -1,20 +1,16 @@
 const { scanBlock } = require("./block");
 const { fetchBlocks } = require("../chain/fetchBlocks");
 const {
+  sleep,
+  clearBlockApi,
   env: { getScanStep, firstScanKnowHeights },
-} = require("@statescan/utils");
-const { sleep } = require("@statescan/utils");
-const {
   chainHeight: { getLatestFinalizedHeight },
-} = require("@statescan/utils");
+  specs: { updateSpecs, getMetaScanHeight },
+} = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const { logger } = require("../logger");
 const last = require("lodash.last");
 const { scanKnownHeights } = require("./known");
-const { clearBlockApi } = require("@statescan/utils");
-const {
-  specs: { updateSpecs, getMetaScanHeight },
-} = require("@statescan/utils");
 
 async function beginRoutineScan() {
   await updateSpecs();

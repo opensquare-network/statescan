@@ -1,5 +1,5 @@
 const { updateClassWithDetails } = require("../event/class/common");
-const { TimelineItemTypes, UniquesEvents } = require("@statescan/utils");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { getClasses } = require("../../mongo/service/class");
 const {
   getInstanceCollection,

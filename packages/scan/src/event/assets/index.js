@@ -1,4 +1,4 @@
-const { Modules, AssetsEvents } = require("@statescan/utils");
+const { Modules, AssetsEvents } = require("@statescan/common");
 const { addAddresses } = require("../../store/blockAddresses");
 const { addAddress } = require("../../store/blockAddresses");
 const {

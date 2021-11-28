@@ -1,12 +1,13 @@
-const { getBlockIndexer } = require("@statescan/utils");
 const { extractTeleportFromOneMsg } = require("./index");
 const { block66710 } = require("../../testCommon/block66710");
 const { GenericBlock } = require("@polkadot/types");
 const {
+  setApi,
+  setProvider,
+  getBlockIndexer,
   specs: { setSpecHeights },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
-const { setApi, setProvider } = require("@statescan/utils");
 jest.setTimeout(3000000);
 
 describe("XCM", () => {

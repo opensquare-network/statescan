@@ -1,5 +1,5 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
-const { TimelineItemTypes, UniquesEvents } = require("@statescan/utils");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { updateMetadata } = require("./common");
 
 async function handleMetadataCleared(event, indexer) {

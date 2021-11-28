@@ -1,7 +1,7 @@
 const {
   insertInstanceTimelineItem,
 } = require("../../../mongo/service/instance");
-const { TimelineItemTypes, UniquesEvents } = require("@statescan/utils");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { updateInstanceWithDetails } = require("./common");
 
 async function handleFrozen(event, indexer, blockEvents, extrinsic) {

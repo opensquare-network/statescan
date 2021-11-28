@@ -4,7 +4,7 @@ const { beginRoutineScan } = require("./scan/routine");
 const { initDb } = require("./mongo");
 const {
   chainHeight: { updateHeight: subscribeFinalizedHeight },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 
 async function main() {
   await initDb();

@@ -1,27 +1,24 @@
 require("dotenv").config();
 
-const { disconnect, isApiConnected } = require("@statescan/utils");
 const {
+  sleep,
+  disconnect,
+  isApiConnected,
+  getBlockIndexer,
   chainHeight: { updateHeight, getLatestFinalizedHeight },
-} = require("@statescan/utils");
+  specs: { updateSpecs, getSpecHeights, getMetaScanHeight },
+  env: { isUseMeta },
+} = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
-const { getBlockIndexer } = require("@statescan/utils");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
-const {
-  env: { isUseMeta },
-} = require("@statescan/utils");
 const { fetchBlocks } = require("./service/fetchBlocks");
 const { initDb, withSession } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
-const {
-  specs: { updateSpecs, getSpecHeights, getMetaScanHeight },
-} = require("@statescan/utils");
 const { updateUnFinalized } = require("./unFinalized");
-const { sleep } = require("@statescan/utils");
 
 const scanStep = parseInt(process.env.SCAN_STEP) || 100;
 

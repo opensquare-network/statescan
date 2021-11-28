@@ -1,4 +1,4 @@
-const { Modules, SystemEvents } = require("@statescan/utils");
+const { Modules, SystemEvents } = require("@statescan/common");
 const { addAddress } = require("../../store/blockAddresses");
 
 function isSystemEvent(section) {

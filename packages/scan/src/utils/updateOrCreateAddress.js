@@ -3,7 +3,7 @@ const asyncLocalStorage = require("../asynclocalstorage");
 const { getRawAddressCollection } = require("../mongo");
 const {
   chainHeight: { getLatestFinalizedHeight },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const { getOnChainAccounts } = require("./getOnChainAccounts");
 const { logger } = require("../logger");
 const { toDecimal128, bigAdd } = require(".");

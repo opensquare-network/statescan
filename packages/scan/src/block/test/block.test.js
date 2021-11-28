@@ -8,14 +8,12 @@ const {
 } = require("../../testCommon/data");
 const { extractBlock } = require("../index");
 const {
-  specs: { setSpecHeights },
-} = require("@statescan/utils");
-const { setApi, setProvider } = require("@statescan/utils");
+  setApi,
+  setProvider,
+  specs: { setSpecHeights, findRegistry },
+} = require("@statescan/common");
 jest.setTimeout(3000000);
 
-const {
-  specs: { findRegistry },
-} = require("@statescan/utils");
 const { GenericBlock } = require("@polkadot/types");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 

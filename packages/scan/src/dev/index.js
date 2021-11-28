@@ -1,11 +1,11 @@
 require("dotenv").config();
 
 const { scanNormalizedBlock } = require("../scan");
-const { getBlockIndexer } = require("@statescan/utils");
-const { getApi } = require("@statescan/utils");
 const {
+  getBlockIndexer,
+  getApi,
   specs: { setSpecHeights },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const { initDb, withSession } = require("../mongo");
 
 async function test() {

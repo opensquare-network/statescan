@@ -1,15 +1,11 @@
 const { blockLogger } = require("../logger");
 const {
   env: { isUseMeta },
-} = require("@statescan/utils");
-const {
   specs: { findRegistry },
-} = require("@statescan/utils");
-const {
   meta: { getBlocksByHeights },
-} = require("@statescan/utils");
-const { findBlockApi } = require("@statescan/utils");
-const { getApi } = require("@statescan/utils");
+  findBlockApi,
+  getApi,
+} = require("@statescan/common");
 const { extractAuthor } = require("@polkadot/api-derive/type/util");
 const { GenericBlock } = require("@polkadot/types");
 

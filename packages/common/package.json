@@ -1,5 +1,5 @@
 {
-  "name": "@statescan/utils",
+  "name": "@statescan/common",
   "version": "1.0.0",
   "main": "src/index.js",
   "license": "Apache-2.0",

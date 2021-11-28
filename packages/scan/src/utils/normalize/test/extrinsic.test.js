@@ -1,7 +1,8 @@
-const { setApi, setProvider } = require("@statescan/utils");
 const {
+  setApi,
+  setProvider,
   specs: { findRegistry, setSpecHeights },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const { normalizeExtrinsics } = require("../extrinsic");
 const {
   height,

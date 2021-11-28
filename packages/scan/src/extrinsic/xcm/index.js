@@ -3,7 +3,7 @@ const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
 const {
   specs: { findRegistry },
-} = require("@statescan/utils");
+} = require("@statescan/common");
 const { bigAdd } = require("../../utils");
 const { addAddress } = require("../../store/blockAddresses");
 const { logger, teleportLogger } = require("../../logger");

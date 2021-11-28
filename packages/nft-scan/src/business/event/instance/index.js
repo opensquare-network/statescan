@@ -1,4 +1,4 @@
-const { Modules, UniquesEvents } = require("@statescan/utils");
+const { Modules, UniquesEvents } = require("@statescan/common");
 const { handleApprovalCancelled } = require("./approvalCancelled");
 const { handleApprovedTransfer } = require("./approvedTransfer");
 const { handleBurned } = require("./burned");

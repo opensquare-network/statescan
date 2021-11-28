@@ -1,6 +1,6 @@
 require("dotenv").config();
 
-const { sleep } = require("@statescan/utils");
+const { sleep } = require("@statescan/common");
 
 const {
   getClassCollection,

@@ -1,7 +1,7 @@
 const {
+  getBlockIndexer,
   env: { getUpdateAddrStep },
-} = require("@statescan/utils");
-const { getBlockIndexer } = require("@statescan/utils");
+} = require("@statescan/common");
 const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");

@@ -1,11 +1,10 @@
 const {
+  blockLogger,
+  findBlockApi,
+  getApi,
   specs: { findRegistry },
-} = require("@statescan/common");
-const {
   meta: { getBlocksByHeights },
 } = require("@statescan/common");
-const { blockLogger } = require("../logger");
-const { findBlockApi, getApi } = require("@statescan/common");
 const { GenericBlock } = require("@polkadot/types");
 
 async function fetchBlocks(heights = []) {

@@ -1,5 +1,5 @@
-const { blockLogger } = require("../logger");
 const {
+  blockLogger,
   env: { isUseMeta },
   specs: { findRegistry },
   meta: { getBlocksByHeights },

@@ -8,6 +8,7 @@ const chainHeight = require("./chain/height");
 const testConsts = require("./testCommon/constants");
 const blockUtils = require("./block");
 const env = require("./env");
+const logger = require("./logger");
 
 module.exports = {
   sleep,
@@ -20,4 +21,5 @@ module.exports = {
   testConsts,
   ...blockUtils,
   env,
+  ...logger,
 };

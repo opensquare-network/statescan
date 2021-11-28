@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const {
+  logger,
   sleep,
   disconnect,
   isApiConnected,
@@ -10,7 +11,6 @@ const {
   env: { isUseMeta },
 } = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
-const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
 const { fetchBlocks } = require("./service/fetchBlocks");
 const { initDb, withSession } = require("./mongo");

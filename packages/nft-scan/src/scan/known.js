@@ -1,9 +1,8 @@
-const { sleep } = require("@statescan/common");
+const { sleep, logger } = require("@statescan/common");
 const { updateScanHeight } = require("../mongo/scanHeight");
 const { fetchBlocks } = require("../chain/fetchBlocks");
 const { getNextKnownHeights } = require("../mongo/service/known");
 const { getNextScanHeight } = require("../mongo/scanHeight");
-const { logger } = require("../logger");
 const last = require("lodash.last");
 const { scanBlock } = require("./block");
 

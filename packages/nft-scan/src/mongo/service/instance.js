@@ -5,7 +5,7 @@ const {
   getInstanceAttributeCollection,
   getNftTransferCollection,
 } = require("../index");
-const { logger } = require("../../logger");
+const { logger } = require("@statescan/common");
 
 async function insertInstance(indexer, classId, instanceId, details) {
   const classCol = await getClassCollection();

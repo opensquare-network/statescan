@@ -2,10 +2,10 @@ const { getAddressCollection } = require("../mongo");
 const asyncLocalStorage = require("../asynclocalstorage");
 const { getRawAddressCollection } = require("../mongo");
 const {
+  logger,
   chainHeight: { getLatestFinalizedHeight },
 } = require("@statescan/common");
 const { getOnChainAccounts } = require("./getOnChainAccounts");
-const { logger } = require("../logger");
 const { toDecimal128, bigAdd } = require(".");
 
 async function saveToRawAddrs(addrs = [], session) {

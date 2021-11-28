@@ -1,11 +1,11 @@
 const {
+  logger,
   getBlockIndexer,
   env: { getUpdateAddrStep },
 } = require("@statescan/common");
 const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
 const { getRawAddressCollection, getAddressCollection } = require("../mongo");
-const { logger } = require("../logger");
 
 async function getNotUpdatedAddresses() {
   const updateAddrStep = getUpdateAddrStep();

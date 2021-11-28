@@ -2,11 +2,12 @@ const { blake2AsHex } = require("@polkadot/util-crypto");
 const { getTeleportCollection } = require("../../mongo");
 const asyncLocalStorage = require("../../asynclocalstorage");
 const {
+  logger,
+  teleportLogger,
   specs: { findRegistry },
 } = require("@statescan/common");
 const { bigAdd } = require("../../utils");
 const { addAddress } = require("../../store/blockAddresses");
-const { logger, teleportLogger } = require("../../logger");
 
 async function saveNewTeleportAssetOut(
   extrinsicIndexer,

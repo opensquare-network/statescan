@@ -8,7 +8,9 @@ const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const { getBlockIndexer } = require("@statescan/utils");
 const { logger } = require("./logger");
 const asyncLocalStorage = require("./asynclocalstorage");
-const { isUseMeta } = require("./env");
+const {
+  env: { isUseMeta },
+} = require("@statescan/utils");
 const { fetchBlocks } = require("./service/fetchBlocks");
 const { initDb, withSession } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");

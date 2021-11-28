@@ -1,4 +1,6 @@
-const { getUpdateAddrStep } = require("../env");
+const {
+  env: { getUpdateAddrStep },
+} = require("@statescan/utils");
 const { getBlockIndexer } = require("@statescan/utils");
 const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");

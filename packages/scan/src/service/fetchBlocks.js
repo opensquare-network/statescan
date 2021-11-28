@@ -1,5 +1,7 @@
 const { blockLogger } = require("../logger");
-const { isUseMeta } = require("../env");
+const {
+  env: { isUseMeta },
+} = require("@statescan/utils");
 const {
   specs: { findRegistry },
 } = require("@statescan/utils");

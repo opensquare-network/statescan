@@ -12,6 +12,7 @@
   },
   "scripts": {
     "scan": "yarn workspace @statescan/scan scan",
+    "nftscan": "yarn workspace @statescan/nft-scan scan",
     "test": "yarn workspace @statescan/scan test",
     "lint": "yarn workspace @statescan/server lint"
   },

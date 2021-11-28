@@ -1,20 +1,18 @@
-const {
-  blockLogger,
-  env: { isUseMeta },
-  specs: { findRegistry },
-  meta: { getBlocksByHeights },
-  findBlockApi,
-  getApi,
-} = require("@statescan/common");
+const { findBlockApi } = require("../blockApi");
+const { getApi } = require("../api");
+const { blockLogger } = require("../logger");
+const { getBlocksByHeights } = require("../mongo/meta");
+const { findRegistry } = require("./specs");
+const { isUseMeta } = require("../env");
 const { extractAuthor } = require("@polkadot/api-derive/type/util");
 const { GenericBlock } = require("@polkadot/types");
 
-async function fetchBlocks(heights = []) {
+async function fetchBlocks(heights = [], doFetchAuthor = false) {
   let blocks;
   if (isUseMeta()) {
-    blocks = await fetchBlocksFromDb(heights);
+    blocks = await fetchBlocksFromDb(heights, doFetchAuthor);
   } else {
-    blocks = await fetchBlocksFromNode(heights);
+    blocks = await fetchBlocksFromNode(heights, doFetchAuthor);
   }
   return blocks.filter((b) => b !== null);
 }
@@ -39,7 +37,7 @@ async function constructBlockFromDbData(blockInDb) {
   };
 }
 
-async function fetchBlocksFromDb(heights = []) {
+async function fetchBlocksFromDb(heights = [], doFetchAuthor = false) {
   const blocksInDb = await getBlocksByHeights(heights);
 
   const blocks = [];
@@ -55,7 +53,7 @@ async function fetchBlocksFromDb(heights = []) {
       console.log(
         `can not construct block from db data at ${blockInDb.height}`
       );
-      block = await makeSureFetch(blockInDb.height);
+      block = await makeSureFetch(blockInDb.height, doFetchAuthor);
       blockLogger.error(`but fetched from node at ${blockInDb.height}`);
     }
 
@@ -65,28 +63,27 @@ async function fetchBlocksFromDb(heights = []) {
   return blocks;
 }
 
-async function fetchBlocksFromNode(heights = []) {
+async function fetchBlocksFromNode(heights = [], doFetchAuthor = false) {
   const allPromises = [];
   for (const height of heights) {
-    allPromises.push(makeSureFetch(height));
+    allPromises.push(makeSureFetch(height, doFetchAuthor));
   }
 
   return await Promise.all(allPromises);
 }
 
-async function makeSureFetch(height) {
+async function makeSureFetch(height, doFetchAuthor = false) {
   try {
-    return await fetchOneBlockFromNode(height);
+    return await fetchOneBlockFromNode(height, doFetchAuthor);
   } catch (e) {
     blockLogger.error(`error fetch block ${height}`, e);
     return null;
   }
 }
 
-async function fetchOneBlockFromNode(height) {
+async function fetchOneBlockFromNode(height, doFetchAuthor = false) {
   const api = await getApi();
   const blockHash = await api.rpc.chain.getBlockHash(height);
-
   const blockApi = await findBlockApi(blockHash);
 
   const promises = [
@@ -94,7 +91,7 @@ async function fetchOneBlockFromNode(height) {
     blockApi.query.system.events(),
   ];
 
-  if (blockApi.query.session?.validators) {
+  if (blockApi.query.session?.validators && doFetchAuthor) {
     promises.push(blockApi.query.session.validators());
   }
 
@@ -111,12 +108,20 @@ async function fetchOneBlockFromNode(height) {
     author = extractAuthor(digest, validators);
   }
 
-  return {
+  const result = {
     height,
     block: block.block,
     events,
-    author: author ? author.toString() : author,
   };
+
+  if (doFetchAuthor && author) {
+    return {
+      ...result,
+      author: author.toString(),
+    };
+  } else {
+    return result;
+  }
 }
 
 module.exports = {

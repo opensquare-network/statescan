@@ -12,7 +12,7 @@ const {
 } = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const asyncLocalStorage = require("./asynclocalstorage");
-const { fetchBlocks } = require("./service/fetchBlocks");
+const { fetchBlocks } = require("@statescan/common");
 const { initDb, withSession } = require("./mongo");
 const { updateAllRawAddrs } = require("./service/updateRawAddress");
 const { scanNormalizedBlock } = require("./scan");
@@ -66,7 +66,7 @@ async function main() {
       heights.push(i);
     }
 
-    const blocks = await fetchBlocks(heights);
+    const blocks = await fetchBlocks(heights, true);
     if ((blocks || []).length <= 0) {
       await sleep(1000);
       continue;

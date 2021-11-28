@@ -1,9 +1,9 @@
 const { scanBlock } = require("./block");
-const { fetchBlocks } = require("../chain/fetchBlocks");
 const {
   logger,
   sleep,
   clearBlockApi,
+  fetchBlocks,
   env: { getScanStep, firstScanKnowHeights },
   chainHeight: { getLatestFinalizedHeight },
   specs: { updateSpecs, getMetaScanHeight },
@@ -40,7 +40,7 @@ async function oneStepScan(startHeight) {
   }
 
   const heights = getHeights(startHeight, targetHeight);
-  const blocks = await fetchBlocks(heights);
+  const blocks = await fetchBlocks(heights, false);
   if ((blocks || []).length <= 0) {
     await sleep(1000);
     return startHeight;

@@ -1,6 +1,6 @@
 const { sleep, logger } = require("@statescan/common");
 const { updateScanHeight } = require("../mongo/scanHeight");
-const { fetchBlocks } = require("../chain/fetchBlocks");
+const { fetchBlocks } = require("@statescan/common");
 const { getNextKnownHeights } = require("../mongo/service/known");
 const { getNextScanHeight } = require("../mongo/scanHeight");
 const last = require("lodash.last");
@@ -13,7 +13,7 @@ async function scanKnownHeights() {
   let heights = await getNextKnownHeights(toScanHeight);
 
   while (heights.length > 0) {
-    const blocks = await fetchBlocks(heights);
+    const blocks = await fetchBlocks(heights, false);
     for (const block of blocks) {
       try {
         await scanBlock(block.block, block.events);

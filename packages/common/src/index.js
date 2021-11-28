@@ -5,6 +5,7 @@ const blockApiObj = require("./blockApi");
 const meta = require("./mongo/meta");
 const specs = require("./chain/specs");
 const chainHeight = require("./chain/height");
+const fetchBlockMethods = require("./chain/fetchBlocks");
 const testConsts = require("./testCommon/constants");
 const blockUtils = require("./block");
 const env = require("./env");
@@ -22,4 +23,5 @@ module.exports = {
   ...blockUtils,
   env,
   ...logger,
+  ...fetchBlockMethods,
 };

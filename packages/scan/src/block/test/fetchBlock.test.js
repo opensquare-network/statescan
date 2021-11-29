@@ -1,6 +1,8 @@
-const { testTimeout } = require("@statescan/nft-scan/src/testCommon/constants");
+const {
+  setApi,
+  testConsts: { testTimeout },
+} = require("@statescan/common");
 const { getBlockFromNode } = require("../fetchBlock");
-const { setApi } = require("../../api");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
 

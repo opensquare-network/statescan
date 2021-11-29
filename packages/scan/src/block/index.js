@@ -1,5 +1,5 @@
 const omit = require("lodash.omit");
-const { extractBlockTime } = require("./extractBlockTime");
+const { extractBlockTime } = require("@statescan/common");
 
 function extractBlock(block, events, author) {
   const hash = block.hash.toHex();

@@ -1,5 +1,4 @@
-const { getApi } = require("../../../api");
-const { findBlockApi } = require("../../../chain/blockApi");
+const { getApi, findBlockApi } = require("@statescan/common");
 
 async function queryClassAttribute(classId, key, indexer) {
   const blockApi = await findBlockApi(indexer.blockHash);

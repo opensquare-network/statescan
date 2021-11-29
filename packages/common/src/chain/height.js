@@ -1,4 +1,4 @@
-const { getApi } = require("./api");
+const { getApi } = require("../api");
 
 let latestFinalizedHeight = null;
 let latestUnFinalizedHeight = null;

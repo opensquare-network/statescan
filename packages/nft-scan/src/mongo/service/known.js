@@ -1,4 +1,6 @@
-const { getScanStep } = require("../../env");
+const {
+  env: { getScanStep },
+} = require("@statescan/common");
 const { getHeightCollection } = require("../knownHeight");
 
 async function getNextKnownHeights(beginHeight) {

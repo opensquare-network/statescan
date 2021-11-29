@@ -1,6 +1,9 @@
-const { setApi } = require("../../../api");
-const { findRegistry } = require("../../../specs");
-const { setSpecHeights } = require("../../../specs");
+const { findBlockHash } = require("../../../block/findBlockHash");
+const {
+  setApi,
+  setProvider,
+  specs: { findRegistry, setSpecHeights },
+} = require("@statescan/common");
 const {
   height,
   blockData,
@@ -19,6 +22,7 @@ describe("normalizeCall", () => {
   beforeAll(async () => {
     provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
     api = await ApiPromise.create({ provider });
+    setProvider(provider);
     setApi(api);
   });
 
@@ -27,11 +31,17 @@ describe("normalizeCall", () => {
   });
 
   test("Extract", async () => {
-    setSpecHeights([height]);
-    const registry = await findRegistry(height);
+    await setSpecHeights([height]);
+    const blockHash = await findBlockHash(height);
+    const registry = await findRegistry({
+      blockHeight: height,
+      blockHash,
+    });
     const block = new GenericBlock(registry, blockData.block);
 
-    const calls = block.extrinsics.map(extrinsic => normalizeCall(extrinsic.method));
+    const calls = block.extrinsics.map((extrinsic) =>
+      normalizeCall(extrinsic.method)
+    );
     expect(calls).toEqual(normalizeCallData);
   });
 });

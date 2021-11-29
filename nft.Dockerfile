@@ -12,4 +12,4 @@ COPY . /usr/src
 
 # install dependencies
 RUN yarn install
-CMD yarn run scan
+CMD yarn run nftscan

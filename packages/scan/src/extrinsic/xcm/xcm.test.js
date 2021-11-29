@@ -1,10 +1,13 @@
-const { getBlockIndexer } = require("../../block/getBlockIndexer");
 const { extractTeleportFromOneMsg } = require("./index");
 const { block66710 } = require("../../testCommon/block66710");
 const { GenericBlock } = require("@polkadot/types");
-const { setSpecHeights, findRegistry } = require("../../specs");
+const {
+  setApi,
+  setProvider,
+  getBlockIndexer,
+  specs: { setSpecHeights },
+} = require("@statescan/common");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
-const { setApi } = require("../../api");
 jest.setTimeout(3000000);
 
 describe("XCM", () => {
@@ -14,6 +17,7 @@ describe("XCM", () => {
   beforeAll(async () => {
     provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
     api = await ApiPromise.create({ provider });
+    setProvider(provider);
     setApi(api);
   });
 
@@ -23,7 +27,7 @@ describe("XCM", () => {
 
   test("teleport works", async () => {
     const height = 66710;
-    setSpecHeights([height]);
+    await setSpecHeights([height]);
     const blockHash = await api.rpc.chain.getBlockHash(height);
 
     const blockApi = await api.at(blockHash);

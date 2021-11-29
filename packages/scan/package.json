@@ -12,7 +12,7 @@
     "test": "jest src"
   },
   "dependencies": {
-    "@polkadot/api": "6.8.1",
+    "@polkadot/api": "6.9.2",
     "bignumber.js": "^9.0.1",
     "dotenv": "^10.0.0",
     "lodash.findlast": "^4.6.0",
@@ -20,7 +20,8 @@
     "lodash.omit": "^4.5.0",
     "log4js": "^6.3.0",
     "moment-timezone": "^0.5.33",
-    "mongodb": "4.1.2"
+    "mongodb": "4.1.2",
+    "@statescan/common": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^16.10.1",

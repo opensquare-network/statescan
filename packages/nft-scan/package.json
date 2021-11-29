@@ -15,7 +15,7 @@
     "statemineStaging:ipfs": "pm2 start ecosystem.config.js --only statescan-ipfsscan-statemine-staging --env production"
   },
   "dependencies": {
-    "@polkadot/api": "6.8.1",
+    "@polkadot/api": "6.9.2",
     "axios": "^0.24.0",
     "dotenv": "^10.0.0",
     "fast-average-color-node": "^2.1.0",
@@ -25,7 +25,8 @@
     "lodash.omit": "^4.5.0",
     "log4js": "^6.3.0",
     "minimist": "^1.2.5",
-    "mongodb": "4.1.2"
+    "mongodb": "4.1.2",
+    "@statescan/common": "1.0.0"
   },
   "devDependencies": {
     "@types/node": "^16.10.1",

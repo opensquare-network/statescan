@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const omit = require("lodash.omit");
 
 function getDbName() {
   const dbName = process.env.MONGO_DB_META_NAME;
@@ -96,7 +97,22 @@ async function getBlocksByHeights(heights = []) {
 async function getAllVersionChangeHeights() {
   const col = await getVersionCollection();
   const versions = await col.find({}).sort({ height: 1 }).toArray();
-  return (versions || []).map((v) => v.height);
+
+  return (versions || []).map((v) => {
+    return {
+      height: v.height,
+      runtimeVersion: {
+        ...omit(v.runtimeVersion, ["apis"]),
+      },
+    };
+  });
+}
+
+async function getScanHeight() {
+  const col = await getStatusCollection();
+  const status = await col.findOne({ name: "main-scan-height" });
+
+  return status?.value || 1;
 }
 
 module.exports = {
@@ -105,4 +121,5 @@ module.exports = {
   getBlocks,
   getAllVersionChangeHeights,
   getBlocksByHeights,
+  getScanHeight,
 };

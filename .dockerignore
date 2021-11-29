@@ -8,3 +8,9 @@ node_modules
 # Logs
 logs
 *.log
+
+yarn.lock
+LICENSE
+README.md
+
+packages/next

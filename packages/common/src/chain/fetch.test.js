@@ -1,6 +1,6 @@
-const { fetchOneBlockFromNode } = require("./fetchBlocks");
-const { elaraStatemine } = require("../testCommon/constants");
 const { setApi } = require("../api");
+const { elaraStatemine } = require("../testCommon/constants");
+const { fetchOneBlockFromNode } = require("./fetchBlocks");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(3000000);
 
@@ -20,7 +20,7 @@ describe("Get one block", () => {
 
   test("at height works", async () => {
     const height = 987619;
-    const block = await fetchOneBlockFromNode(height);
+    const block = await fetchOneBlockFromNode(height, true);
     expect(block.author).toEqual(
       "EPk1wv1TvVFfsiG73YLuLAtGacfPmojyJKvmifobBzUTxFv"
     );

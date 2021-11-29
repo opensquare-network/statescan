@@ -6,7 +6,7 @@ const {
 } = require("../mongo");
 const moment = require("moment-timezone");
 const BigNumber = require("bignumber.js");
-const { statisticLogger } = require("../logger");
+const { statisticLogger } = require("@statescan/common");
 
 async function makeAssetStatistics(blockIndexer) {
   if (!blockIndexer.blockTime) {

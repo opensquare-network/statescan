@@ -1,9 +1,8 @@
 const {
   insertInstanceTimelineItem,
 } = require("../../../mongo/service/instance");
-const { TimelineItemTypes } = require("../../common/constants");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { insertNewTransfer, updateInstanceWithDetails } = require("./common");
-const { UniquesEvents } = require("../../common/constants");
 
 async function handleTransferred(event, indexer, blockEvents, extrinsic) {
   const [classId, instanceId, from, to] = event.data.toJSON();

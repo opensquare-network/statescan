@@ -305,9 +305,9 @@ export async function getServerSideProps(context) {
     { result: nftClass },
     { result: nftInstance },
   ] = await Promise.all([
-    nextApi.fetch(`nftclasses/${paramClassId}`),
+    nextApi.fetch(`nft/classes/${paramClassId}`),
     nextApi.fetch(
-      `nftclasses/${paramClassId}/instances/${paramInstanceId}`
+      `nft/classes/${paramClassId}/instances/${paramInstanceId}`
     ),
   ]);
   if (!nftClass || !nftInstance) {
@@ -333,7 +333,7 @@ export async function getServerSideProps(context) {
     { result: nftTransfers },
   ] = await Promise.all([
     nextApi.fetch(
-      `nftclasses/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
+      `nft/classes/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
       { page: nPage - 1, pageSize: 25 }
     ),
   ]);

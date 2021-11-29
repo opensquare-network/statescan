@@ -1,4 +1,4 @@
-const { getApi } = require("../api");
+const { getApi } = require("./api");
 let blockApiMap = {};
 
 function setBlockApi(blockHash, api) {
@@ -18,11 +18,15 @@ async function findBlockApi(blockHash) {
   return blockApi;
 }
 
+function removeBlockApi(blockHash) {
+  delete blockApiMap[blockHash];
+}
+
 function clearBlockApi() {
   blockApiMap = {};
 }
-
 module.exports = {
   findBlockApi,
+  removeBlockApi,
   clearBlockApi,
 };

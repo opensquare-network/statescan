@@ -1,10 +1,14 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
-const { TimelineItemTypes } = require("../../common/constants");
-const { UniquesEvents } = require("../../common/constants");
+const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
 const { queryClassDetails } = require("../../common/class/storage");
 const { updateClass } = require("../../../mongo/service/class");
 
-async function handleAssetStatusChanged(event, indexer, blockEvents, extrinsic) {
+async function handleAssetStatusChanged(
+  event,
+  indexer,
+  blockEvents,
+  extrinsic
+) {
   const [classId] = event.data.toJSON();
   const details = await queryClassDetails(classId, indexer);
   await updateClass(classId, { details });

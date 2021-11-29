@@ -1,15 +1,16 @@
 const { scanBlock } = require("./block");
-const { fetchBlocks } = require("../chain/fetchBlocks");
-const { getScanStep } = require("../env");
-const { sleep } = require("../utils/sleep");
-const { getLatestHeight } = require("../chain/finalizedHead");
+const {
+  logger,
+  sleep,
+  clearBlockApi,
+  fetchBlocks,
+  env: { getScanStep, firstScanKnowHeights },
+  chainHeight: { getLatestFinalizedHeight },
+  specs: { updateSpecs, getMetaScanHeight },
+} = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
-const { logger } = require("../logger");
 const last = require("lodash.last");
 const { scanKnownHeights } = require("./known");
-const { firstScanKnowHeights } = require("../env");
-const { clearBlockApi } = require("../chain/blockApi");
-const { getSpecHeights, updateSpecs } = require("../chain/specs");
 
 async function beginRoutineScan() {
   await updateSpecs();
@@ -26,7 +27,7 @@ async function beginRoutineScan() {
 }
 
 async function oneStepScan(startHeight) {
-  const chainHeight = getLatestHeight();
+  const chainHeight = getLatestFinalizedHeight();
   if (startHeight > chainHeight) {
     // Just wait if the to scan height greater than current chain height
     await sleep(3000);
@@ -34,13 +35,12 @@ async function oneStepScan(startHeight) {
   }
 
   const targetHeight = getTargetHeight(startHeight);
-  const specHeights = getSpecHeights();
-  if (targetHeight > last(specHeights).height) {
+  if (targetHeight > getMetaScanHeight()) {
     await updateSpecs();
   }
 
   const heights = getHeights(startHeight, targetHeight);
-  const blocks = await fetchBlocks(heights);
+  const blocks = await fetchBlocks(heights, false);
   if ((blocks || []).length <= 0) {
     await sleep(1000);
     return startHeight;
@@ -69,7 +69,7 @@ async function oneStepScan(startHeight) {
 }
 
 function getTargetHeight(startHeight) {
-  const chainHeight = getLatestHeight();
+  const chainHeight = getLatestFinalizedHeight();
 
   let targetHeight = chainHeight;
   const step = getScanStep();

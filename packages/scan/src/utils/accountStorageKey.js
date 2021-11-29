@@ -12,7 +12,7 @@ function getAccountStorageKey(address) {
   const id = decodeAddress(address);
   const hash = blake2AsU8a(id, 128);
 
-  return u8aToHex([...section, ...method, ...hash, ...id]);
+  return u8aToHex(new Uint8Array([...section, ...method, ...hash, ...id]));
 }
 
 module.exports = {

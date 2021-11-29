@@ -1,6 +1,6 @@
 const { insertInstanceAttribute } = require("../../../mongo/service/instance");
 const { queryInstanceAttribute } = require("../../common/instance/attribute");
-const { logger } = require("../../../logger");
+const { logger } = require("@statescan/common");
 
 async function handleAttributeSet(event, indexer) {
   const [classId, maybeInstanceId, key] = event.data.toJSON();
@@ -8,7 +8,12 @@ async function handleAttributeSet(event, indexer) {
     return;
   }
 
-  const valueDepositTuple = await queryInstanceAttribute(classId, maybeInstanceId, key, indexer);
+  const valueDepositTuple = await queryInstanceAttribute(
+    classId,
+    maybeInstanceId,
+    key,
+    indexer
+  );
   if (!valueDepositTuple || !Array.isArray(valueDepositTuple)) {
     logger.error(
       "Can not get attribute value at class AttributeSet event",
@@ -18,7 +23,14 @@ async function handleAttributeSet(event, indexer) {
   }
 
   const [value, deposit] = valueDepositTuple;
-  await insertInstanceAttribute(classId, maybeInstanceId, key, value, deposit, indexer);
+  await insertInstanceAttribute(
+    classId,
+    maybeInstanceId,
+    key,
+    value,
+    deposit,
+    indexer
+  );
 }
 
 module.exports = {

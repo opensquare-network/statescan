@@ -99,7 +99,7 @@ export async function getServerSideProps(context) {
 
   const nPage = parseInt(page) || 1;
 
-  const { result: nfts } = await nextApi.fetch(`nftclasses`, {
+  const { result: nfts } = await nextApi.fetch(`nft/classes`, {
     page: nPage - 1,
     pageSize: 25,
     ...(recognized ? { recognized } : {}),

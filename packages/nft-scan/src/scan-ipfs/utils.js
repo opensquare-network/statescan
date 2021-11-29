@@ -1,7 +1,6 @@
 const axios = require("axios");
 const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
-const { getNftMetadataCollection } = require("../mongo");
 const { isHex, hexToString } = require("@polkadot/util");
 const { getAverageColor } = require("fast-average-color-node");
 
@@ -20,17 +19,18 @@ async function createImageThumbnail(image, width, height) {
   return `data:image/png;base64,${thumbnail.toString("base64")}`;
 }
 
-async function fetchDataFromIPFS(data) {
-  if (!data) {
-    throw new Error(`data is missing`);
+async function fetchMetadataFromIpfsByHex(hexData) {
+  if (!hexData) {
+    throw new Error(`No data provided to fetch metadata from IPFS`);
   }
 
-  if (!isHex(data)) {
+  if (!isHex(hexData)) {
     return null;
   }
 
-  const maybeCid = hexToString(data);
+  const maybeCid = hexToString(hexData);
   if (!isIPFS.cid(maybeCid)) {
+    console.log(`data ${hexData} can not be converted to CID`);
     return null;
   }
 
@@ -47,132 +47,40 @@ async function fetchDataFromIPFS(data) {
       description: maybeJsonData.description,
       image: maybeJsonData.image,
     };
+  } else {
+    console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData}, 
+    but not contain name, description or image, ignore it`);
   }
 
   return null;
 }
 
-async function scanMeta(dataHash, data) {
-  if (!data) {
-    return;
-  }
+async function fetchAndSharpImage(imageCid) {
+  console.log(`Will fetch image by cid`, imageCid);
 
-  console.log(`Scanning ipfs meta data for`, dataHash);
-  let nftIPFSData;
-  try {
-    nftIPFSData = await fetchDataFromIPFS(data);
-  } catch (e) {
-    console.error("Error with fetching data from ipfs", e);
-  }
+  // fetch image from ipfs link item.image
+  const ipfsImage = await axios({
+    url: `${ipfsGatewayUrl}${imageCid}`,
+    responseType: "arraybuffer",
+  });
+  const imageData = ipfsImage.data;
 
-  const nftMetadataCol = await getNftMetadataCollection();
-  if (!nftIPFSData) {
-    await nftMetadataCol.updateOne(
-      { dataHash },
-      {
-        $set: {
-          recognized: false,
-          timestamp: new Date(),
-        },
-      },
-    );
-    console.log(`Result: unrecognized.`);
-    return;
-  }
+  // todo: we should check the data media type, only handle it if it's image
+  const sharpImage = sharp(imageData);
+  const { format, size, width, height } = await sharpImage.metadata();
+  const { hex: background } = await getAverageColor(imageData);
+  const imageMetadata = { format, size, width, height, background };
 
-  await nftMetadataCol.updateOne(
-    { dataHash },
-    {
-      $set: {
-        ...nftIPFSData,
-        recognized: true,
-        timestamp: new Date(),
-      },
-    },
-  );
-  console.log("Result: recognized. data:", nftIPFSData);
-}
+  // create image thumbnail from image data
+  const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
 
-async function scanMetaImage(dataHash) {
-  if (!dataHash) {
-    return;
-  }
-
-  console.log(`Scanning ipfs meta image for`, dataHash);
-
-  const nftMetadataCol = await getNftMetadataCollection();
-  const item = await nftMetadataCol.findOne({ dataHash });
-  if (!item) {
-    return;
-  }
-
-  if (!item.recognized) {
-    return;
-  }
-
-  if (!item.image) {
-    return;
-  }
-
-  if (!item.image.startsWith("ipfs://")) {
-    return;
-  }
-
-  const image = item.image.split("/").pop();
-  if (!image) {
-    return;
-  }
-
-  if (!isIPFS.cid(image)) {
-    return;
-  }
-
-  let imageMetadata, imageThumbnail;
-
-  try {
-    console.log(`Fetch image:`, image);
-
-    // fetch image from ipfs link item.image
-    const ipfsImage = await axios({
-      url: `${ipfsGatewayUrl}${image}`,
-      responseType: "arraybuffer",
-    });
-    const imageData = ipfsImage.data;
-    const sharpImage = sharp(imageData);
-    const { format, size, width, height } = await sharpImage.metadata();
-    const { hex: background } = await getAverageColor(imageData);
-    imageMetadata = { format, size, width, height, background };
-
-    // create image thumbnail from image data
-    imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
-  } catch (e) {
-    await nftMetadataCol.updateOne(
-      { dataHash },
-      {
-        $set: {
-          error: "imageError",
-        },
-      },
-    );
-    return;
-  }
-
-  await nftMetadataCol.updateOne(
-    { dataHash },
-    {
-      $set: {
-        imageMetadata,
-        imageThumbnail,
-      },
-      $unset: {
-        error: true,
-      }
-    },
-  );
-
+  return {
+    imageMetadata,
+    imageThumbnail,
+  };
 }
 
 module.exports = {
-  scanMeta,
-  scanMetaImage,
+  fetchMetadataFromIpfsByHex,
+  fetchAndSharpImage,
 };

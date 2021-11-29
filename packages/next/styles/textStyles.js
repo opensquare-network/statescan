@@ -1,7 +1,7 @@
 import { css } from "styled-components";
 
 export const h4_24_bold = css`
-  font-family: Inter;
+  font-family: Inter, serif;
   font-style: normal;
   font-weight: bold;
   font-size: 24px;
@@ -9,7 +9,7 @@ export const h4_24_bold = css`
 `;
 
 export const p_12_normal = css`
-  font-family: Inter;
+  font-family: Inter, serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -17,8 +17,17 @@ export const p_12_normal = css`
   letter-spacing: 0px;
 `;
 
+export const p_14_normal = css`
+  font-family: SF Mono, serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: -0.2px;
+`;
+
 export const p_18_bold = css`
-  font-family: Inter;
+  font-family: Inter, serif;
   font-style: normal;
   font-weight: bold;
   font-size: 18px;
@@ -40,8 +49,8 @@ export const text_dark_placeholder = css`
 export const card_border = css`
   border: 1px solid rgb(244, 244, 244);
   box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.04),
-    0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
-    0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
-    0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
+  0px 1.80882px 5.94747px rgba(0, 0, 0, 0.0260636),
+  0px 0.751293px 0.932578px rgba(0, 0, 0, 0.02),
+  0px 0.271728px 0px rgba(0, 0, 0, 0.0139364);
   border-radius: 8px;
 `;

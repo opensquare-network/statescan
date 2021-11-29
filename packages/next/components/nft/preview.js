@@ -133,7 +133,7 @@ export default function Preview({ open, nftClass, nftInstance, closeFn }) {
         <Row>
           <Field>Owner</Field>
           <Value>
-            <Address address={addressEllipsis(nftObject?.details?.owner)} />
+            <Address to={`/account/${nftObject?.details?.owner}`} address={addressEllipsis(nftObject?.details?.owner)} />
           </Value>
         </Row>
 

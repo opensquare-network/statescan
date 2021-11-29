@@ -79,7 +79,7 @@ async function fetchAndSaveMetadataImagesFromIpfs() {
 
 async function handleImageByDataHash(dataHash) {
   const nftMetadataCol = await getNftMetadataCollection();
-  const metadata = nftMetadataCol.findOne({ dataHash });
+  const metadata = await nftMetadataCol.findOne({ dataHash });
   if (metadata.recognized && metadata.image) {
     await handleMetadataImage(metadata.image);
   }

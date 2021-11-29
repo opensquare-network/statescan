@@ -357,9 +357,9 @@ export async function getServerSideProps(context) {
     { result: nftClass },
     { result: nftInstances }
   ] = await Promise.all([
-    nextApi.fetch(`nftclasses/${classId}`),
+    nextApi.fetch(`nftclass/${classId}`),
     nextApi.fetch(
-      `nftclasses/${classId}/instances`,
+      `nftclass/${classId}/instances`,
       { page: nPage - 1, pageSize: 25 }
     ),
   ]);

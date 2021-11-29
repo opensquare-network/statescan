@@ -49,7 +49,11 @@ async function main() {
     await Promise.all(items.map((item) => scanMeta(item.dataHash, item.data)));
 
     items = await nftMetadataCol
-      .find({ recognized: true, imageThumbnail: null })
+      .find({
+        recognized: true,
+        imageThumbnail: null,
+        error: null,
+      })
       .limit(10)
       .toArray();
     await Promise.all(items.map((item) => scanMetaImage(item.dataHash)));

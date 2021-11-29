@@ -2,7 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const minimist = require("minimist");
-const { scanMeta } = require("../scan-ipfs/utils");
+const { scanMeta, scanMetaImage } = require("../scan-ipfs/utils");
 const {
   getClassCollection,
   getInstanceCollection,
@@ -31,8 +31,9 @@ async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
     process.exit(0);
   }
   console.log(`Re-scan instance object`, nftInstance._id);
-  if (nftInstance.metadata?.data) {
-    await scanMeta(nftInstance.metadata.data);
+  if (nftInstance.dataHash) {
+    await scanMeta(nftInstance.dataHash, nftInstance.metadata.data);
+    await scanMetaImage(nftInstance.dataHash);
   }
 }
 
@@ -51,8 +52,9 @@ async function scanClass(classId, classHeight) {
     process.exit(0);
   }
   console.log(`Re-scan class object`, nftClass._id);
-  if (nftClass.metadata?.data) {
-    await scanMeta(nftClass.metadata.data);
+  if (nftClass.dataHash) {
+    await scanMeta(nftClass.dataHash, nftClass.metadata.data);
+    await scanMetaImage(nftClass.dataHash);
   }
 }
 

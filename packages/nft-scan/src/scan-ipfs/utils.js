@@ -75,7 +75,6 @@ async function scanMeta(dataHash, data) {
           timestamp: new Date(),
         },
       },
-      { upsert: true }
     );
     console.log(`Result: unrecognized.`);
     return;
@@ -90,7 +89,6 @@ async function scanMeta(dataHash, data) {
         timestamp: new Date(),
       },
     },
-    { upsert: true }
   );
   console.log("Result: recognized. data:", nftIPFSData);
 }
@@ -129,21 +127,36 @@ async function scanMetaImage(dataHash) {
     return;
   }
 
-  console.log(`Fetch image:`, image);
+  let imageMetadata, imageThumbnail;
 
-  // fetch image from ipfs link item.image
-  const ipfsImage = await axios({
-    url: `${ipfsGatewayUrl}${image}`,
-    responseType: "arraybuffer",
-  });
-  const imageData = ipfsImage.data;
-  const sharpImage = sharp(imageData);
-  const { format, size, width, height } = await sharpImage.metadata();
-  const { hex: background } = await getAverageColor(imageData);
-  const imageMetadata = { format, size, width, height, background };
+  try {
+    console.log(`Fetch image:`, image);
 
-  // create image thumbnail from image data
-  const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
+    // fetch image from ipfs link item.image
+    const ipfsImage = await axios({
+      url: `${ipfsGatewayUrl}${image}`,
+      responseType: "arraybuffer",
+    });
+    const imageData = ipfsImage.data;
+    const sharpImage = sharp(imageData);
+    const { format, size, width, height } = await sharpImage.metadata();
+    const { hex: background } = await getAverageColor(imageData);
+    imageMetadata = { format, size, width, height, background };
+
+    // create image thumbnail from image data
+    imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
+  } catch (e) {
+    await nftMetadataCol.updateOne(
+      { dataHash },
+      {
+        $set: {
+          error: "imageError",
+        },
+      },
+    );
+    return;
+  }
+
   await nftMetadataCol.updateOne(
     { dataHash },
     {
@@ -151,9 +164,12 @@ async function scanMetaImage(dataHash) {
         imageMetadata,
         imageThumbnail,
       },
+      $unset: {
+        error: true,
+      }
     },
-    { upsert: true }
   );
+
 }
 
 module.exports = {

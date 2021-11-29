@@ -5,10 +5,6 @@ const { getNftMetadataCollection } = require("../mongo");
 const { isHex, hexToString } = require("@polkadot/util");
 const { getAverageColor } = require("fast-average-color-node");
 
-const MetaStatus = {
-  IMAGE_ERROR: "imageError",
-};
-
 const ipfsGatewayUrl =
   process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
 
@@ -154,6 +150,9 @@ async function scanMetaImage(dataHash) {
           imageMetadata,
           imageThumbnail,
         },
+        $unset: {
+          error: true,
+        }
       },
     );
 
@@ -162,7 +161,7 @@ async function scanMetaImage(dataHash) {
       { dataHash },
       {
         $set: {
-          status: MetaStatus.IMAGE_ERROR,
+          error: "imageError",
         },
       },
     );
@@ -172,5 +171,4 @@ async function scanMetaImage(dataHash) {
 module.exports = {
   scanMeta,
   scanMetaImage,
-  MetaStatus,
 };

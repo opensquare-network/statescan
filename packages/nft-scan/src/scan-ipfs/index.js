@@ -1,13 +1,12 @@
 require("dotenv").config();
 
-const { sleep } = require("@statescan/common");
-
+const { fetchAndSaveMetaDataFromIpfs } = require("./metadata");
+const { fetchAndSaveMetadataImagesFromIpfs } = require("./image");
 const {
   getClassCollection,
   getInstanceCollection,
   getNftMetadataCollection,
 } = require("../mongo");
-const { scanMeta, scanMetaImage } = require("./utils");
 
 async function queueIpfsTask(nftCol) {
   const items =
@@ -33,33 +32,14 @@ async function queueIpfsTask(nftCol) {
 }
 
 async function main() {
-  while (true) {
-    console.log(`Last IPFS scan run at`, new Date());
+  const classCol = await getClassCollection();
+  const instanceCol = await getInstanceCollection();
 
-    const classCol = await getClassCollection();
-    const instanceCol = await getInstanceCollection();
+  await queueIpfsTask(classCol);
+  await queueIpfsTask(instanceCol);
 
-    await queueIpfsTask(classCol);
-    await queueIpfsTask(instanceCol);
-
-    const nftMetadataCol = await getNftMetadataCollection();
-    let items =
-      (await nftMetadataCol.find({ recognized: null }).limit(10).toArray()) ||
-      [];
-    await Promise.all(items.map((item) => scanMeta(item.dataHash, item.data)));
-
-    items = await nftMetadataCol
-      .find({
-        recognized: true,
-        imageThumbnail: null,
-        error: null,
-      })
-      .limit(10)
-      .toArray();
-    await Promise.all(items.map((item) => scanMetaImage(item.dataHash)));
-
-    await sleep(5000);
-  }
+  await fetchAndSaveMetaDataFromIpfs();
+  await fetchAndSaveMetadataImagesFromIpfs();
 }
 
 main()

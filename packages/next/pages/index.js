@@ -402,7 +402,7 @@ export async function getServerSideProps() {
     nextApi.fetch(`transfers/count`),
     nextApi.fetch(`holders/count`),
     nextApi.fetch(`${node}/prices/daily`),
-    nextApi.fetch(`nftclasses/popular`),
+    nextApi.fetch(`nft/classes/popular`),
   ]);
 
   return {

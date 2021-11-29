@@ -8,6 +8,7 @@ import { fetchIdentity } from "services/identity";
 import { useEffect, useState } from "react";
 import { nodes } from "utils/constants";
 import { isNoIdentity } from "utils";
+import { p_14_normal } from "../styles/textStyles";
 
 const StyledLink = styled.div`
   word-break: break-all;
@@ -18,6 +19,15 @@ const StyledLink = styled.div`
     css`
       cursor: pointer;
     `}
+  a {
+    background-color: white;
+    ${p_14_normal};
+    color: ${(p) => p.themecolor};
+    text-align: left;
+    &:hover {
+      color: ${(p) => p.themecolor};
+    }
+  }
 `;
 
 export default function Address({ address, to }) {

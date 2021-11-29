@@ -127,6 +127,8 @@ async function scanMetaImage(dataHash) {
     return;
   }
 
+  let imageMetadata, imageThumbnail;
+
   try {
     console.log(`Fetch image:`, image);
 
@@ -139,23 +141,10 @@ async function scanMetaImage(dataHash) {
     const sharpImage = sharp(imageData);
     const { format, size, width, height } = await sharpImage.metadata();
     const { hex: background } = await getAverageColor(imageData);
-    const imageMetadata = { format, size, width, height, background };
+    imageMetadata = { format, size, width, height, background };
 
     // create image thumbnail from image data
-    const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
-    await nftMetadataCol.updateOne(
-      { dataHash },
-      {
-        $set: {
-          imageMetadata,
-          imageThumbnail,
-        },
-        $unset: {
-          error: true,
-        }
-      },
-    );
-
+    imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
   } catch (e) {
     await nftMetadataCol.updateOne(
       { dataHash },
@@ -165,7 +154,22 @@ async function scanMetaImage(dataHash) {
         },
       },
     );
+    return;
   }
+
+  await nftMetadataCol.updateOne(
+    { dataHash },
+    {
+      $set: {
+        imageMetadata,
+        imageThumbnail,
+      },
+      $unset: {
+        error: true,
+      }
+    },
+  );
+
 }
 
 module.exports = {

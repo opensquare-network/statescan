@@ -17,7 +17,7 @@ async function getLatest(symbol) {
       signal: controller.signal,
     });
     const json = await res.json();
-    return json.data;
+    return json;
   } catch (error) {
     if (error.name === "AbortError") {
       console.log("request was aborted");

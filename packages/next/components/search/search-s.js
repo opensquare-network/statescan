@@ -156,11 +156,11 @@ export default function SearchS() {
       return true;
     }
     if (type === "nftClasses") {
-      router.push(`/nft/classes/${selectedHint?.classId}`);
+      router.push(`/nft/class/${selectedHint?.classId}`);
       return true;
     }
     if (type === "nftInstances") {
-      router.push(`/nft/classes/${selectedHint?.classId}/instances/${selectedHint?.instanceId}`);
+      router.push(`/nft/class/${selectedHint?.classId}/instances/${selectedHint?.instanceId}`);
       return true;
     }
     return false;

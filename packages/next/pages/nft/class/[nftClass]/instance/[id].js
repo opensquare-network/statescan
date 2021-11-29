@@ -237,7 +237,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
               { name: "NFT", path: `/nft` },
               {
                 name: `Class ${nftInstance?.classId}`,
-                path: `/nft/classes/${nftInstance?.classId}`,
+                path: `/nft/class/${nftInstance?.classId}`,
               },
               { name: `Instance` },
               { name: nftInstance?.instanceId },

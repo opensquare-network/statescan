@@ -14,7 +14,7 @@ export default function NftLink({ nftClass, nftInstance, children }) {
       : nftInstance.instanceId;
     return (
       <InLink
-        to={`/nft/classes/${classId}/instances/${instanceId}`}
+        to={`/nft/class/${classId}/instance/${instanceId}`}
       >{children}</InLink>
     );
   } else {
@@ -25,7 +25,7 @@ export default function NftLink({ nftClass, nftInstance, children }) {
       : nftClass.classId;
     return (
       <InLink
-        to={`/nft/classes/${classId}`}
+        to={`/nft/class/${classId}`}
       >{children}</InLink>
     );
   }

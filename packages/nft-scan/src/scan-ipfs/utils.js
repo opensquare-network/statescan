@@ -5,6 +5,10 @@ const { getNftMetadataCollection } = require("../mongo");
 const { isHex, hexToString } = require("@polkadot/util");
 const { getAverageColor } = require("fast-average-color-node");
 
+const MetaStatus = {
+  IMAGE_ERROR: "imageError",
+};
+
 const ipfsGatewayUrl =
   process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
 
@@ -75,7 +79,6 @@ async function scanMeta(dataHash, data) {
           timestamp: new Date(),
         },
       },
-      { upsert: true }
     );
     console.log(`Result: unrecognized.`);
     return;
@@ -90,7 +93,6 @@ async function scanMeta(dataHash, data) {
         timestamp: new Date(),
       },
     },
-    { upsert: true }
   );
   console.log("Result: recognized. data:", nftIPFSData);
 }
@@ -129,34 +131,46 @@ async function scanMetaImage(dataHash) {
     return;
   }
 
-  console.log(`Fetch image:`, image);
+  try {
+    console.log(`Fetch image:`, image);
 
-  // fetch image from ipfs link item.image
-  const ipfsImage = await axios({
-    url: `${ipfsGatewayUrl}${image}`,
-    responseType: "arraybuffer",
-  });
-  const imageData = ipfsImage.data;
-  const sharpImage = sharp(imageData);
-  const { format, size, width, height } = await sharpImage.metadata();
-  const { hex: background } = await getAverageColor(imageData);
-  const imageMetadata = { format, size, width, height, background };
+    // fetch image from ipfs link item.image
+    const ipfsImage = await axios({
+      url: `${ipfsGatewayUrl}${image}`,
+      responseType: "arraybuffer",
+    });
+    const imageData = ipfsImage.data;
+    const sharpImage = sharp(imageData);
+    const { format, size, width, height } = await sharpImage.metadata();
+    const { hex: background } = await getAverageColor(imageData);
+    const imageMetadata = { format, size, width, height, background };
 
-  // create image thumbnail from image data
-  const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
-  await nftMetadataCol.updateOne(
-    { dataHash },
-    {
-      $set: {
-        imageMetadata,
-        imageThumbnail,
+    // create image thumbnail from image data
+    const imageThumbnail = await createImageThumbnail(sharpImage, 32, 32);
+    await nftMetadataCol.updateOne(
+      { dataHash },
+      {
+        $set: {
+          imageMetadata,
+          imageThumbnail,
+        },
       },
-    },
-    { upsert: true }
-  );
+    );
+
+  } catch (e) {
+    await nftMetadataCol.updateOne(
+      { dataHash },
+      {
+        $set: {
+          status: MetaStatus.IMAGE_ERROR,
+        },
+      },
+    );
+  }
 }
 
 module.exports = {
   scanMeta,
   scanMetaImage,
+  MetaStatus,
 };

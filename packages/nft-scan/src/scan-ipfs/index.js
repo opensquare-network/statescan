@@ -7,7 +7,7 @@ const {
   getInstanceCollection,
   getNftMetadataCollection,
 } = require("../mongo");
-const { scanMeta, scanMetaImage } = require("./utils");
+const { scanMeta, scanMetaImage, MetaStatus } = require("./utils");
 
 async function queueIpfsTask(nftCol) {
   const items =
@@ -49,7 +49,13 @@ async function main() {
     await Promise.all(items.map((item) => scanMeta(item.dataHash, item.data)));
 
     items = await nftMetadataCol
-      .find({ recognized: true, imageThumbnail: null })
+      .find({
+        recognized: true,
+        imageThumbnail: null,
+        status: {
+          $ne: MetaStatus.IMAGE_ERROR
+        },
+      })
       .limit(10)
       .toArray();
     await Promise.all(items.map((item) => scanMetaImage(item.dataHash)));

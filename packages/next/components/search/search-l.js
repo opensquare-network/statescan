@@ -89,33 +89,43 @@ export default function SearchL({node}) {
   const theme = useTheme();
   const forceUpdate = useForceUpdate();
   const [selectedHint, setSelectedHint] = useState(null);
+  const [linkedList, setLinkedList] = useState({head: null, current: null, tail: null});
+  const [inputTimeOut, setInputTimeOut] = useState(null);
 
   useEffect(() => {
+    clearTimeout(inputTimeOut);
     if (hintCache.has(searchKeyword)) return;
-    nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
-      const categories = ['blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
-      const linkedList = {head: null, current: null, tail: null};
-      categories.forEach(category => {
-        res.result[category].forEach(hint => {
-          const node = {type: category, ...hint};
-          if (!linkedList.head) {
-            linkedList.head = node;
-            linkedList.current = node;
-            linkedList.tail = node;
-          } else {
-            node.previous = linkedList.current;
-            node.next = linkedList.head;//loop linked list
-            linkedList.current.next = node;
-            linkedList.current = node;
-            linkedList.tail = node;
-            linkedList.head.previous = node;
-          }
+    //debounce query
+    const timerId = setTimeout(
+      () => {
+        nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
+          const categories = ['blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
+          const hintsList = ({head: null, current: null, tail: null});
+          setSelectedHint(null);
+          categories.forEach(category => {
+            res.result[category].forEach(hint => {
+              const node = {type: category, ...hint};
+              if (!hintsList.head) {
+                hintsList.head = node;
+                hintsList.current = node;
+                hintsList.tail = node;
+              } else {
+                node.previous = hintsList.current;
+                node.next = hintsList.head;//loop linked list
+                hintsList.current.next = node;
+                hintsList.current = node;
+                hintsList.tail = node;
+                hintsList.head.previous = node;
+              }
+            });
+            setLinkedList(hintsList);
+          });
+          hintCache.set(searchKeyword, res?.result);
+          forceUpdate();
         });
-      });
-      setSelectedHint(linkedList.head);
-      hintCache.set(searchKeyword, res?.result);
-      forceUpdate();
-    });
+      }
+      , 200);
+    setInputTimeOut(timerId);
   }, [searchKeyword, hintCache, forceUpdate]);
 
   const onInput = (e) => {
@@ -163,11 +173,16 @@ export default function SearchL({node}) {
     if (e.code === "ArrowDown") {
       e.preventDefault();
       selectedHint?.next && setSelectedHint(selectedHint?.next);
+      if(selectedHint === null){
+        setSelectedHint(linkedList.head);
+      }
     }
   };
 
   const toPage = (selectedHint) => {
-    if (!selectedHint) return;
+    if (!selectedHint) {
+      return false;
+    }
     const {type} = selectedHint;
     if (type === "blocks") {
       router.push(`/block/${selectedHint?.header?.number}`);

@@ -3,12 +3,12 @@ const nftclassesController = require("./nftclasses.controller");
 
 const router = new Router();
 
-router.get("/nftclasses", nftclassesController.getNftClasses);
-router.get("/nftclasses/:classId(\\d+)", nftclassesController.getNftClassById);
+router.get("/nft/classes", nftclassesController.getNftClasses);
+router.get("/nft/classes/:classId(\\d+)", nftclassesController.getNftClassById);
 router.get(
-  "/nftclasses/:classId(\\d+)_:blockHeight(\\d+)",
+  "/nft/classes/:classId(\\d+)_:blockHeight(\\d+)",
   nftclassesController.getNftClass
 );
-router.get("/nftclasses/popular", nftclassesController.getPopularNftClasses);
+router.get("/nft/classes/popular", nftclassesController.getPopularNftClasses);
 
 module.exports = router;

@@ -66,6 +66,7 @@ export default function SearchS() {
   const [linkedList, setLinkedList] = useState({head: null, current: null, tail: null});
   const [inputTimeOut, setInputTimeOut] = useState(null);
 
+  /*eslint-disable */
   useEffect(() => {
     clearTimeout(inputTimeOut);
     if (hintCache.has(searchKeyword)) return;
@@ -101,6 +102,7 @@ export default function SearchS() {
       , 200);
     setInputTimeOut(timerId);
   }, [searchKeyword, hintCache, forceUpdate]);
+  /*eslint-enable */
 
   useEffect(() => {
     setSearchKeyword("");

@@ -12,11 +12,11 @@ const Wrapper = styled.span`
   }
 `;
 
-export default function SymbolLink({ children, assetId }) {
+export default function SymbolLink({ children, assetId, destroyedAt=null,createdAt=null }) {
   const theme = useTheme();
   return assetId !== null && assetId !== undefined ? (
     <Wrapper color={theme.color}>
-      <Link href={`/asset/${assetId}`} passHref>
+      <Link href={`/asset/${assetId}${destroyedAt ? `_${createdAt.blockHeight}` : ""}`} passHref>
         {children}
       </Link>
     </Wrapper>

@@ -30,8 +30,7 @@ export default function Assets({node, assets}) {
             <InLink
               key={`${index}-1`}
               to={
-                `/asset/${item.assetId}` +
-                (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
+                `/asset/${item.assetId}${item.destroyedAt ? `_${item.createdAt.blockHeight}` : ""}`
               }
             >{`#${item.assetId}`}</InLink>,
             <Symbol
@@ -39,6 +38,7 @@ export default function Assets({node, assets}) {
               symbol={item.symbol}
               assetId={item.assetId}
               destroyedAt={item.destroyedAt}
+              createdAt={item.createdAt}
             />,
             <Name key={`${index}-3`} name={item.name}/>,
             time(item.destroyedAt.blockTime),

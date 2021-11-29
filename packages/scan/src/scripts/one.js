@@ -5,7 +5,7 @@ const { normalizeExtrinsics } = require("../utils/normalize/extrinsic");
 const { getBlockIndexer, getApi } = require("@statescan/common");
 const { normalizeBlock } = require("../utils/normalize/block");
 const { getBlockFromNode } = require("../block/fetchBlock");
-const { updateHeight, getLatestFinalizedHeight } = require("../chain");
+const { chainHeight: { updateHeight, getLatestFinalizedHeight } } = require("@statescan/common");
 const {
   getBlockCollection,
   getExtrinsicCollection,

@@ -2,11 +2,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const minimist = require("minimist");
-const { scanMeta, scanMetaImage } = require("../scan-ipfs/utils");
-const {
-  getClassCollection,
-  getInstanceCollection,
-} = require("../mongo");
+const { handleImageByDataHash } = require("../scan-ipfs/image");
+const { scanMetadataAndSave } = require("../scan-ipfs/metadata");
+const { getClassCollection, getInstanceCollection } = require("../mongo");
 
 async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
   console.log(`Re-scan instance data from IPFS for`, classId, instanceId);
@@ -23,8 +21,8 @@ async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
   const nftInstance = await instanceCol.findOne(query, {
     sort: {
       classHeight: -1,
-      "indexer.blockHeight": -1
-    }
+      "indexer.blockHeight": -1,
+    },
   });
   if (!nftInstance) {
     console.log(`Instance ${instanceId} not found`);
@@ -32,8 +30,8 @@ async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
   }
   console.log(`Re-scan instance object`, nftInstance._id);
   if (nftInstance.dataHash) {
-    await scanMeta(nftInstance.dataHash, nftInstance.metadata.data);
-    await scanMetaImage(nftInstance.dataHash);
+    await scanMetadataAndSave(nftInstance.dataHash, nftInstance.metadata.data);
+    await handleImageByDataHash(nftInstance.dataHash);
   }
 }
 
@@ -46,15 +44,17 @@ async function scanClass(classId, classHeight) {
   }
 
   const classCol = await getClassCollection();
-  const nftClass = await classCol.findOne(query, { sort: { "indexer.blockHeight": -1 } });
+  const nftClass = await classCol.findOne(query, {
+    sort: { "indexer.blockHeight": -1 },
+  });
   if (!nftClass) {
     console.log(`Class ${classId} not found`);
     process.exit(0);
   }
   console.log(`Re-scan class object`, nftClass._id);
   if (nftClass.dataHash) {
-    await scanMeta(nftClass.dataHash, nftClass.metadata.data);
-    await scanMetaImage(nftClass.dataHash);
+    await scanMetadataAndSave(nftClass.dataHash, nftClass.metadata.data);
+    await handleImageByDataHash(nftClass.dataHash);
   }
 }
 
@@ -78,4 +78,6 @@ async function main() {
   }
 }
 
-main().catch(console.error).then(() => process.exit(0));
+main()
+  .catch(console.error)
+  .then(() => process.exit(0));

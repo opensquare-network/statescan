@@ -54,4 +54,5 @@ async function fetchAndSaveMetaDataFromIpfs() {
 
 module.exports = {
   fetchAndSaveMetaDataFromIpfs,
+  scanMetadataAndSave,
 };

@@ -36,10 +36,11 @@ async function fetchMetadataFromIpfsByHex(hexData) {
 
   // fetch data from ipfs
   const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${maybeCid}`)).data;
+  const jsonKeys = Object.keys(maybeJsonData);
   if (
-    maybeJsonData?.name &&
-    maybeJsonData?.description &&
-    maybeJsonData?.image
+    jsonKeys.includes("name") &&
+    jsonKeys.includes("description") &&
+    jsonKeys.includes("image")
   ) {
     return {
       cid: maybeCid,

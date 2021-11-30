@@ -121,7 +121,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
   }
 
   const name = (nftInstance?.nftMetadata ?? nftClass?.nftMetadata)?.name;
-  const imageThumbnail = !nftInstance.nftMetadata?.recognized ? null : (nftInstance.nftMetadata?.image
+  const imageThumbnail = (nftInstance?.nftMetadata?.recognized === false) ? null : (nftInstance.nftMetadata?.image
     ? nftInstance.nftMetadata.imageThumbnail
     : nftInstance.class.nftMetadata?.imageThumbnail);
   const background = nftInstance?.nftMetadata?.image

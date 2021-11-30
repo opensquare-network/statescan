@@ -337,13 +337,12 @@ export default function Address({
       head: addressNFTInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-        const imageThumbnail = !instance.nftMetadata?.recognized ? null : (instance.nftMetadata?.image
+        const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
           ? instance.nftMetadata.imageThumbnail
           : instance.class.nftMetadata?.imageThumbnail);
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
           : instance.class.nftMetadata?.imageMetadata?.background;
-
         return [
           <NftLink key={`classid${index}`} nftClass={instance.class}>
             {instance.classId}
@@ -394,7 +393,7 @@ export default function Address({
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.instance;
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-        const imageThumbnail = !instance.nftMetadata?.recognized ? null : (instance.nftMetadata?.image
+        const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
           ? instance.nftMetadata.imageThumbnail
           : instance.class.nftMetadata?.imageThumbnail);
         const background = instance.nftMetadata?.image

@@ -139,7 +139,7 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
         (item, index) => {
           const instance = item.instance;
           const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-          const imageThumbnail = !instance.nftMetadata?.recognized ? null : (instance.nftMetadata?.image
+          const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
             ? instance.nftMetadata.imageThumbnail
             : instance.class.nftMetadata?.imageThumbnail);
           const background = instance.nftMetadata?.image

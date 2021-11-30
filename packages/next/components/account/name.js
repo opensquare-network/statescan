@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const Text = styled.span`
+  display: block;
   width: 152px;
   overflow: hidden;
   white-space: nowrap;
@@ -8,5 +9,5 @@ const Text = styled.span`
 `;
 
 export default function Name({ name }) {
-  return <Text>{name}</Text>;
+  return <Text title={name}>{name}</Text>;
 }

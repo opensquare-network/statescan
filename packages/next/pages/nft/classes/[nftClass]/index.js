@@ -162,9 +162,9 @@ export default function NftClass({ node, nftClass, nftInstances }) {
         </NftLink>,
         <Thumbnail
           imageThumbnail={
-            (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
-            ? instance.nftMetadata.imageThumbnail
-            : instance.class.nftMetadata?.imageThumbnail)
+            (instance?.nftMetadata?.recognized === false) ? null :
+              (instance?.nftMetadata?.imageThumbnail ??
+                nftClass?.nftMetadata?.imageThumbnail)
           }
           key={`thumbnail${index}`}
           onClick={() => {

@@ -52,7 +52,7 @@ export const assetsHead = [
 ];
 
 export const destroyedAssetsHead = [
-  { name: "Asset ID", width: 136 },
+  { name: "Asset ID", width: 120 },
   { name: "Symbol", width: 152 },
   { name: "Name", width: 200 },
   { name: "Destroyed Time", width: 200 },
@@ -61,7 +61,7 @@ export const destroyedAssetsHead = [
 ];
 
 export const destroyedNftHead = [
-  { name: "ID", width: 136 },
+  { name: "ID", width: 120 },
   { name: "Class", width: 100 },
   { name: "Name" },
   { name: "Destroyed Time", width: 200 },
@@ -89,7 +89,7 @@ export const addressExtrincsHead = [
 ];
 
 export const addressAssetsHead = [
-  { name: "Asset ID", width: 136 },
+  { name: "Asset ID", width: 120 },
   { name: "Symbol", width: 152 },
   { name: "Name", width: 200 },
   { name: "Balance", align: "right" },
@@ -277,7 +277,7 @@ export const NFTInstanceHead = [
 ];
 
 export const NFTClassInstanceHead = [
-  { name: "ID", width: 136 },
+  { name: "ID", width: 120 },
   { name: "NFT", width: 100 },
   { name: "Name", width: 452 },
   { name: "Created Time", width: 200 },
@@ -286,8 +286,8 @@ export const NFTClassInstanceHead = [
 ];
 
 export const addressNFTInstanceHead = [
-  { name: "Class ID", width: 136 },
-  { name: "Instance ID", width: 136 },
+  { name: "Class ID", width: 120 },
+  { name: "Instance ID", width: 120 },
   { name: "NFT", width: 100 },
   { name: "Name", width: 452 },
   { name: "Created Time", width: 200, align: "right" },
@@ -296,7 +296,7 @@ export const addressNFTInstanceHead = [
 
 export const NFTTransferHead = [
   { name: "Extrinsic ID", width: 136 },
-  { name: "Instance ID", width: 136 },
+  { name: "Instance ID", width: 120 },
   { name: "Time", type: "time", width: 200 },
   { name: "NFT", width: 100 },
   { name: "Name" },

@@ -128,10 +128,8 @@ export async function getServerSideProps(context) {
       name: "Status",
       query: "status",
       options: [
-        { text: "All", value: "all" },
-        { text: "Existing", value: "" },
+        { text: "All", value: "" },
         { text: "Frozen", value: "frozen" },
-        { text: "Destroyed", value: "destroyed" },
       ],
     },
   ];

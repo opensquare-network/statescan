@@ -70,7 +70,7 @@ export const destroyedNftHead = [
 ];
 
 export const nftsHead = [
-  { name: "ID", width: 136 },
+  { name: "ID", width: 120 },
   { name: "Class", width: 100 },
   { name: "Name" },
   { name: "Created Time", width: 200 },

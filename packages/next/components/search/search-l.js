@@ -92,6 +92,7 @@ export default function SearchL({node}) {
   const [linkedList, setLinkedList] = useState({head: null, current: null, tail: null});
   const [inputTimeOut, setInputTimeOut] = useState(null);
 
+  /*eslint-disable */
   useEffect(() => {
     clearTimeout(inputTimeOut);
     if (hintCache.has(searchKeyword)) return;
@@ -127,6 +128,7 @@ export default function SearchL({node}) {
       , 200);
     setInputTimeOut(timerId);
   }, [searchKeyword, hintCache, forceUpdate]);
+  /*eslint-enable */
 
   const onInput = (e) => {
     const value = e.target.value;

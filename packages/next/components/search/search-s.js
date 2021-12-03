@@ -64,16 +64,24 @@ export default function SearchS() {
   const forceUpdate = useForceUpdate();
   const [selectedHint, setSelectedHint] = useState(null);
   const [linkedList, setLinkedList] = useState({head: null, current: null, tail: null});
-  const [inputTimeOut, setInputTimeOut] = useState(null);
+  const [inputTimeOutId, setInputTimeOut] = useState(null);
+  const [controller, setAbortController] = useState(new AbortController());
 
   /*eslint-disable */
   useEffect(() => {
-    clearTimeout(inputTimeOut);
+    clearTimeout(inputTimeOutId);
     if (hintCache.has(searchKeyword)) return;
     //debounce query
     const timerId = setTimeout(
       () => {
-        nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`).then((res) => {
+        controller.abort();
+        const newController = new AbortController();
+        let { signal } = newController;
+        setAbortController(newController);
+        nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`, {}, {signal}).then((res) => {
+          if(!res?.result){
+            return;
+          }
           const categories = ['blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
           const hintsList = ({head: null, current: null, tail: null});
           setSelectedHint(null);

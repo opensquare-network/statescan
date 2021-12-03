@@ -75,6 +75,9 @@ export default function SearchS() {
     const timerId = setTimeout(
       () => {
         controller.abort();
+        if(searchKeyword === ''){
+          return ;
+        }
         const newController = new AbortController();
         let { signal } = newController;
         setAbortController(newController);

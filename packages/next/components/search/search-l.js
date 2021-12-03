@@ -103,6 +103,9 @@ export default function SearchL({node}) {
     const timerId = setTimeout(
       () => {
         controller.abort();
+        if(searchKeyword === ''){
+          return ;
+        }
         const newController = new AbortController();
         let { signal } = newController;
         setAbortController(newController);

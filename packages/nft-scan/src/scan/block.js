@@ -1,4 +1,4 @@
-const { getBlockIndexer } = require("@statescan/common/src/block");
+const { getBlockIndexer } = require("@statescan/common");
 const { handleBlockIssuance } = require("../business/batch/issuance");
 const { clearIssuance } = require("../store/blockIssuance");
 const { handleEvents } = require("../business/event");

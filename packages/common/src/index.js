@@ -10,6 +10,7 @@ const testConsts = require("./testCommon/constants");
 const blockUtils = require("./block");
 const env = require("./env");
 const logger = require("./logger");
+const utils = require("./utils");
 
 module.exports = {
   sleep,
@@ -24,4 +25,5 @@ module.exports = {
   env,
   ...logger,
   ...fetchBlockMethods,
+  utils,
 };

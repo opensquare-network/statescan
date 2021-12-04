@@ -5,6 +5,16 @@ const Modules = Object.freeze({
   Uniques: "uniques",
   DmpQueue: "dmpQueue",
   ParachainSystem: "parachainSystem",
+  PolkadotXcm: "polkadotXcm",
+});
+
+const XcmPalletMethods = Object.freeze({
+  teleportAssets: "teleportAssets",
+  limitedTeleportAssets: "limitedTeleportAssets",
+});
+
+const XcmPalletEvents = Object.freeze({
+  Attempted: "Attempted",
 });
 
 const SystemEvents = Object.freeze({
@@ -100,4 +110,6 @@ module.exports = {
   TimelineItemTypes,
   DmpQueueEvents,
   ParachainSystemMethods,
+  XcmPalletMethods,
+  XcmPalletEvents,
 };

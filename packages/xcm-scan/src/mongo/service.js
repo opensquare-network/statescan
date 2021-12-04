@@ -13,6 +13,16 @@ async function bulkInsertTeleports(teleports = []) {
   await bulk.execute();
 }
 
+async function insertTeleport(teleport) {
+  if (!teleport) {
+    return;
+  }
+
+  const col = await getTeleportCollection();
+  await col.insertOne(teleport);
+}
+
 module.exports = {
   bulkInsertTeleports,
+  insertTeleport,
 };

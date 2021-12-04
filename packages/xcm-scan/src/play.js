@@ -9,7 +9,7 @@ const { initDb } = require("./mongo");
 
 async function test() {
   await initDb();
-  const heights = [955529];
+  const heights = [1227048];
   await setSpecHeights(heights);
 
   for (const height of heights) {

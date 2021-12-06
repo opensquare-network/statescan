@@ -166,6 +166,19 @@ async function getEventsFromCollection(col, $match, page, pageSize) {
   };
 }
 
+async function getBlockFromTime(ctx) {
+  const { blockTime } = ctx.params;
+
+  const col = await getBlockCollection();
+  const block = await col.findOne({
+    blockTime: {
+      $lte: parseInt(blockTime),
+    },
+  }).sort({ blockTime: -1 });
+
+  ctx.body = block;
+}
+
 module.exports = {
   getBlocks,
   getLatestBlocks,
@@ -173,4 +186,5 @@ module.exports = {
   getBlock,
   getBlockExtrinsics,
   getBlockEvents,
+  getBlockFromTime,
 };

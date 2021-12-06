@@ -5,12 +5,17 @@ const {
   env: { getScanStep, isUseMeta },
   chainHeight: { getLatestFinalizedHeight },
   specs: { getMetaScanHeight, updateSpecs },
+  store: { getAddresses, clearAddresses },
 } = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const last = require("lodash.last");
+const { deleteFromHeight } = require("../mongo/service");
+const { updateAddrs } = require("../mongo/account");
+const { scanBlock } = require("./block");
 
 async function beginScan() {
   let scanHeight = await getNextScanHeight();
+  await deleteFromHeight(scanHeight);
   while (true) {
     scanHeight = await oneStepScan(scanHeight);
   }
@@ -37,8 +42,15 @@ async function oneStepScan(startHeight) {
   for (const item of blocks) {
     // TODO: do following operations in one transaction
     try {
-      // await scanBlock(item.block, item.events);
+      await scanBlock(item.block, item.events);
       await updateScanHeight(item.height);
+
+      const addrs = getAddresses(item.height);
+      await updateAddrs(addrs);
+      clearAddresses(item.height);
+      if (addrs.length > 0) {
+        logger.info(`${addrs.length} addr updated at ${item.height}`);
+      }
     } catch (e) {
       await sleep(1000);
       logger.error(`Error with block scan ${item.height}`, e);
@@ -80,3 +92,7 @@ async function checkAndUpdateSpecs(targetHeight) {
     await updateSpecs();
   }
 }
+
+module.exports = {
+  beginScan,
+};

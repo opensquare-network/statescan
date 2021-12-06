@@ -22,7 +22,13 @@ async function insertTeleport(teleport) {
   await col.insertOne(teleport);
 }
 
+async function deleteFromHeight(height) {
+  const col = await getTeleportCollection();
+  await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
+}
+
 module.exports = {
   bulkInsertTeleports,
   insertTeleport,
+  deleteFromHeight,
 };

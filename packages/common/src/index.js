@@ -11,6 +11,7 @@ const blockUtils = require("./block");
 const env = require("./env");
 const logger = require("./logger");
 const utils = require("./utils");
+const store = require("./store");
 
 module.exports = {
   sleep,
@@ -26,4 +27,5 @@ module.exports = {
   ...logger,
   ...fetchBlockMethods,
   utils,
+  store,
 };

@@ -5,6 +5,7 @@ const {
   DmpQueueEvents,
   ParachainSystemMethods,
   specs: { findRegistry },
+  store: { addAddresses },
 } = require("@statescan/common");
 const { blake2AsHex } = require("@polkadot/util-crypto");
 
@@ -65,6 +66,11 @@ async function handleParachainExtrinsic(extrinsic, indexer, events) {
       indexer,
     });
   }
+
+  addAddresses(
+    indexer.blockHeight,
+    teleports.map((teleport) => teleport.beneficiary)
+  );
 
   await bulkInsertTeleports(teleports);
 }

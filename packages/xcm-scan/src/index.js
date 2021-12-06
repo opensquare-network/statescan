@@ -5,10 +5,13 @@ const { initDb } = require("./mongo");
 const {
   chainHeight: { subscribeFinalizedHead },
 } = require("@statescan/common");
+const { beginScan } = require("./scan");
 
 async function main() {
   await initDb();
   await subscribeFinalizedHead();
+
+  await beginScan();
 }
 
 main()

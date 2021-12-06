@@ -170,11 +170,14 @@ async function getBlockFromTime(ctx) {
   const { blockTime } = ctx.params;
 
   const col = await getBlockCollection();
-  const block = await col.findOne({
-    blockTime: {
-      $lte: parseInt(blockTime),
+  const block = await col.findOne(
+    {
+      blockTime: {
+        $lte: parseInt(blockTime),
+      },
     },
-  }).sort({ blockTime: -1 });
+    { sort: { blockTime: -1 } }
+  );
 
   ctx.body = block;
 }

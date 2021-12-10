@@ -7,6 +7,7 @@ const scanFileCategory = "block-scan";
 const statisticFileCategory = "statistic";
 const teleportFileCategory = "teleport";
 const blockFileCategory = "block";
+const busFileCategory = "bus";
 
 log4js.configure({
   appenders: {
@@ -14,6 +15,7 @@ log4js.configure({
     [statisticFileCategory]: { type: "file", filename: `log/statistic.log` },
     [teleportFileCategory]: { type: "file", filename: `log/teleport.log` },
     [blockFileCategory]: { type: "file", filename: `log/block.log` },
+    [busFileCategory]: { type: "file", filename: `log/bus.log` },
     errorFile: {
       type: "file",
       filename: `log/errors.log`,
@@ -45,6 +47,13 @@ log4js.configure({
       ],
       level: logLevel,
     },
+    [busFileCategory]: {
+      appenders: [
+        isProduction ? busFileCategory : "out",
+        isProduction ? busFileCategory : "errors",
+      ],
+      level: logLevel,
+    },
   },
 });
 
@@ -52,10 +61,12 @@ const logger = log4js.getLogger(scanFileCategory);
 const statisticLogger = log4js.getLogger(statisticFileCategory);
 const teleportLogger = log4js.getLogger(teleportFileCategory);
 const blockLogger = log4js.getLogger(blockFileCategory);
+const busLogger = log4js.getLogger(busFileCategory);
 
 module.exports = {
   logger,
   statisticLogger,
   teleportLogger,
   blockLogger,
+  busLogger,
 };

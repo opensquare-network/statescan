@@ -12,5 +12,6 @@ router.get(
   blocksController.getBlockExtrinsics
 );
 router.get("/blocks/:heightOrHash/events", blocksController.getBlockEvents);
+router.get("/blocks/fromtime/:blockTime", blocksController.getBlockFromTime);
 
 module.exports = router;

@@ -126,6 +126,7 @@ async function _createIndexes() {
 
   blockCol.createIndex({ hash: 1 });
   blockCol.createIndex({ "header.number": -1 });
+  blockCol.createIndex({ "blockTime": -1 });
 
   extrinsicCol.createIndex({ hash: 1 });
   extrinsicCol.createIndex({ "indexer.blockHash": 1, "indexer.index": -1 });

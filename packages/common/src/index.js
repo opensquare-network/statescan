@@ -12,6 +12,7 @@ const env = require("./env");
 const logger = require("./logger");
 const utils = require("./utils");
 const store = require("./store");
+const mem = require("./mem");
 
 module.exports = {
   sleep,
@@ -28,4 +29,5 @@ module.exports = {
   ...fetchBlockMethods,
   utils,
   store,
+  mem,
 };

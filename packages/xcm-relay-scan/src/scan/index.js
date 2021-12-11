@@ -5,6 +5,7 @@ const {
   env: { getScanStep, isUseMeta, currentChain },
   chainHeight: { getLatestFinalizedHeight },
   specs: { getMetaScanHeight, updateSpecs },
+  mem: { getHeadUsedInGB },
 } = require("@statescan/common");
 const { deleteFromHeight } = require("../mongo/service");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
@@ -25,6 +26,7 @@ async function beginScan() {
   await deleteFromHeight(scanHeight);
   while (true) {
     scanHeight = await oneStepScan(scanHeight);
+    await sleep(0);
   }
 }
 
@@ -54,6 +56,14 @@ async function oneStepScan(startHeight) {
     } catch (e) {
       await sleep(1000);
       logger.error(`Error with block scan ${item.height}`, e);
+    } finally {
+      const memUsedInGB = getHeadUsedInGB();
+      if (memUsedInGB > 1) {
+        console.log(
+          `${memUsedInGB}GB heap used, restart process in case of memory leak`
+        );
+        process.exit(0);
+      }
     }
   }
 

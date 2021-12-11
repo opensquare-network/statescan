@@ -3,6 +3,7 @@ const constants = require("./constants");
 const apiRelated = require("./api");
 const blockApiObj = require("./blockApi");
 const meta = require("./mongo/meta");
+const known = require("./mongo/knownHeight");
 const specs = require("./chain/specs");
 const chainHeight = require("./chain/height");
 const fetchBlockMethods = require("./chain/fetchBlocks");
@@ -20,6 +21,7 @@ module.exports = {
   ...apiRelated,
   ...blockApiObj,
   meta,
+  known,
   specs,
   chainHeight,
   testConsts,

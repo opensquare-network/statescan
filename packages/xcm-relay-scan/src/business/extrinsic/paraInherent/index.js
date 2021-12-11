@@ -17,7 +17,7 @@ async function handleParaInherentExtrinsic(extrinsic, indexer, events) {
 
 async function handleCandidate({ descriptor, commitments }, indexer) {
   if (
-    descriptor.paraId !== 1000 ||
+    descriptor.paraId.toNumber() !== 1000 ||
     (commitments.upwardMessages || []).length <= 0
   ) {
     return;

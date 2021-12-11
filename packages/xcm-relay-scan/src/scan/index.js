@@ -2,7 +2,7 @@ const {
   logger,
   sleep,
   fetchBlocks,
-  env: { getScanStep, isUseMeta, currentChain },
+  env: { getScanStep, isUseMeta, currentChain, firstScanKnowHeights },
   chainHeight: { getLatestFinalizedHeight },
   specs: { getMetaScanHeight, updateSpecs },
   mem: { getHeadUsedInGB },
@@ -10,6 +10,7 @@ const {
 const { deleteFromHeight } = require("../mongo/service");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
 const last = require("lodash.last");
+const { scanKnownHeights } = require("./known");
 const { scanBlock } = require("./block");
 
 async function getScanHeight() {
@@ -21,6 +22,12 @@ async function getScanHeight() {
 }
 
 async function beginScan() {
+  await updateSpecs();
+
+  if (firstScanKnowHeights()) {
+    await scanKnownHeights();
+  }
+
   let scanHeight = await getScanHeight();
 
   await deleteFromHeight(scanHeight);

@@ -7,6 +7,12 @@ const Modules = Object.freeze({
   ParachainSystem: "parachainSystem",
   PolkadotXcm: "polkadotXcm",
   ParasInherent: "parasInherent",
+  Ump: "ump",
+});
+
+const UmpEvents = Object.freeze({
+  ExecutedUpward: "ExecutedUpward",
+  UpwardMessagesReceived: "UpwardMessagesReceived",
 });
 
 const XcmPalletMethods = Object.freeze({
@@ -113,4 +119,5 @@ module.exports = {
   ParachainSystemMethods,
   XcmPalletMethods,
   XcmPalletEvents,
+  UmpEvents,
 };

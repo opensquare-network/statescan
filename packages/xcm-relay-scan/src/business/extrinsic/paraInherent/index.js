@@ -10,7 +10,7 @@ async function handleParaInherentExtrinsic(extrinsic, indexer, events) {
   }
 
   const backedCandidates = extrinsic.method.args[0].backedCandidates;
-  for (const candidate of backedCandidates) {
+  for (const { candidate } of backedCandidates) {
     await handleCandidate(candidate, indexer);
   }
 }

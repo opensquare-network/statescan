@@ -7,6 +7,7 @@ const {
   XcmPalletMethods,
   XcmPalletEvents,
   teleportLogger,
+  store: { addAddresses },
 } = require("@statescan/common");
 
 async function handleTeleportExtrinsic(extrinsic, indexer, events) {
@@ -30,13 +31,16 @@ async function handleTeleportExtrinsic(extrinsic, indexer, events) {
     return;
   }
 
+  const signer = extrinsic.singer.toString();
   const teleport = {
     sentAt: indexer.blockHeight,
     direction: 1,
-    signer: extrinsic.signer.toString(),
+    signer,
     ...info,
     indexer,
   };
+
+  addAddresses(indexer.blockHeight, [signer, info.beneficiary]);
 
   await insertTeleport(teleport);
 }

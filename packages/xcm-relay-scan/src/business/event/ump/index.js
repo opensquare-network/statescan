@@ -4,7 +4,7 @@ const { Modules, UmpEvents } = require("@statescan/common");
 
 async function handleUmpEvents(event, indexer, blockEvents, extrinsic) {
   const { section, method } = event;
-  if ([Modules.Ump, Modules.ParasUmp].includes(section)) {
+  if (![Modules.Ump, Modules.ParasUmp].includes(section)) {
     return;
   }
 

@@ -33,7 +33,7 @@ async function handleCandidate({ descriptor, commitments }, indexer) {
       msgId,
       message,
       msgIndex: index++,
-      descriptor,
+      descriptor: descriptor.toJSON(),
       indexer,
     });
   }

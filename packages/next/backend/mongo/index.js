@@ -33,6 +33,7 @@ const nftTransferCollectionName = "nftTransfer";
 let client = null;
 let db = null;
 let nftDb = null;
+let xcmDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -59,6 +60,8 @@ let instanceAttributeCol = null;
 let nftMetadataCol = null;
 let nftTransferCol = null;
 
+let xcmTeleportCol = null;
+
 function getDbName() {
   const dbName = process.env.MONGO_DB_NAME;
   if (!dbName) {
@@ -75,6 +78,15 @@ function getNftDbName() {
   }
 
   return nftDbName;
+}
+
+function getXcmDbName() {
+  const xcmDbName = process.env.MONGO_DB_XCM_NAME;
+  if (!xcmDbName) {
+    throw new Error("MONGO_DB_XCM_NAME not set");
+  }
+
+  return xcmDbName;
 }
 
 async function initDb() {
@@ -115,6 +127,10 @@ async function initDb() {
   nftMetadataCol = nftDb.collection(nftMetadataCollectionName);
   nftTransferCol = nftDb.collection(nftTransferCollectionName);
 
+  const xcmDbName = getXcmDbName();
+  xcmDb = client.db(xcmDbName);
+  xcmTeleportCol = xcmDb.collection(teleportCollectionName);
+
   await _createIndexes();
 }
 
@@ -126,7 +142,7 @@ async function _createIndexes() {
 
   blockCol.createIndex({ hash: 1 });
   blockCol.createIndex({ "header.number": -1 });
-  blockCol.createIndex({ "blockTime": -1 });
+  blockCol.createIndex({ blockTime: -1 });
 
   extrinsicCol.createIndex({ hash: 1 });
   extrinsicCol.createIndex({ "indexer.blockHash": 1, "indexer.index": -1 });
@@ -192,6 +208,10 @@ async function _createIndexes() {
   assetTransferCol.createIndex({ listIgnore: 1, "indexer.blockHeight": -1 });
 
   teleportCol.createIndex({ "indexer.blockHeight": -1, "indexer.index": -1 });
+  xcmTeleportCol.createIndex({
+    "indexer.blockHeight": -1,
+    "indexer.index": -1,
+  });
 }
 
 async function tryInit(col) {
@@ -305,6 +325,11 @@ async function getNftTransferCollection() {
   return nftTransferCol;
 }
 
+async function getXcmTeleportCollection() {
+  await tryInit(xcmTeleportCol);
+  return xcmTeleportCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -328,4 +353,5 @@ module.exports = {
   getInstanceAttributeCollection,
   getNftMetadataCollection,
   getNftTransferCollection,
+  getXcmTeleportCollection,
 };

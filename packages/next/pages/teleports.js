@@ -2,7 +2,12 @@ import Layout from "components/layout";
 import styled from "styled-components";
 import _ from "lodash";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import { teleportsHead, EmptyQuery, nodes } from "utils/constants";
+import {
+  teleportsHead,
+  EmptyQuery,
+  nodes,
+  teleportDirection,
+} from "utils/constants";
 import Nav from "components/nav";
 import Table from "components/table";
 import Pagination from "components/pagination";
@@ -25,7 +30,7 @@ const Icon = styled.img`
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
-  if (direction === "in") {
+  if (direction === teleportDirection.in) {
     return { source: chain.sub, target: chain.name };
   } else {
     return { source: chain.name, target: chain.sub };
@@ -63,11 +68,11 @@ export default function Events({ node, teleports, filter }) {
             item.indexer.blockTime,
             <TeleportDirection
               key={`${index}-2`}
-              from={teleportSourceAndTarget(item.teleportDirection).source}
-              to={teleportSourceAndTarget(item.teleportDirection).target}
+              from={teleportSourceAndTarget(item.direction).source}
+              to={teleportSourceAndTarget(item.direction).target}
             />,
             item.beneficiary ? (
-              item.teleportDirection === "in" ? (
+              item.teleportDirection === teleportDirection.in ? (
                 <AddressEllipsis
                   address={item.beneficiary}
                   to={`/account/${item.beneficiary}`}
@@ -81,17 +86,17 @@ export default function Events({ node, teleports, filter }) {
             ) : (
               "-"
             ),
-            item.teleportDirection === "in" ? (
+            item.direction === teleportDirection.in ? (
               <Result isSuccess={item.complete} noText={true} />
             ) : (
               <Result isSuccess={null} noText={true} />
             ),
-            item.teleportDirection === "in" ? (
+            item.direction === teleportDirection.in ? (
               <ExplorerLink
-                chain={teleportSourceAndTarget(item.teleportDirection).source}
-                href={`/block/${item.pubSentAt}`}
+                chain={teleportSourceAndTarget(item.direction).source}
+                href={`/block/${item.sentAt}`}
               >
-                {item.pubSentAt.toLocaleString()}
+                {item.sentAt.toLocaleString()}
               </ExplorerLink>
             ) : (
               "-"

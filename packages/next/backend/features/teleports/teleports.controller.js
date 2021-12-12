@@ -1,4 +1,4 @@
-const { getTeleportCollection } = require("../../mongo");
+const { getXcmTeleportCollection } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getTeleport(ctx) {
@@ -15,7 +15,7 @@ async function getTeleport(ctx) {
     q = { extrinsicHash: indexOrHash };
   }
 
-  const col = await getTeleportCollection();
+  const col = await getXcmTeleportCollection();
   const item = await col.findOne(q);
 
   ctx.body = item;
@@ -30,7 +30,7 @@ async function getTeleports(ctx) {
 
   const q = {};
 
-  const col = await getTeleportCollection();
+  const col = await getXcmTeleportCollection();
   const items = await col
     .find(q)
     .sort({

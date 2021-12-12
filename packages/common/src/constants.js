@@ -7,6 +7,7 @@ const Modules = Object.freeze({
   ParachainSystem: "parachainSystem",
   PolkadotXcm: "polkadotXcm",
   ParasInherent: "parasInherent",
+  ParasUmp: "parasUmp",
   Ump: "ump",
 });
 

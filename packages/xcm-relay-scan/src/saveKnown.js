@@ -36,5 +36,6 @@ main()
   .then(async () => {
     console.log("Known heights saved");
     await closeKnownClient();
+    process.exit(0);
   })
   .catch(console.error);

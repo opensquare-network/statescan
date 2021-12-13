@@ -5,10 +5,9 @@ const {
   fetchBlocks,
   sleep,
   logger,
+  mem: { exitWhenTooMuchMem },
 } = require("@statescan/common");
 const last = require("lodash.last");
-
-let count = 0;
 
 async function scanKnownHeights() {
   const toScanHeight = await getNextScanHeight();
@@ -30,12 +29,7 @@ async function scanKnownHeights() {
     const lastHeight = last(blocks || [])?.height;
     logger.info(`${lastHeight} scan finished! - known height scan`);
 
-    count++;
-    if (count % 10 === 0) {
-      console.log(`${lastHeight} restart process in case of memory leak`);
-      process.exit(0);
-    }
-
+    exitWhenTooMuchMem();
     heights = await getNextKnownHeights(lastHeight + 1);
   }
 }

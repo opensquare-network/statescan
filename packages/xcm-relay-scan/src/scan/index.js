@@ -6,6 +6,7 @@ const {
   chainHeight: { getLatestFinalizedHeight },
   specs: { getMetaScanHeight, updateSpecs },
   mem: { exitWhenTooMuchMem },
+  clearBlockApi,
 } = require("@statescan/common");
 const { deleteFromHeight } = require("../mongo/service");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
@@ -34,6 +35,7 @@ async function beginScan() {
   while (true) {
     scanHeight = await oneStepScan(scanHeight);
     await sleep(0);
+    clearBlockApi();
   }
 }
 

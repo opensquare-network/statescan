@@ -28,6 +28,12 @@ async function handleCandidate({ descriptor, commitments }, indexer) {
     return;
   }
 
+  if (commitments.upwardMessages.length > 1) {
+    busLogger.info(
+      `Got ${commitments.upwardMessages.length} upward msgs at ${indexer.blockHeight}`
+    );
+  }
+
   const col = await getUpwardMessageCollection();
   const bulk = col.initializeUnorderedBulkOp();
   let index = 0;
@@ -46,10 +52,6 @@ async function handleCandidate({ descriptor, commitments }, indexer) {
   }
 
   await bulk.execute();
-  busLogger.info(
-    `found ${commitments.upwardMessages.length} upward messages, at`,
-    indexer
-  );
 }
 
 async function extractUmp(msg, indexer) {

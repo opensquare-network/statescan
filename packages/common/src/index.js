@@ -14,6 +14,7 @@ const logger = require("./logger");
 const utils = require("./utils");
 const store = require("./store");
 const mem = require("./mem");
+const scan = require("./scan");
 
 module.exports = {
   sleep,
@@ -32,4 +33,5 @@ module.exports = {
   utils,
   store,
   mem,
+  scan,
 };

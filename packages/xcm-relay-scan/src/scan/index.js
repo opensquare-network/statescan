@@ -2,11 +2,14 @@ const {
   logger,
   sleep,
   fetchBlocks,
-  env: { getScanStep, isUseMeta, currentChain, firstScanKnowHeights },
+  env: { currentChain, firstScanKnowHeights },
   chainHeight: { getLatestFinalizedHeight },
-  specs: { getMetaScanHeight, updateSpecs },
+  specs: { updateSpecs },
   mem: { exitWhenTooMuchMem },
   clearBlockApi,
+  scan: {
+    utils: { getTargetHeight, getHeights, checkAndUpdateSpecs },
+  },
 } = require("@statescan/common");
 const { deleteFromHeight } = require("../mongo/service");
 const { getNextScanHeight, updateScanHeight } = require("../mongo/scanHeight");
@@ -73,37 +76,6 @@ async function oneStepScan(startHeight) {
   const lastHeight = last(blocks || []).height;
   logger.info(`${startHeight} - ${lastHeight} done!`);
   return lastHeight + 1;
-}
-
-function getTargetHeight(startHeight) {
-  const chainHeight = getLatestFinalizedHeight();
-
-  let targetHeight = chainHeight;
-  const step = getScanStep();
-  if (startHeight + step < chainHeight) {
-    targetHeight = startHeight + step;
-  }
-
-  return targetHeight;
-}
-
-function getHeights(start, end) {
-  const heights = [];
-  for (let i = start; i <= end; i++) {
-    heights.push(i);
-  }
-
-  return heights;
-}
-
-async function checkAndUpdateSpecs(targetHeight) {
-  if (!isUseMeta()) {
-    return;
-  }
-
-  if (targetHeight > getMetaScanHeight()) {
-    await updateSpecs();
-  }
 }
 
 module.exports = {

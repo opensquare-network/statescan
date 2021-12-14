@@ -6,6 +6,7 @@ const {
   getAssetCollection,
   getAddressCollection,
   getNftClassCollection,
+  getNftInstanceCollection,
 } = require("../mongo");
 const { getLatestBlocks } = require("../common/latestBlocks");
 
@@ -32,6 +33,7 @@ async function calcOverview() {
   const addressCol = await getAddressCollection();
   const assetCol = await getAssetCollection();
   const nftClassCol = await getNftClassCollection();
+  const nftInstanceCol = await getNftInstanceCollection();
 
   // Load latest 5 blocks
   const latestBlocks = await getLatestBlocks(5);
@@ -79,7 +81,16 @@ async function calcOverview() {
     .limit(5)
     .toArray();
 
-  const popularNftClasses = await nftClassCol.aggregate([
+  const [
+    {
+      popularNftClasses,
+      recognizedNftClasses: [
+        {
+          count: recognizedNftClassesCount
+        } = { count: 0 }
+      ]
+    }
+  ] = await nftClassCol.aggregate([
     {
       $lookup: {
         from: "nftMetadata",
@@ -96,12 +107,126 @@ async function calcOverview() {
       }
     },
     {
-      $sort: {
-        "nftMetadata.recognized": -1,
-        "details.instances": -1,
+      $facet: {
+        popularNftClasses: [
+          {
+            $sort: {
+              "nftMetadata.recognized": -1,
+              "details.instances": -1,
+            }
+          },
+          { $limit: 5 },
+        ],
+        recognizedNftClasses: [
+          {
+            $match: {
+              "nftMetadata.recognized": true,
+            }
+          },
+          {
+            $count: "count"
+          }
+        ],
       }
     },
-    { $limit: 5 },
+  ]).toArray();
+
+const [{
+  nftInstances: [
+    {
+      count: nftInstancesCount
+    } = { count: 0 }
+  ],
+  recognizedNftInstances: [
+    {
+      count: recognizedNftInstancesCount
+    } = { count: 0 }
+  ],
+}] = await nftInstanceCol.aggregate([
+    {
+      $lookup: {
+        from: "nftMetadata",
+        localField: "dataHash",
+        foreignField: "dataHash",
+        as: "nftMetadata",
+      }
+    },
+    {
+      $addFields: {
+        nftMetadata: {
+          $arrayElemAt: ["$nftMetadata", 0]
+        }
+      }
+    },
+    {
+      $lookup: {
+        from: "nftClass",
+        let: { classId: "$classId", classHeight: "$classHeight" },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  { $eq: ["$classId", "$$classId"] },
+                  { $eq: ["$indexer.blockHeight", "$$classHeight"] },
+                ]
+              }
+            }
+          },
+          {
+            $lookup: {
+              from: "nftMetadata",
+              localField: "dataHash",
+              foreignField: "dataHash",
+              as: "nftMetadata",
+            }
+          },
+          {
+            $addFields: {
+              nftMetadata: {
+                $arrayElemAt: ["$nftMetadata", 0]
+              }
+            }
+          },
+        ],
+        as: "nftClass",
+      }
+    },
+    {
+      $addFields: {
+        nftClass: {
+          $arrayElemAt: ["$nftClass", 0]
+        }
+      }
+    },
+    {
+      $facet: {
+        nftInstances: [
+          {
+            $count: "count"
+          }
+        ],
+        recognizedNftInstances: [
+          {
+            $match: {
+              $or: [
+                { "nftMetadata.recognized": true },
+                {
+                  $and: [
+                    { nftMetadata: null },
+                    { "nftClass.nftMetadata.recognized": true },
+                  ],
+                },
+              ]
+            }
+          },
+          {
+            $count: "count"
+          }
+        ]
+      }
+    },
+
   ]).toArray();
 
   // Calculate counts
@@ -110,6 +235,7 @@ async function calcOverview() {
     $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   });
   const transfersCount = await transferCol.countDocuments();
+  const nftClassesCount = await nftClassCol.countDocuments();
 
   return {
     latestBlocks,
@@ -119,6 +245,14 @@ async function calcOverview() {
     assetsCount,
     holdersCount,
     transfersCount,
+    nftClassesCount: {
+      total: nftClassesCount,
+      recognized: recognizedNftClassesCount,
+    },
+    nftInstancesCount: {
+      total: nftInstancesCount,
+      recognized: recognizedNftInstancesCount,
+    }
   };
 }
 

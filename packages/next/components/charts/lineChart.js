@@ -1,5 +1,6 @@
 import { Axis, Chart, LineAdvance, Tooltip } from "bizcharts";
 import styled from "styled-components";
+import moment from "moment";
 
 const Wrapper = styled.div`
   display: flex;
@@ -30,14 +31,24 @@ export default function LineChart({
   data = [],
   color = "#F22279",
 }) {
+  console.log({ data });
+  const scale = {
+    time: {
+      tickCount: 3,
+      formatter: (text) => moment(text).format("MMM DD"),
+    },
+    price: {
+      tickCount: 3,
+    },
+  };
   return (
     <Wrapper>
       <Title>{token} Price History(USDT) · Last 30d</Title>
-      {data.length ? (
-        <ChartWrapper>
-          <Chart data={data} height={100} width={367}>
-            <Axis name="time" visible={false} />
-            <Axis name="price" visible={false} />
+      <ChartWrapper>
+        {data.length ? (
+          <Chart data={data} scale={scale} height={100} width={367}>
+            <Axis name="time" visible={true} tickLine={null} line={null} />
+            <Axis name="price" visible={true} grid={null} />
             <LineAdvance
               shape="smooth"
               area
@@ -46,10 +57,10 @@ export default function LineChart({
             />
             <Tooltip custom={true} containerTpl={`<i></i>`} />
           </Chart>
-        </ChartWrapper>
-      ) : (
-        <img src="/imgs/nochart.svg" alt="NoChartDataLoaded" />
-      )}
+        ) : (
+          <img src="/imgs/nochart.svg" alt="NoChartDataLoaded" />
+        )}
+      </ChartWrapper>
     </Wrapper>
   );
 }

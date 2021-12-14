@@ -1,8 +1,13 @@
 const { getUpwardMessageCollection } = require("../../../mongo");
-const { Modules, busLogger } = require("@statescan/common");
+const {
+  utils: { bigAdd },
+  Modules,
+  busLogger,
+  specs: { findRegistry },
+} = require("@statescan/common");
 const { blake2AsHex } = require("@polkadot/util-crypto");
 
-async function handleParaInherentExtrinsic(extrinsic, indexer, events) {
+async function handleParaInherentExtrinsic(extrinsic, indexer) {
   const { section, method } = extrinsic.method;
 
   if (Modules.ParasInherent !== section || "enter" !== method) {
@@ -29,9 +34,11 @@ async function handleCandidate({ descriptor, commitments }, indexer) {
   for (const msg of commitments.upwardMessages) {
     const msgId = blake2AsHex(msg);
     const message = msg.toHex();
+    const extracted = await extractUmp(message, indexer);
     bulk.insert({
       msgId,
       message,
+      extracted,
       msgIndex: index++,
       descriptor: descriptor.toJSON(),
       indexer,
@@ -43,6 +50,61 @@ async function handleCandidate({ descriptor, commitments }, indexer) {
     `found ${commitments.upwardMessages.length} upward messages, at`,
     indexer
   );
+}
+
+async function extractUmp(msg, indexer) {
+  const registry = await findRegistry(indexer);
+  const versionedXcm = registry.createType("VersionedXcm", msg, true);
+
+  if (versionedXcm.isV0) {
+    const v0 = versionedXcm.asV0;
+    if (v0.isReceiveTeleportedAsset) {
+      return extractV0Teleport(v0.asReceiveTeleportedAsset, indexer);
+    }
+  } else {
+    busLogger.error(`Found teleport version not V0 at`, indexer);
+  }
+}
+
+async function extractV0Teleport(receiveTeleportAsset, indexer) {
+  const teleportedAmount = receiveTeleportAsset.assets.reduce(
+    (result, asset) => {
+      if (!asset.isConcreteFungible) {
+        return result;
+      }
+
+      const fungible = asset.asConcreteFungible;
+      if (!fungible.id.isHere) {
+        return result;
+      }
+
+      return bigAdd(result, fungible.amount.toString());
+    },
+    0
+  );
+
+  const effects = receiveTeleportAsset.effects;
+  const buyExecution = effects.find((effect) => effect.isBuyExecution);
+  const depositAsset = effects.find((effect) => effect.isDepositAsset);
+
+  const fee = buyExecution.asBuyExecution.debt.toString();
+  if (!depositAsset) {
+    throw new Error(`No deposit found at ${indexer.blockHeight}`);
+  }
+
+  let beneficiary;
+  const dest = depositAsset.asDepositAsset.dest;
+  if (dest.isX1 && dest.asX1.isAccountId32) {
+    beneficiary = dest.asX1.asAccountId32.id.toString();
+  } else if (dest.isX2 && dest.asX2.isAccountId32) {
+    beneficiary = dest.asX2.asAccountId32.id.toString();
+  }
+
+  return {
+    amount: teleportedAmount,
+    fee,
+    beneficiary,
+  };
 }
 
 module.exports = {

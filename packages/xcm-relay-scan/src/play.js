@@ -1,7 +1,10 @@
 require("dotenv").config();
 
 const { scanBlock } = require("./scan/block");
-const { getApi } = require("@statescan/common");
+const {
+  getApi,
+  specs: { setSpecHeights },
+} = require("@statescan/common");
 const { initDb } = require("./mongo");
 
 async function test() {
@@ -9,7 +12,10 @@ async function test() {
   // const heights = [7515704];
   // const heights = [7519683];
   // const heights = [7812531];
-  const heights = [8921808];
+  const heights = [7812703];
+  // const heights = [8921808];
+
+  await setSpecHeights(heights);
 
   for (const height of heights) {
     const api = await getApi();

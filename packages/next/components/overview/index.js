@@ -77,6 +77,8 @@ export default function Overview({ node, overviewData, price }) {
   const previousTimeRef = useRef();
   const animationDuration = 500;
 
+  const { nftClassesCount, nftInstancesCount } = overviewData;
+
   useEffect(() => {
     if (overviewData && blocksHeightData) {
       if (
@@ -160,16 +162,16 @@ export default function Overview({ node, overviewData, price }) {
         <OverviewItem
           title="NFT Class"
           icon="nft-class.svg"
-          text="30"
-          textSec="32"
+          text={nftClassesCount?.recognized ?? 0}
+          textSec={nftClassesCount?.total ?? 0}
           link="nft"
           tip="Recognized / All"
         />
         <OverviewItem
           title="NFT Instance"
           icon="nft-class.svg"
-          text="80"
-          textSec="100"
+          text={nftInstancesCount?.recognized ?? 0}
+          textSec={nftInstancesCount?.total ?? 0}
           link="nft"
           tip="Recognized / All"
         />

@@ -26,12 +26,17 @@ const ChartWrapper = styled.div`
   flex-grow: 1;
 `;
 
+const NoData = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
+`;
+
 export default function LineChart({
   token = "",
   data = [],
   color = "#F22279",
 }) {
-  console.log({ data });
   const scale = {
     time: {
       tickCount: 3,
@@ -41,6 +46,7 @@ export default function LineChart({
       tickCount: 3,
     },
   };
+
   return (
     <Wrapper>
       <Title>{token} Price History(USDT) · Last 30d</Title>
@@ -58,7 +64,9 @@ export default function LineChart({
             <Tooltip custom={true} containerTpl={`<i></i>`} />
           </Chart>
         ) : (
-          <img src="/imgs/nochart.svg" alt="NoChartDataLoaded" />
+          <NoData>
+            <img src="/imgs/nochart.svg" alt="NoChartDataLoaded" />
+          </NoData>
         )}
       </ChartWrapper>
     </Wrapper>

@@ -2,58 +2,45 @@ import styled from "styled-components";
 import LineChart from "components/charts/lineChart";
 import { useEffect, useRef, useState } from "react";
 import { card_border } from "styles/textStyles";
+import OverviewItem from "./overviewItem";
 
 const Wrapper = styled.div`
   background: #ffffff;
   ${card_border};
-  padding: 39px 64px;
+  padding: 32px 24px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  @media screen and (max-width: 900px) {
-    padding: 24px 24px 0;
-    > * {
-      margin-bottom: 24px;
-    }
+  @media screen and (max-width: 1200px) {
+    padding: 24px 24px;
   }
 `;
 
 const ItemWrapper = styled.div`
-  min-width: 130px;
-  text-align: center;
-  @media screen and (max-width: 900px) {
-    width: 130px;
-  }
-`;
-
-const Title = styled.p`
-  font-size: 14px;
-  line-height: 16px;
-  color: rgba(17, 17, 17, 0.35);
-  margin: 0 0 8px;
-`;
-
-const Text = styled.p`
-  font-weight: bold;
-  font-size: 24px;
-  line-height: 24px;
-  color: #111111;
-  margin: 0;
+  flex-grow: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 240px);
+  row-gap: 32px;
 `;
 
 const Divider = styled.div`
   width: 1px;
   background: #f4f4f4;
-  @media screen and (max-width: 900px) {
+  align-self: stretch;
+  margin: 0 40px 0 0;
+  @media screen and (max-width: 1200px) {
+    margin-right: 0;
     width: 100%;
     height: 1px;
+    margin: 24px 0;
   }
 `;
 
 const ChartWrapper = styled.div`
-  width: 227px;
-  height: 48px;
-  @media screen and (max-width: 900px) {
+  width: 367px;
+  height: 120px;
+  @media screen and (max-width: 1200px) {
     width: 100%;
   }
 `;
@@ -89,6 +76,8 @@ export default function Overview({ node, overviewData, price }) {
   const requestRef = useRef();
   const previousTimeRef = useRef();
   const animationDuration = 500;
+
+  const { nftClassesCount, nftInstancesCount } = overviewData;
 
   useEffect(() => {
     if (overviewData && blocksHeightData) {
@@ -147,23 +136,47 @@ export default function Overview({ node, overviewData, price }) {
   return (
     <Wrapper>
       <ItemWrapper>
-        <Title>Block Height</Title>
-        <Text>{blocksHeightDynamic?.toLocaleString()}</Text>
-      </ItemWrapper>
-      <ItemWrapper>
-        <Title>Assets</Title>
-        <Text>{assetsCountDynamic?.toLocaleString()}</Text>
-      </ItemWrapper>
-      <ItemWrapper>
-        <Title>Transfers</Title>
-        <Text>{transfersCountDynamic?.toLocaleString()}</Text>
-      </ItemWrapper>
-      <ItemWrapper>
-        <Title>Holders</Title>
-        <Text>{holdersCountDynamic?.toLocaleString()}</Text>
+        <OverviewItem
+          title="Block Height"
+          icon="blocks.svg"
+          link="/blocks"
+          text={blocksHeightDynamic?.toLocaleString()}
+        />
+        <OverviewItem
+          title="Transfers"
+          icon="transfers.svg"
+          link="/transfers"
+          text={transfersCountDynamic?.toLocaleString()}
+        />
+        <OverviewItem
+          title="Assets"
+          icon="asset.svg"
+          link="assets"
+          text={assetsCountDynamic?.toLocaleString()}
+        />
+        <OverviewItem
+          title="Holders"
+          icon="holder.svg"
+          text={holdersCountDynamic?.toLocaleString()}
+        />
+        <OverviewItem
+          title="NFT Class"
+          icon="nft-class.svg"
+          text={nftClassesCount?.recognized ?? 0}
+          textSec={nftClassesCount?.total ?? 0}
+          link="nft"
+          tip="Recognized / All"
+        />
+        <OverviewItem
+          title="NFT Instance"
+          icon="nft-class.svg"
+          text={nftInstancesCount?.recognized ?? 0}
+          textSec={nftInstancesCount?.total ?? 0}
+          link="nft"
+          tip="Recognized / All"
+        />
       </ItemWrapper>
       <Divider />
-      <div />
       <ChartWrapper>
         <LineChart token={token} data={chartData} color={color} />
       </ChartWrapper>

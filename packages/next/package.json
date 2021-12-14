@@ -17,7 +17,7 @@
     "@reduxjs/toolkit": "^1.6.0",
     "@svgr/webpack": "^5.5.0",
     "bignumber.js": "^9.0.1",
-    "bizcharts": "^4.1.11",
+    "bizcharts": "^4.1.15",
     "chart.js": "^2.9.4",
     "copy-to-clipboard": "^3.3.1",
     "dotenv": "^8.2.0",

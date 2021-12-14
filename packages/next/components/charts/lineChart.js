@@ -1,8 +1,11 @@
 import { Axis, Chart, LineAdvance, Tooltip } from "bizcharts";
 import styled from "styled-components";
-import Image from "next/image";
+import moment from "moment";
 
-const ChartWrapper = styled.div`
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   svg,
   img {
     margin-top: 17px;
@@ -13,8 +16,20 @@ const Title = styled.h2`
   margin: 0;
   font-size: 12px;
   text-align: right;
-  color: rgba(17, 17, 17, 0.2);
-  font-weight: 400;
+  color: rgba(17, 17, 17, 0.65);
+  font-weight: normal;
+  line-height: 16px;
+`;
+
+const ChartWrapper = styled.div`
+  margin-top: 4px;
+  flex-grow: 1;
+`;
+
+const NoData = styled.div`
+  display: flex;
+  align-items: center;
+  height: 100%;
 `;
 
 export default function LineChart({
@@ -22,24 +37,38 @@ export default function LineChart({
   data = [],
   color = "#F22279",
 }) {
+  const scale = {
+    time: {
+      tickCount: 3,
+      formatter: (text) => moment(text).format("MMM DD"),
+    },
+    price: {
+      tickCount: 3,
+    },
+  };
+
   return (
-    <ChartWrapper>
-      <Title>{token} · Last 30d</Title>
-      {data.length ? (
-        <Chart padding={[2, 0, 0, 0]} width={227} height={34} data={data}>
-          <Axis name="time" visible={false} />
-          <Axis name="price" visible={false} />
-          <LineAdvance
-            shape="smooth"
-            area
-            position="time*price"
-            color={color}
-          />
-          <Tooltip custom={true} containerTpl={`<i></i>`} />
-        </Chart>
-      ) : (
-        <img src="/imgs/nochart.svg" alt="NoChartDataLoaded" />
-      )}
-    </ChartWrapper>
+    <Wrapper>
+      <Title>{token} Price History(USDT) · Last 30d</Title>
+      <ChartWrapper>
+        {data.length ? (
+          <Chart data={data} scale={scale} height={100} width={367}>
+            <Axis name="time" visible={true} tickLine={null} line={null} />
+            <Axis name="price" visible={true} grid={null} />
+            <LineAdvance
+              shape="smooth"
+              area
+              position="time*price"
+              color={color}
+            />
+            <Tooltip custom={true} containerTpl={`<i></i>`} />
+          </Chart>
+        ) : (
+          <NoData>
+            <img src="/imgs/nochart.svg" alt="NoChartDataLoaded" />
+          </NoData>
+        )}
+      </ChartWrapper>
+    </Wrapper>
   );
 }

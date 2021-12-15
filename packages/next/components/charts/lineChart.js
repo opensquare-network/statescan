@@ -61,7 +61,13 @@ export default function LineChart({
       <Title>{token} Price History(USDT) · Last 30d</Title>
       <ChartWrapper>
         {data.length ? (
-          <Chart data={data} scale={scale} height={100} width={chartWidth}>
+          <Chart
+            data={data}
+            scale={scale}
+            height={100}
+            width={chartWidth}
+            padding={[2, 0, 20, 30]}
+          >
             <Axis name="time" visible={true} tickLine={null} line={null} />
             <Axis name="price" visible={true} grid={null} />
             <LineAdvance

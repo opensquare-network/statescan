@@ -37,6 +37,7 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
               enterAt: upwardMessage.indexer,
               executedAt: indexer,
               outcome,
+              fee: upwardMessage.extracted.fee,
             }
           }
         }

@@ -10,7 +10,6 @@ const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
-const teleportCollectionName = "teleport";
 
 // unFinalized collections
 const unFinalizedCollectionName = "unFinalizedBlock";
@@ -30,6 +29,10 @@ const instanceAttributeCollectionName = "instanceAttribute";
 const nftMetadataCollectionName = "nftMetadata";
 const nftTransferCollectionName = "nftTransfer";
 
+// XCM
+const teleportInCollectionName = "teleportIn";
+const teleportOutCollectionName = "teleportOut";
+
 let client = null;
 let db = null;
 let nftDb = null;
@@ -43,7 +46,6 @@ let assetTransferCol = null;
 let assetCol = null;
 let assetHolderCol = null;
 let addressCol = null;
-let teleportCol = null;
 
 let unFinalizedBlockCol = null;
 let unFinalizedExtrinsicCol = null;
@@ -60,7 +62,8 @@ let instanceAttributeCol = null;
 let nftMetadataCol = null;
 let nftTransferCol = null;
 
-let xcmTeleportCol = null;
+let teleportInCol = null;
+let teleportOutCol = null;
 
 function getDbName() {
   const dbName = process.env.MONGO_DB_NAME;
@@ -106,7 +109,6 @@ async function initDb() {
   assetCol = db.collection(assetCollectionName);
   assetHolderCol = db.collection(assetHolderCollectionName);
   addressCol = db.collection(addressCollectionName);
-  teleportCol = db.collection(teleportCollectionName);
 
   unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
   unFinalizedExtrinsicCol = db.collection(unFinalizedExtrinsicCollectionName);
@@ -129,7 +131,8 @@ async function initDb() {
 
   const xcmDbName = getXcmDbName();
   xcmDb = client.db(xcmDbName);
-  xcmTeleportCol = xcmDb.collection(teleportCollectionName);
+  teleportInCol = xcmDb.collection(teleportInCollectionName);
+  teleportOutCol = xcmDb.collection(teleportOutCollectionName);
 
   await _createIndexes();
 }
@@ -206,12 +209,6 @@ async function _createIndexes() {
   assetTransferCol.createIndex({ asset: 1, to: 1 });
   assetTransferCol.createIndex({ "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ listIgnore: 1, "indexer.blockHeight": -1 });
-
-  teleportCol.createIndex({ "indexer.blockHeight": -1, "indexer.index": -1 });
-  xcmTeleportCol.createIndex({
-    "indexer.blockHeight": -1,
-    "indexer.index": -1,
-  });
 }
 
 async function tryInit(col) {
@@ -258,11 +255,6 @@ async function getAssetHolderCollection() {
 async function getAddressCollection() {
   await tryInit(addressCol);
   return addressCol;
-}
-
-async function getTeleportCollection() {
-  await tryInit(teleportCol);
-  return teleportCol;
 }
 
 async function getUnFinalizedBlockCollection() {
@@ -325,9 +317,14 @@ async function getNftTransferCollection() {
   return nftTransferCol;
 }
 
-async function getXcmTeleportCollection() {
-  await tryInit(xcmTeleportCol);
-  return xcmTeleportCol;
+async function getTeleportInCollection() {
+  await tryInit(teleportInCol);
+  return teleportInCol;
+}
+
+async function getTeleportOutCollection() {
+  await tryInit(teleportOutCol);
+  return teleportOutCol;
 }
 
 module.exports = {
@@ -340,7 +337,6 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
-  getTeleportCollection,
   getUnFinalizedBlockCollection,
   getUnFinalizedEventCollection,
   getUnFinalizedExrinsicCollection,
@@ -353,5 +349,6 @@ module.exports = {
   getInstanceAttributeCollection,
   getNftMetadataCollection,
   getNftTransferCollection,
-  getXcmTeleportCollection,
+  getTeleportInCollection,
+  getTeleportOutCollection,
 };

@@ -12,7 +12,6 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
     {
       msgId: messageId,
       "indexer.blockHeight": { $lte: indexer.blockHeight },
-      isExecuted: null,
     },
     { sort: { "indexer.blockHeight": -1 } },
   );
@@ -20,11 +19,6 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
   if (!upwardMessage) {
     return;
   }
-
-  await upwardMessageCol.updateOne(
-    { _id: upwardMessage._id },
-    { $set: { isExecuted: true } }
-  );
 
   const blockHash = upwardMessage.descriptor.paraHead;
   const beneficiary = upwardMessage.extracted.beneficiary;

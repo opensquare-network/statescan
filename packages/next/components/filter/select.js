@@ -23,6 +23,7 @@ const SelectWrapper = styled.div`
   padding: 0 6px 0 12px;
   cursor: pointer;
   border: 1px solid #eeeeee;
+  white-space: nowrap;
   > span {
     flex: 1 1 auto;
     overflow: hidden;
@@ -53,10 +54,9 @@ const OptionWrapper = styled.div`
   ${card_border};
   padding: 8px 0;
   background: #ffffff;
-  min-width: 160px;
   left: 0;
   top: 40px;
-  width: 100%;
+  min-width: 100%;
 `;
 
 const OptionItem = styled.div`

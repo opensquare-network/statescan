@@ -43,8 +43,11 @@ const SelectWrapper = styled.div`
     margin-left: 16px;
   }
   @media screen and (max-width: 1100px) {
-    > :first-child {
-      flex: 0 0 80px;
+    flex-direction: column;
+    align-items: stretch;
+    > :not(:first-child) {
+      margin-left: 0;
+      margin-top: 8px;
     }
   }
 `;

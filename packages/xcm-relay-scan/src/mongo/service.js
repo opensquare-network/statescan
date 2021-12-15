@@ -11,7 +11,7 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
   const upwardMessage = await upwardMessageCol.findOne(
     {
       msgId: messageId,
-      "indexer.blockHeight": { $lt: indexer.blockHeight },
+      "indexer.blockHeight": { $lte: indexer.blockHeight },
       isExecuted: null,
     },
     { sort: { "indexer.blockHeight": 1 } },

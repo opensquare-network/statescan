@@ -1,4 +1,5 @@
 const { getExecutedCollection } = require("../../../mongo");
+const { updateTeleportOutInfo } = require("../../../mongo/service");
 
 async function handleExecutedUpward(event, indexer) {
   const [messageId, outcome] = event.data.toJSON();
@@ -9,6 +10,8 @@ async function handleExecutedUpward(event, indexer) {
     outcome,
     indexer,
   });
+
+  await updateTeleportOutInfo(messageId, indexer, outcome);
 }
 
 module.exports = {

@@ -172,7 +172,6 @@ export default function Overview({ node, overviewData, price }) {
           icon="nft-class.svg"
           text={nftInstancesCount?.recognized ?? 0}
           textSec={nftInstancesCount?.total ?? 0}
-          link="nft"
           tip="Recognized / All"
         />
       </ItemWrapper>

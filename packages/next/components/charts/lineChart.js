@@ -1,6 +1,7 @@
 import { Axis, Chart, LineAdvance, Tooltip } from "bizcharts";
 import styled from "styled-components";
 import moment from "moment";
+import { useEffect, useRef, useState } from "react";
 
 const Wrapper = styled.div`
   display: flex;
@@ -37,6 +38,8 @@ export default function LineChart({
   data = [],
   color = "#F22279",
 }) {
+  const targetRef = useRef();
+  const [chartWidth, setChartWidth] = useState(0);
   const scale = {
     time: {
       tickCount: 3,
@@ -47,12 +50,18 @@ export default function LineChart({
     },
   };
 
+  useEffect(() => {
+    if (targetRef.current) {
+      setChartWidth(targetRef.current.offsetWidth);
+    }
+  }, [targetRef?.current?.offsetWidth]);
+
   return (
-    <Wrapper>
+    <Wrapper ref={targetRef}>
       <Title>{token} Price History(USDT) · Last 30d</Title>
       <ChartWrapper>
         {data.length ? (
-          <Chart data={data} scale={scale} height={100} width={367}>
+          <Chart data={data} scale={scale} height={100} width={chartWidth}>
             <Axis name="time" visible={true} tickLine={null} line={null} />
             <Axis name="price" visible={true} grid={null} />
             <LineAdvance

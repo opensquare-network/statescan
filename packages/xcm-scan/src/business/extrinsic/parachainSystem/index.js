@@ -1,4 +1,4 @@
-const { bulkInsertTeleports } = require("../../../mongo/service");
+const { bulkInsertTeleportIns } = require("../../../mongo/service");
 const { extractTeleportFromV0Xcm } = require("./xcm/v0");
 const {
   Modules,
@@ -60,7 +60,6 @@ async function handleParachainExtrinsic(extrinsic, indexer, events) {
         theDownwardMessage.pubSentAt || theDownwardMessage.sentAt
       ).toNumber(),
       messageId,
-      direction: 0,
       ...result,
       complete,
       indexer,
@@ -72,7 +71,7 @@ async function handleParachainExtrinsic(extrinsic, indexer, events) {
     teleports.map((teleport) => teleport.beneficiary)
   );
 
-  await bulkInsertTeleports(teleports);
+  await bulkInsertTeleportIns(teleports);
 }
 
 async function extractTeleportDownward(pubMsg, messageId, indexer) {

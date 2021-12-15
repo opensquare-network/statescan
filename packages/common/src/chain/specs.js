@@ -9,6 +9,10 @@ let versionChangedHeights = [];
 let metaScanHeight = 1;
 
 async function updateSpecs() {
+  if (!isUseMeta()) {
+    return;
+  }
+
   versionChangedHeights = await getAllVersionChangeHeights();
   metaScanHeight = await getScanHeight();
 }

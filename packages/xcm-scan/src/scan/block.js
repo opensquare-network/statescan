@@ -1,4 +1,4 @@
-const { handleExtrinsics } = require("../business/extrinsic");
+const { handleExtrinsics } = require("../business/extrinsic/index");
 const { getBlockIndexer } = require("@statescan/common");
 
 async function scanBlock(block, blockEvents) {

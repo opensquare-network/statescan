@@ -9,14 +9,14 @@ async function handleExtrinsics(
   blockEvents = [],
   blockIndexer
 ) {
-  let index = 0;
+  let extrinsicIndex = 0;
   for (const extrinsic of extrinsics) {
-    const eventRecords = extractExtrinsicEvents(blockEvents, index);
+    const eventRecords = extractExtrinsicEvents(blockEvents, extrinsicIndex);
     const events = eventRecords.map((record) => record.event);
 
     const extrinsicIndexer = {
       ...blockIndexer,
-      index: index++,
+      extrinsicIndex: extrinsicIndex++,
     };
 
     await handleParachainExtrinsic(extrinsic, extrinsicIndexer, events);

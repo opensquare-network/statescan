@@ -2,7 +2,7 @@ const BigNumber = require("bignumber.js");
 const { getAssetAmount } = require("./amount");
 const { extractBeneficiary } = require("./beneficiary");
 const { isSupportedDest } = require("./dest");
-const { insertTeleport } = require("../../../../mongo/service");
+const { insertTeleportOut } = require("../../../../mongo/service");
 const {
   XcmPalletMethods,
   XcmPalletEvents,
@@ -11,7 +11,10 @@ const {
 } = require("@statescan/common");
 
 async function handleTeleportExtrinsic(extrinsic, indexer, events) {
-  const { method } = extrinsic.method;
+  const {
+    method: { method },
+    signer: rawSigner,
+  } = extrinsic;
   if (
     ![
       XcmPalletMethods.limitedTeleportAssets,
@@ -20,6 +23,8 @@ async function handleTeleportExtrinsic(extrinsic, indexer, events) {
   ) {
     return;
   }
+
+  const signer = rawSigner?.toString();
 
   if (!events.some((e) => XcmPalletEvents.Attempted === e.method)) {
     return;
@@ -31,10 +36,8 @@ async function handleTeleportExtrinsic(extrinsic, indexer, events) {
     return;
   }
 
-  const signer = extrinsic.singer.toString();
   const teleport = {
     sentAt: indexer.blockHeight,
-    direction: 1,
     signer,
     ...info,
     indexer,
@@ -42,7 +45,7 @@ async function handleTeleportExtrinsic(extrinsic, indexer, events) {
 
   addAddresses(indexer.blockHeight, [signer, info.beneficiary]);
 
-  await insertTeleport(teleport);
+  await insertTeleportOut(teleport);
 }
 
 function extractTeleportInfo(extrinsic, indexer) {

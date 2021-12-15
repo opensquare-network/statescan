@@ -11,9 +11,9 @@ function getDbName() {
 
 const mongoUrl = process.env.MONGO_SCAN_URL || "mongodb://localhost:27017";
 const statusCollectionName = "status";
-const teleportCollectionName = "teleport";
 let statusCol = null;
-let teleportCol = null;
+let teleportInCol = null;
+let teleportOutCol = null;
 
 let client = null;
 let db = null;
@@ -44,7 +44,8 @@ async function initDb() {
   db = client.db(dbName);
 
   statusCol = await getCollection(statusCollectionName);
-  teleportCol = await getCollection(teleportCollectionName);
+  teleportInCol = await getCollection("teleportIn");
+  teleportOutCol = await getCollection("teleportOut");
 
   await _createIndexes();
 }
@@ -67,13 +68,19 @@ async function getStatusCollection() {
   return statusCol;
 }
 
-async function getTeleportCollection() {
-  await tryInit(teleportCol);
-  return teleportCol;
+async function getTeleportInCollection() {
+  await tryInit(teleportInCol);
+  return teleportInCol;
+}
+
+async function getTeleportOutCollection() {
+  await tryInit(teleportOutCol);
+  return teleportOutCol;
 }
 
 module.exports = {
   initDb,
   getStatusCollection,
-  getTeleportCollection,
+  getTeleportInCollection,
+  getTeleportOutCollection,
 };

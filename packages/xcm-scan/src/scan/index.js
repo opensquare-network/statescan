@@ -4,6 +4,8 @@ const {
   fetchBlocks,
   chainHeight: { getLatestFinalizedHeight },
   store: { getAddresses, clearAddresses },
+  env: { firstScanKnowHeights },
+  specs: { updateSpecs },
   scan: {
     utils: { getTargetHeight, getHeights, checkAndUpdateSpecs },
   },
@@ -13,8 +15,15 @@ const last = require("lodash.last");
 const { deleteFromHeight } = require("../mongo/service");
 const { updateAddrs } = require("../mongo/account");
 const { scanBlock } = require("./block");
+const { scanKnownHeights } = require("./known");
 
 async function beginScan() {
+  await updateSpecs();
+
+  if (firstScanKnowHeights()) {
+    await scanKnownHeights();
+  }
+
   let scanHeight = await getNextScanHeight();
   await deleteFromHeight(scanHeight);
   while (true) {

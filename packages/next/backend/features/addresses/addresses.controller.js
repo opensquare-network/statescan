@@ -2,7 +2,8 @@ const {
   getAddressCollection,
   getAssetHolderCollection,
   getAssetTransferCollection,
-  getXcmTeleportCollection,
+  getTeleportInCollection,
+  getTeleportOutCollection,
   getNftInstanceCollection,
   getNftTransferCollection,
 } = require("../../mongo");
@@ -280,7 +281,7 @@ async function getAddressTransfers(ctx) {
   };
 }
 
-async function getAddressTeleports(ctx) {
+async function getAddressTeleportsIn(ctx) {
   const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
@@ -289,17 +290,43 @@ async function getAddressTeleports(ctx) {
   }
 
   const q = {
-    $or: [
-      {
-        $and: [{ direction: 0 }, { beneficiary: address }],
-      },
-      {
-        $and: [{ direction: 1 }, { signer: address }],
-      },
-    ],
+    beneficiary: address,
   };
 
-  const xcmTeleportCol = await getXcmTeleportCollection();
+  const xcmTeleportCol = await getTeleportInCollection();
+  const items = await xcmTeleportCol
+    .find(q)
+    .sort({
+      "indexer.blockHeight": -1,
+      "indexer.index": -1,
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  const total = await xcmTeleportCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
+async function getAddressTeleportsOut(ctx) {
+  const { address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = {
+    signer: address,
+  };
+
+  const xcmTeleportCol = await getTeleportOutCollection();
   const items = await xcmTeleportCol
     .find(q)
     .sort({
@@ -517,7 +544,8 @@ module.exports = {
   getAddressAssets,
   getAddressCount,
   getAddressTransfers,
-  getAddressTeleports,
+  getAddressTeleportsIn,
+  getAddressTeleportsOut,
   getAddresses,
   getAddressNftInstances,
   getAddressNftTransfers,

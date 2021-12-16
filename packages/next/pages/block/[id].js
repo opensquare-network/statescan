@@ -89,7 +89,7 @@ export default function Block({
         <BreakText
           key={`${index}-4`}
         >{`${item?.section}(${item?.name})`}</BreakText>,
-        item.args,
+        item,
       ]),
       foot: (
         <Pagination

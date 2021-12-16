@@ -5,6 +5,7 @@ const {
   getExtrinsicCollection,
   getNftInstanceCollection,
   getNftClassCollection,
+  getNftMetadataCollection,
 } = require("../../mongo");
 
 function escapeRegex(string) {
@@ -321,69 +322,87 @@ async function findNftClassesById({ prefix }) {
 }
 
 async function findNftClassesByPrefix({ icasePrefixPattern }) {
-  const nftClassCol = await getNftClassCollection();
-  return await nftClassCol.aggregate([
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: [
-            "$nftMetadata",
-            0,
-          ],
-        }
-      }
-    },
+  const nftMetadataCol = await getNftMetadataCollection();
+  const nftMetadatas = await nftMetadataCol.aggregate([
     {
       $match: {
-        isDestroyed: false,
-        "nftMetadata.name": icasePrefixPattern,
+        name: icasePrefixPattern,
       }
     },
-    { $project: { timeline: 0 } },
-    { $sort: { "nftMetadata.name": 1 } },
-    { $limit: 10 },
+    { $sort: { name: 1 } },
+    {
+      $lookup: {
+        from: "nftClass",
+        let: { dataHash: "$dataHash" },
+        pipeline: [
+          {
+            $match: {
+              isDestroyed: false,
+              $expr: {
+                $eq: ["$dataHash", "$$dataHash"],
+              }
+            }
+          },
+          { $project: { timeline: 0 } },
+        ],
+        as: "nftClass",
+      }
+    },
+    { $unwind: "$nftClass" },
+    { $limit: 10 }
   ]).toArray();
+
+  return nftMetadatas.map((nftMetadata) => (
+    {
+      ...nftMetadata.nftClass,
+      nftMetadata: {
+        ...nftMetadata,
+        nftClass: undefined,
+      },
+    }
+  ));
 }
 
 async function findNftInstancesByPrefix({ icasePrefixPattern }) {
-  const nftInstanceCol = await getNftInstanceCollection();
-  return await nftInstanceCol.aggregate([
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: [
-            "$nftMetadata",
-            0,
-          ],
-        }
-      }
-    },
+  const nftMetadataCol = await getNftMetadataCollection();
+  const nftMetadatas = await nftMetadataCol.aggregate([
     {
       $match: {
-        isDestroyed: false,
-        "nftMetadata.name": icasePrefixPattern,
+        name: icasePrefixPattern,
       }
     },
-    { $project: { timeline: 0 } },
-    { $sort: { "nftMetadata.name": 1 } },
-    { $limit: 10 },
+    { $sort: { name: 1 } },
+    {
+      $lookup: {
+        from: "nftInstance",
+        let: { dataHash: "$dataHash" },
+        pipeline: [
+          {
+            $match: {
+              isDestroyed: false,
+              $expr: {
+                $eq: ["$dataHash", "$$dataHash"],
+              }
+            }
+          },
+          { $project: { timeline: 0 } },
+        ],
+        as: "nftInstance",
+      }
+    },
+    { $unwind: "$nftInstance" },
+    { $limit: 10 }
   ]).toArray();
+
+  return nftMetadatas.map((nftMetadata) => (
+    {
+      ...nftMetadata.nftInstance,
+      nftMetadata: {
+        ...nftMetadata,
+        nftInstance: undefined,
+      },
+    }
+  ));
 }
 
 function autoCompleteAssets({ prefix, icasePrefixPattern, isNum, isAddr, isHash }) {

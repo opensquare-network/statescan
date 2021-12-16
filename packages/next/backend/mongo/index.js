@@ -194,8 +194,13 @@ async function _createIndexes() {
   teleportCol.createIndex({ "indexer.blockHeight": -1, "indexer.index": -1 });
 
   nftClassCol.createIndex({ classId: 1, "indexer.blockHeight": -1 });
+  nftClassCol.createIndex({ dataHash: 1 }, { sparse: true });
+
   nftInstanceCol.createIndex({ classId: 1, classHeight: -1, instanceId: 1, "indexer.blockHeight": -1 });
-  nftMetadataCol.createIndex({ name: 1 }, { sparse: true } );
+  nftInstanceCol.createIndex({ dataHash: 1 }, { sparse: true });
+
+  nftMetadataCol.createIndex({ dataHash: 1 });
+  nftMetadataCol.createIndex({ name: 1 }, { sparse: true });
 }
 
 async function tryInit(col) {

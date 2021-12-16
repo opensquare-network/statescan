@@ -22,7 +22,8 @@ import {
   EmptyQuery,
   NFTTransferHead,
   nodes,
-  teleportsHead,
+  teleportsHeadIn,
+  teleportsHeadOut,
 } from "utils/constants";
 import MinorText from "components/minorText";
 import MonoText from "components/monoText";
@@ -114,18 +115,18 @@ export default function Address({
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
 
-  const nodeInfo = nodes.find((i) => i.value === node);
-  const customTeleportHead = _.cloneDeep(teleportsHead);
-  const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
-  if (sendAtCol) {
-    sendAtCol.name = (
-      <img
-        style={{ position: "absolute", top: 12 }}
-        src={nodeInfo.icon}
-        alt=""
-      />
-    );
-  }
+  // const nodeInfo = nodes.find((i) => i.value === node);
+  // const customTeleportHead = _.cloneDeep(teleportsHead);
+  // const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
+  // if (sendAtCol) {
+  //   sendAtCol.name = (
+  //     <img
+  //       style={{ position: "absolute", top: 12 }}
+  //       src={nodeInfo.icon}
+  //       alt=""
+  //     />
+  //   );
+  // }
 
   const tabTableData = [
     {
@@ -266,7 +267,7 @@ export default function Address({
       name: "Teleports",
       page: addressTeleports?.page,
       total: addressTeleports?.total,
-      head: customTeleportHead,
+      head: teleportsHeadIn,
       body: (addressTeleports?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
@@ -275,38 +276,15 @@ export default function Address({
           {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.index}`}
         </InLink>,
         item.indexer.blockTime,
-        <TeleportDirection
-          key={`${index}-2`}
-          from={teleportSourceAndTarget(item.teleportDirection).source}
-          to={teleportSourceAndTarget(item.teleportDirection).target}
-        />,
-        item.beneficiary ? (
-          item.teleportDirection === "in" ? (
-            <AddressEllipsis address={item.beneficiary} />
-          ) : (
-            <ChainAddressEllipsis
-              chain={teleportSourceAndTarget(item.teleportDirection).target}
-              address={item.beneficiary}
-            />
-          )
-        ) : (
-          "-"
-        ),
-        item.teleportDirection === "in" ? (
-          <Result isSuccess={item.complete} noText={true} />
-        ) : (
-          <Result isSuccess={null} noText={true} />
-        ),
-        item.teleportDirection === "in" ? (
-          <ExplorerLink
-            chain={teleportSourceAndTarget(item.teleportDirection).source}
-            href={`/block/${item.pubSentAt}`}
-          >
-            {item.pubSentAt.toLocaleString()}
-          </ExplorerLink>
-        ) : (
-          "-"
-        ),
+        item.beneficiary ? <AddressEllipsis address={item.beneficiary} /> : "-",
+        <Result key={`${index}-2`} isSuccess={item.complete} noText={true} />,
+        <ExplorerLink
+          key={`${index}-3`}
+          chain={teleportSourceAndTarget("in").source}
+          href={`/block/${item.sentAt}`}
+        >
+          {item.sentAt.toLocaleString()}
+        </ExplorerLink>,
         !item.complete || item.amount === null || item.amount === undefined
           ? "-"
           : `${bigNumber2Locale(
@@ -337,9 +315,12 @@ export default function Address({
       head: addressNFTInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-        const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
-          ? instance.nftMetadata.imageThumbnail
-          : instance.class.nftMetadata?.imageThumbnail);
+        const imageThumbnail =
+          instance?.nftMetadata?.recognized === false
+            ? null
+            : instance.nftMetadata?.image
+            ? instance.nftMetadata.imageThumbnail
+            : instance.class.nftMetadata?.imageThumbnail;
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
           : instance.class.nftMetadata?.imageMetadata?.background;
@@ -393,9 +374,12 @@ export default function Address({
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.instance;
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-        const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
-          ? instance.nftMetadata.imageThumbnail
-          : instance.class.nftMetadata?.imageThumbnail);
+        const imageThumbnail =
+          instance?.nftMetadata?.recognized === false
+            ? null
+            : instance.nftMetadata?.image
+            ? instance.nftMetadata.imageThumbnail
+            : instance.class.nftMetadata?.imageThumbnail;
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
           : instance.class.nftMetadata?.imageMetadata?.background;
@@ -567,7 +551,7 @@ export async function getServerSideProps(context) {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
       pageSize: 25,
     }),
-    nextApi.fetch(`addresses/${id}/teleports`, {
+    nextApi.fetch(`addresses/${id}/teleports/in`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
       pageSize: 25,
     }),

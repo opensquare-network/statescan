@@ -394,7 +394,7 @@ function autoCompleteAssets({ prefix, icasePrefixPattern, isNum, isAddr, isHash 
   if (isNum) {
     return findAssetById({ prefix });
   } else if (prefix.length >= 2) {
-    return findAssetByPrefix({ prefix, icasePrefixPattern, isNum });
+    return findAssetByPrefix({ icasePrefixPattern });
   }
 
   return [];

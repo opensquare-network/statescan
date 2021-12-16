@@ -252,7 +252,7 @@ export default function Address({
         item?.indexer?.blockTime,
         <Result key={`${index}-3`} isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,
-        item.args,
+        item,
       ]),
       foot: (
         <Pagination

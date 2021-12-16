@@ -70,8 +70,8 @@ export default function JsonDisplay({ data, type }) {
 
   useEffect(() => {
     if (type === "extrinsic") {
-      setTableData(convertArgsForTableView(data));
-      setJsonData(convertArgsForJsonView(data));
+      setTableData(convertArgsForTableView(data.args, data.section, data.name));
+      setJsonData(convertArgsForJsonView(data.args, data.section, data.name));
     } else if (type === "event") {
       setTableData(makeEventArgs(node, data));
       setJsonData(data.data);

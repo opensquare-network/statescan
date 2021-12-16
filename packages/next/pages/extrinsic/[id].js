@@ -174,7 +174,7 @@ export default function Extrinsic({
             foot={
               <JsonAttributes
                 title={"Parameters"}
-                data={extrinsicDetail?.args}
+                data={extrinsicDetail}
                 type="extrinsic"
               />
             }

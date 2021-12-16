@@ -188,3 +188,15 @@ export function getNftStatus(nftObject) {
   }
   return status;
 }
+
+export function hexEllipsis(hex, start = 6, end = 4) {
+  return textEllipsis(hex, start, end);
+}
+
+export function textEllipsis(text, start, end) {
+  if (!text) return;
+  if (text.length <= start + end) return text;
+  if (!text.slice) return text;
+  return `${text.slice(0, start)}...${text.slice(-end)}`;
+}
+

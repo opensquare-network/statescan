@@ -200,13 +200,29 @@ export const addressesHead = [
   { name: "Balance", width: 240, align: "right" },
 ];
 
-export const teleportsHead = [
-  { name: "Extrinsics ID", width: 130 },
+export const teleportsHeadIn = [
+  { name: "Extrinsics ID", width: 136 },
   { name: "Time", type: "time", width: 184 },
-  { name: "Direction", width: 144 },
-  { name: "Receiver", width: 144 },
-  { name: "Result", width: 56 },
-  { name: "Sent At", width: 128 },
+  { name: "Receiver", width: 160 },
+  { name: "Result", width: 100 },
+  { name: "SentAt", width: 138, icon: "kusama.svg" },
+  { name: "Amount", align: "right" },
+  { name: "Fee", align: "right" },
+  { name: "Total", align: "right" },
+];
+
+export const teleportsHeadOut = [
+  { name: "Extrinsics ID", width: 136 },
+  { name: "Time", type: "time", width: 184 },
+  {
+    name: "Receiver",
+    type: "switcher",
+    children: ["Recerver", "Sender"],
+    width: 160,
+  },
+  { name: "Result", width: 100 },
+  { name: "Enter", width: 136, icon: "kusama.svg" },
+  { name: "Executed", width: 136, icon: "kusama.svg" },
   { name: "Amount", align: "right" },
   { name: "Fee", align: "right" },
   { name: "Total", align: "right" },

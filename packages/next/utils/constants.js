@@ -21,6 +21,9 @@ export const nodes = [
     value: "westmint",
     symbol: "WND",
     icon: "/imgs/icons/westend.svg",
+    color: "#DA68A7",
+    colorSecondary: "#FAE6F2",
+    buttonColor: "#DA68A7",
   },
 ];
 

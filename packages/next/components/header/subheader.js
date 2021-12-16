@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   margin: 40px 0 16px;
 
   > :not(:first-child) {
-    margin-top: 32px;
+    margin-top: 24px;
   }
 
   @media screen and (max-width: 900px) {
@@ -29,8 +29,8 @@ const Container = styled.div`
 
 const Title = styled.div`
   font-weight: bold;
-  font-size: 32px;
-  line-height: 32px;
+  font-size: 24px;
+  line-height: 24px;
   color: #111111;
   margin: 0;
   white-space: nowrap;

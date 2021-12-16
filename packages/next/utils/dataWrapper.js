@@ -37,7 +37,7 @@ export function convertArgsForTableView(args, section, method, chain) {
               (section === "system" && method === "setCode") ||
               (section === "parachainSystem" && method === "enactAuthorizedUpgrade")
             ) {
-              return [arg.name, <LongText key={`arg-${index}`} text={arg.value} key="0" />];
+              return [arg.name, <LongText key={`arg-${index}`} text={arg.value} />];
             }
             return [arg.name, hexToString(arg.value)];
           }

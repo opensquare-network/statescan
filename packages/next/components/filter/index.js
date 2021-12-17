@@ -131,7 +131,13 @@ const WarningWrapper = styled.div`
   }
 `;
 
-export default function Filter({ total, warning, data, allmodulemethods }) {
+export default function Filter({
+  total,
+  warning,
+  data,
+  allmodulemethods,
+  addQuery = {},
+}) {
   const [selectData, setSelectData] = useState(data);
   const [show, setShow] = useState(false);
   const { width } = useWindowSize();
@@ -214,7 +220,8 @@ export default function Filter({ total, warning, data, allmodulemethods }) {
             <Button
               onClick={() => {
                 router.push(
-                  `${router.pathname}?${encodeURIQuery({
+                  `${router.asPath.split("?")[0]}?${encodeURIQuery({
+                    ...addQuery,
                     page: 1,
                     ...getCurrentFilter(),
                   })}`

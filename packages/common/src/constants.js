@@ -6,7 +6,7 @@ const Modules = Object.freeze({
   DmpQueue: "dmpQueue",
   ParachainSystem: "parachainSystem",
   PolkadotXcm: "polkadotXcm",
-  ParasInherent: "parasInherent",
+  ParaInherent: "paraInherent",
   ParasUmp: "parasUmp",
   Ump: "ump",
 });

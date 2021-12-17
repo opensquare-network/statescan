@@ -25,7 +25,7 @@ async function test() {
 
     // const has = block.block.extrinsics
     //   .map((x) => x.method.section)
-    //   .includes("parasInherent");
+    //   .includes("paraInherent");
     // console.log(has);
     // console.log(block);
     await scanBlock(block.block, allEvents);

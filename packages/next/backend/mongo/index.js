@@ -213,7 +213,12 @@ async function _createIndexes() {
   nftClassCol.createIndex({ classId: 1, "indexer.blockHeight": -1 });
   nftClassCol.createIndex({ dataHash: 1 }, { sparse: true });
 
-  nftInstanceCol.createIndex({ classId: 1, classHeight: -1, instanceId: 1, "indexer.blockHeight": -1 });
+  nftInstanceCol.createIndex({
+    classId: 1,
+    classHeight: -1,
+    instanceId: 1,
+    "indexer.blockHeight": -1,
+  });
   nftInstanceCol.createIndex({ dataHash: 1 }, { sparse: true });
 
   nftMetadataCol.createIndex({ dataHash: 1 });

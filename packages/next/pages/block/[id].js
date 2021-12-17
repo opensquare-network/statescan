@@ -53,7 +53,7 @@ export default function Block({
   if (!blockDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Block"/>
+        <PageNotFound resource="Block" />
       </Layout>
     );
   }
@@ -237,7 +237,12 @@ export default function Block({
             ]}
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={["id"]} />
+        <TabTable
+          data={tabTableData}
+          activeTab={tab}
+          collapse={900}
+          query={["id"]}
+        />
       </Section>
     </Layout>
   );
@@ -263,7 +268,7 @@ export async function getServerSideProps(context) {
     }),
     nextApi.fetch(`blocks/${id}/extrinsics`, {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
   ]);
 

@@ -1,4 +1,7 @@
-const { getTeleportInCollection, getTeleportOutCollection } = require("../../mongo");
+const {
+  getTeleportInCollection,
+  getTeleportOutCollection,
+} = require("../../mongo");
 const { extractPage } = require("../../utils");
 
 async function getTeleportsIn(ctx) {

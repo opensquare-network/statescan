@@ -22,8 +22,8 @@ import {
   EmptyQuery,
   NFTTransferHead,
   nodes,
-  teleportDirection,
-  teleportsHead,
+  teleportsHeadIn,
+  teleportsHeadOut,
 } from "utils/constants";
 import MinorText from "components/minorText";
 import MonoText from "components/monoText";
@@ -69,7 +69,7 @@ const AssetPrice = styled.div`
 
 function getTeleportSourceAndTarget(node, direction) {
   const chain = nodes.find((item) => item.value === node);
-  if (direction === teleportDirection.in) {
+  if (direction === "in") {
     return { source: chain.sub, target: chain.name };
   } else {
     return { source: chain.name, target: chain.sub };
@@ -114,18 +114,18 @@ export default function Address({
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
 
-  const nodeInfo = nodes.find((i) => i.value === node);
-  const customTeleportHead = _.cloneDeep(teleportsHead);
-  const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
-  if (sendAtCol) {
-    sendAtCol.name = (
-      <img
-        style={{ position: "absolute", top: 12 }}
-        src={nodeInfo.icon}
-        alt=""
-      />
-    );
-  }
+  // const nodeInfo = nodes.find((i) => i.value === node);
+  // const customTeleportHead = _.cloneDeep(teleportsHead);
+  // const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
+  // if (sendAtCol) {
+  //   sendAtCol.name = (
+  //     <img
+  //       style={{ position: "absolute", top: 12 }}
+  //       src={nodeInfo.icon}
+  //       alt=""
+  //     />
+  //   );
+  // }
 
   const tabTableData = [
     {
@@ -266,7 +266,7 @@ export default function Address({
       name: "Teleports",
       page: addressTeleports?.page,
       total: addressTeleports?.total,
-      head: customTeleportHead,
+      head: teleportsHeadIn,
       body: (addressTeleports?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
@@ -275,27 +275,15 @@ export default function Address({
           {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.index}`}
         </InLink>,
         item.indexer.blockTime,
-        <TeleportDirection
-          key={`${index}-2`}
-          from={teleportSourceAndTarget(item.direction).source}
-          to={teleportSourceAndTarget(item.direction).target}
-        />,
         item.beneficiary ? <AddressEllipsis address={item.beneficiary} /> : "-",
-        item.direction === teleportDirection.in ? (
-          <Result isSuccess={item.complete} noText={true} />
-        ) : (
-          <Result isSuccess={null} noText={true} />
-        ),
-        item.direction === teleportDirection.in ? (
-          <ExplorerLink
-            chain={teleportSourceAndTarget(item.direction).source}
-            href={`/block/${item.sentAt}`}
-          >
-            {item.sentAt.toLocaleString()}
-          </ExplorerLink>
-        ) : (
-          "-"
-        ),
+        <Result key={`${index}-2`} isSuccess={item.complete} noText={true} />,
+        <ExplorerLink
+          key={`${index}-3`}
+          chain={teleportSourceAndTarget("in").source}
+          href={`/block/${item.sentAt}`}
+        >
+          {item.sentAt.toLocaleString()}
+        </ExplorerLink>,
         !item.complete || item.amount === null || item.amount === undefined
           ? "-"
           : `${bigNumber2Locale(
@@ -562,7 +550,7 @@ export async function getServerSideProps(context) {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
       pageSize: 25,
     }),
-    nextApi.fetch(`addresses/${id}/teleports`, {
+    nextApi.fetch(`addresses/${id}/teleports/in`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
       pageSize: 25,
     }),

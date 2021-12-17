@@ -49,7 +49,7 @@ export default function Extrinsic({
   if (!extrinsicDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Extrinsic"/>
+        <PageNotFound resource="Extrinsic" />
       </Layout>
     );
   }
@@ -86,7 +86,8 @@ export default function Extrinsic({
     },
   ];
 
-  const transfersCount = (extrinsicTransfer?.length || 0) + (extrinsicNftTransfer?.length || 0);
+  const transfersCount =
+    (extrinsicTransfer?.length || 0) + (extrinsicNftTransfer?.length || 0);
 
   return (
     <Layout node={node}>
@@ -162,7 +163,11 @@ export default function Extrinsic({
                 "-"
               ),
               transfersCount > 0 ? (
-                <TransfersList node={node} assetTransfers={extrinsicTransfer} nftTransfers={extrinsicNftTransfer} />
+                <TransfersList
+                  node={node}
+                  assetTransfers={extrinsicTransfer}
+                  nftTransfers={extrinsicNftTransfer}
+                />
               ) : undefined,
               extrinsicDetail?.nonce === undefined ? undefined : (
                 <MinorText>{extrinsicDetail?.nonce}</MinorText>
@@ -180,7 +185,12 @@ export default function Extrinsic({
             }
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={["id"]} />
+        <TabTable
+          data={tabTableData}
+          activeTab={tab}
+          collapse={900}
+          query={["id"]}
+        />
       </Section>
     </Layout>
   );
@@ -205,7 +215,7 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`extrinsics/${id}/nft-transfers`),
     nextApi.fetch(`extrinsics/${id}/events`, {
       page: activeTab === "events" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
   ]);
 

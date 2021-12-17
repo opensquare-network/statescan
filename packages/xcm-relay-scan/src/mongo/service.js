@@ -13,7 +13,7 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
       msgId: messageId,
       "indexer.blockHeight": { $lte: indexer.blockHeight },
     },
-    { sort: { "indexer.blockHeight": -1 } },
+    { sort: { "indexer.blockHeight": -1 } }
   );
 
   if (!upwardMessage) {
@@ -42,8 +42,8 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
           executedAt: indexer,
           outcome,
           fee: upwardMessage.extracted.fee,
-        }
-      }
+        },
+      },
     }
   );
 }

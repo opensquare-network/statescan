@@ -23,9 +23,15 @@ const Wrapper = styled.div`
     flex-direction: column;
     align-items: stretch;
   }
+  ${(p) =>
+    p.warning &&
+    css`
+      padding: 15px 23px;
+    `}
 `;
 
 const Total = styled.div`
+  font-weight: 600;
   white-space: nowrap;
 `;
 
@@ -112,7 +118,20 @@ const HiddenButton = styled.div`
   }
 `;
 
-export default function Filter({ total, data, allmodulemethods }) {
+const WarningWrapper = styled.div`
+  display: flex;
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(17, 17, 17, 0.65);
+  margin-top: 4px;
+  > img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+`;
+
+export default function Filter({ total, warning, data, allmodulemethods }) {
   const [selectData, setSelectData] = useState(data);
   const [show, setShow] = useState(false);
   const { width } = useWindowSize();
@@ -160,47 +179,20 @@ export default function Filter({ total, data, allmodulemethods }) {
   };
 
   return (
-    <Wrapper>
+    <Wrapper warning={warning}>
       <TotalWrapper>
-        <Total>{total}</Total>
+        <div>
+          <Total>{total}</Total>
+          {warning && (
+            <WarningWrapper>
+              <img src="/imgs/icons/circled-warning.svg" alt="" />
+              <div>{warning}</div>
+            </WarningWrapper>
+          )}
+        </div>
         <HiddenButton active={show}>
           <FilterIcon onClick={() => setShow(!show)} />
         </HiddenButton>
-        {total.includes("teleport") && (
-          <div style={{ display: "flex" }}>
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z"
-                stroke="#FFBB37"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M10 6.25L10 10.4167M10 13.7583L10.0083 13.7491"
-                stroke="#FFBB37"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span
-              style={{
-                marginLeft: 8,
-                color: "rgba(17, 17, 17, 0.65)",
-                fontWeight: 400,
-              }}
-            >
-              There are issues with teleports scan and we are fixing them.
-            </span>
-          </div>
-        )}
       </TotalWrapper>
       {(show || width > 1100) && selectData?.length > 0 && (
         <>

@@ -33,5 +33,4 @@ router.get(
   addressesController.getAddressNftTransfers
 );
 
-
 module.exports = router;

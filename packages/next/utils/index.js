@@ -199,4 +199,3 @@ export function textEllipsis(text, start, end) {
   if (!text.slice) return text;
   return `${text.slice(0, start)}...${text.slice(-end)}`;
 }
-

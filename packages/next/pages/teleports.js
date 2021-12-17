@@ -30,6 +30,7 @@ function getTeleportSourceAndTarget(node, direction) {
 }
 
 export default function Teleports({ node, teleports, direction }) {
+  console.log({ teleports });
   const symbol = getSymbol(node);
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
@@ -156,28 +157,9 @@ export default function Teleports({ node, teleports, direction }) {
       ) : (
         "-"
       ),
-      item.relayChainInfo?.outcome?.complete
-        ? `${bigNumber2Locale(
-            fromSymbolUnit(
-              new BigNumber(item.relayChainInfo.outcome.complete)
-                .minus(BigNumber(item.relayChainInfo.fee) || 0)
-                .toString(),
-              symbol
-            )
-          )}`
+      item.amount !== null && item.amount !== undefined
+        ? `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))}`
         : "-",
-      item.relayChainInfo?.fee === null ||
-      item.relayChainInfo?.fee === undefined
-        ? "-"
-        : `${bigNumber2Locale(
-            fromSymbolUnit(item.relayChainInfo.fee, symbol)
-          )}`,
-      item.relayChainInfo?.outcome?.complete === null ||
-      item.relayChainInfo?.outcome?.complete === undefined
-        ? "-"
-        : `${bigNumber2Locale(
-            fromSymbolUnit(item.relayChainInfo.outcome.complete, symbol)
-          )}`,
     ]);
   }
 

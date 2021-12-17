@@ -212,20 +212,20 @@ export const teleportsHeadIn = [
 ];
 
 export const teleportsHeadOut = [
-  { name: "Extrinsics ID", width: 136 },
-  { name: "Time", type: "time", width: 184 },
+  { name: "Extrinsics ID", width: 156 },
+  { name: "Time", type: "time", width: 204 },
   {
     name: "Receiver",
     type: "switcher",
     children: ["Recerver", "Sender"],
-    width: 160,
+    width: 200,
   },
-  { name: "Result", width: 100 },
-  { name: "Enter", width: 136, icon: "kusama.svg" },
-  { name: "Executed", width: 136, icon: "kusama.svg" },
+  { name: "Result", width: 120 },
+  { name: "Enter", width: 156, icon: "kusama.svg" },
+  { name: "Executed", width: 156, icon: "kusama.svg" },
   { name: "Amount", align: "right" },
-  { name: "Fee", align: "right" },
-  { name: "Total", align: "right" },
+  // { name: "Fee", align: "right" },
+  // { name: "Total", align: "right" },
 ];
 
 export const addressHead = [

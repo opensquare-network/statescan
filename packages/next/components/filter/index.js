@@ -31,6 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const Total = styled.div`
+  font-weight: 600;
   white-space: nowrap;
 `;
 

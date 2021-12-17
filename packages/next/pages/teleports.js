@@ -12,7 +12,6 @@ import Table from "components/table";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import AddressEllipsis from "components/addressEllipsis";
-import ChainAddressEllipsis from "components/chainAddressEllipsis";
 import Filter from "components/filter";
 import { bigNumber2Locale, fromSymbolUnit } from "utils";
 import TeleportDirection from "components/teleportDirection";
@@ -31,6 +30,7 @@ function getTeleportSourceAndTarget(node, direction) {
 }
 
 export default function Teleports({ node, teleports, direction }) {
+  console.log({ teleports });
   const symbol = getSymbol(node);
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
@@ -123,32 +123,59 @@ export default function Teleports({ node, teleports, direction }) {
         />,
         <AddressEllipsis
           key={`${index}-2-2`}
-          address={item.beneficiary}
-          to={`/account/${item.beneficiary}`}
+          address={item.signer}
+          to={`/account/${item.signer}`}
         />,
       ],
-      <Result key={`${index}-2`} isSuccess={item.complete} noText={true} />,
-      <ExplorerLink
+      <Result
         key={`${index}-3`}
-        chain={teleportSourceAndTarget("in").source}
-        href={`/block/${item.sentAt}`}
-      >
-        {item.sentAt.toLocaleString()}
-      </ExplorerLink>,
-      !item.complete || item.amount === null || item.amount === undefined
-        ? "-"
-        : `${bigNumber2Locale(
+        isSuccess={item.relayChainInfo?.outcome?.complete}
+        noText={true}
+      />,
+      item.relayChainInfo?.enterAt?.blockHeight ? (
+        <ExplorerLink
+          key={`${index}-4`}
+          chain={teleportSourceAndTarget("in").source}
+          href={`/block/${item.relayChainInfo.enterAt.blockHeight}`}
+        >
+          {item.relayChainInfo.enterAt.blockHeight.toLocaleString()}
+        </ExplorerLink>
+      ) : (
+        "-"
+      ),
+      item.relayChainInfo?.executedAt?.blockHeight ? (
+        <ExplorerLink
+          key={`${index}-5`}
+          chain={teleportSourceAndTarget("in").source}
+          href={`/block/${item.relayChainInfo.executedAt.blockHeight}`}
+        >
+          {item.relayChainInfo.executedAt.blockHeight.toLocaleString()}
+        </ExplorerLink>
+      ) : (
+        "-"
+      ),
+      item.relayChainInfo?.outcome?.complete
+        ? `${bigNumber2Locale(
             fromSymbolUnit(
-              new BigNumber(item.amount).minus(item.fee || 0).toString(),
+              new BigNumber(item.relayChainInfo.outcome.complete)
+                .minus(BigNumber(item.relayChainInfo.fee) || 0)
+                .toString(),
               symbol
             )
+          )}`
+        : "-",
+      item.relayChainInfo?.fee === null ||
+      item.relayChainInfo?.fee === undefined
+        ? "-"
+        : `${bigNumber2Locale(
+            fromSymbolUnit(item.relayChainInfo.fee, symbol)
           )}`,
-      item.fee === null || item.fee === undefined
+      item.relayChainInfo?.outcome?.complete === null ||
+      item.relayChainInfo?.outcome?.complete === undefined
         ? "-"
-        : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))}`,
-      item.amount === null || item.amount === undefined
-        ? "-"
-        : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))}`,
+        : `${bigNumber2Locale(
+            fromSymbolUnit(item.relayChainInfo.outcome.complete, symbol)
+          )}`,
     ]);
   }
 

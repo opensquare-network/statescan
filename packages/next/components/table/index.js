@@ -386,7 +386,7 @@ export default function Table({
                           )}
                           {head?.[index]?.type === "switcher" && (
                             <div>
-                              {item[switcher[head[index].name].value] ?? ""}
+                              {item[switcher[head[index]?.name]?.value] ?? ""}
                             </div>
                           )}
                           {!head?.[index]?.type && item}

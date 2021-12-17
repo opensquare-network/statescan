@@ -379,6 +379,7 @@ export default function Address({
     },
     {
       name: "Teleports",
+      addQuery: direction === "out" && { direction },
       page: addressTeleports?.page,
       total: addressTeleports?.total,
       head: teleportsHead,

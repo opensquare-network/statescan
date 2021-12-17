@@ -101,6 +101,7 @@ export default function TabTable({ data, activeTab, collapse, query = [] }) {
                     ...pick(router.query, query),
                     tab: item.name.toLowerCase(),
                     ...(item.page > 0 ? { page: item.page + 1 } : {}),
+                    ...item.addQuery,
                   },
                 },
                 undefined,

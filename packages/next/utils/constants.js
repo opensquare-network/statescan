@@ -345,3 +345,8 @@ export const EmptyQuery = {
   pageSize: 10,
   items: [],
 };
+
+export const teleportDirection = {
+  in: 0,
+  out: 1,
+};

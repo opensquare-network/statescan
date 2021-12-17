@@ -1,4 +1,3 @@
-import _ from "lodash";
 import Layout from "components/layout";
 import { ssrNextApi as nextApi } from "services/nextApi";
 import { addressesHead, EmptyQuery } from "utils/constants";
@@ -26,10 +25,7 @@ export default function Addresses({ node, addresses }) {
               to={`/account/${item?.address}`}
             />,
             `${bigNumber2Locale(
-              fromSymbolUnit(
-                item?.data?.total?.$numberDecimal || "0",
-                symbol
-              )
+              fromSymbolUnit(item?.data?.total?.$numberDecimal || "0", symbol)
             )} ${symbol}`,
           ])}
           foot={

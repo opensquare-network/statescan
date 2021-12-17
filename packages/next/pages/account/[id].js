@@ -39,7 +39,6 @@ import HashEllipsis from "components/hashEllipsis";
 import PageNotFound from "components/pageNotFound";
 import Identity from "../../components/account/identity";
 import TeleportDirection from "../../components/teleportDirection";
-import ChainAddressEllipsis from "../../components/chainAddressEllipsis";
 import ExplorerLink from "../../components/explorerLink";
 import BigNumber from "bignumber.js";
 import Source from "../../components/account/source";
@@ -253,7 +252,7 @@ export default function Address({
         item?.indexer?.blockTime,
         <Result key={`${index}-3`} isSuccess={item?.isSuccess} />,
         `${item.section}(${item.name})`,
-        item.args,
+        item,
       ]),
       foot: (
         <Pagination
@@ -574,6 +573,8 @@ export async function getServerSideProps(context) {
       pageSize: 25,
     }),
   ]);
+
+  console.log(addressTeleports);
 
   return {
     props: {

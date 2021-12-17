@@ -52,7 +52,7 @@ export default function Extrinsics({
             <BreakText
               key={`${index}-5`}
             >{`${item?.section}(${item?.name})`}</BreakText>,
-            item.args,
+            item,
           ])}
           foot={
             <Pagination

@@ -2,7 +2,8 @@ const {
   getAddressCollection,
   getAssetHolderCollection,
   getAssetTransferCollection,
-  getTeleportCollection,
+  getTeleportInCollection,
+  getTeleportOutCollection,
   getNftInstanceCollection,
   getNftTransferCollection,
 } = require("../../mongo");
@@ -280,7 +281,7 @@ async function getAddressTransfers(ctx) {
   };
 }
 
-async function getAddressTeleports(ctx) {
+async function getAddressTeleportsIn(ctx) {
   const { address } = ctx.params;
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
@@ -289,18 +290,11 @@ async function getAddressTeleports(ctx) {
   }
 
   const q = {
-    $or: [
-      {
-        $and: [{ teleportDirection: "in" }, { beneficiary: address }],
-      },
-      {
-        $and: [{ teleportDirection: "out" }, { signer: address }],
-      },
-    ],
+    beneficiary: address,
   };
 
-  const teleportCol = await getTeleportCollection();
-  const items = await teleportCol
+  const xcmTeleportCol = await getTeleportInCollection();
+  const items = await xcmTeleportCol
     .find(q)
     .sort({
       "indexer.blockHeight": -1,
@@ -310,7 +304,40 @@ async function getAddressTeleports(ctx) {
     .limit(pageSize)
     .toArray();
 
-  const total = await teleportCol.countDocuments(q);
+  const total = await xcmTeleportCol.countDocuments(q);
+
+  ctx.body = {
+    items,
+    page,
+    pageSize,
+    total,
+  };
+}
+
+async function getAddressTeleportsOut(ctx) {
+  const { address } = ctx.params;
+  const { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const q = {
+    signer: address,
+  };
+
+  const xcmTeleportCol = await getTeleportOutCollection();
+  const items = await xcmTeleportCol
+    .find(q)
+    .sort({
+      "indexer.blockHeight": -1,
+      "indexer.index": -1,
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  const total = await xcmTeleportCol.countDocuments(q);
 
   ctx.body = {
     items,
@@ -334,58 +361,60 @@ async function getAddressNftInstances(ctx) {
   };
 
   const nftInstanceCol = await getNftInstanceCollection();
-  const items = await nftInstanceCol.aggregate([
-    { $match: q },
-    { $sort: { instanceId: 1 } },
-    { $skip: page * pageSize },
-    { $limit: pageSize },
-    {
-      $lookup: {
-        from: "nftClass",
-        let: { classId: "$classId", classHeight: "$classHeight" },
-        pipeline: [
-          {
-            $match: {
-              $expr: {
-                $and: [
-                  { $eq: ["$classId", "$$classId"] },
-                  { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                ],
+  const items = await nftInstanceCol
+    .aggregate([
+      { $match: q },
+      { $sort: { instanceId: 1 } },
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      {
+        $lookup: {
+          from: "nftClass",
+          let: { classId: "$classId", classHeight: "$classHeight" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$classId", "$$classId"] },
+                    { $eq: ["$indexer.blockHeight", "$$classHeight"] },
+                  ],
+                },
               },
             },
-          },
-          {
-            $lookup: {
-              from: "nftMetadata",
-              localField: "dataHash",
-              foreignField: "dataHash",
-              as: "nftMetadata",
-            }
-          },
-          {
-            $addFields: {
-              nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
+            {
+              $lookup: {
+                from: "nftMetadata",
+                localField: "dataHash",
+                foreignField: "dataHash",
+                as: "nftMetadata",
+              },
             },
-          },
-        ],
-        as: "class",
-      }
-    },
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-        class: { $arrayElemAt: ["$class", 0] },
+            {
+              $addFields: {
+                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
+              },
+            },
+          ],
+          as: "class",
+        },
       },
-    },
-  ]).toArray();
+      {
+        $lookup: {
+          from: "nftMetadata",
+          localField: "dataHash",
+          foreignField: "dataHash",
+          as: "nftMetadata",
+        },
+      },
+      {
+        $addFields: {
+          nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
+          class: { $arrayElemAt: ["$class", 0] },
+        },
+      },
+    ])
+    .toArray();
 
   const total = await nftInstanceCol.countDocuments(q);
 
@@ -422,7 +451,7 @@ async function getAddressNftTransfers(ctx) {
             classId: "$classId",
             classHeight: "$classHeight",
             instanceId: "$instanceId",
-            instanceHeight: "$instanceHeight"
+            instanceHeight: "$instanceHeight",
           },
           pipeline: [
             {
@@ -435,7 +464,7 @@ async function getAddressNftTransfers(ctx) {
                     { $eq: ["$indexer.blockHeight", "$$instanceHeight"] },
                   ],
                 },
-              }
+              },
             },
             {
               $lookup: {
@@ -443,7 +472,7 @@ async function getAddressNftTransfers(ctx) {
                 localField: "dataHash",
                 foreignField: "dataHash",
                 as: "nftMetadata",
-              }
+              },
             },
             {
               $addFields: {
@@ -471,7 +500,7 @@ async function getAddressNftTransfers(ctx) {
                       localField: "dataHash",
                       foreignField: "dataHash",
                       as: "nftMetadata",
-                    }
+                    },
                   },
                   {
                     $addFields: {
@@ -480,7 +509,7 @@ async function getAddressNftTransfers(ctx) {
                   },
                 ],
                 as: "class",
-              }
+              },
             },
             {
               $addFields: {
@@ -515,7 +544,8 @@ module.exports = {
   getAddressAssets,
   getAddressCount,
   getAddressTransfers,
-  getAddressTeleports,
+  getAddressTeleportsIn,
+  getAddressTeleportsOut,
   getAddresses,
   getAddressNftInstances,
   getAddressNftTransfers,

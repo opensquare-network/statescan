@@ -492,7 +492,7 @@ async function searchAutoComplete(ctx) {
   const isAddr = prefix.match(/^[0-9a-zA-Z]{47,48}$/);
   const isNum = prefix.match(/^[0-9]+$/);
 
-  const icasePrefixPattern = new RegExp(`^${escapeRegex(lowerPrefix)}`, "i");
+  const icasePrefixPattern = new RegExp(`${escapeRegex(lowerPrefix)}`, "i");
 
   const [assets, addresses, blocks, nftClasses, nftInstances] =
     await Promise.all([

@@ -21,8 +21,8 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
   }
 
   const blockHash = upwardMessage.descriptor.paraHead;
-  const beneficiary = upwardMessage.extracted.beneficiary;
-  const amount = upwardMessage.extracted.amount;
+  const beneficiary = upwardMessage.extracted?.beneficiary;
+  const amount = upwardMessage.extracted?.amount;
   const teleportOut = await teleportOutCol.findOne({
     "indexer.blockHash": blockHash,
     beneficiary,
@@ -41,7 +41,7 @@ async function updateTeleportOutInfo(messageId, indexer, outcome) {
           enterAt: upwardMessage.indexer,
           executedAt: indexer,
           outcome,
-          fee: upwardMessage.extracted.fee,
+          fee: upwardMessage.extracted?.fee,
         },
       },
     }

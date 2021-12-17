@@ -6,6 +6,7 @@ const {
   specs: { findRegistry },
 } = require("@statescan/common");
 const { blake2AsHex } = require("@polkadot/util-crypto");
+const { extractV1Teleport } = require("./teleportV1");
 
 async function handleParaInherentExtrinsic(extrinsic, indexer) {
   const { section, method } = extrinsic.method;
@@ -24,10 +25,8 @@ async function handleParaInherentExtrinsic(extrinsic, indexer) {
 }
 
 async function handleCandidate({ descriptor, commitments }, indexer) {
-  if (
-    descriptor.paraId.toNumber() !== 1000 ||
-    (commitments.upwardMessages || []).length <= 0
-  ) {
+  const paraId = descriptor.paraId.toNumber();
+  if (paraId !== 1000 || (commitments.upwardMessages || []).length <= 0) {
     return;
   }
 
@@ -59,15 +58,26 @@ async function handleCandidate({ descriptor, commitments }, indexer) {
 
 async function extractUmp(msg, indexer) {
   const registry = await findRegistry(indexer);
-  const versionedXcm = registry.createType("VersionedXcm", msg, true);
+  let versionedXcm;
+  try {
+    versionedXcm = registry.createType("VersionedXcm", pubMsg, true);
+  } catch (e) {
+    console.log(`versionedXcm parse failed at ${indexer.blockHeight}`, e);
+    return null;
+  }
 
   if (versionedXcm.isV0) {
     const v0 = versionedXcm.asV0;
     if (v0.isReceiveTeleportedAsset) {
       return extractV0Teleport(v0.asReceiveTeleportedAsset, indexer);
     }
+  } else if (versionedXcm.isV1) {
+    const v1 = versionedXcm.asV1;
+    if (v1.isReceiveTeleportedAsset) {
+      return extractV1Teleport(v1.asReceiveTeleportedAsset, indexer);
+    }
   } else {
-    busLogger.error(`Found teleport version not V0 at`, indexer);
+    busLogger.error(`Found teleport version not V0 and V1 at`, indexer);
   }
 }
 
@@ -94,7 +104,8 @@ async function extractV0Teleport(receiveTeleportAsset, indexer) {
 
   const fee = buyExecution.asBuyExecution.debt.toString();
   if (!depositAsset) {
-    throw new Error(`No deposit found at ${indexer.blockHeight}`);
+    busLogger.error(`No deposit found at ${indexer.blockHeight}`);
+    return null;
   }
 
   let beneficiary;

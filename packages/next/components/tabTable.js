@@ -132,6 +132,7 @@ export default function TabTable({ data, activeTab, collapse, query = [] }) {
           </Tab>
         ))}
       </TabWrapper>
+      {data?.[currentTab]?.filter ?? data?.[currentTab]?.filter}
       {data?.[currentTab]?.component ? (
         data?.[currentTab]?.component
       ) : (

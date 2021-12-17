@@ -10,7 +10,10 @@ const { blake2AsHex } = require("@polkadot/util-crypto");
 async function handleParaInherentExtrinsic(extrinsic, indexer) {
   const { section, method } = extrinsic.method;
 
-  if (Modules.ParaInherent !== section || "enter" !== method) {
+  if (
+    ![Modules.ParaInherent, Modules.ParasInherent].includes(section) ||
+    "enter" !== method
+  ) {
     return;
   }
 

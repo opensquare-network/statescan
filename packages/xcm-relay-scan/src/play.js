@@ -11,8 +11,8 @@ async function test() {
   await initDb();
   // const heights = [7515704];
   // const heights = [7519683];
-  // const heights = [7812531];
-  const heights = [7812703];
+  const heights = [7812531];
+  // const heights = [7812703];
   // const heights = [8921808];
 
   await setSpecHeights(heights);

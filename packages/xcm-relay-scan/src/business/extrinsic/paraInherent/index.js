@@ -60,7 +60,7 @@ async function extractUmp(msg, indexer) {
   const registry = await findRegistry(indexer);
   let versionedXcm;
   try {
-    versionedXcm = registry.createType("VersionedXcm", pubMsg, true);
+    versionedXcm = registry.createType("VersionedXcm", msg, true);
   } catch (e) {
     console.log(`versionedXcm parse failed at ${indexer.blockHeight}`, e);
     return null;

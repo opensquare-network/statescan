@@ -62,7 +62,7 @@ async function extractUmp(msg, indexer) {
   try {
     versionedXcm = registry.createType("VersionedXcm", msg, true);
   } catch (e) {
-    busLogger.error(`versionedXcm parse failed at ${indexer.blockHeight}`, e);
+    busLogger.error(`versionedXcm parse failed at ${indexer.blockHeight}`);
     return null;
   }
 

@@ -130,7 +130,10 @@ export default function Teleports({ node, teleports, direction }) {
         key={`${index}-3`}
         isSuccess={
           item.relayChainInfo?.outcome?.complete ??
-          (item.relayChainInfo?.outcome?.incomplete ? false : undefined)
+          (item.relayChainInfo?.outcome?.incomplete ||
+          item.relayChainInfo?.outcome?.error
+            ? false
+            : undefined)
         }
         noText={true}
       />,

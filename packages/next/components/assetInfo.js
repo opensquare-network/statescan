@@ -60,8 +60,6 @@ const RightWrapper = styled.div`
     margin-top: 12px;
   }
   .title {
-    display: flex;
-    align-items: center;
     font-weight: 600;
     font-size: 15px;
     line-height: 20px;
@@ -86,10 +84,12 @@ const AboutEdit = styled.div`
 `;
 
 const Edit = styled.div`
-  display: flex;
-  align-items: center;
   cursor: pointer;
   margin-left: 12px;
+  a {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const LinksWrapper = styled.div`
@@ -120,7 +120,7 @@ export default function AssetInfo({ data, symbol, name }) {
         </LeftWrapper>
         <RightWrapper>
           <AboutEdit>
-            <div className="title">About</div>
+            <span className="title">About</span>
             <Edit>
               <ExternalLink href={`https://forms.gle/9C3zJAS9YzYtoJFs9`}>
                 <EditSvg />

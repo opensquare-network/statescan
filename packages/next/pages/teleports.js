@@ -30,7 +30,6 @@ function getTeleportSourceAndTarget(node, direction) {
 }
 
 export default function Teleports({ node, teleports, direction }) {
-  console.log({ teleports });
   const symbol = getSymbol(node);
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);

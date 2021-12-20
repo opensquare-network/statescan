@@ -61,7 +61,6 @@ async function oneStepScan(startHeight) {
   }
 
   for (const item of blocks) {
-    // TODO: do following operations in one transaction
     try {
       await scanBlock(item.block, item.events);
       await updateScanHeight(item.height);

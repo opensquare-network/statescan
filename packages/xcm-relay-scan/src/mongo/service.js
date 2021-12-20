@@ -1,8 +1,19 @@
-const { getUpwardMessageCollection } = require(".");
+const {
+  getUpwardMessageCollection,
+  getExecutedCollection,
+  getReceivedCollection,
+} = require(".");
 const { getTeleportOutCollection } = require("./parachain");
 
 async function deleteFromHeight(height) {
-  // todo: delete over scaned business
+  let col = await getUpwardMessageCollection();
+  await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
+
+  col = await getExecutedCollection();
+  await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
+
+  col = await getReceivedCollection();
+  await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
 }
 
 async function updateTeleportOutInfo(messageId, indexer, outcome) {

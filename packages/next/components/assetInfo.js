@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 import ExternalLink from "./externalLink";
 import Tooltip from "./tooltip";
+import EditSvg from "public/imgs/icons/edit.svg";
 
 const Wrapper = styled.div`
   margin-top: 8px;
@@ -59,6 +60,8 @@ const RightWrapper = styled.div`
     margin-top: 12px;
   }
   .title {
+    display: flex;
+    align-items: center;
     font-weight: 600;
     font-size: 15px;
     line-height: 20px;
@@ -77,6 +80,18 @@ const RightWrapper = styled.div`
   }
 `;
 
+const AboutEdit = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Edit = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 12px;
+`;
+
 const LinksWrapper = styled.div`
   display: grid;
   gap: 8px;
@@ -89,7 +104,6 @@ const LinkIcon = styled.img`
 `;
 
 export default function AssetInfo({ data, symbol, name }) {
-  // if (!data) return null;
   return (
     <>
       <Wrapper>
@@ -105,7 +119,14 @@ export default function AssetInfo({ data, symbol, name }) {
           </SymbolWrapper>
         </LeftWrapper>
         <RightWrapper>
-          <div className="title">About</div>
+          <AboutEdit>
+            <div className="title">About</div>
+            <Edit>
+              <ExternalLink href={`https://forms.gle/9C3zJAS9YzYtoJFs9`}>
+                <EditSvg />
+              </ExternalLink>
+            </Edit>
+          </AboutEdit>
           {data?.about && <div className="content">{data?.about}</div>}
           {!data?.about && <div className="noinfo">No more information.</div>}
           <LinksWrapper>

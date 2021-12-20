@@ -230,6 +230,7 @@ export const extrinsicHead = [
   "Signer",
   "Assets Transferred",
   "Nonce",
+  "Tip",
   "Result",
 ];
 

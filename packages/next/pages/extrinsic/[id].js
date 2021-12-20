@@ -13,7 +13,13 @@ import InLink from "components/inLink";
 import CopyText from "components/copyText";
 import Result from "components/result";
 import MinorText from "components/minorText";
-import { capitalize, time, timeDuration } from "utils";
+import {
+  bigNumber2Locale,
+  capitalize,
+  fromSymbolUnit,
+  time,
+  timeDuration,
+} from "utils";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
 import BreakText from "components/breakText";
@@ -24,6 +30,7 @@ import JsonAttributes from "components/jsonAttributes";
 import Address from "components/address";
 import ModuleItem from "components/moduleItem";
 import CallItem from "components/callItem";
+import { getSymbol } from "utils/hooks";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -53,6 +60,8 @@ export default function Extrinsic({
       </Layout>
     );
   }
+
+  const symbol = getSymbol(node);
 
   const expand = (extrinsicEvents?.items || []).findIndex(
     (item) => `${item?.indexer?.blockHeight}-${item?.sort}` === event
@@ -104,17 +113,7 @@ export default function Extrinsic({
           />
           <DetailTable
             head={extrinsicHead}
-            badge={[
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              null,
-              transfersCount,
-              null,
-            ]}
+            badge={{ 7: transfersCount }}
             body={[
               <FlexWrapper key="1">
                 <MinorText>
@@ -153,7 +152,7 @@ export default function Extrinsic({
               </ModuleItem>,
               <CallItem key="5">{capitalize(extrinsicDetail?.name)}</CallItem>,
               extrinsicDetail?.signer ? (
-                <CopyText text={extrinsicDetail?.signer}>
+                <CopyText key={`6`} text={extrinsicDetail?.signer}>
                   <Address
                     address={extrinsicDetail?.signer}
                     to={`/account/${extrinsicDetail?.signer}`}
@@ -164,15 +163,24 @@ export default function Extrinsic({
               ),
               transfersCount > 0 ? (
                 <TransfersList
+                  key={`7`}
                   node={node}
                   assetTransfers={extrinsicTransfer}
                   nftTransfers={extrinsicNftTransfer}
                 />
               ) : undefined,
               extrinsicDetail?.nonce === undefined ? undefined : (
-                <MinorText>{extrinsicDetail?.nonce}</MinorText>
+                <MinorText key={`8`}>{extrinsicDetail?.nonce}</MinorText>
               ),
-              <MinorText key="6">
+              extrinsicDetail?.tip === undefined ||
+              extrinsicDetail?.tip === 0 ? undefined : (
+                <MinorText key={`9`}>
+                  {`${bigNumber2Locale(
+                    fromSymbolUnit(extrinsicDetail?.tip, symbol)
+                  )} ${symbol}`}
+                </MinorText>
+              ),
+              <MinorText key="10">
                 <Result isSuccess={extrinsicDetail?.isSuccess} />
               </MinorText>,
             ]}

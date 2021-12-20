@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { closeDataDbClient } = require("./mongo");
 const { closeKnownClient } = require("./mongo/knownHeight");
 const { getNftTransferCollection } = require("./mongo");
@@ -8,7 +9,6 @@ const { getClassAttributeCollection } = require("./mongo");
 const { saveKnownHeights } = require("./mongo/service/known");
 const { getClassTimelineCollection } = require("./mongo");
 const { getClassCollection } = require("./mongo");
-require("dotenv").config();
 
 async function main() {
   const heights = [];

@@ -5,13 +5,14 @@ import _ from "lodash";
 import BigNumber from "bignumber.js";
 import { hexToString } from "@polkadot/util";
 import { hexEllipsis } from ".";
-const LongText = dynamic(() => import("components/table/longText"), { ssr: false });
-
+const LongText = dynamic(() => import("components/table/longText"), {
+  ssr: false,
+});
 
 export function convertCallForTableView(call, chain) {
   return {
     ...call,
-    args: convertArgsForTableView(call.args, call.section, call.method, chain)
+    args: convertArgsForTableView(call.args, call.section, call.method, chain),
   };
 }
 
@@ -35,9 +36,13 @@ export function convertArgsForTableView(args, section, method, chain) {
             if (
               (section === "phalaRegistry" && method === "addPruntime") ||
               (section === "system" && method === "setCode") ||
-              (section === "parachainSystem" && method === "enactAuthorizedUpgrade")
+              (section === "parachainSystem" &&
+                method === "enactAuthorizedUpgrade")
             ) {
-              return [arg.name, <LongText key={`arg-${index}`} text={arg.value} />];
+              return [
+                arg.name,
+                <LongText key={`arg-${index}`} text={arg.value} />,
+              ];
             }
             return [arg.name, hexToString(arg.value)];
           }
@@ -49,7 +54,10 @@ export function convertArgsForTableView(args, section, method, chain) {
           case "LookupSource":
           case "MultiAddress": {
             if (arg.value.id) {
-              return [arg.name, <Address key={`arg-${index}`} address={arg.value.id} />];
+              return [
+                arg.name,
+                <Address key={`arg-${index}`} address={arg.value.id} />,
+              ];
             } else {
               return [arg.name, arg.value];
             }
@@ -66,14 +74,13 @@ export function convertArgsForTableView(args, section, method, chain) {
 export function convertCallForJsonView(call, chain) {
   return {
     ...call,
-    args: convertArgsForJsonView(call.args, call.section, call.method, chain)
+    args: convertArgsForJsonView(call.args, call.section, call.method, chain),
   };
 }
 
-
 export function convertArgsForJsonView(args, section, method, chain) {
-  return Object.fromEntries(args.map(
-    (arg) => ([
+  return Object.fromEntries(
+    args.map((arg) => [
       arg.name,
       (() => {
         switch (arg.type) {
@@ -89,7 +96,8 @@ export function convertArgsForJsonView(args, section, method, chain) {
             if (
               (section === "phalaRegistry" && method === "addPruntime") ||
               (section === "system" && method === "setCode") ||
-              (section === "parachainSystem" && method === "enactAuthorizedUpgrade")
+              (section === "parachainSystem" &&
+                method === "enactAuthorizedUpgrade")
             ) {
               return arg.value?.length <= 200
                 ? arg.value
@@ -103,5 +111,5 @@ export function convertArgsForJsonView(args, section, method, chain) {
         }
       })(),
     ])
-  ));
+  );
 }

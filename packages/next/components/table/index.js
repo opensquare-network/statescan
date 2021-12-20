@@ -10,6 +10,7 @@ import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 import { p_18_bold, text_dark_major } from "../../styles/textStyles";
 import JsonDisplay from "components/jsonDisplay";
 import { card_border } from "styles/textStyles";
+import { useTheme } from "utils/hooks";
 
 const Wrapper = styled.div``;
 
@@ -35,7 +36,7 @@ const StyledTable = styled.table`
     @media screen and (max-width: 1200px) {
       width: 100% !important;
     }
-    
+
     :first-child {
       border-top-left-radius: 8px;
       -moz-border-top-left-radius: 8px;
@@ -219,6 +220,21 @@ const DataImg = styled.img`
   cursor: pointer;
 `;
 
+const HeadIcon = styled.img`
+  position: absolute;
+  margin-top: -1px;
+  margin-left: 4px;
+`;
+
+const SwitchWrapper = styled.div`
+  cursor: pointer;
+  ${(p) =>
+    p.color &&
+    css`
+      color: ${p.color};
+    `}
+`;
+
 export default function Table({
   title,
   head,
@@ -231,6 +247,7 @@ export default function Table({
 }) {
   const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState();
+  const color = useTheme().color;
 
   // Hanlding expand json data by default
   const initExpand = useMemo(() => [], []);
@@ -238,6 +255,7 @@ export default function Table({
     initExpand[expand] = true;
   }
   const [showData, setShowData] = useState(initExpand);
+  const [switcher, setSwitcher] = useState({});
 
   useEffect(() => {
     if (!initExpand.some((item) => item)) {
@@ -266,6 +284,31 @@ export default function Table({
     }
   }, [size, collapse]);
 
+  useEffect(() => {
+    (head || []).forEach((item) => {
+      if (item.type === "switcher") {
+        setSwitcher((s) => ({
+          ...s,
+          [item.name]: {
+            children: item.children,
+            value: 0,
+          },
+        }));
+      }
+    });
+  }, [head]);
+
+  const onClickSwitcher = (name) => {
+    const update = {
+      ...switcher[name],
+      value: (switcher[name].value + 1) % switcher[name].children.length,
+    };
+    setSwitcher((s) => ({
+      ...s,
+      [name]: update,
+    }));
+  };
+
   if (!size.width || isCollapse === undefined) {
     return null;
   }
@@ -289,7 +332,22 @@ export default function Table({
                     <TimeHead timeType={timeType} setTimeType={doSetTimeType} />
                   )}
                   {item.type === "data" && <div />}
+                  {item.type === "switcher" && (
+                    <SwitchWrapper
+                      color={color}
+                      onClick={() => onClickSwitcher(item.name)}
+                    >
+                      {item.children?.[switcher?.[item.name]?.value]}
+                    </SwitchWrapper>
+                  )}
                   {!item.type && item.name}
+                  {item.icon && (
+                    <HeadIcon
+                      src={`/imgs/icons/${item.icon}`}
+                      width={18}
+                      alt=""
+                    />
+                  )}
                 </th>
               ))}
             </tr>
@@ -325,6 +383,11 @@ export default function Table({
                                 }}
                               />
                             </IconWrapper>
+                          )}
+                          {head?.[index]?.type === "switcher" && (
+                            <div>
+                              {item[switcher[head[index]?.name]?.value] ?? ""}
+                            </div>
                           )}
                           {!head?.[index]?.type && item}
                           <div className="border-bottom"></div>

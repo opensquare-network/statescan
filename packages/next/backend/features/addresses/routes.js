@@ -16,8 +16,12 @@ router.get(
   addressesController.getAddressTransfers
 );
 router.get(
-  "/addresses/:address/teleports",
-  addressesController.getAddressTeleports
+  "/addresses/:address/teleports/in",
+  addressesController.getAddressTeleportsIn
+);
+router.get(
+  "/addresses/:address/teleports/out",
+  addressesController.getAddressTeleportsOut
 );
 
 router.get(
@@ -28,6 +32,5 @@ router.get(
   "/addresses/:address/nft/transfers",
   addressesController.getAddressNftTransfers
 );
-
 
 module.exports = router;

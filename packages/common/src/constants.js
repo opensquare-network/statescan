@@ -3,6 +3,27 @@ const Modules = Object.freeze({
   Balances: "balances",
   Assets: "assets",
   Uniques: "uniques",
+  DmpQueue: "dmpQueue",
+  ParachainSystem: "parachainSystem",
+  PolkadotXcm: "polkadotXcm",
+  ParaInherent: "paraInherent",
+  ParasInherent: "parasInherent",
+  ParasUmp: "parasUmp",
+  Ump: "ump",
+});
+
+const UmpEvents = Object.freeze({
+  ExecutedUpward: "ExecutedUpward",
+  UpwardMessagesReceived: "UpwardMessagesReceived",
+});
+
+const XcmPalletMethods = Object.freeze({
+  teleportAssets: "teleportAssets",
+  limitedTeleportAssets: "limitedTeleportAssets",
+});
+
+const XcmPalletEvents = Object.freeze({
+  Attempted: "Attempted",
 });
 
 const SystemEvents = Object.freeze({
@@ -81,6 +102,14 @@ const TimelineItemTypes = Object.freeze({
   event: "event",
 });
 
+const DmpQueueEvents = Object.freeze({
+  ExecutedDownward: "ExecutedDownward",
+});
+
+const ParachainSystemMethods = Object.freeze({
+  setValidationData: "setValidationData",
+});
+
 module.exports = {
   Modules,
   SystemEvents,
@@ -88,4 +117,9 @@ module.exports = {
   AssetsEvents,
   UniquesEvents,
   TimelineItemTypes,
+  DmpQueueEvents,
+  ParachainSystemMethods,
+  XcmPalletMethods,
+  XcmPalletEvents,
+  UmpEvents,
 };

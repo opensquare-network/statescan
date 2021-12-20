@@ -104,18 +104,18 @@ const MenuItem = styled.div`
       background: #fafafa;
     `}
   ${(p) =>
-      p.disabled &&
-      css`
-        background: #ffffff;
-        cursor: not-allowed;
-        ${text_dark_placeholder};
-        pointer-events: none;
+    p.disabled &&
+    css`
+      background: #ffffff;
+      cursor: not-allowed;
+      ${text_dark_placeholder};
+      pointer-events: none;
     `}
 `;
 
 const SubMenuItem = styled(MenuItem)`
   padding: 8px 24px;
-`
+`;
 
 const Divider = styled.div`
   margin: 8px 0;
@@ -126,11 +126,15 @@ const Divider = styled.div`
   }
 `;
 
-
-export default function SubMenu({ category, menus, closeMenu, divideIndex=2 }) {
+export default function SubMenu({
+  category,
+  menus,
+  closeMenu,
+  divideIndex = 2,
+}) {
   const router = useRouter();
   const [isActive, setIsActive] = useState(false);
-  const {width} = useWindowSize();
+  const { width } = useWindowSize();
   const ref = useRef();
   const theme = useTheme();
 
@@ -156,7 +160,7 @@ export default function SubMenu({ category, menus, closeMenu, divideIndex=2 }) {
     <Wrapper onMouseOver={onMouseOver} onMouseLeave={onMouseLeave}>
       <TitleWrapper isActive={isActive} themecolor={theme.color}>
         {category}
-        <ArrowDown/>
+        <ArrowDown />
       </TitleWrapper>
       {(isActive || width <= 900) && (
         <MouseWrapper>
@@ -175,10 +179,10 @@ export default function SubMenu({ category, menus, closeMenu, divideIndex=2 }) {
                     {item.name}
                   </MenuItem>
                 </Link>
-                {index === divideIndex && <Divider/>}
-                {
-                  (item.children ?? []).map(child=>{
-                    return <Fragment key={index}>
+                {index === divideIndex && <Divider />}
+                {(item.children ?? []).map((child, index) => {
+                  return (
+                    <Fragment key={index}>
                       <Link href={`/${child.value}`} passHref>
                         <SubMenuItem
                           onClick={() => {
@@ -192,8 +196,8 @@ export default function SubMenu({ category, menus, closeMenu, divideIndex=2 }) {
                         </SubMenuItem>
                       </Link>
                     </Fragment>
-                  })
-                }
+                  );
+                })}
               </Fragment>
             ))}
           </MenuWrapper>

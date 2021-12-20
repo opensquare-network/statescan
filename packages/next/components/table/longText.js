@@ -9,14 +9,14 @@ const Between = styled.div`
 `
 
 const A = styled.a`
-  color: #6848FF;
-`
+  color: #6848ff;
+`;
 
-export default function LongText({text, threshold = 200, fileName = "hex"}) {
+export default function LongText({ text, threshold = 200, fileName = "hex" }) {
   if (text?.length <= 200) {
     return text;
   }
-  const blob = new Blob([text], {type: "text/plain"});
+  const blob = new Blob([text], { type: "text/plain" });
   const url = window.URL.createObjectURL(blob);
   return <Between>
     <span>{hexEllipsis(text)}</span>

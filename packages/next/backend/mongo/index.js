@@ -10,7 +10,6 @@ const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
-const teleportCollectionName = "teleport";
 
 // unFinalized collections
 const unFinalizedCollectionName = "unFinalizedBlock";
@@ -30,9 +29,14 @@ const instanceAttributeCollectionName = "instanceAttribute";
 const nftMetadataCollectionName = "nftMetadata";
 const nftTransferCollectionName = "nftTransfer";
 
+// XCM
+const teleportInCollectionName = "teleportIn";
+const teleportOutCollectionName = "teleportOut";
+
 let client = null;
 let db = null;
 let nftDb = null;
+let xcmDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -42,7 +46,6 @@ let assetTransferCol = null;
 let assetCol = null;
 let assetHolderCol = null;
 let addressCol = null;
-let teleportCol = null;
 
 let unFinalizedBlockCol = null;
 let unFinalizedExtrinsicCol = null;
@@ -58,6 +61,9 @@ let instanceTimelineCol = null;
 let instanceAttributeCol = null;
 let nftMetadataCol = null;
 let nftTransferCol = null;
+
+let teleportInCol = null;
+let teleportOutCol = null;
 
 function getDbName() {
   const dbName = process.env.MONGO_DB_NAME;
@@ -77,6 +83,15 @@ function getNftDbName() {
   return nftDbName;
 }
 
+function getXcmDbName() {
+  const xcmDbName = process.env.MONGO_DB_XCM_NAME;
+  if (!xcmDbName) {
+    throw new Error("MONGO_DB_XCM_NAME not set");
+  }
+
+  return xcmDbName;
+}
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
@@ -94,7 +109,6 @@ async function initDb() {
   assetCol = db.collection(assetCollectionName);
   assetHolderCol = db.collection(assetHolderCollectionName);
   addressCol = db.collection(addressCollectionName);
-  teleportCol = db.collection(teleportCollectionName);
 
   unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
   unFinalizedExtrinsicCol = db.collection(unFinalizedExtrinsicCollectionName);
@@ -115,6 +129,11 @@ async function initDb() {
   nftMetadataCol = nftDb.collection(nftMetadataCollectionName);
   nftTransferCol = nftDb.collection(nftTransferCollectionName);
 
+  const xcmDbName = getXcmDbName();
+  xcmDb = client.db(xcmDbName);
+  teleportInCol = xcmDb.collection(teleportInCollectionName);
+  teleportOutCol = xcmDb.collection(teleportOutCollectionName);
+
   await _createIndexes();
 }
 
@@ -126,7 +145,7 @@ async function _createIndexes() {
 
   blockCol.createIndex({ hash: 1 });
   blockCol.createIndex({ "header.number": -1 });
-  blockCol.createIndex({ "blockTime": -1 });
+  blockCol.createIndex({ blockTime: -1 });
 
   extrinsicCol.createIndex({ hash: 1 });
   extrinsicCol.createIndex({ "indexer.blockHash": 1, "indexer.index": -1 });
@@ -191,12 +210,15 @@ async function _createIndexes() {
   assetTransferCol.createIndex({ "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ listIgnore: 1, "indexer.blockHeight": -1 });
 
-  teleportCol.createIndex({ "indexer.blockHeight": -1, "indexer.index": -1 });
-
   nftClassCol.createIndex({ classId: 1, "indexer.blockHeight": -1 });
   nftClassCol.createIndex({ dataHash: 1 }, { sparse: true });
 
-  nftInstanceCol.createIndex({ classId: 1, classHeight: -1, instanceId: 1, "indexer.blockHeight": -1 });
+  nftInstanceCol.createIndex({
+    classId: 1,
+    classHeight: -1,
+    instanceId: 1,
+    "indexer.blockHeight": -1,
+  });
   nftInstanceCol.createIndex({ dataHash: 1 }, { sparse: true });
 
   nftMetadataCol.createIndex({ dataHash: 1 });
@@ -247,11 +269,6 @@ async function getAssetHolderCollection() {
 async function getAddressCollection() {
   await tryInit(addressCol);
   return addressCol;
-}
-
-async function getTeleportCollection() {
-  await tryInit(teleportCol);
-  return teleportCol;
 }
 
 async function getUnFinalizedBlockCollection() {
@@ -314,6 +331,16 @@ async function getNftTransferCollection() {
   return nftTransferCol;
 }
 
+async function getTeleportInCollection() {
+  await tryInit(teleportInCol);
+  return teleportInCol;
+}
+
+async function getTeleportOutCollection() {
+  await tryInit(teleportOutCol);
+  return teleportOutCol;
+}
+
 module.exports = {
   initDb,
   getStatusCollection,
@@ -324,7 +351,6 @@ module.exports = {
   getAssetCollection,
   getAssetHolderCollection,
   getAddressCollection,
-  getTeleportCollection,
   getUnFinalizedBlockCollection,
   getUnFinalizedEventCollection,
   getUnFinalizedExrinsicCollection,
@@ -337,4 +363,6 @@ module.exports = {
   getInstanceAttributeCollection,
   getNftMetadataCollection,
   getNftTransferCollection,
+  getTeleportInCollection,
+  getTeleportOutCollection,
 };

@@ -7,8 +7,10 @@ const {
   isApiConnected,
   getBlockIndexer,
   chainHeight: { updateHeight, getLatestFinalizedHeight },
-  specs: { updateSpecs, getSpecHeights, getMetaScanHeight },
-  env: { isUseMeta },
+  specs: { updateSpecs },
+  scan: {
+    utils: { getTargetHeight, checkAndUpdateSpecs, getHeights },
+  },
 } = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
 const asyncLocalStorage = require("./asynclocalstorage");
@@ -20,20 +22,10 @@ const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
 const { updateUnFinalized } = require("./unFinalized");
 
-const scanStep = parseInt(process.env.SCAN_STEP) || 100;
-
 async function main() {
   await initDb();
   await updateHeight();
-
-  if (isUseMeta()) {
-    await updateSpecs();
-    const specHeights = getSpecHeights();
-    if (specHeights.length <= 0 || specHeights[0] > 1) {
-      logger.error("No specHeights or invalid");
-      return;
-    }
-  }
+  await updateSpecs();
 
   let scanFinalizedHeight = await getNextScanHeight();
   while (true) {
@@ -51,20 +43,9 @@ async function main() {
       continue;
     }
 
-    let targetHeight = finalizedHeight;
-    // Retrieve & Scan no more than 100 blocks at a time
-    if (scanFinalizedHeight + scanStep < finalizedHeight) {
-      targetHeight = scanFinalizedHeight + scanStep;
-    }
-
-    if (targetHeight > getMetaScanHeight()) {
-      await updateSpecs();
-    }
-
-    const heights = [];
-    for (let i = scanFinalizedHeight; i <= targetHeight; i++) {
-      heights.push(i);
-    }
+    const targetHeight = getTargetHeight(scanFinalizedHeight);
+    await checkAndUpdateSpecs(targetHeight);
+    const heights = getHeights(scanFinalizedHeight, targetHeight);
 
     const blocks = await fetchBlocks(heights, true);
     if ((blocks || []).length <= 0) {

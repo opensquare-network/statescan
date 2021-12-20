@@ -21,6 +21,17 @@ async function updateHeight() {
   });
 }
 
+async function subscribeFinalizedHead() {
+  const api = await getApi();
+
+  await new Promise((resolve) => {
+    api.rpc.chain.subscribeFinalizedHeads((header) => {
+      latestFinalizedHeight = header.number.toNumber();
+      resolve();
+    });
+  });
+}
+
 function getLatestFinalizedHeight() {
   return latestFinalizedHeight;
 }
@@ -31,6 +42,7 @@ function getLatestUnFinalizedHeight() {
 
 module.exports = {
   updateHeight,
+  subscribeFinalizedHead,
   getLatestFinalizedHeight,
   getLatestUnFinalizedHeight,
 };

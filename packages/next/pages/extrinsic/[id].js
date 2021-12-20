@@ -18,7 +18,7 @@ import {
   capitalize,
   fromSymbolUnit,
   time,
-  timeDuration
+  timeDuration,
 } from "utils";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
@@ -56,7 +56,7 @@ export default function Extrinsic({
   if (!extrinsicDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Extrinsic"/>
+        <PageNotFound resource="Extrinsic" />
       </Layout>
     );
   }
@@ -95,7 +95,8 @@ export default function Extrinsic({
     },
   ];
 
-  const transfersCount = (extrinsicTransfer?.length || 0) + (extrinsicNftTransfer?.length || 0);
+  const transfersCount =
+    (extrinsicTransfer?.length || 0) + (extrinsicNftTransfer?.length || 0);
 
   return (
     <Layout node={node}>
@@ -161,18 +162,22 @@ export default function Extrinsic({
                 "-"
               ),
               transfersCount > 0 ? (
-                <TransfersList key={`7`} node={node} assetTransfers={extrinsicTransfer} nftTransfers={extrinsicNftTransfer} />
+                <TransfersList
+                  key={`7`}
+                  node={node}
+                  assetTransfers={extrinsicTransfer}
+                  nftTransfers={extrinsicNftTransfer}
+                />
               ) : undefined,
               extrinsicDetail?.nonce === undefined ? undefined : (
                 <MinorText key={`8`}>{extrinsicDetail?.nonce}</MinorText>
               ),
-              (extrinsicDetail?.tip === undefined || extrinsicDetail?.tip === 0) ? undefined : (
+              extrinsicDetail?.tip === undefined ||
+              extrinsicDetail?.tip === 0 ? undefined : (
                 <MinorText key={`9`}>
-                  {
-                    `${bigNumber2Locale(
-                      fromSymbolUnit(extrinsicDetail?.tip, symbol)
-                    )} ${symbol}`
-                  }
+                  {`${bigNumber2Locale(
+                    fromSymbolUnit(extrinsicDetail?.tip, symbol)
+                  )} ${symbol}`}
                 </MinorText>
               ),
               <MinorText key="10">
@@ -188,7 +193,12 @@ export default function Extrinsic({
             }
           />
         </div>
-        <TabTable data={tabTableData} activeTab={tab} collapse={900} query={["id"]} />
+        <TabTable
+          data={tabTableData}
+          activeTab={tab}
+          collapse={900}
+          query={["id"]}
+        />
       </Section>
     </Layout>
   );
@@ -213,7 +223,7 @@ export async function getServerSideProps(context) {
     nextApi.fetch(`extrinsics/${id}/nft-transfers`),
     nextApi.fetch(`extrinsics/${id}/events`, {
       page: activeTab === "events" ? nPage - 1 : 0,
-      pageSize: 25
+      pageSize: 25,
     }),
   ]);
 

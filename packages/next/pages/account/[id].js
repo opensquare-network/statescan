@@ -22,7 +22,8 @@ import {
   EmptyQuery,
   NFTTransferHead,
   nodes,
-  teleportsHead,
+  teleportsHeadIn,
+  teleportsHeadOut,
 } from "utils/constants";
 import MinorText from "components/minorText";
 import MonoText from "components/monoText";
@@ -38,7 +39,6 @@ import HashEllipsis from "components/hashEllipsis";
 import PageNotFound from "components/pageNotFound";
 import Identity from "../../components/account/identity";
 import TeleportDirection from "../../components/teleportDirection";
-import ChainAddressEllipsis from "../../components/chainAddressEllipsis";
 import ExplorerLink from "../../components/explorerLink";
 import BigNumber from "bignumber.js";
 import Source from "../../components/account/source";
@@ -52,6 +52,7 @@ import NftName from "components/nft/name";
 import { useRef, useState } from "react";
 import Preview from "components/nft/preview";
 import NftLink from "components/nft/nftLink";
+import Filter from "components/filter";
 
 const TextDark = styled.span`
   ${text_dark_major};
@@ -80,6 +81,7 @@ export default function Address({
   node,
   id,
   tab,
+  direction,
   addressDetail,
   addressAssets,
   addressTransfers,
@@ -114,17 +116,134 @@ export default function Address({
   const teleportSourceAndTarget = (direction) =>
     getTeleportSourceAndTarget(node, direction);
 
-  const nodeInfo = nodes.find((i) => i.value === node);
-  const customTeleportHead = _.cloneDeep(teleportsHead);
-  const sendAtCol = customTeleportHead.find((item) => item.name === "Sent At");
-  if (sendAtCol) {
-    sendAtCol.name = (
-      <img
-        style={{ position: "absolute", top: 12 }}
-        src={nodeInfo.icon}
-        alt=""
-      />
-    );
+  const inDirection = (
+    <TeleportDirection
+      from={teleportSourceAndTarget("in").source}
+      to={teleportSourceAndTarget("in").target}
+    />
+  );
+  const outDirection = (
+    <TeleportDirection
+      from={teleportSourceAndTarget("out").source}
+      to={teleportSourceAndTarget("out").target}
+    />
+  );
+  const filter = [
+    {
+      value: direction,
+      name: "Direction",
+      query: "direction",
+      options: [
+        { text: inDirection, value: "in" },
+        { text: outDirection, value: "out" },
+      ],
+    },
+  ];
+  let teleportsHead, teleportsBody;
+  if (direction === "in") {
+    teleportsHead = teleportsHeadIn;
+    teleportsBody = (addressTeleports?.items || []).map((item, index) => [
+      <InLink
+        key={`${index}-1`}
+        to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
+      >
+        {`${item.indexer.blockHeight.toLocaleString()}-${
+          item.indexer.extrinsicIndex
+        }`}
+      </InLink>,
+      item.indexer.blockTime,
+      item.beneficiary ? (
+        <AddressEllipsis
+          address={item.beneficiary}
+          to={`/account/${item.beneficiary}`}
+        />
+      ) : (
+        "-"
+      ),
+      <Result key={`${index}-2`} isSuccess={item.complete} noText={true} />,
+      <ExplorerLink
+        key={`${index}-3`}
+        chain={teleportSourceAndTarget("in").source}
+        href={`/block/${item.sentAt}`}
+      >
+        {item.sentAt.toLocaleString()}
+      </ExplorerLink>,
+      !item.complete || item.amount === null || item.amount === undefined
+        ? "-"
+        : `${bigNumber2Locale(
+            fromSymbolUnit(
+              new BigNumber(item.amount).minus(item.fee || 0).toString(),
+              symbol
+            )
+          )}`,
+      item.fee === null || item.fee === undefined
+        ? "-"
+        : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))}`,
+      item.amount === null || item.amount === undefined
+        ? "-"
+        : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))}`,
+    ]);
+  } else if (direction === "out") {
+    teleportsHead = teleportsHeadOut;
+    teleportsBody = (addressTeleports?.items || []).map((item, index) => [
+      <InLink
+        key={`${index}-1`}
+        to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
+      >
+        {`${item.indexer.blockHeight.toLocaleString()}-${
+          item.indexer.extrinsicIndex
+        }`}
+      </InLink>,
+      item.indexer.blockTime,
+      [
+        <AddressEllipsis
+          key={`${index}-2-1`}
+          address={item.beneficiary}
+          to={`/account/${item.beneficiary}`}
+        />,
+        <AddressEllipsis
+          key={`${index}-2-2`}
+          address={item.signer}
+          to={`/account/${item.signer}`}
+        />,
+      ],
+      <Result
+        key={`${index}-3`}
+        isSuccess={
+          item.relayChainInfo?.outcome?.complete ??
+          (item.relayChainInfo?.outcome?.incomplete ||
+          item.relayChainInfo?.outcome?.error
+            ? false
+            : undefined)
+        }
+        noText={true}
+      />,
+      item.relayChainInfo?.enterAt?.blockHeight ? (
+        <ExplorerLink
+          key={`${index}-4`}
+          chain={teleportSourceAndTarget("in").source}
+          href={`/block/${item.relayChainInfo.enterAt.blockHeight}`}
+        >
+          {item.relayChainInfo.enterAt.blockHeight.toLocaleString()}
+        </ExplorerLink>
+      ) : (
+        "-"
+      ),
+      item.relayChainInfo?.executedAt?.blockHeight ? (
+        <ExplorerLink
+          key={`${index}-5`}
+          chain={teleportSourceAndTarget("in").source}
+          href={`/block/${item.relayChainInfo.executedAt.blockHeight}`}
+        >
+          {item.relayChainInfo.executedAt.blockHeight.toLocaleString()}
+        </ExplorerLink>
+      ) : (
+        "-"
+      ),
+      item.amount !== null && item.amount !== undefined
+        ? `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))}`
+        : "-",
+    ]);
   }
 
   const tabTableData = [
@@ -197,7 +316,6 @@ export default function Address({
         ) : (
           "-"
         ),
-
         item.extrinsicHash ? <Tooltip label={item.method} bg /> : "-",
         item.indexer.blockTime,
         item.from !== id ? (
@@ -264,64 +382,19 @@ export default function Address({
     },
     {
       name: "Teleports",
+      addQuery: direction === "out" && { direction },
       page: addressTeleports?.page,
       total: addressTeleports?.total,
-      head: customTeleportHead,
-      body: (addressTeleports?.items || []).map((item, index) => [
-        <InLink
-          key={`${index}-1`}
-          to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.index}`}
-        >
-          {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.index}`}
-        </InLink>,
-        item.indexer.blockTime,
-        <TeleportDirection
-          key={`${index}-2`}
-          from={teleportSourceAndTarget(item.teleportDirection).source}
-          to={teleportSourceAndTarget(item.teleportDirection).target}
-        />,
-        item.beneficiary ? (
-          item.teleportDirection === "in" ? (
-            <AddressEllipsis address={item.beneficiary} />
-          ) : (
-            <ChainAddressEllipsis
-              chain={teleportSourceAndTarget(item.teleportDirection).target}
-              address={item.beneficiary}
-            />
-          )
-        ) : (
-          "-"
-        ),
-        item.teleportDirection === "in" ? (
-          <Result isSuccess={item.complete} noText={true} />
-        ) : (
-          <Result isSuccess={null} noText={true} />
-        ),
-        item.teleportDirection === "in" ? (
-          <ExplorerLink
-            chain={teleportSourceAndTarget(item.teleportDirection).source}
-            href={`/block/${item.pubSentAt}`}
-          >
-            {item.pubSentAt.toLocaleString()}
-          </ExplorerLink>
-        ) : (
-          "-"
-        ),
-        !item.complete || item.amount === null || item.amount === undefined
-          ? "-"
-          : `${bigNumber2Locale(
-              fromSymbolUnit(
-                new BigNumber(item.amount).minus(item.fee || 0).toString(),
-                symbol
-              )
-            )}`,
-        item.fee === null || item.fee === undefined
-          ? "-"
-          : `${bigNumber2Locale(fromSymbolUnit(item.fee, symbol))}`,
-        item.amount === null || item.amount === undefined
-          ? "-"
-          : `${bigNumber2Locale(fromSymbolUnit(item.amount, symbol))}`,
-      ]),
+      head: teleportsHead,
+      body: teleportsBody,
+      filter: (
+        <Filter
+          total={`All ${addressTeleports?.total} teleports`}
+          warning="There are issues with teleports scan and we are fixing them."
+          data={filter}
+          addQuery={{ tab: "teleports" }}
+        />
+      ),
       foot: (
         <Pagination
           page={addressTeleports?.page}
@@ -337,9 +410,12 @@ export default function Address({
       head: addressNFTInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-        const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
-          ? instance.nftMetadata.imageThumbnail
-          : instance.class.nftMetadata?.imageThumbnail);
+        const imageThumbnail =
+          instance?.nftMetadata?.recognized === false
+            ? null
+            : instance.nftMetadata?.image
+            ? instance.nftMetadata.imageThumbnail
+            : instance.class.nftMetadata?.imageThumbnail;
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
           : instance.class.nftMetadata?.imageMetadata?.background;
@@ -393,9 +469,12 @@ export default function Address({
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.instance;
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
-        const imageThumbnail = (instance?.nftMetadata?.recognized === false) ? null : (instance.nftMetadata?.image
-          ? instance.nftMetadata.imageThumbnail
-          : instance.class.nftMetadata?.imageThumbnail);
+        const imageThumbnail =
+          instance?.nftMetadata?.recognized === false
+            ? null
+            : instance.nftMetadata?.image
+            ? instance.nftMetadata.imageThumbnail
+            : instance.class.nftMetadata?.imageThumbnail;
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
           : instance.class.nftMetadata?.imageMetadata?.background;
@@ -536,13 +615,14 @@ export default function Address({
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const { id } = context.params;
-  const { tab, page } = context.query;
+  const { tab, page, direction } = context.query;
 
   const relayChain =
     nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";
 
   const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "assets";
+  const nDirection = direction || "in";
 
   const [
     { result: addressDetail },
@@ -567,7 +647,7 @@ export async function getServerSideProps(context) {
       page: activeTab === "extrinsics" ? nPage - 1 : 0,
       pageSize: 25,
     }),
-    nextApi.fetch(`addresses/${id}/teleports`, {
+    nextApi.fetch(`addresses/${id}/teleports/${nDirection}`, {
       page: activeTab === "teleports" ? nPage - 1 : 0,
       pageSize: 25,
     }),
@@ -596,6 +676,7 @@ export async function getServerSideProps(context) {
       node,
       id,
       tab: activeTab,
+      direction: nDirection,
       addressDetail: addressDetail ?? {
         address: id,
         data: { free: 0, reserved: 0, miscFrozen: 0, feeFrozen: 0 },

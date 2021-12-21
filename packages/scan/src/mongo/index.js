@@ -18,7 +18,6 @@ const assetCollectionName = "asset";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
 const approvalCollectionName = "approval";
-const teleportCollectionMame = "teleport";
 
 // unFinalized collection names
 const unFinalizedCollectionName = "unFinalizedBlock";
@@ -42,7 +41,6 @@ let assetHolderCol = null;
 let rawAddressCol = null;
 let addressCol = null;
 let approvalCol = null;
-let teleportCol = null;
 
 // unFinalized collections
 let unFinalizedBlockCol = null;
@@ -86,7 +84,6 @@ async function initDb() {
   rawAddressCol = await getCollection("rawAddress");
   addressCol = await getCollection(addressCollectionName);
   approvalCol = await getCollection(approvalCollectionName);
-  teleportCol = await getCollection(teleportCollectionMame);
   unFinalizedBlockCol = await getCollection(unFinalizedCollectionName);
   unFinalizedExtrinsicCol = await getCollection(
     unFinalizedExtrinsicCollectionName
@@ -184,11 +181,6 @@ async function getAssetApprovalCollection() {
   return approvalCol;
 }
 
-async function getTeleportCollection() {
-  await tryInit(teleportCol);
-  return teleportCol;
-}
-
 function withSession(fn) {
   return client.withSession(fn);
 }
@@ -205,7 +197,6 @@ module.exports = {
   getAddressCollection,
   getRawAddressCollection,
   getAssetApprovalCollection,
-  getTeleportCollection,
   getUnFinalizedBlockCollection,
   getUnFinalizedExrinsicCollection,
   getUnFinalizedEventCollection,

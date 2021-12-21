@@ -1,9 +1,5 @@
 const { ignoreInExtrinsicList } = require("../utils/checkSystem");
 const { extractExtrinsicEvents } = require("../utils");
-const {
-  handleTeleportAssetDownwardMessage,
-  handleTeleportAssets,
-} = require("./xcm");
 const { addAddress } = require("../store/blockAddresses");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], blockIndexer) {
@@ -28,9 +24,6 @@ async function handleExtrinsic(extrinsic, indexer) {
   if (signer.length < 47) {
     signer = "";
   }
-
-  await handleTeleportAssetDownwardMessage(extrinsic, indexer);
-  await handleTeleportAssets(extrinsic, indexer, signer);
 
   if (!ignoreInExtrinsicList(extrinsic.method) && signer) {
     addAddress(indexer.blockHeight, signer);

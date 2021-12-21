@@ -3,9 +3,7 @@ const {
 } = require("./balance/noExtrinsic");
 const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
-const { handleExecutedDownwardEvent } = require("./dmpQueue");
 const { handleSystemEvent } = require("./system");
-const { handleXcmAttemptedEvent } = require("./polkadotXcm");
 
 async function handleEvents(events, blockIndexer, extrinsics) {
   if (events.length <= 0) {
@@ -36,20 +34,6 @@ async function handleEvents(events, blockIndexer, extrinsics) {
         blockIndexer
       );
       await handleSystemEvent(
-        event,
-        sort,
-        extrinsicIndex,
-        extrinsicHash,
-        blockIndexer
-      );
-      await handleExecutedDownwardEvent(
-        event,
-        sort,
-        extrinsicIndex,
-        extrinsicHash,
-        blockIndexer
-      );
-      await handleXcmAttemptedEvent(
         event,
         sort,
         extrinsicIndex,

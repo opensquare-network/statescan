@@ -11,6 +11,7 @@ import { p_18_bold, text_dark_major } from "../../styles/textStyles";
 import JsonDisplay from "components/jsonDisplay";
 import { card_border } from "styles/textStyles";
 import { useTheme } from "utils/hooks";
+import TimeCollapseBody from "./timeCollapseBody";
 
 const Wrapper = styled.div``;
 
@@ -194,6 +195,7 @@ const CollapseHead = styled.td`
   line-height: 20px;
   padding: 6px 24px;
   width: 136px;
+  vertical-align: top;
 `;
 
 const CollapseBody = styled.td`
@@ -224,6 +226,11 @@ const HeadIcon = styled.img`
   position: absolute;
   margin-top: -1px;
   margin-left: 4px;
+  ${(p) =>
+    p.collapse &&
+    css`
+      margin-top: 0;
+    `}
 `;
 
 const SwitchWrapper = styled.div`
@@ -320,36 +327,41 @@ export default function Table({
         <StyledTable>
           <thead>
             <tr>
-              {(head || []).map((item, index) => (
-                <th
-                  key={index}
-                  style={{
-                    textAlign: item.align ?? "left",
-                    width: item.width ?? "100%",
-                  }}
-                >
-                  {item.type === "time" && (
-                    <TimeHead timeType={timeType} setTimeType={doSetTimeType} />
-                  )}
-                  {item.type === "data" && <div />}
-                  {item.type === "switcher" && (
-                    <SwitchWrapper
-                      color={color}
-                      onClick={() => onClickSwitcher(item.name)}
-                    >
-                      {item.children?.[switcher?.[item.name]?.value]}
-                    </SwitchWrapper>
-                  )}
-                  {!item.type && item.name}
-                  {item.icon && (
-                    <HeadIcon
-                      src={`/imgs/icons/${item.icon}`}
-                      width={18}
-                      alt=""
-                    />
-                  )}
-                </th>
-              ))}
+              {(head || [])
+                .filter((item) => item.type !== "collapse")
+                .map((item, index) => (
+                  <th
+                    key={index}
+                    style={{
+                      textAlign: item.align ?? "left",
+                      width: item.width ?? "100%",
+                    }}
+                  >
+                    {item.type === "time" && (
+                      <TimeHead
+                        timeType={timeType}
+                        setTimeType={doSetTimeType}
+                      />
+                    )}
+                    {item.type === "data" && <div />}
+                    {item.type === "switcher" && (
+                      <SwitchWrapper
+                        color={color}
+                        onClick={() => onClickSwitcher(item.name)}
+                      >
+                        {item.children?.[switcher?.[item.name]?.value]}
+                      </SwitchWrapper>
+                    )}
+                    {!item.type && item.name}
+                    {item.icon && (
+                      <HeadIcon
+                        src={`/imgs/icons/${item.icon}`}
+                        width={18}
+                        alt=""
+                      />
+                    )}
+                  </th>
+                ))}
             </tr>
           </thead>
           {body && body.length > 0 ? (
@@ -358,41 +370,44 @@ export default function Table({
                 {(body || []).map((row, bodyIndex) => (
                   <Fragment key={bodyIndex}>
                     <StyledTr isShow={showData[bodyIndex]}>
-                      {row.map((item, index) => (
-                        <td
-                          key={index}
-                          style={{
-                            textAlign: head?.[index]?.align ?? "left",
-                            height: `${rowHeight}px`,
-                          }}
-                        >
-                          {head?.[index]?.type === "time" && (
-                            <TimeBody timeType={timeType} ts={item} />
-                          )}
-                          {head?.[index]?.type === "data" && (
-                            <IconWrapper>
-                              <DataImg
-                                src={`/imgs/icons/data-show${
-                                  showData[bodyIndex] ? "-active" : ""
-                                }.svg`}
-                                alt="action"
-                                onClick={() => {
-                                  const data = [...showData];
-                                  data[bodyIndex] = !showData[bodyIndex];
-                                  setShowData(data);
-                                }}
-                              />
-                            </IconWrapper>
-                          )}
-                          {head?.[index]?.type === "switcher" && (
-                            <div>
-                              {item[switcher[head[index]?.name]?.value] ?? ""}
-                            </div>
-                          )}
-                          {!head?.[index]?.type && item}
-                          <div className="border-bottom"></div>
-                        </td>
-                      ))}
+                      {row.map((item, index) => {
+                        if (head?.[index]?.type === "collapse") return null;
+                        return (
+                          <td
+                            key={index}
+                            style={{
+                              textAlign: head?.[index]?.align ?? "left",
+                              height: `${rowHeight}px`,
+                            }}
+                          >
+                            {head?.[index]?.type === "time" && (
+                              <TimeBody timeType={timeType} ts={item} />
+                            )}
+                            {head?.[index]?.type === "data" && (
+                              <IconWrapper>
+                                <DataImg
+                                  src={`/imgs/icons/data-show${
+                                    showData[bodyIndex] ? "-active" : ""
+                                  }.svg`}
+                                  alt="action"
+                                  onClick={() => {
+                                    const data = [...showData];
+                                    data[bodyIndex] = !showData[bodyIndex];
+                                    setShowData(data);
+                                  }}
+                                />
+                              </IconWrapper>
+                            )}
+                            {head?.[index]?.type === "switcher" && (
+                              <div>
+                                {item[switcher[head[index]?.name]?.value] ?? ""}
+                              </div>
+                            )}
+                            {!head?.[index]?.type && item}
+                            <div className="border-bottom"></div>
+                          </td>
+                        );
+                      })}
                     </StyledTr>
                     {showData[bodyIndex] && (
                       <StyledTr>
@@ -464,9 +479,51 @@ export default function Table({
                                 </CollapseBody>
                               </>
                             )}
-                            {!head?.[index].type && (
+                            {head?.[index].type === "time" && (
                               <>
-                                <CollapseHead>{headItem.name}</CollapseHead>
+                                <CollapseHead>Time</CollapseHead>
+                                <CollapseBody>
+                                  <TimeCollapseBody ts={bodyItem[index]} />
+                                </CollapseBody>
+                              </>
+                            )}
+                            {head?.[index].type === "switcher" && (
+                              <>
+                                <CollapseHead>
+                                  <SwitchWrapper
+                                    color={color}
+                                    onClick={() =>
+                                      onClickSwitcher(head?.[index].name)
+                                    }
+                                  >
+                                    {
+                                      head?.[index].children?.[
+                                        switcher?.[head?.[index].name]?.value
+                                      ]
+                                    }
+                                  </SwitchWrapper>
+                                </CollapseHead>
+                                <CollapseBody>
+                                  {bodyItem[index]?.[
+                                    switcher[head[index]?.name]?.value
+                                  ] ?? ""}
+                                </CollapseBody>
+                              </>
+                            )}
+                            {(!head?.[index].type ||
+                              head?.[index].type === "collapse") && (
+                              <>
+                                <CollapseHead>
+                                  {headItem.name}
+                                  {headItem.icon && (
+                                    <HeadIcon
+                                      src={`/imgs/icons/${headItem.icon}`}
+                                      width={18}
+                                      alt=""
+                                      collapse
+                                    />
+                                  )}
+                                </CollapseHead>
                                 <CollapseBody>{bodyItem[index]}</CollapseBody>
                               </>
                             )}

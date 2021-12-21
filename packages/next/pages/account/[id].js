@@ -160,6 +160,7 @@ export default function Address({
       ) : (
         "-"
       ),
+      inDirection,
       <Result key={`${index}-2`} isSuccess={item.complete} noText={true} />,
       <ExplorerLink
         key={`${index}-3`}
@@ -207,6 +208,7 @@ export default function Address({
           to={`/account/${item.signer}`}
         />,
       ],
+      outDirection,
       <Result
         key={`${index}-3`}
         isSuccess={

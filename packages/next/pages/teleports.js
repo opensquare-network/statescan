@@ -79,6 +79,7 @@ export default function Teleports({ node, teleports, direction }) {
       ) : (
         "-"
       ),
+      inDirection,
       <Result key={`${index}-2`} isSuccess={item.complete} noText={true} />,
       <ExplorerLink
         key={`${index}-3`}
@@ -126,6 +127,7 @@ export default function Teleports({ node, teleports, direction }) {
           to={`/account/${item.signer}`}
         />,
       ],
+      outDirection,
       <Result
         key={`${index}-3`}
         isSuccess={

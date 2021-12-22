@@ -19,8 +19,8 @@ async function main() {
           }
         : {}
       )
-      .limit(100)
       .sort({ _id: 1 })
+      .limit(100)
       .toArray();
 
     if (allExecuteds.length === 0) {

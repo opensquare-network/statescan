@@ -7,6 +7,7 @@ const { updateTeleportOutInfo } = require("../mongo/service");
 async function main() {
   const col = await getExecutedCollection();
   let lastId = null;
+  let page = 1;
   while (true) {
     const allExecuteds = await col
       .find(
@@ -26,9 +27,9 @@ async function main() {
       break;
     }
 
+    console.log(`Last Id: ${lastId}, Current page: ${page}`);
     for (const executed of allExecuteds) {
       const { messageId, indexer, outcome } = executed;
-      console.log(`Updating ${messageId}:`, outcome);
       await updateTeleportOutInfo(messageId, indexer, outcome);
     }
 

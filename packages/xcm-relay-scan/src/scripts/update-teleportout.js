@@ -34,6 +34,7 @@ async function main() {
     }
 
     lastId = allExecuteds[allExecuteds.length - 1]._id;
+    page++;
   }
 }
 

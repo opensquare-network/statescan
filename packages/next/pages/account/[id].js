@@ -666,7 +666,7 @@ export async function getServerSideProps(context) {
       pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/nft/transfers`, {
-      page: activeTab === "nft transfers" ? nPage - 1 : 0,
+      page: ["nft-transfer", "nft transfer"].includes(activeTab) ? nPage - 1 : 0,
       pageSize: 25,
     }),
   ]);

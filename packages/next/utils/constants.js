@@ -16,6 +16,16 @@ export const nodes = [
     logo: "logo-img-2.svg",
   },
   {
+    name: "Statemint",
+    sub: "Polkadot",
+    value: "statemint",
+    symbol: "DOT",
+    icon: "/imgs/icons/polkadot.svg",
+    color: "#E6007A",
+    colorSecondary: "#FDE5F2",
+    buttonColor: "#E6007A",
+  },
+  {
     name: "Westmint",
     sub: "Westend",
     value: "westmint",

@@ -186,7 +186,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
           >
             {`${item.classId}-${item.instanceId}`}
           </NftLink>,
-          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
+          item.indexer?.blockTime,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
             background={background}
           />,

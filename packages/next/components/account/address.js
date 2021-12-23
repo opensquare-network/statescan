@@ -44,7 +44,9 @@ function Address({ address }) {
           <BreakText>
             <MinorText>
               <Link href={`/account/${address}`} passHref>
-                <MonoText>{address}</MonoText>
+                <a>
+                  <MonoText>{address}</MonoText>
+                </a>
               </Link>
             </MinorText>
           </BreakText>
@@ -71,7 +73,9 @@ function Address({ address }) {
         <BreakText>
           <MinorText>
             <Link href={`/account/${address}`} passHref>
-              <MonoText>{address}</MonoText>
+              <a>
+                <MonoText>{address}</MonoText>
+              </a>
             </Link>
           </MinorText>
         </BreakText>

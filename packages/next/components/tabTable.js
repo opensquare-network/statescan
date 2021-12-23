@@ -71,8 +71,8 @@ const TabTag = styled.div`
   color: ${(p) => p.themecolor};
 `;
 
-const tabNameToUrl = (tabName) => tabName?.replace(" ", "-").toLowerCase();
-const tabNameFromUrl = (urlTabName) => urlTabName?.replace("-", " ").toLowerCase();
+const tabNameToUrl = (tabName) => tabName?.replace?.(" ", "-").toLowerCase();
+const tabNameFromUrl = (urlTabName) => urlTabName?.replace?.("-", " ").toLowerCase();
 
 export default function TabTable({ data, activeTab, collapse, query = [] }) {
   const router = useRouter();

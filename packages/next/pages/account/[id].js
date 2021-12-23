@@ -497,9 +497,7 @@ export default function Address({
           >
             {`${item.classId}-${item.instanceId}`}
           </NftLink>,
-          <TextDarkMinor key={`time-${index}`}>
-            {time(item.indexer?.blockTime)}
-          </TextDarkMinor>,
+         item.indexer?.blockTime,
           <Thumbnail
             imageThumbnail={imageThumbnail}
             key={`thumbnail${index}`}
@@ -668,7 +666,7 @@ export async function getServerSideProps(context) {
       pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/nft/transfers`, {
-      page: activeTab === "nft transfers" ? nPage - 1 : 0,
+      page: ["nft-transfer", "nft transfer"].includes(activeTab) ? nPage - 1 : 0,
       pageSize: 25,
     }),
   ]);

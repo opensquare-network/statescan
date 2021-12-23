@@ -144,7 +144,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
     );
   }
 
-  const tab = {};
+  const tab = null;
 
   const tabTableData = [
     {

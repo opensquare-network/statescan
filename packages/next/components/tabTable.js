@@ -71,18 +71,21 @@ const TabTag = styled.div`
   color: ${(p) => p.themecolor};
 `;
 
+const tabNameToUrl = (tabName) => tabName?.replace?.(" ", "-").toLowerCase();
+const tabNameFromUrl = (urlTabName) => urlTabName?.replace?.("-", " ").toLowerCase();
+
 export default function TabTable({ data, activeTab, collapse, query = [] }) {
   const router = useRouter();
   const theme = useTheme();
   const activeTabIndex = data
     .map((item) => item.name.toLowerCase())
-    .indexOf(activeTab);
+    .indexOf(tabNameFromUrl(activeTab));
   const [currentTab, setCurrentTab] = useState(activeTabIndex);
 
   useEffect(() => {
     const currTabIndex = data
       .map((item) => item.name.toLowerCase())
-      .indexOf(router.query.tab);
+      .indexOf(tabNameFromUrl(router.query.tab));
     setCurrentTab(currTabIndex >= 0 ? currTabIndex : 0);
   }, [data, router]);
 
@@ -99,7 +102,7 @@ export default function TabTable({ data, activeTab, collapse, query = [] }) {
                 {
                   query: {
                     ...pick(router.query, query),
-                    tab: item.name.toLowerCase(),
+                    tab: tabNameToUrl(item.name),
                     ...(item.page > 0 ? { page: item.page + 1 } : {}),
                     ...item.addQuery,
                   },

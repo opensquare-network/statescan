@@ -128,7 +128,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
     ? nftInstance.nftMetadata.imageMetadata?.background
     : nftClass?.nftMetadata?.imageMetadata?.background;
 
-  const tab = {};
+  const tab = null;
   const nftMetadata = nftInstance?.nftMetadata
     ? nftInstance?.nftMetadata
     : nftClass?.nftMetadata;
@@ -186,7 +186,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
           >
             {`${item.classId}-${item.instanceId}`}
           </NftLink>,
-          <TextDarkMinor key={`time-${index}`}>{time(item.indexer?.blockTime)}</TextDarkMinor>,
+          item.indexer?.blockTime,
           <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
             background={background}
           />,

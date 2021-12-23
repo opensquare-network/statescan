@@ -32,6 +32,11 @@ const statemineConfig = {
   ...getEnvConfig("statemine"),
 };
 
+const statemintConfig = {
+  ...commonPart,
+  ...getEnvConfig("statemint"),
+};
+
 module.exports = {
   apps: [
     {
@@ -49,6 +54,14 @@ module.exports = {
     {
       name: "statescan-scan-statemine-staging",
       ...statemineConfig,
+    },
+    {
+      name: "statescan-scan-statemint",
+      ...statemintConfig,
+    },
+    {
+      name: "statescan-scan-statemint-staging",
+      ...statemintConfig,
     },
   ],
 };

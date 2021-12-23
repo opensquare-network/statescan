@@ -128,7 +128,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
     ? nftInstance.nftMetadata.imageMetadata?.background
     : nftClass?.nftMetadata?.imageMetadata?.background;
 
-  const tab = {};
+  const tab = null;
   const nftMetadata = nftInstance?.nftMetadata
     ? nftInstance?.nftMetadata
     : nftClass?.nftMetadata;

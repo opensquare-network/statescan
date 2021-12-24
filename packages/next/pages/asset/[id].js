@@ -152,7 +152,10 @@ export default function Asset({
         <div>
           <Nav
             data={[
-              { name: "Asset Tracker", path: `/assets` },
+              {
+                name: (asset.destroyedAt ? "Destroyed Assets" : "Asset Tracker"),
+                path: (asset.destroyedAt ? `/destroyed/assets` : `/assets`),
+              },
               { name: assetSymbol },
             ]}
             node={node}

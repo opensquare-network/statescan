@@ -273,7 +273,10 @@ export default function NftClass({ node, nftClass, nftInstances }) {
         <div>
           <Nav
             data={[
-              { name: "NFT", path: `/nft` },
+              {
+                name: (nftClass.isDestroyed ? "Destroyed NFT" : "NFT"),
+                path: (nftClass.isDestroyed ? `/destroyed/nft` : `/nft`),
+              },
               { name: `Class` },
               { name: `${nftClass?.classId}` },
             ]}

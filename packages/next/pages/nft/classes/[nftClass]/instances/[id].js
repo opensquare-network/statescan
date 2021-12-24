@@ -23,7 +23,7 @@ import AddressEllipsis from "components/addressEllipsis";
 import NftName from "components/nft/name";
 import Pagination from "components/pagination";
 import InLink from "components/inLink";
-import { text_dark_major, text_dark_minor } from "styles/textStyles";
+import { text_dark_major } from "styles/textStyles";
 import NftLink from "components/nft/nftLink";
 import PageNotFound from "components/pageNotFound";
 
@@ -107,11 +107,7 @@ const TextDark = styled.span`
   ${text_dark_major};
 `
 
-const TextDarkMinor = styled.span`
-  ${text_dark_minor};
-`
-
-export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) {
+export default function NftInstance({ node, nftClass, nftInstance, nftTransfers }) {
   if (!nftClass || !nftInstance) {
     return (
       <Layout node={node}>
@@ -228,13 +224,17 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
     imageCid = nftMetadata?.image.split("/").pop();
   }
 
+  const isDestroyed = nftInstance.isDestroyed || nftClass.isDestroyed;
   return (
     <Layout node={node}>
       <Section>
         <div>
           <Nav
             data={[
-              { name: "NFT", path: `/nft` },
+              {
+                name: (isDestroyed ? "Destroyed NFT" : "NFT"),
+                path: (isDestroyed ? `/destroyed/nft` : `/nft`),
+              },
               {
                 name: `Class ${nftInstance?.classId}`,
                 path: `/nft/classes/${nftInstance?.classId}`,

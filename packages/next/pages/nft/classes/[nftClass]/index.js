@@ -1,7 +1,8 @@
+import { useRef, useState } from "react";
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { EmptyQuery, NFTClassHead, NFTClassInstanceHead } from "utils/constants";
+import { EmptyQuery, nftClassHead, nftClassInstanceHead } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
@@ -10,7 +11,7 @@ import { time } from "utils";
 import Address from "components/address";
 import TabTable from "components/tabTable";
 import Pagination from "components/pagination";
-import Timeline from "components/timeline/NFTTimeline";
+import Timeline from "components/timeline/nftTimeline";
 import Status from "components/status";
 import styled, { css } from "styled-components";
 import {
@@ -24,12 +25,11 @@ import IpfsLink from "components/ipfsLink";
 import SquareBoxComponent from "components/squareBox";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
-import NFTImage from "../../../../components/nft/NFTImage";
-import NoData from "../../../../components/table/noData";
-import Preview from "../../../../components/nft/preview";
-import { useOnClickOutside } from "../../../../utils/hooks";
-import { useRef, useState } from "react";
-import { shadow_100 } from "../../../../styles/shadows";
+import NftImage from "components/nft/nftImage";
+import NoData from "components/table/noData";
+import Preview from "components/nft/preview";
+import { useOnClickOutside } from "utils/hooks";
+import { shadow_100 } from "styles/shadows";
 import NftLink from "components/nft/nftLink";
 import PageNotFound from "components/pageNotFound";
 
@@ -125,7 +125,7 @@ const BgWhite = styled.div`
 
 export default function NftClass({ node, nftClass, nftInstances }) {
   const [showModal, setShowModal] = useState(false);
-  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
+  const [previewNftInstance, setPreviewNftInstance] = useState(null);
   const ref = useRef();
 
   useOnClickOutside(ref, (event) => {
@@ -151,7 +151,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
       name: "Instance",
       page: nftInstances?.page,
       total: nftInstances?.total,
-      head: NFTClassInstanceHead,
+      head: nftClassInstanceHead,
       body: (nftInstances?.items || []).map((instance, index) => [
         <NftLink
           key={`id${index}`}
@@ -168,7 +168,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           }
           key={`thumbnail${index}`}
           onClick={() => {
-            setPreviewNFTInstance(instance);
+            setPreviewNftInstance(instance);
             setShowModal(true);
           }}
           background={
@@ -263,7 +263,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
         <Preview
           open={showModal}
           nftClass={nftClass}
-          nftInstance={previewNFTInstance}
+          nftInstance={previewNftInstance}
           closeFn={() => {
             setShowModal(false);
           }}
@@ -282,11 +282,11 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           <Between>
             <div>
               <SquareBoxComponent background={nftClass?.nftMetadata?.background}>
-                <NFTImage nftMetadata={nftClass?.nftMetadata} />
+                <NftImage nftMetadata={nftClass?.nftMetadata} />
               </SquareBoxComponent>
             </div>
             <DetailTable
-              head={NFTClassHead}
+              head={nftClassHead}
               body={[
                 <MinorText key="1">{nftClass?.classId}</MinorText>,
                 <MinorText key="2">

@@ -1,23 +1,23 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { NFTInstanceHead, NFTTransferHead, EmptyQuery } from "utils/constants";
+import { nftInstanceHead, nftTransferHead, EmptyQuery } from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
 import { time } from "utils";
 import Address from "components/address";
 import TabTable from "components/tabTable";
-import Timeline from "components/timeline/NFTTimeline";
+import Timeline from "components/timeline/nftTimeline";
 import Status from "components/status";
 import styled, { css } from "styled-components";
 import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import IpfsLink from "../../../../../components/ipfsLink";
-import NFTImage from "../../../../../components/nft/NFTImage";
-import SquareBoxComponent from "../../../../../components/squareBox";
-import NoData from "../../../../../components/table/noData";
+import IpfsLink from "components/ipfsLink";
+import NftImage from "components/nft/nftImage";
+import SquareBoxComponent from "components/squareBox";
+import NoData from "components/table/noData";
 import Thumbnail from "components/nft/thumbnail";
 import AddressEllipsis from "components/addressEllipsis";
 import NftName from "components/nft/name";
@@ -170,7 +170,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
       name: "Transfers",
       page: nftTransfers?.page,
       total: nftTransfers?.total,
-      head: NFTTransferHead,
+      head: nftTransferHead,
       body: (nftTransfers?.items || []).map((item, index) => {
         return [
           <InLink
@@ -247,11 +247,11 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
           <Between>
             <div>
               <SquareBoxComponent background={nftMetadata?.background}>
-                <NFTImage nftMetadata={nftMetadata} />
+                <NftImage nftMetadata={nftMetadata} />
               </SquareBoxComponent>
             </div>
             <DetailTable
-              head={["Class ID  ", ...NFTInstanceHead]}
+              head={["Class ID  ", ...nftInstanceHead]}
               body={[
                 <MinorText key="1">{nftInstance?.classId}</MinorText>,
                 <MinorText key="2">{nftInstance?.instanceId}</MinorText>,

@@ -101,7 +101,7 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
   const theme = useTheme();
   const symbol = getSymbol(node);
   const [showModal, setShowModal] = useState(false);
-  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
+  const [previewNftInstance, setPreviewNftInstance] = useState(null);
   const ref = useRef();
 
   useOnClickOutside(ref, (event) => {
@@ -129,8 +129,8 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
       <div ref={ref}>
         <Preview
           open={showModal}
-          nftClass={previewNFTInstance?.class}
-          nftInstance={previewNFTInstance}
+          nftClass={previewNftInstance?.class}
+          nftInstance={previewNftInstance}
           closeFn={()=>{setShowModal(false)}}
         />
       </div>
@@ -160,7 +160,7 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
                 size={20}
                 imageThumbnail={imageThumbnail}
                 onClick={() => {
-                  setPreviewNFTInstance(instance);
+                  setPreviewNftInstance(instance);
                   setShowModal(true);
                 }}
                 background={background}

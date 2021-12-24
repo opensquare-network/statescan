@@ -4,7 +4,7 @@ import { addressEllipsis, time } from "../../utils";
 import Address from "../address";
 import NftInfo from "../nftInfo";
 import SquareBoxComponent from "../squareBox";
-import NFTImage from "./NFTImage";
+import NftImage from "./nftImage";
 import NftLink from "./nftLink";
 import { useKeyPress } from "utils/hooks";
 import { useEffect } from "react";
@@ -114,7 +114,7 @@ export default function Preview({ open, nftClass, nftInstance, closeFn }) {
       <Wrapper>
         <div style={{ width: "100%", marginBottom: "24px" }}>
           <SquareBoxComponent background={nftMetadata?.background}>
-            <NFTImage nftMetadata={nftMetadata} />
+            <NftImage nftMetadata={nftMetadata} />
           </SquareBoxComponent>
         </div>
 

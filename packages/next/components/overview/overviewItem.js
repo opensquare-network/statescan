@@ -84,7 +84,7 @@ export default function OverviewItem({
           <InLink to={link}>
             <Text themecolor={theme.color}>
               <span>{text}</span>
-              {textSec && (
+              {textSec !== null && textSec !== undefined && (
                 <>
                   <span>/</span>
                   <span>{textSec}</span>
@@ -95,7 +95,7 @@ export default function OverviewItem({
         ) : (
           <Text>
             <span>{text}</span>
-            {textSec && (
+            {textSec !== null && textSec !== undefined && (
               <>
                 <span>/</span>
                 <span>{textSec}</span>

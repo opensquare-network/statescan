@@ -81,7 +81,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
   const pushedOverview = useSelector(overviewSelector);
   const symbol = getSymbol(node);
   const [currentTime, setTime] = useState(Date.now());
-  const [previewNFTClass, setPreviewNFTCLass] = useState(null);
+  const [previewNftClass, setPreviewNftClass] = useState(null);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     connect();
@@ -258,7 +258,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
       <div ref={ref}>
         <Preview
           open={showModal}
-          nftClass={previewNFTClass}
+          nftClass={previewNftClass}
           closeFn={() => {
             setShowModal(false);
           }}
@@ -350,7 +350,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
               imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
               background={nftClass?.nftMetadata?.imageMetadata?.background}
               onClick={() => {
-                setPreviewNFTCLass(nftClass);
+                setPreviewNftClass(nftClass);
                 setShowModal(true);
               }}
             />,

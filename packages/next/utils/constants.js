@@ -288,7 +288,7 @@ export const assetHead = [
   "Transfers",
 ];
 
-export const NFTClassHead = [
+export const nftClassHead = [
   "Class ID",
   "Created Time",
   "Instance",
@@ -300,7 +300,7 @@ export const NFTClassHead = [
   "Link",
 ];
 
-export const NFTInstanceHead = [
+export const nftInstanceHead = [
   "Instance ID",
   "Created Time",
   "Owner",
@@ -308,7 +308,7 @@ export const NFTInstanceHead = [
   "Link",
 ];
 
-export const NFTClassInstanceHead = [
+export const nftClassInstanceHead = [
   { name: "ID", width: 120 },
   { name: "NFT", width: 100 },
   { name: "Name", width: 452 },
@@ -317,7 +317,7 @@ export const NFTClassInstanceHead = [
   { name: "Status" },
 ];
 
-export const addressNFTInstanceHead = [
+export const addressNftInstanceHead = [
   { name: "Class ID", width: 120 },
   { name: "Instance ID", width: 120 },
   { name: "NFT", width: 100 },
@@ -326,7 +326,7 @@ export const addressNFTInstanceHead = [
   { name: "Status", align: "right" },
 ];
 
-export const NFTTransferHead = [
+export const nftTransferHead = [
   { name: "Extrinsic ID", width: 136 },
   { name: "Instance ID", width: 120 },
   { name: "Time", type: "time", width: 200 },

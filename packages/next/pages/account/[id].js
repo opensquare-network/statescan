@@ -17,10 +17,10 @@ import {
   addressAssetsHead,
   addressExtrincsHead,
   addressHead,
-  addressNFTInstanceHead,
+  addressNftInstanceHead,
   addressTransfersHead,
   EmptyQuery,
-  NFTTransferHead,
+  nftTransferHead,
   nodes,
   teleportsHeadIn,
   teleportsHeadOut,
@@ -92,7 +92,7 @@ export default function Address({
   addressNftTransfers,
 }) {
   const [showModal, setShowModal] = useState(false);
-  const [previewNFTInstance, setPreviewNFTInstance] = useState(null);
+  const [previewNftInstance, setPreviewNftInstance] = useState(null);
   const ref = useRef();
 
   useOnClickOutside(ref, (event) => {
@@ -409,7 +409,7 @@ export default function Address({
       name: "NFT",
       page: addressNftInstances?.page,
       total: addressNftInstances?.total,
-      head: addressNFTInstanceHead,
+      head: addressNftInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
         const imageThumbnail =
@@ -436,7 +436,7 @@ export default function Address({
             imageThumbnail={imageThumbnail}
             key={`thumbnail${index}`}
             onClick={() => {
-              setPreviewNFTInstance(instance);
+              setPreviewNftInstance(instance);
               setShowModal(true);
             }}
             background={background}
@@ -467,7 +467,7 @@ export default function Address({
       name: "NFT Transfer",
       page: addressNftTransfers?.page,
       total: addressNftTransfers?.total,
-      head: NFTTransferHead,
+      head: nftTransferHead,
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.instance;
         const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
@@ -502,7 +502,7 @@ export default function Address({
             imageThumbnail={imageThumbnail}
             key={`thumbnail${index}`}
             onClick={() => {
-              setPreviewNFTInstance(instance);
+              setPreviewNftInstance(instance);
               setShowModal(true);
             }}
             background={background}
@@ -547,8 +547,8 @@ export default function Address({
       <div ref={ref}>
         <Preview
           open={showModal}
-          nftClass={previewNFTInstance?.class}
-          nftInstance={previewNFTInstance}
+          nftClass={previewNftInstance?.class}
+          nftInstance={previewNftInstance}
           closeFn={() => {
             setShowModal(false);
           }}

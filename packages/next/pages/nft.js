@@ -23,7 +23,7 @@ const TextDarkMinor = styled.span`
 
 export default function NftClasses({ node, nfts, filter }) {
   const [showModal, setShowModal] = useState(false);
-  const [previewNFTClass, setPreviewNFTCLass] = useState(null);
+  const [previewNftClass, setPreviewNftClass] = useState(null);
   const ref = useRef();
 
   useOnClickOutside(ref, (event) => {
@@ -39,7 +39,7 @@ export default function NftClasses({ node, nfts, filter }) {
       <div ref={ref}>
         <Preview
           open={showModal}
-          nftClass={previewNFTClass}
+          nftClass={previewNftClass}
           closeFn={() => {
             setShowModal(false);
           }}
@@ -59,7 +59,7 @@ export default function NftClasses({ node, nfts, filter }) {
               imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
               background={nftClass?.nftMetadata?.imageMetadata?.background}
               onClick={() => {
-                setPreviewNFTCLass(nftClass);
+                setPreviewNftClass(nftClass);
                 setShowModal(true);
               }}
             />,

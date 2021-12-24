@@ -239,7 +239,11 @@ async function findAssetByPrefix({ icasePrefixPattern }) {
   return await assetCol
     .find(
       {
-        $or: [{ name: icasePrefixPattern }, { symbol: icasePrefixPattern }],
+        destroyedAt: null,
+        $or: [
+          { name: icasePrefixPattern },
+          { symbol: icasePrefixPattern },
+        ],
       },
       { projection: { timeline: 0 } }
     )
@@ -251,7 +255,13 @@ async function findAssetByPrefix({ icasePrefixPattern }) {
 async function findAssetById({ prefix }) {
   const assetCol = await getAssetCollection();
   return await assetCol
-    .find({ assetId: Number(prefix) }, { projection: { timeline: 0 } })
+    .find(
+      {
+        destroyedAt: null,
+        assetId: Number(prefix),
+      },
+      { projection: { timeline: 0 } }
+    )
     .toArray();
 }
 
@@ -379,6 +389,28 @@ async function findNftInstancesByPrefix({ icasePrefixPattern }) {
               },
             },
             { $project: { timeline: 0 } },
+            {
+              $lookup: {
+                from: "nftClass",
+                let: { classId: "$classId", classHeight: "$classHeight" },
+                pipeline: [
+                  {
+                    $match: {
+                      isDestroyed: false,
+                      $expr: {
+                        $and: [
+                          { $eq: ["$classId", "$$classId"] },
+                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
+                        ]
+                      }
+                    }
+                  },
+                  { $project: { timeline: 0 } },
+                ],
+                as: "nftClass",
+              }
+            },
+            { $unwind: "$nftClass" },
           ],
           as: "nftInstance",
         },

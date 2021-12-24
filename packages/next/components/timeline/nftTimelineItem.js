@@ -208,7 +208,7 @@ function formatBalance(balance, asset) {
     <BreakText>
       {bigNumber2Locale(balanceStr)}
       {Number.isInteger(asset.decimals) && asset.symbol ? (
-        <span style={{marginLeft: 8}}>
+        <span style={{ marginLeft: 8 }}>
           ({bigNumber2Locale(fromAssetUnit(balance, asset.decimals))}{" "}
           {asset.symbol})
         </span>
@@ -219,7 +219,7 @@ function formatBalance(balance, asset) {
   );
 }
 
-export default function NftTimelineItem({data}) {
+export default function NftTimelineItem({ data }) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.name] || timelineItem.name;
 
@@ -230,23 +230,79 @@ export default function NftTimelineItem({data}) {
       case "Created": {
         return {
           ...timelineItem.args,
-          creator: <CopyText> <Address address={timelineItem.args.creator} to={`/account/${timelineItem.args.creator}`} /> </CopyText>,
-          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`}/> </CopyText>,
+          creator: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.creator}
+                to={`/account/${timelineItem.args.creator}`}
+              />{" "}
+            </CopyText>
+          ),
+          owner: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.owner}
+                to={`/account/${timelineItem.args.owner}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "ForceCreated": {
         return {
           ...timelineItem.args,
-          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>
+          owner: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.owner}
+                to={`/account/${timelineItem.args.owner}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "AssetStatusChanged": {
         return {
           ...timelineItem.args,
-          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>,
-          issuer: <CopyText> <Address address={timelineItem.args.issuer} to={`/account/${timelineItem.args.issuer}`} /> </CopyText>,
-          admin: <CopyText> <Address address={timelineItem.args.admin} to={`/account/${timelineItem.args.admin}`} /> </CopyText>,
-          freezer: <CopyText> <Address address={timelineItem.args.freezer} to={`/account/${timelineItem.args.freezer}`} /> </CopyText>,
+          owner: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.owner}
+                to={`/account/${timelineItem.args.owner}`}
+              />{" "}
+            </CopyText>
+          ),
+          issuer: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.issuer}
+                to={`/account/${timelineItem.args.issuer}`}
+              />{" "}
+            </CopyText>
+          ),
+          admin: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.admin}
+                to={`/account/${timelineItem.args.admin}`}
+              />{" "}
+            </CopyText>
+          ),
+          freezer: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.freezer}
+                to={`/account/${timelineItem.args.freezer}`}
+              />{" "}
+            </CopyText>
+          ),
           freeHolding: timelineItem?.args?.freeHolding?.toString(),
           isFrozen: timelineItem?.args?.isFrozen?.toString(),
         };
@@ -254,36 +310,108 @@ export default function NftTimelineItem({data}) {
       case "TeamChanged": {
         return {
           ...timelineItem.args,
-          issuer: <CopyText> <Address address={timelineItem.args.issuer} to={`/account/${timelineItem.args.issuer}`} /> </CopyText>,
-          admin: <CopyText> <Address address={timelineItem.args.admin} to={`/account/${timelineItem.args.admin}`} /> </CopyText>,
-          freezer: <CopyText> <Address address={timelineItem.args.freezer} to={`/account/${timelineItem.args.freezer}`} /> </CopyText>,
+          issuer: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.issuer}
+                to={`/account/${timelineItem.args.issuer}`}
+              />{" "}
+            </CopyText>
+          ),
+          admin: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.admin}
+                to={`/account/${timelineItem.args.admin}`}
+              />{" "}
+            </CopyText>
+          ),
+          freezer: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.freezer}
+                to={`/account/${timelineItem.args.freezer}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "OwnerChanged": {
         return {
           ...timelineItem.args,
-          newOwner: <CopyText> <Address address={timelineItem.args.newOwner} to={`/account/${timelineItem.args.newOwner}`} /> </CopyText>,
+          newOwner: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.newOwner}
+                to={`/account/${timelineItem.args.newOwner}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "Issued": {
         return {
           ...timelineItem.args,
-          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>,
+          owner: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.owner}
+                to={`/account/${timelineItem.args.owner}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "Transferred": {
         return {
           ...timelineItem.args,
-          from: <CopyText> <Address address={timelineItem.args.from} to={`/account/${timelineItem.args.from}`} /> </CopyText>,
-          to: <CopyText> <Address address={timelineItem.args.to} to={`/account/${timelineItem.args.to}`} /> </CopyText>,
+          from: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.from}
+                to={`/account/${timelineItem.args.from}`}
+              />{" "}
+            </CopyText>
+          ),
+          to: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.to}
+                to={`/account/${timelineItem.args.to}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "ApprovedTransfer":
       case "ApprovalCancelled": {
-          return {
+        return {
           ...timelineItem.args,
-          owner: <CopyText> <Address address={timelineItem.args.owner} to={`/account/${timelineItem.args.owner}`} /> </CopyText>,
-          delegate: <CopyText> <Address address={timelineItem.args.delegate} to={`/account/${timelineItem.args.delegate}`} /> </CopyText>,
+          owner: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.owner}
+                to={`/account/${timelineItem.args.owner}`}
+              />{" "}
+            </CopyText>
+          ),
+          delegate: (
+            <CopyText>
+              {" "}
+              <Address
+                address={timelineItem.args.delegate}
+                to={`/account/${timelineItem.args.delegate}`}
+              />{" "}
+            </CopyText>
+          ),
         };
       }
       case "ClassMetadataSet":
@@ -307,22 +435,22 @@ export default function NftTimelineItem({data}) {
   return (
     <Wrapper>
       <ItemLine>
-        <TopLine className="top-line"/>
-        <Icon/>
-        <BotLine className="bot-line"/>
+        <TopLine className="top-line" />
+        <Icon />
+        <BotLine className="bot-line" />
       </ItemLine>
       <ItemWrapper>
         <TimelineHeader>
           <BoldText>{getTitle(data)}</BoldText>
-          <Time ts={data.indexer.blockTime}/>
-          <BlockHeight height={data.indexer.blockHeight}/>
+          <Time ts={data.indexer.blockTime} />
+          <BlockHeight height={data.indexer.blockHeight} />
           <Links>
             <InLink
               to={`/extrinsic/${data.indexer.blockHeight}-${data.indexer.extrinsicIndex}`}
             >
               <LinkItem>
                 <span>{"Extrinsic"}</span>
-                <icons.LinkIcon/>
+                <icons.LinkIcon />
               </LinkItem>
             </InLink>
             <InLink
@@ -330,7 +458,7 @@ export default function NftTimelineItem({data}) {
             >
               <LinkItem>
                 <span>{"Event"}</span>
-                <icons.LinkIcon/>
+                <icons.LinkIcon />
               </LinkItem>
             </InLink>
           </Links>

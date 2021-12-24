@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import NFTUnrecognizedThumbnailSvg from "public/imgs/nft-unrecognized-thumbnail.svg";
+import NftUnrecognizedThumbnailSvg from "public/imgs/nft-unrecognized-thumbnail.svg";
 
 const Wrapper = styled.div`
   ${(props) =>
@@ -37,7 +37,7 @@ export default function Thumbnail({
     </ThumbnailContainer>
   ) : (
     <Wrapper onClick={onClick ?? (()=>{})}>
-      <NFTUnrecognizedThumbnailSvg
+      <NftUnrecognizedThumbnailSvg
         width={size}
         height={size}
         viewBox="0 0 32 32"

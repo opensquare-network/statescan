@@ -219,7 +219,7 @@ function formatBalance(balance, asset) {
   );
 }
 
-export default function NFTTimelineItem({data}) {
+export default function NftTimelineItem({data}) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.name] || timelineItem.name;
 

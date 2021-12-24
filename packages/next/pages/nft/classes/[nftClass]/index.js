@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
@@ -24,12 +25,11 @@ import IpfsLink from "components/ipfsLink";
 import SquareBoxComponent from "components/squareBox";
 import Thumbnail from "components/nft/thumbnail";
 import NftName from "components/nft/name";
-import NFTImage from "../../../../components/nft/NFTImage";
-import NoData from "../../../../components/table/noData";
-import Preview from "../../../../components/nft/preview";
-import { useOnClickOutside } from "../../../../utils/hooks";
-import { useRef, useState } from "react";
-import { shadow_100 } from "../../../../styles/shadows";
+import NftImage from "components/nft/nftImage";
+import NoData from "components/table/noData";
+import Preview from "components/nft/preview";
+import { useOnClickOutside } from "utils/hooks";
+import { shadow_100 } from "styles/shadows";
 import NftLink from "components/nft/nftLink";
 import PageNotFound from "components/pageNotFound";
 
@@ -282,7 +282,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           <Between>
             <div>
               <SquareBoxComponent background={nftClass?.nftMetadata?.background}>
-                <NFTImage nftMetadata={nftClass?.nftMetadata} />
+                <NftImage nftMetadata={nftClass?.nftMetadata} />
               </SquareBoxComponent>
             </div>
             <DetailTable

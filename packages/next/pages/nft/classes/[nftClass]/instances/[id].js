@@ -14,10 +14,10 @@ import styled, { css } from "styled-components";
 import { card_border } from "styles/textStyles";
 import NftInfo from "components/nftInfo";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import IpfsLink from "../../../../../components/ipfsLink";
-import NFTImage from "../../../../../components/nft/NFTImage";
-import SquareBoxComponent from "../../../../../components/squareBox";
-import NoData from "../../../../../components/table/noData";
+import IpfsLink from "components/ipfsLink";
+import NftImage from "components/nft/nftImage";
+import SquareBoxComponent from "components/squareBox";
+import NoData from "components/table/noData";
 import Thumbnail from "components/nft/thumbnail";
 import AddressEllipsis from "components/addressEllipsis";
 import NftName from "components/nft/name";
@@ -247,7 +247,7 @@ export default function NftClass({ node, nftClass, nftInstance, nftTransfers }) 
           <Between>
             <div>
               <SquareBoxComponent background={nftMetadata?.background}>
-                <NFTImage nftMetadata={nftMetadata} />
+                <NftImage nftMetadata={nftMetadata} />
               </SquareBoxComponent>
             </div>
             <DetailTable

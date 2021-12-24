@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import NFTTimelineItem from "./NFTTimelineItem";
+import NftTimelineItem from "./nftTimelineItem";
 
 import { card_border } from "styles/textStyles";
 
@@ -14,7 +14,7 @@ export default function Timeline({ data, node, asset }) {
     <Wrapper>
       {(data || []).map((item, index) => {
         return (
-          <NFTTimelineItem key={index} data={item} node={node} asset={asset} />
+          <NftTimelineItem key={index} data={item} node={node} asset={asset} />
         );
       })}
     </Wrapper>

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Image from "next/image";
-import NFTUnrecognizedSvg from "../../public/imgs/nft-unrecognized.svg";
+import NftUnrecognizedSvg from "../../public/imgs/nft-unrecognized.svg";
 
 const ImgWrapper = styled.div`
   display: flex;
@@ -15,7 +15,7 @@ const ImgWrapper = styled.div`
 const transparentThumbnail =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
-export default function NFTImage({ nftMetadata }) {
+export default function NftImage({ nftMetadata }) {
   let imageCid;
   if (nftMetadata?.image?.startsWith("ipfs://")) {
     imageCid = nftMetadata?.image.split("/").pop();
@@ -24,7 +24,7 @@ export default function NFTImage({ nftMetadata }) {
   if (!imageCid) {
     return (
       <ImgWrapper background={nftMetadata?.imageMetadata?.background}>
-        <NFTUnrecognizedSvg
+        <NftUnrecognizedSvg
           width={"100%"}
           height={"100%"}
           viewBox="0 0 480 480"

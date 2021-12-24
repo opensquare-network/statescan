@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import NFTTimelineItem from "./NFTTimelineItem";
+import NftTimelineItem from "./nftTimelineItem";
 
 import { card_border } from "styles/textStyles";
 
@@ -10,12 +10,12 @@ const Wrapper = styled.div`
   text-transform: capitalize;
 `;
 
-export default function NFTTimeline({ data, node, asset }) {
+export default function NftTimeline({ data, node, asset }) {
   return (
     <Wrapper>
       {(data || []).map((item, index) => {
         return (
-          <NFTTimelineItem key={index} data={item} node={node} asset={asset} />
+          <NftTimelineItem key={index} data={item} node={node} asset={asset} />
         );
       })}
     </Wrapper>

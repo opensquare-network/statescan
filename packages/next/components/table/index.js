@@ -10,8 +10,9 @@ import { timeTypeSelector, setTimeType } from "store/reducers/preferenceSlice";
 import { p_18_bold, text_dark_major } from "../../styles/textStyles";
 import JsonDisplay from "components/jsonDisplay";
 import { card_border } from "styles/textStyles";
-import { useTheme } from "utils/hooks";
+import { useTheme, useNode } from "utils/hooks";
 import TimeCollapseBody from "./timeCollapseBody";
+import { nodes } from "utils/constants";
 
 const Wrapper = styled.div``;
 
@@ -255,6 +256,7 @@ export default function Table({
   const dispatch = useDispatch();
   const [isCollapse, setIsCollapse] = useState();
   const color = useTheme().color;
+  const node = useNode();
 
   // Hanlding expand json data by default
   const initExpand = useMemo(() => [], []);
@@ -353,13 +355,20 @@ export default function Table({
                       </SwitchWrapper>
                     )}
                     {!item.type && item.name}
-                    {item.icon && (
-                      <HeadIcon
-                        src={`/imgs/icons/${item.icon}`}
-                        width={18}
-                        alt=""
-                      />
-                    )}
+                    {item.icon &&
+                      (item.icon === "icon" ? (
+                        <HeadIcon
+                          src={nodes.find((item) => item.value === node).icon}
+                          width={18}
+                          alt=""
+                        />
+                      ) : (
+                        <HeadIcon
+                          src={`/imgs/icons/${item.icon}`}
+                          width={18}
+                          alt=""
+                        />
+                      ))}
                   </th>
                 ))}
             </tr>

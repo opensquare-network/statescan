@@ -13,11 +13,11 @@ const {
   },
 } = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
-const asyncLocalStorage = require("./asynclocalstorage");
 const { fetchBlocks } = require("@statescan/common");
-const { initDb, withSession } = require("./mongo");
+const { initDb } = require("./mongo");
 const { scanNormalizedBlock } = require("./scan");
 const { updateUnFinalized } = require("./unFinalized");
+const { deleteFromHeight } = require("./delete");
 
 async function main() {
   await initDb();
@@ -25,6 +25,9 @@ async function main() {
   await updateSpecs();
 
   let scanFinalizedHeight = await getNextScanHeight();
+
+  await deleteFromHeight(scanFinalizedHeight);
+
   while (true) {
     await sleep(0);
     // chainHeight is the current on-chain last block height
@@ -51,18 +54,11 @@ async function main() {
     }
 
     for (const block of blocks) {
-      await withSession(async (session) => {
-        session.startTransaction();
         try {
-          await asyncLocalStorage.run(session, async () => {
-            await scanBlock(block, session);
-            await updateScanHeight(block.height);
-          });
-
-          await session.commitTransaction();
+          await scanBlock(block);
+          await updateScanHeight(block.height);
         } catch (e) {
           logger.error(`Error with block scan ${block.height}`, e);
-          await session.abortTransaction();
           await sleep(3000);
 
           if (!isApiConnected()) {
@@ -76,14 +72,13 @@ async function main() {
         if (block.height % 100000 === 0) {
           process.exit(0);
         }
-      });
     }
 
     logger.info(`block ${scanFinalizedHeight - 1} done`);
   }
 }
 
-async function scanBlock(blockInfo, session) {
+async function scanBlock(blockInfo) {
   const blockIndexer = getBlockIndexer(blockInfo.block);
 
   await scanNormalizedBlock(
@@ -91,7 +86,6 @@ async function scanBlock(blockInfo, session) {
     blockInfo.events,
     blockInfo.author,
     blockIndexer,
-    session
   );
 }
 

@@ -1,11 +1,9 @@
-const asyncLocalStorage = require("../asynclocalstorage");
 const { getRawAddressCollection } = require("../mongo");
 const {
   logger,
-  chainHeight: { getLatestFinalizedHeight },
 } = require("@statescan/common");
 
-async function saveToRawAddrs(addrs = [], session) {
+async function saveToRawAddrs(addrs = [], indexer) {
   if (addrs.length <= 0) {
     return;
   }
@@ -14,12 +12,19 @@ async function saveToRawAddrs(addrs = [], session) {
   const bulk = col.initializeUnorderedBulkOp();
   for (const addr of addrs) {
     bulk
-      .find({ address: addr })
+      .find({
+        address: addr
+      })
       .upsert()
-      .updateOne({ $set: { updated: false } });
+      .updateOne({
+        $setOnInsert: {
+          indexer
+        },
+        $set: { updated: false },
+      });
   }
 
-  await bulk.execute({ session });
+  await bulk.execute();
 }
 
 async function handleMultiAddress(blockIndexer, addrs = []) {
@@ -27,19 +32,10 @@ async function handleMultiAddress(blockIndexer, addrs = []) {
     return;
   }
 
-  const session = asyncLocalStorage.getStore();
-
-  const finalizedHeight = getLatestFinalizedHeight();
-  if (
-    !process.env.UPDATE_ADDR_IN_TIME &&
-    finalizedHeight - blockIndexer.blockHeight > 100
-  ) {
-    await saveToRawAddrs(addrs, session);
-    logger.info(
-      `${addrs.length} addresses updated at height ${blockIndexer.blockHeight}`
-    );
-    return;
-  }
+  await saveToRawAddrs(addrs, blockIndexer);
+  logger.info(
+    `${addrs.length} addresses updated at height ${blockIndexer.blockHeight}`
+  );
 }
 
 module.exports = {

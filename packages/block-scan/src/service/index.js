@@ -4,19 +4,19 @@ const {
   getEventCollection,
 } = require("../mongo");
 
-async function saveData(indexer, block, extrinsics, events, session) {
+async function saveData(indexer, block, extrinsics, events) {
   const blockCol = await getBlockCollection();
 
-  const result = await blockCol.insertOne(block, { session });
+  const result = await blockCol.insertOne(block);
   if (result.result && !result.result.ok) {
     // TODO: Handle insertion failed
   }
 
-  await saveExtrinsics(extrinsics, session);
-  await saveEvents(events, session);
+  await saveExtrinsics(extrinsics);
+  await saveEvents(events);
 }
 
-async function saveExtrinsics(extrinsics = [], session) {
+async function saveExtrinsics(extrinsics = []) {
   if (extrinsics.length <= 0) {
     return;
   }
@@ -27,13 +27,13 @@ async function saveExtrinsics(extrinsics = [], session) {
     bulk.insert(extrinsic);
   }
 
-  const result = await bulk.execute({ session });
+  const result = await bulk.execute();
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }
 }
 
-async function saveEvents(events = [], session) {
+async function saveEvents(events = []) {
   if (events.length <= 0) {
     return;
   }
@@ -44,7 +44,7 @@ async function saveEvents(events = [], session) {
     bulk.insert(event);
   }
 
-  const result = await bulk.execute({ session });
+  const result = await bulk.execute();
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }

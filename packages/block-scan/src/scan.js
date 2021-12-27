@@ -13,7 +13,6 @@ async function scanNormalizedBlock(
   blockEvents,
   author,
   blockIndexer,
-  session
 ) {
   const extractedBlock = extractBlock(block, blockEvents, author);
   const extractedExtrinsics = normalizeExtrinsics(
@@ -40,7 +39,6 @@ async function scanNormalizedBlock(
     extractedBlock,
     extractedExtrinsics,
     extractedEvents,
-    session
   );
 
   removeBlockApi(blockIndexer.blockHash);

@@ -4,12 +4,6 @@
   "main": "index.js",
   "license": "Apache-2.0",
   "scripts": {
-    "westmint": "pm2 start ecosystem.config.js --only statescan-block-scan-westmint --env production",
-    "statemine": "pm2 start ecosystem.config.js --only statescan-block-scan-statemine --env production",
-    "statemint": "pm2 start ecosystem.config.js --only statescan-block-scan-statemint --env production",
-    "westmintStaging": "pm2 start ecosystem.config.js --only statescan-block-scan-westmint-staging --env production",
-    "statemineStaging": "pm2 start ecosystem.config.js --only statescan-block-scan-statemine-staging --env production",
-    "statemintStaging": "pm2 start ecosystem.config.js --only statescan-block-scan-statemint-staging --env production",
     "scan": "node src/index.js",
     "test": "jest src"
   },

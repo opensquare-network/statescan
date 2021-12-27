@@ -3,7 +3,7 @@ const { normalizeEvents } = require("../utils/normalize/event");
 const { getUnFinalizedEventCollection } = require("../mongo/index");
 
 function getEventDataFromBlockData(data) {
-  const block = data.block.block;
+  const block = data.block;
   const events = data.events;
 
   const blockIndexer = getBlockIndexer(block);

@@ -3,7 +3,7 @@ const {
   chainHeight: { getLatestFinalizedHeight, getLatestUnFinalizedHeight },
 } = require("@statescan/common");
 const { getUnFinalizedBlockCollection } = require("../mongo");
-const { getBlockFromNode } = require("../block/fetchBlock");
+const { fetchOneBlockFromNode } = require("@statescan/common");
 const { saveBlocksEventData } = require("./events");
 const { saveBlocksExtrinsicData } = require("./extrinsics");
 
@@ -33,7 +33,7 @@ async function updateUnFinalized() {
     return;
   }
 
-  const promises = heights.map((height) => getBlockFromNode(height));
+  const promises = heights.map((height) => fetchOneBlockFromNode(height));
   const blockDataArr = await Promise.all(promises);
 
   const normalizedBlocks = blockDataArr.map(normalizeBlock);

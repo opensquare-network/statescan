@@ -4,7 +4,7 @@ const { normalizeEvents } = require("../utils/normalize/event");
 const { normalizeExtrinsics } = require("../utils/normalize/extrinsic");
 const { getBlockIndexer, getApi } = require("@statescan/common");
 const { normalizeBlock } = require("../utils/normalize/block");
-const { getBlockFromNode } = require("../block/fetchBlock");
+const { fetchOneBlockFromNode } = require("@statescan/common");
 const { chainHeight: { updateHeight, getLatestFinalizedHeight } } = require("@statescan/common");
 const {
   getBlockCollection,
@@ -13,7 +13,7 @@ const {
 } = require("../mongo");
 
 async function fetchAndSave(height) {
-  const blockData = await getBlockFromNode(height);
+  const blockData = await fetchOneBlockFromNode(height);
   const normalizedBlock = normalizeBlock(blockData);
 
   const col = await getBlockCollection();
@@ -22,9 +22,9 @@ async function fetchAndSave(height) {
   bulk.insert(normalizedBlock);
   await bulk.execute();
 
-  const blockIndexer = getBlockIndexer(blockData.block.block);
+  const blockIndexer = getBlockIndexer(blockData.block);
   const normalizedExtrinsics = normalizeExtrinsics(
-    blockData.block.block.extrinsics,
+    blockData.block.extrinsics,
     blockData.events,
     blockIndexer
   );
@@ -39,7 +39,7 @@ async function fetchAndSave(height) {
   const normalizedEvents = normalizeEvents(
     blockData.events,
     blockIndexer,
-    blockData.block.block.extrinsics
+    blockData.block.extrinsics
   );
   const eventCol = await getEventCollection();
   const eventBulk = eventCol.initializeOrderedBulkOp();
@@ -67,7 +67,6 @@ async function main() {
   await updateHeight();
   const api = await getApi();
   const finalizedHeight = getLatestFinalizedHeight();
-  console.log(finalizedHeight);
   if (height > finalizedHeight) {
     console.error("Block height can not be greater than the finalized height");
     await api.disconnect();

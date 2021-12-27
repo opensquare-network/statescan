@@ -4,9 +4,9 @@ const { getUnFinalizedExrinsicCollection } = require("../mongo/index");
 
 async function saveBlocksExtrinsicData(blockDataArr = []) {
   const extrinsics = blockDataArr.reduce((result, { block, events }) => {
-    const blockIndexer = getBlockIndexer(block.block);
+    const blockIndexer = getBlockIndexer(block);
     const normalizedExtrinsics = normalizeExtrinsics(
-      block.block.extrinsics,
+      block.extrinsics,
       events,
       blockIndexer
     );

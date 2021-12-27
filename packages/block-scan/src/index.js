@@ -54,24 +54,24 @@ async function main() {
     }
 
     for (const block of blocks) {
-        try {
-          await scanBlock(block);
-          await updateScanHeight(block.height);
-        } catch (e) {
-          logger.error(`Error with block scan ${block.height}`, e);
-          await sleep(3000);
+      try {
+        await scanBlock(block);
+        await updateScanHeight(block.height);
+      } catch (e) {
+        logger.error(`Error with block scan ${block.height}`, e);
+        await sleep(3000);
 
-          if (!isApiConnected()) {
-            console.log(`provider disconnected, will restart`);
-            process.exit(0);
-          }
-        }
-
-        scanFinalizedHeight = block.height + 1;
-
-        if (block.height % 100000 === 0) {
+        if (!isApiConnected()) {
+          console.log(`provider disconnected, will restart`);
           process.exit(0);
         }
+      }
+
+      scanFinalizedHeight = block.height + 1;
+
+      if (block.height % 100000 === 0) {
+        process.exit(0);
+      }
     }
 
     logger.info(`block ${scanFinalizedHeight - 1} done`);

@@ -5,8 +5,10 @@ const {
   getUnFinalizedExrinsicCollection,
   getUnFinalizedBlockCollection,
   getBlockCollection,
-  getRawAddressCollection,
 } = require("../mongo");
+const {
+  getRawAddressCollection,
+} = require("../mongo/account");
 
 async function deleteUnFinalizedBlockFromHeight(height) {
   const col = await getUnFinalizedBlockCollection();

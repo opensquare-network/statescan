@@ -1,7 +1,9 @@
-const { getRawAddressCollection } = require("../mongo");
 const {
   logger,
 } = require("@statescan/common");
+const {
+  getRawAddressCollection,
+} = require("../mongo/account");
 
 async function saveToRawAddrs(addrs = [], indexer) {
   if (addrs.length <= 0) {

@@ -27,7 +27,6 @@ let statusCol = null;
 let blockCol = null;
 let eventCol = null;
 let extrinsicCol = null;
-let rawAddressCol = null;
 
 // unFinalized collections
 let unFinalizedBlockCol = null;
@@ -63,7 +62,6 @@ async function initDb() {
   blockCol = await getCollection(blockCollectionName);
   eventCol = await getCollection(eventCollectionName);
   extrinsicCol = await getCollection(extrinsicCollectionName);
-  rawAddressCol = await getCollection("rawAddress");
   unFinalizedBlockCol = await getCollection(unFinalizedCollectionName);
   unFinalizedExtrinsicCol = await getCollection(
     unFinalizedExtrinsicCollectionName
@@ -78,8 +76,6 @@ async function _createIndexes() {
     console.error("Please call initDb first");
     process.exit(1);
   }
-
-  rawAddressCol.createIndex({ updated: 1 });
 }
 
 async function tryInit(col) {
@@ -123,11 +119,6 @@ async function getEventCollection() {
   return eventCol;
 }
 
-async function getRawAddressCollection() {
-  await tryInit(rawAddressCol);
-  return rawAddressCol;
-}
-
 function withSession(fn) {
   return client.withSession(fn);
 }
@@ -138,7 +129,6 @@ module.exports = {
   getBlockCollection,
   getExtrinsicCollection,
   getEventCollection,
-  getRawAddressCollection,
   getUnFinalizedBlockCollection,
   getUnFinalizedExrinsicCollection,
   getUnFinalizedEventCollection,

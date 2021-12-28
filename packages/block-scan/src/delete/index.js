@@ -6,9 +6,6 @@ const {
   getUnFinalizedBlockCollection,
   getBlockCollection,
 } = require("../mongo");
-const {
-  getRawAddressCollection,
-} = require("../mongo/account");
 
 async function deleteUnFinalizedBlockFromHeight(height) {
   const col = await getUnFinalizedBlockCollection();
@@ -40,11 +37,6 @@ async function deleteEventsFromHeight(height) {
   await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
 }
 
-async function deleteRawAddressesFromHeight(height) {
-  const col = await getRawAddressCollection();
-  await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
-}
-
 async function deleteFromHeight(height) {
   await deleteUnFinalizedEventsFromHeight(height);
   await deleteEventsFromHeight(height);
@@ -52,7 +44,6 @@ async function deleteFromHeight(height) {
   await deleteExtrinsicsFromHeight(height);
   await deleteUnFinalizedBlockFromHeight(height);
   await deleteBlockFromHeight(height);
-  await deleteRawAddressesFromHeight(height);
 }
 
 module.exports = {

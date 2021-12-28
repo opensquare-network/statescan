@@ -228,7 +228,7 @@ export const teleportsHeadOut = [
   {
     name: "Receiver",
     type: "switcher",
-    children: ["Recerver", "Sender"],
+    children: ["Receiver", "Sender"],
     width: 160,
   },
   { name: "Direction", type: "collapse" },

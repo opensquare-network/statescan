@@ -1,19 +1,16 @@
-const { removeBlockApi } = require("@statescan/common");
+const {
+  removeBlockApi,
+  store: { getAddresses, clearAddresses },
+} = require("@statescan/common");
 const { saveData } = require("./service");
 const { handleEvents } = require("./event");
-const { getAddresses, clearAddresses } = require("./store/blockAddresses");
 const { handleMultiAddress } = require("./utils/updateOrCreateAddress");
 const { handleExtrinsics } = require("./extrinsic");
 const { normalizeEvents } = require("./utils/normalize/event");
 const { normalizeExtrinsics } = require("./utils/normalize/extrinsic");
 const { extractBlock } = require("./block");
 
-async function scanNormalizedBlock(
-  block,
-  blockEvents,
-  author,
-  blockIndexer,
-) {
+async function scanNormalizedBlock(block, blockEvents, author, blockIndexer) {
   const extractedBlock = extractBlock(block, blockEvents, author);
   const extractedExtrinsics = normalizeExtrinsics(
     block.extrinsics,
@@ -38,7 +35,7 @@ async function scanNormalizedBlock(
     blockIndexer,
     extractedBlock,
     extractedExtrinsics,
-    extractedEvents,
+    extractedEvents
   );
 
   removeBlockApi(blockIndexer.blockHash);

@@ -1,6 +1,8 @@
 const { ignoreInExtrinsicList } = require("../utils/checkSystem");
 const { extractExtrinsicEvents } = require("../utils");
-const { addAddress } = require("../store/blockAddresses");
+const {
+  store: { addAddress },
+} = require("@statescan/common");
 
 async function handleExtrinsics(extrinsics = [], allEvents = [], blockIndexer) {
   let index = 0;

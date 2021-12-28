@@ -1,5 +1,8 @@
-const { Modules, SystemEvents } = require("@statescan/common");
-const { addAddress } = require("../../store/blockAddresses");
+const {
+  Modules,
+  SystemEvents,
+  store: { addAddress },
+} = require("@statescan/common");
 
 function isSystemEvent(section) {
   return section === Modules.System;

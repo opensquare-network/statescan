@@ -144,6 +144,7 @@ async function getAddressAssets(ctx) {
           asset: "$asset._id",
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",
@@ -258,6 +259,7 @@ async function getAddressTransfers(ctx) {
         $addFields: {
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",

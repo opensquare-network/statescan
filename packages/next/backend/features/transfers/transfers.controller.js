@@ -53,6 +53,7 @@ async function getLatestTransfers(ctx) {
         $addFields: {
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",
@@ -134,6 +135,7 @@ async function getTransfers(ctx) {
         $addFields: {
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",

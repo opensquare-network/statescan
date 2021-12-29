@@ -18,8 +18,13 @@ async function handleApprovalCancelled(
     delegate
   );
 
-  await updateOrCreateApproval(blockIndexer, assetId, owner, delegate, approval);
-
+  await updateOrCreateApproval(
+    blockIndexer,
+    assetId,
+    owner,
+    delegate,
+    approval
+  );
 }
 
 module.exports = {

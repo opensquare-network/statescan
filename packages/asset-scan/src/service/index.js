@@ -2,15 +2,13 @@ const {
   getBlockNativeTransfers,
   clearNativeTransfers,
 } = require("../store/blockNativeTokenTransfers");
-const {
-  getAssetTransferCollection,
-} = require("../mongo");
+const { getAssetTransferCollection } = require("../mongo");
 
-async function saveData(indexer, session) {
-  await saveNativeTokenTransfers(indexer.blockHeight, session);
+async function saveData(indexer) {
+  await saveNativeTokenTransfers(indexer.blockHeight);
 }
 
-async function saveNativeTokenTransfers(blockHeight, session) {
+async function saveNativeTokenTransfers(blockHeight) {
   const transfers = getBlockNativeTransfers(blockHeight);
   if (transfers.length <= 0) {
     return;
@@ -22,7 +20,7 @@ async function saveNativeTokenTransfers(blockHeight, session) {
     bulk.insert(transfer);
   }
 
-  const result = await bulk.execute({ session });
+  const result = await bulk.execute();
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }

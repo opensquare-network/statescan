@@ -117,7 +117,7 @@ async function destroyAsset(blockIndexer, assetId) {
   const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
   const result = await col.updateOne(
-    { assetId },
+    { assetId, destroyedAt: null },
     {
       $set: {
         destroyedAt: blockIndexer,

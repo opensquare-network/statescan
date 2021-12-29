@@ -266,6 +266,8 @@ export default function Address({
           key={`${index}-2`}
           symbol={item.assetSymbol}
           assetId={item.assetId}
+          createdAt={item.assetCreatedAt}
+          destroyedAt={item.assetDestroyedAt}
         />,
         item.assetName,
         <div key={`${index}-3`}>

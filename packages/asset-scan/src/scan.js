@@ -1,3 +1,4 @@
+const { clearMeta } = require("./store/assetMeta");
 const { removeBlockApi } = require("@statescan/common");
 const { setLastBlockIndexer } = require("./statistic/date");
 const { saveData } = require("./service");
@@ -16,6 +17,7 @@ async function scanNormalizedBlock(
 
   setLastBlockIndexer(blockIndexer);
   removeBlockApi(blockIndexer.blockHash);
+  clearMeta(blockIndexer.blockHash);
 }
 
 module.exports = {

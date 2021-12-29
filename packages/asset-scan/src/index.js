@@ -1,6 +1,5 @@
-const { deleteFromHeight } = require("./mongo/delete");
 require("dotenv").config();
-
+const { deleteFromHeight } = require("./mongo/delete");
 const {
   logger,
   sleep,
@@ -25,22 +24,22 @@ async function main() {
   await updateHeight();
   await updateSpecs();
 
-  let scanFinalizedHeight = await getNextScanHeight();
-  await deleteFromHeight(scanFinalizedHeight);
+  let scanStartHeight = await getNextScanHeight();
+  await deleteFromHeight(scanStartHeight);
   while (true) {
     await sleep(0);
     // chainHeight is the current on-chain last block height
     const finalizedHeight = getLatestFinalizedHeight();
 
-    if (scanFinalizedHeight > finalizedHeight) {
+    if (scanStartHeight > finalizedHeight) {
       // Just wait if the to scan height greater than current chain height
       await sleep(3000);
       continue;
     }
 
-    const targetHeight = getTargetHeight(scanFinalizedHeight);
+    const targetHeight = getTargetHeight(scanStartHeight);
     await checkAndUpdateSpecs(targetHeight);
-    const heights = getHeights(scanFinalizedHeight, targetHeight);
+    const heights = getHeights(scanStartHeight, targetHeight);
 
     const blocks = await fetchBlocks(heights, true);
     if ((blocks || []).length <= 0) {
@@ -62,14 +61,14 @@ async function main() {
         }
       }
 
-      scanFinalizedHeight = block.height + 1;
+      scanStartHeight = block.height + 1;
 
       if (block.height % 100000 === 0) {
         process.exit(0);
       }
     }
 
-    logger.info(`block ${scanFinalizedHeight - 1} done`);
+    logger.info(`block ${scanStartHeight - 1} done`);
   }
 }
 

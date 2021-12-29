@@ -11,17 +11,17 @@ async function handleBalancesEvent(
 ) {
   const { section, method, data } = event;
 
-  const extrinsicHash = extrinsic.hash.toJSON();
-  const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
-
   if (!isBalancesEvent(section)) {
     return false;
   }
 
-  const eventData = data.toJSON();
-
   if ([BalancesEvents.Transfer].includes(method)) {
+    const eventData = data.toJSON();
     const [from, to, value] = eventData;
+
+    const extrinsicHash = extrinsic.hash.toJSON();
+    const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
+
     addNativeTransfer(blockIndexer.blockHeight, {
       indexer: blockIndexer,
       eventSort,

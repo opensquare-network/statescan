@@ -10,8 +10,7 @@ async function handleTransferred(
   extrinsicIndex,
   blockIndexer
 ) {
-  const { section, method, data } = event;
-  const eventData = data.toJSON();
+  const eventData = event.data.toJSON();
   const [assetId, from, to, balance] = eventData;
 
   const extrinsicHash = extrinsic.hash.toJSON();

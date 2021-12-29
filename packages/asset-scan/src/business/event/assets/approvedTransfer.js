@@ -8,8 +8,7 @@ async function handleApprovedTransfer(
   extrinsicIndex,
   blockIndexer
 ) {
-  const { section, method, data } = event;
-  const eventData = data.toJSON();
+  const eventData = event.data.toJSON();
   const [assetId, owner, delegate] = eventData;
 
   const approval = await getAssetsApprovals(

@@ -305,6 +305,8 @@ export default function Home({ node, overview: ssrOverview, price }) {
               key={`${index}-2`}
               symbol={item.symbol}
               assetId={item.assetId}
+              createdAt={item.createdAt}
+              destroyedAt={item.destroyedAt}
             />,
             <Name key={`${index}-3`} name={item.name} />,
             <AddressEllipsis

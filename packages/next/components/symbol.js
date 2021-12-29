@@ -34,7 +34,7 @@ const DestroyedIcon = styled.img`
   bottom: 0;
 `;
 
-export default function Symbol({ symbol, assetId, destroyedAt=null, createdAt = null }) {
+export default function Symbol({ symbol, assetId, destroyedAt = null, createdAt = null }) {
   const node = useNode();
   let iconSrc = getAssetInfo(node, assetId)?.icon ?? `/imgs/icons/default.svg`;
   let Icon = (

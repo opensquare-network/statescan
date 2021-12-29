@@ -1,0 +1,31 @@
+{
+  "name": "@statescan/scan",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "scripts": {
+    "scan": "node src/index.js",
+    "test": "jest src"
+  },
+  "dependencies": {
+    "@polkadot/api": "6.11.1",
+    "bignumber.js": "^9.0.1",
+    "dotenv": "^10.0.0",
+    "lodash.findlast": "^4.6.0",
+    "lodash.last": "^3.0.0",
+    "lodash.omit": "^4.5.0",
+    "log4js": "^6.3.0",
+    "moment-timezone": "^0.5.33",
+    "mongodb": "4.1.2",
+    "@statescan/common": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.10.1",
+    "jest": "^27.1.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@polkadot|@babel)/)"
+    ]
+  }
+}

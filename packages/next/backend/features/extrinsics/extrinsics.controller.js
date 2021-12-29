@@ -282,6 +282,7 @@ async function getExtrinsicTransfers(ctx) {
         $addFields: {
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",

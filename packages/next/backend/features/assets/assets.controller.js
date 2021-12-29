@@ -164,6 +164,7 @@ async function getAssetTransfers(ctx) {
         $addFields: {
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",
@@ -234,6 +235,7 @@ async function getAssetHolders(ctx) {
         $addFields: {
           assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
+          assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
           assetName: "$asset.name",
           assetDecimals: "$asset.decimals",

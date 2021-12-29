@@ -259,7 +259,7 @@ export default function Address({
           key={`${index}-1`}
           to={
             `/asset/${item.assetId}` +
-            (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
+            (item.assetDestroyedAt ? `_${item.assetCreatedAt.blockHeight}` : "")
           }
         >{`#${item.assetId}`}</InLink>,
         <Symbol
@@ -336,7 +336,7 @@ export default function Address({
                 fromAssetUnit(item.balance, item.assetDecimals)
               )} `
             : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))} `}
-          <SymbolLink assetId={item.assetId}>
+          <SymbolLink assetId={item.assetId} destroyedAt={item.assetDestroyedAt} createdAt={item.assetCreatedAt}>
             {item.assetSymbol ? item.assetSymbol : symbol}
           </SymbolLink>
         </>,

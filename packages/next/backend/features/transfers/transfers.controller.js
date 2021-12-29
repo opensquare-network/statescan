@@ -97,29 +97,6 @@ async function getTransfers(ctx) {
       { $limit: pageSize },
       {
         $lookup: {
-          from: "extrinsic",
-          localField: "extrinsicHash",
-          foreignField: "hash",
-          as: "extrinsic",
-        },
-      },
-      {
-        $addFields: {
-          extrinsic: { $arrayElemAt: ["$extrinsic", 0] },
-        },
-      },
-      {
-        $addFields: {
-          module: "$extrinsic.section",
-          method: "$extrinsic.name",
-          extrinsicIndex: "$extrinsic.indexer.index",
-        },
-      },
-      {
-        $project: { extrinsic: 0 },
-      },
-      {
-        $lookup: {
           from: "asset",
           localField: "asset",
           foreignField: "_id",

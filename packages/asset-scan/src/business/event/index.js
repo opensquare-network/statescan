@@ -9,31 +9,28 @@ async function handleEvents(events, blockIndexer, extrinsics) {
     return;
   }
 
-  for (let sort = 0; sort < events.length; sort++) {
-    const { event, phase } = events[sort];
-    let [phaseValue, extrinsicHash] = [null, null];
+  for (let eventSort = 0; eventSort < events.length; eventSort++) {
+    const { event, phase } = events[eventSort];
     if (!phase.isNull) {
-      phaseValue = phase.value.toNumber();
-      const extrinsic = extrinsics[phaseValue];
-      extrinsicHash = extrinsic.hash.toHex();
-      const extrinsicIndex = phaseValue;
+      const extrinsicIndex = phase.value.toNumber();
+      const extrinsic = extrinsics[extrinsicIndex];
 
       await handleAssetsEvent(
         event,
-        sort,
+        eventSort,
+        extrinsic,
         extrinsicIndex,
-        extrinsicHash,
         blockIndexer
       );
       await handleBalancesEvent(
         event,
-        sort,
+        eventSort,
+        extrinsic,
         extrinsicIndex,
-        extrinsicHash,
         blockIndexer
       );
     } else {
-      await handleEventWithoutExtrinsic(event, sort, blockIndexer, events);
+      await handleEventWithoutExtrinsic(event, eventSort, blockIndexer, events);
     }
   }
 }

@@ -8,13 +8,15 @@ const { getAssetsAsset } = require("../../common/assetStorage");
 async function handleBurned(
   event,
   eventSort,
+  extrinsic,
   extrinsicIndex,
-  extrinsicHash,
   blockIndexer
 ) {
   const { section, method, data } = event;
   const eventData = data.toJSON();
   const [assetId] = eventData;
+
+  const extrinsicHash = extrinsic.hash.toJSON();
 
   const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
   const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);

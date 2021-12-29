@@ -5,11 +5,14 @@ const { addNativeTransfer } = require("../../../store/blockNativeTokenTransfers"
 async function handleBalancesEvent(
   event,
   eventSort,
+  extrinsic,
   extrinsicIndex,
-  extrinsicHash,
   blockIndexer
 ) {
   const { section, method, data } = event;
+
+  const extrinsicHash = extrinsic.hash.toJSON();
+  const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
 
   if (!isBalancesEvent(section)) {
     return false;
@@ -24,6 +27,8 @@ async function handleBalancesEvent(
       eventSort,
       extrinsicIndex,
       extrinsicHash,
+      module: extrinsicSection,
+      method: extrinsicMethod,
       from,
       to,
       balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)

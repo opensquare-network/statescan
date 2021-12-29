@@ -34,10 +34,11 @@ const teleportInCollectionName = "teleportIn";
 const teleportOutCollectionName = "teleportOut";
 
 let client = null;
-let db = null;
+
 let nftDb = null;
 let xcmDb = null;
 let blockDb = null;
+let assetDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -102,21 +103,30 @@ function getBlockDbName() {
   return dbName;
 }
 
+function getAssetDbName() {
+  const dbName = process.env.MONGO_DB_ASSET_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_ASSET_NAME not set");
+  }
+
+  return dbName;
+}
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
   });
 
-  const dbName = getDbName();
-  console.log(`Use scan DB name:`, dbName);
+  const assetDbName = getAssetDbName();
+  console.log(`Use asset scan DB name:`, assetDbName);
 
-  db = client.db(dbName);
-  assetTransferCol = db.collection(assetTransferCollectionName);
-  assetCol = db.collection(assetCollectionName);
-  assetHolderCol = db.collection(assetHolderCollectionName);
-  addressCol = db.collection(addressCollectionName);
+  assetDb = client.db(assetDbName);
+  assetTransferCol = assetDb.collection(assetTransferCollectionName);
+  assetCol = assetDb.collection(assetCollectionName);
+  assetHolderCol = assetDb.collection(assetHolderCollectionName);
+  addressCol = assetDb.collection(addressCollectionName);
 
-  dailyAssetStatisticCol = db.collection(dailyAssetStatisticCollectionName);
+  dailyAssetStatisticCol = assetDb.collection(dailyAssetStatisticCollectionName);
 
   const blockDbName = getBlockDbName();
   console.log(`Use block scan DB name:`, blockDbName);
@@ -155,7 +165,7 @@ async function initDb() {
 }
 
 async function _createIndexes() {
-  if (!db) {
+  if (!assetDb) {
     console.error("Please call initDb first");
     process.exit(1);
   }

@@ -6,13 +6,16 @@ const { getAssetsAccount } = require("../../common/accountStorage");
 async function handleTransferred(
   event,
   eventSort,
+  extrinsic,
   extrinsicIndex,
-  extrinsicHash,
   blockIndexer
 ) {
   const { section, method, data } = event;
   const eventData = data.toJSON();
   const [assetId, from, to, balance] = eventData;
+
+  const extrinsicHash = extrinsic.hash.toJSON();
+  const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
 
   const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
   const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);
@@ -29,6 +32,8 @@ async function handleTransferred(
     eventSort,
     extrinsicIndex,
     extrinsicHash,
+    extrinsicSection,
+    extrinsicMethod,
     assetId,
     from,
     to,

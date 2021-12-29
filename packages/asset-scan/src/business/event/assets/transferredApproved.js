@@ -4,8 +4,8 @@ const { getAssetsApprovals } = require("../../common/approvals");
 async function handleTransferredApproved(
   event,
   eventSort,
+  extrinsic,
   extrinsicIndex,
-  extrinsicHash,
   blockIndexer
 ) {
   const { section, method, data } = event;

@@ -13,6 +13,8 @@ async function saveNewAssetTransfer(
   eventSort,
   extrinsicIndex,
   extrinsicHash,
+  extrinsicSection,
+  extrinsicMethod,
   assetId,
   from,
   to,
@@ -35,6 +37,8 @@ async function saveNewAssetTransfer(
       eventSort,
       extrinsicIndex,
       extrinsicHash,
+      module: extrinsicSection,
+      method: extrinsicMethod,
       asset: asset._id,
       from,
       to,
@@ -109,7 +113,7 @@ async function destroyAsset(blockIndexer, assetId) {
   const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
   const result = await col.updateOne(
-    { assetId },
+    { assetId, destroyedAt: null },
     {
       $set: {
         destroyedAt: blockIndexer,

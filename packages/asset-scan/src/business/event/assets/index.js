@@ -24,8 +24,8 @@ function isAssetsEvent(section) {
 async function handleAssetsEvent(
   event,
   eventSort,
+  extrinsic,
   extrinsicIndex,
-  extrinsicHash,
   blockIndexer
 ) {
   const { section, method, data } = event;

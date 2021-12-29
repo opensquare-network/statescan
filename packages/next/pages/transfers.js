@@ -53,7 +53,7 @@ export default function Transfers({ node, transfers, filter }) {
                     fromAssetUnit(item.balance, item.assetDecimals)
                   )} `
                 : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))} `}
-              <SymbolLink assetId={item.assetId}>
+              <SymbolLink assetId={item.assetId} destroyedAt={item.assetDestroyedAt} createdAt={item.assetCreatedAt}>
                 {item.assetSymbol ? item.assetSymbol : symbol}
               </SymbolLink>
             </>,

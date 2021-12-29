@@ -12,7 +12,7 @@ const Wrapper = styled.span`
   }
 `;
 
-export default function SymbolLink({ children, assetId, destroyedAt=null,createdAt=null }) {
+export default function SymbolLink({ children, assetId, destroyedAt = null, createdAt = null }) {
   const theme = useTheme();
   return assetId !== null && assetId !== undefined ? (
     <Wrapper color={theme.color}>

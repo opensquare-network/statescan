@@ -37,6 +37,7 @@ let client = null;
 let db = null;
 let nftDb = null;
 let xcmDb = null;
+let blockDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -92,6 +93,15 @@ function getXcmDbName() {
   return xcmDbName;
 }
 
+function getBlockDbName() {
+  const dbName = process.env.MONGO_DB_BLOCK_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_BLOCK_NAME not set");
+  }
+
+  return dbName;
+}
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
@@ -101,20 +111,25 @@ async function initDb() {
   console.log(`Use scan DB name:`, dbName);
 
   db = client.db(dbName);
-  statusCol = db.collection(statusCollectionName);
-  blockCol = db.collection(blockCollectionName);
-  eventCol = db.collection(eventCollectionName);
-  extrinsicCol = db.collection(extrinsicCollectionName);
   assetTransferCol = db.collection(assetTransferCollectionName);
   assetCol = db.collection(assetCollectionName);
   assetHolderCol = db.collection(assetHolderCollectionName);
   addressCol = db.collection(addressCollectionName);
 
-  unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
-  unFinalizedExtrinsicCol = db.collection(unFinalizedExtrinsicCollectionName);
-  unFinalizedEventCol = db.collection(unFinalizedEventCollectionName);
-
   dailyAssetStatisticCol = db.collection(dailyAssetStatisticCollectionName);
+
+  const blockDbName = getBlockDbName();
+  console.log(`Use block scan DB name:`, blockDbName);
+
+  blockDb = client.db(blockDbName);
+  statusCol = blockDb.collection(statusCollectionName);
+  blockCol = blockDb.collection(blockCollectionName);
+  eventCol = blockDb.collection(eventCollectionName);
+  extrinsicCol = blockDb.collection(extrinsicCollectionName);
+
+  unFinalizedBlockCol = blockDb.collection(unFinalizedCollectionName);
+  unFinalizedExtrinsicCol = blockDb.collection(unFinalizedExtrinsicCollectionName);
+  unFinalizedEventCol = blockDb.collection(unFinalizedEventCollectionName);
 
   const nftDbName = getNftDbName();
   console.log(`Use nft scan DB name:`, nftDbName);
@@ -130,6 +145,8 @@ async function initDb() {
   nftTransferCol = nftDb.collection(nftTransferCollectionName);
 
   const xcmDbName = getXcmDbName();
+  console.log(`Use xcm scan DB name:`, nftDbName);
+
   xcmDb = client.db(xcmDbName);
   teleportInCol = xcmDb.collection(teleportInCollectionName);
   teleportOutCol = xcmDb.collection(teleportOutCollectionName);

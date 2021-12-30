@@ -1,4 +1,5 @@
 const BigNumber = require("bignumber.js");
+const { Decimal128 } = require("mongodb");
 
 function extractExtrinsicEvents(events, extrinsicIndex) {
   return events.filter((event) => {
@@ -15,8 +16,13 @@ function gt(v1, v2) {
   return new BigNumber(v1).isGreaterThan(v2);
 }
 
+function toDecimal128(num) {
+  return Decimal128.fromString(new BigNumber(num).toString());
+}
+
 module.exports = {
   extractExtrinsicEvents,
   bigAdd,
   gt,
+  toDecimal128,
 };

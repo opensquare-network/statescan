@@ -2,6 +2,7 @@ const { MongoClient } = require("mongodb");
 
 const mongoUrl = process.env.MONGO_SERVER_URL || "mongodb://localhost:27017";
 
+// Asset DB
 const statusCollectionName = "status";
 const blockCollectionName = "block";
 const eventCollectionName = "event";
@@ -10,6 +11,8 @@ const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
 const assetTimelineCollectionName = "assetTimeline";
 const assetHolderCollectionName = "assetHolder";
+
+// Account DB
 const addressCollectionName = "address";
 
 // unFinalized collections
@@ -40,6 +43,7 @@ let nftDb = null;
 let xcmDb = null;
 let blockDb = null;
 let assetDb = null;
+let accountDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -105,6 +109,15 @@ function getAssetDbName() {
   return dbName;
 }
 
+function getAccountDbName() {
+  const dbName = process.env.MONGO_DB_ACCOUNT_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_ACCOUNT_NAME not set");
+  }
+
+  return dbName;
+}
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
@@ -118,9 +131,14 @@ async function initDb() {
   assetCol = assetDb.collection(assetCollectionName);
   assetTimelineCol = assetDb.collection(assetTimelineCollectionName);
   assetHolderCol = assetDb.collection(assetHolderCollectionName);
-  addressCol = assetDb.collection(addressCollectionName);
 
   dailyAssetStatisticCol = assetDb.collection(dailyAssetStatisticCollectionName);
+
+  const accountDbName = getAccountDbName();
+  console.log(`Use account DB name:`, accountDbName);
+
+  accountDb = client.db(accountDbName);
+  addressCol = accountDb.collection(addressCollectionName);
 
   const blockDbName = getBlockDbName();
   console.log(`Use block scan DB name:`, blockDbName);

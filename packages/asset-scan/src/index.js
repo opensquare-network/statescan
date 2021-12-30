@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const { deleteFromHeight } = require("./mongo/delete");
 const {
   logger,
   sleep,
@@ -13,9 +13,8 @@ const {
   },
 } = require("@statescan/common");
 const { getNextScanHeight, updateScanHeight } = require("./mongo/scanHeight");
-const asyncLocalStorage = require("./asynclocalstorage");
 const { fetchBlocks } = require("@statescan/common");
-const { initDb, withSession } = require("./mongo");
+const { initDb } = require("./mongo");
 const { scanNormalizedBlock } = require("./scan");
 const { makeAssetStatistics } = require("./statistic");
 const { getLastBlockIndexer, isNewDay } = require("./statistic/date");
@@ -25,21 +24,22 @@ async function main() {
   await updateHeight();
   await updateSpecs();
 
-  let scanFinalizedHeight = await getNextScanHeight();
+  let scanStartHeight = await getNextScanHeight();
+  await deleteFromHeight(scanStartHeight);
   while (true) {
     await sleep(0);
     // chainHeight is the current on-chain last block height
     const finalizedHeight = getLatestFinalizedHeight();
 
-    if (scanFinalizedHeight > finalizedHeight) {
+    if (scanStartHeight > finalizedHeight) {
       // Just wait if the to scan height greater than current chain height
       await sleep(3000);
       continue;
     }
 
-    const targetHeight = getTargetHeight(scanFinalizedHeight);
+    const targetHeight = getTargetHeight(scanStartHeight);
     await checkAndUpdateSpecs(targetHeight);
-    const heights = getHeights(scanFinalizedHeight, targetHeight);
+    const heights = getHeights(scanStartHeight, targetHeight);
 
     const blocks = await fetchBlocks(heights, true);
     if ((blocks || []).length <= 0) {
@@ -48,39 +48,31 @@ async function main() {
     }
 
     for (const block of blocks) {
-      await withSession(async (session) => {
-        session.startTransaction();
-        try {
-          await asyncLocalStorage.run(session, async () => {
-            await scanBlock(block, session);
-            await updateScanHeight(block.height);
-          });
+      try {
+        await scanBlock(block);
+        await updateScanHeight(block.height);
+      } catch (e) {
+        logger.error(`Error with block scan ${block.height}`, e);
+        await sleep(3000);
 
-          await session.commitTransaction();
-        } catch (e) {
-          logger.error(`Error with block scan ${block.height}`, e);
-          await session.abortTransaction();
-          await sleep(3000);
-
-          if (!isApiConnected()) {
-            console.log(`provider disconnected, will restart`);
-            process.exit(0);
-          }
-        }
-
-        scanFinalizedHeight = block.height + 1;
-
-        if (block.height % 100000 === 0) {
+        if (!isApiConnected()) {
+          console.log(`provider disconnected, will restart`);
           process.exit(0);
         }
-      });
+      }
+
+      scanStartHeight = block.height + 1;
+
+      if (block.height % 100000 === 0) {
+        process.exit(0);
+      }
     }
 
-    logger.info(`block ${scanFinalizedHeight - 1} done`);
+    logger.info(`block ${scanStartHeight - 1} done`);
   }
 }
 
-async function scanBlock(blockInfo, session) {
+async function scanBlock(blockInfo) {
   const blockIndexer = getBlockIndexer(blockInfo.block);
   if (isNewDay(blockIndexer.blockTime)) {
     await makeAssetStatistics(getLastBlockIndexer());
@@ -90,8 +82,7 @@ async function scanBlock(blockInfo, session) {
     blockInfo.block,
     blockInfo.events,
     blockInfo.author,
-    blockIndexer,
-    session
+    blockIndexer
   );
 }
 

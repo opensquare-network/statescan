@@ -6,7 +6,7 @@ const {
   getApi,
   specs: { setSpecHeights },
 } = require("@statescan/common");
-const { initDb, withSession } = require("../mongo");
+const { initDb } = require("../mongo");
 
 async function test() {
   await initDb();
@@ -21,17 +21,7 @@ async function test() {
 
   const blockIndexer = getBlockIndexer(block.block);
 
-  await withSession(async (session) => {
-    session.startTransaction();
-    await scanNormalizedBlock(
-      block.block,
-      allEvents,
-      "",
-      blockIndexer,
-      session
-    );
-    await session.commitTransaction();
-  });
+  await scanNormalizedBlock(block.block, allEvents, "", blockIndexer);
 }
 
 test();

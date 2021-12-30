@@ -127,10 +127,6 @@ async function getAssetApprovalCollection() {
   return approvalCol;
 }
 
-function withSession(fn) {
-  return client.withSession(fn);
-}
-
 module.exports = {
   initDb,
   getStatusCollection,
@@ -141,5 +137,4 @@ module.exports = {
   getRawAddressCollection,
   getAssetApprovalCollection,
   getDailyAssetStatisticCollection,
-  withSession,
 };

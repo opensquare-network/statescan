@@ -5,7 +5,6 @@ const {
   getAssetHolderCollection,
   getAssetApprovalCollection,
 } = require("..");
-const asyncLocalStorage = require("../../asynclocalstorage");
 const { toDecimal128 } = require("../../utils");
 
 async function saveNewAssetTransfer(
@@ -20,37 +19,29 @@ async function saveNewAssetTransfer(
   to,
   balance
 ) {
-  const session = asyncLocalStorage.getStore();
   const assetCol = await getAssetCollection();
-  const asset = await assetCol.findOne(
-    { assetId, destroyedAt: null },
-    { session }
-  );
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
   if (!asset) {
     return;
   }
 
   const col = await getAssetTransferCollection();
-  const result = await col.insertOne(
-    {
-      indexer: blockIndexer,
-      eventSort,
-      extrinsicIndex,
-      extrinsicHash,
-      module: extrinsicSection,
-      method: extrinsicMethod,
-      asset: asset._id,
-      from,
-      to,
-      balance,
-      listIgnore: false,
-    },
-    { session }
-  );
+  const result = await col.insertOne({
+    indexer: blockIndexer,
+    eventSort,
+    extrinsicIndex,
+    extrinsicHash,
+    module: extrinsicSection,
+    method: extrinsicMethod,
+    asset: asset._id,
+    from,
+    to,
+    balance,
+    listIgnore: false,
+  });
 }
 
 async function saveAsset(blockIndexer, assetId, asset, metadata) {
-  const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
   const result = await col.updateOne(
     { assetId, destroyedAt: null },
@@ -65,7 +56,7 @@ async function saveAsset(blockIndexer, assetId, asset, metadata) {
         name: hexToString(metadata.name),
       },
     },
-    { upsert: true, session }
+    { upsert: true }
   );
 }
 
@@ -79,9 +70,8 @@ async function saveAssetTimeline(
   extrinsicIndex,
   extrinsicHash,
   asset,
-  metadata,
+  metadata
 ) {
-  const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
   const result = await col.updateOne(
     { assetId, destroyedAt: null },
@@ -104,13 +94,11 @@ async function saveAssetTimeline(
           },
         },
       },
-    },
-    { session }
+    }
   );
 }
 
 async function destroyAsset(blockIndexer, assetId) {
-  const session = asyncLocalStorage.getStore();
   const col = await getAssetCollection();
   const result = await col.updateOne(
     { assetId, destroyedAt: null },
@@ -118,18 +106,18 @@ async function destroyAsset(blockIndexer, assetId) {
       $set: {
         destroyedAt: blockIndexer,
       },
-    },
-    { session }
+    }
   );
 }
 
-async function updateOrCreateAssetHolder(blockIndexer, assetId, address, account) {
-  const session = asyncLocalStorage.getStore();
+async function updateOrCreateAssetHolder(
+  blockIndexer,
+  assetId,
+  address,
+  account
+) {
   const assetCol = await getAssetCollection();
-  const asset = await assetCol.findOne(
-    { assetId, destroyedAt: null },
-    { session }
-  );
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
   if (!asset) {
     return;
   }
@@ -148,17 +136,19 @@ async function updateOrCreateAssetHolder(blockIndexer, assetId, address, account
         lastUpdatedAt: blockIndexer,
       },
     },
-    { upsert: true, session }
+    { upsert: true }
   );
 }
 
-async function updateOrCreateApproval(blockIndexer, assetId, owner, delegate, approval) {
-  const session = asyncLocalStorage.getStore();
+async function updateOrCreateApproval(
+  blockIndexer,
+  assetId,
+  owner,
+  delegate,
+  approval
+) {
   const assetCol = await getAssetCollection();
-  const asset = await assetCol.findOne(
-    { assetId, destroyedAt: null },
-    { session }
-  );
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
   if (!asset) {
     return;
   }
@@ -166,14 +156,11 @@ async function updateOrCreateApproval(blockIndexer, assetId, owner, delegate, ap
   const col = await getAssetApprovalCollection();
 
   if (!approval) {
-    await col.deleteOne(
-      {
-        asset: asset._id,
-        owner,
-        delegate,
-      },
-      { session }
-    );
+    await col.deleteOne({
+      asset: asset._id,
+      owner,
+      delegate,
+    });
   } else {
     await col.updateOne(
       {
@@ -187,7 +174,7 @@ async function updateOrCreateApproval(blockIndexer, assetId, owner, delegate, ap
           lastUpdatedAt: blockIndexer,
         },
       },
-      { upsert: true, session }
+      { upsert: true }
     );
   }
 }

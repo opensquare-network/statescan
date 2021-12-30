@@ -12,11 +12,17 @@ const Wrapper = styled.div`
   > :first-child {
     margin-right: 8px;
   }
+  :hover {
+    svg {
+      display: block;
+    }
+  }
 `;
 
 const StyledIcon = styled(Icon)`
   flex-shrink: 0;
   cursor: pointer;
+  display: none;
 `;
 
 export default function CopyText({ children, text }) {
@@ -32,7 +38,7 @@ export default function CopyText({ children, text }) {
   return (
     <Wrapper>
       {children}
-      <StyledIcon onClick={onCopy} />
+      <StyledIcon onClick={onCopy}></StyledIcon>
     </Wrapper>
   );
 }

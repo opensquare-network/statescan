@@ -1,0 +1,17 @@
+{
+  "name": "@statescan/account-sync",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@polkadot/api": "6.11.1",
+    "dotenv": "^10.0.0",
+    "mongodb": "4.1.2",
+    "@statescan/common": "1.0.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(@polkadot|@babel)/)"
+    ]
+  }
+}

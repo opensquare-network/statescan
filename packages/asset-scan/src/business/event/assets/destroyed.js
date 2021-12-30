@@ -5,36 +5,27 @@ const {
 const { getAssetsMetadata } = require("../../common/metadata");
 const { getAssetsAsset } = require("../../common/assetStorage");
 
-async function handleDestroyed(
-  event,
-  eventSort,
-  extrinsic,
-  extrinsicIndex,
-  blockIndexer
-) {
+async function handleDestroyed(event, indexer, extrinsic) {
   const { section, method, data } = event;
   const eventData = data.toJSON();
   const [assetId] = eventData;
 
   const extrinsicHash = extrinsic.hash.toJSON();
 
-  const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
-  const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);
+  const asset = await getAssetsAsset(indexer.blockHash, assetId);
+  const metadata = await getAssetsMetadata(indexer.blockHash, assetId);
 
   await saveAssetTimeline(
-    blockIndexer,
+    indexer,
     assetId,
     section,
     method,
     eventData,
-    eventSort,
-    extrinsicIndex,
     extrinsicHash,
     asset,
     metadata
   );
-  await destroyAsset(blockIndexer, assetId);
-
+  await destroyAsset(indexer, assetId);
 }
 
 module.exports = {

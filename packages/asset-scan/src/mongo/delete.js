@@ -1,4 +1,8 @@
-const { getAssetTransferCollection, getAssetCollection } = require("./index");
+const {
+  getAssetTransferCollection,
+  getAssetCollection,
+  getAssetTimelineCollection,
+} = require("./index");
 
 async function deleteFromHeight(height) {
   let col = await getAssetTransferCollection();
@@ -6,6 +10,9 @@ async function deleteFromHeight(height) {
 
   col = await getAssetCollection();
   await col.deleteMany({ "createdAt.blockHeight": { $gte: height } });
+
+  col = await getAssetTimelineCollection();
+  await col.deleteMany({ "indexer.blockHeight": { $gte: height } });
 }
 
 module.exports = {

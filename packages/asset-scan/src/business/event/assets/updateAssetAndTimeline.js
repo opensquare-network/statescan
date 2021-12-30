@@ -5,42 +5,29 @@ const {
 const { getAssetsMetadata } = require("../../common/metadata");
 const { getAssetsAsset } = require("../../common/assetStorage");
 
-async function handleForceCreated(
-  event,
-  eventSort,
-  extrinsic,
-  extrinsicIndex,
-  blockIndexer
-) {
+async function updateAssetAndTimeline(event, indexer, extrinsic) {
   const { section, method, data } = event;
   const eventData = data.toJSON();
   const [assetId] = eventData;
 
   const extrinsicHash = extrinsic.hash.toJSON();
 
-  const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
-  const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);
+  const asset = await getAssetsAsset(indexer.blockHash, assetId);
+  const metadata = await getAssetsMetadata(indexer.blockHash, assetId);
 
-  await saveAsset(
-    blockIndexer,
-    assetId,
-    asset,
-    metadata
-  );
+  await saveAsset(indexer, assetId, asset, metadata);
   await saveAssetTimeline(
-    blockIndexer,
+    indexer,
     assetId,
     section,
     method,
     eventData,
-    eventSort,
-    extrinsicIndex,
     extrinsicHash,
     asset,
-    metadata,
+    metadata
   );
 }
 
 module.exports = {
-  handleForceCreated,
+  updateAssetAndTimeline,
 };

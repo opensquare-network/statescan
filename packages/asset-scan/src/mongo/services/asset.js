@@ -9,13 +9,19 @@ const {
 } = require("..");
 const { storeAsset, getAssets, clearAssets } = require("./store/asset");
 const { toDecimal128 } = require("../../utils");
-const { addAssetTransfer, getAssetTransfers, clearAssetTransfers } = require("./store/assetTransfer");
-const { storeAssetHolder, getAssetHolders, clearAssetHolders } = require("./store/assetHolder");
+const {
+  addAssetTransfer,
+  getAssetTransfers,
+  clearAssetTransfers,
+} = require("./store/assetTransfer");
+const {
+  storeAssetHolder,
+  getAssetHolders,
+  clearAssetHolders,
+} = require("./store/assetHolder");
 
 async function saveNewAssetTransfer(
-  blockIndexer,
-  eventSort,
-  extrinsicIndex,
+  indexer,
   extrinsicHash,
   extrinsicSection,
   extrinsicMethod,
@@ -30,10 +36,8 @@ async function saveNewAssetTransfer(
     return;
   }
 
-  addAssetTransfer(blockIndexer.blockHash, {
-    indexer: blockIndexer,
-    eventSort,
-    extrinsicIndex,
+  addAssetTransfer(indexer.blockHash, {
+    indexer,
     extrinsicHash,
     module: extrinsicSection,
     method: extrinsicMethod,
@@ -83,7 +87,7 @@ async function flushAssetsToDb(blockHash) {
       bulk
         .find({
           assetId: parseInt(assetId),
-          destroyedAt: null
+          destroyedAt: null,
         })
         .upsert()
         .update(data);
@@ -94,13 +98,11 @@ async function flushAssetsToDb(blockHash) {
 }
 
 async function saveAssetTimeline(
-  blockIndexer,
+  indexer,
   assetId,
   section,
   method,
   eventData,
-  eventSort,
-  extrinsicIndex,
   extrinsicHash,
   asset,
   metadata
@@ -112,16 +114,13 @@ async function saveAssetTimeline(
   }
 
   const col = await getAssetTimelineCollection();
-  const result = await col.insertOne({
+  await col.insertOne({
+    indexer,
     assetId: assetObj.assetId,
     assetHeight: assetObj.createdAt.blockHeight,
-    type: "event",
     section,
     method,
     eventData,
-    eventIndexer: blockIndexer,
-    eventSort,
-    extrinsicIndex,
     extrinsicHash,
     asset: {
       ...asset,
@@ -134,7 +133,7 @@ async function saveAssetTimeline(
 
 async function destroyAsset(blockIndexer, assetId) {
   const col = await getAssetCollection();
-  const result = await col.updateOne(
+  await col.updateOne(
     { assetId, destroyedAt: null },
     {
       $set: {
@@ -177,10 +176,7 @@ async function flushAssetHoldersToDb(blockHash) {
       const data = assetHolders[assetHolderId];
       const [assetId, address] = assetHolderId.split("/");
       const assetObjId = ObjectId(assetId);
-      bulk
-        .find({ asset: assetObjId, address })
-        .upsert()
-        .update(data);
+      bulk.find({ asset: assetObjId, address }).upsert().update(data);
     }
 
     bulk.execute();

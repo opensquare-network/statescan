@@ -78,12 +78,7 @@ async function scanBlock(blockInfo) {
     await makeAssetStatistics(getLastBlockIndexer());
   }
 
-  await scanNormalizedBlock(
-    blockInfo.block,
-    blockInfo.events,
-    blockInfo.author,
-    blockIndexer
-  );
+  await scanNormalizedBlock(blockInfo.block, blockInfo.events, blockIndexer);
 }
 
 main()

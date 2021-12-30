@@ -1,35 +1,28 @@
-const { saveAsset, saveNewAssetTransfer, updateOrCreateAssetHolder } = require("../../../mongo/services/asset");
+const {
+  saveAsset,
+  saveNewAssetTransfer,
+  updateOrCreateAssetHolder,
+} = require("../../../mongo/services/asset");
 const { getAssetsMetadata } = require("../../common/metadata");
 const { getAssetsAsset } = require("../../common/assetStorage");
 const { getAssetsAccount } = require("../../common/accountStorage");
 
-async function handleTransferred(
-  event,
-  eventSort,
-  extrinsic,
-  extrinsicIndex,
-  blockIndexer
-) {
+async function handleTransferred(event, indexer, extrinsic) {
   const eventData = event.data.toJSON();
   const [assetId, from, to, balance] = eventData;
 
   const extrinsicHash = extrinsic.hash.toJSON();
-  const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
+  const { section: extrinsicSection, method: extrinsicMethod } =
+    extrinsic.method;
 
-  const asset = await getAssetsAsset(blockIndexer.blockHash, assetId);
-  const metadata = await getAssetsMetadata(blockIndexer.blockHash, assetId);
+  const asset = await getAssetsAsset(indexer.blockHash, assetId);
+  const metadata = await getAssetsMetadata(indexer.blockHash, assetId);
 
-  await saveAsset(
-    blockIndexer,
-    assetId,
-    asset,
-    metadata
-  );
+  // fixme: why do we update asset info when asset transferred?
+  await saveAsset(indexer, assetId, asset, metadata);
 
   await saveNewAssetTransfer(
-    blockIndexer,
-    eventSort,
-    extrinsicIndex,
+    indexer,
     extrinsicHash,
     extrinsicSection,
     extrinsicMethod,
@@ -40,18 +33,18 @@ async function handleTransferred(
   );
 
   const assetOfFromAddress = await getAssetsAccount(
-    blockIndexer.blockHash,
+    indexer.blockHash,
     assetId,
     from
   );
-  await updateOrCreateAssetHolder(blockIndexer, assetId, from, assetOfFromAddress);
+  await updateOrCreateAssetHolder(indexer, assetId, from, assetOfFromAddress);
 
   const assetOfToAddress = await getAssetsAccount(
-    blockIndexer.blockHash,
+    indexer.blockHash,
     assetId,
     to
   );
-  await updateOrCreateAssetHolder(blockIndexer, assetId, to, assetOfToAddress);
+  await updateOrCreateAssetHolder(indexer, assetId, to, assetOfToAddress);
 }
 
 module.exports = {

@@ -75,7 +75,7 @@ async function calcOverview() {
 
   // Load 5 most popular assets
   const popularAssets = await assetCol
-    .find({})
+    .find({ destroyedAt: null })
     .sort({
       accounts: -1,
     })
@@ -92,6 +92,11 @@ async function calcOverview() {
       ]
     }
   ] = await nftClassCol.aggregate([
+    {
+      $match: {
+        isDestroyed: false,
+      }
+    },
     {
       $lookup: {
         from: "nftMetadata",
@@ -132,18 +137,23 @@ async function calcOverview() {
     },
   ]).toArray();
 
-const [{
-  nftInstances: [
+  const [{
+    nftInstances: [
+      {
+        count: nftInstancesCount
+      } = { count: 0 }
+    ],
+    recognizedNftInstances: [
+      {
+        count: recognizedNftInstancesCount
+      } = { count: 0 }
+    ],
+  }] = await nftInstanceCol.aggregate([
     {
-      count: nftInstancesCount
-    } = { count: 0 }
-  ],
-  recognizedNftInstances: [
-    {
-      count: recognizedNftInstancesCount
-    } = { count: 0 }
-  ],
-}] = await nftInstanceCol.aggregate([
+      $match: {
+        isDestroyed: false,
+      }
+    },
     {
       $lookup: {
         from: "nftMetadata",
@@ -166,6 +176,7 @@ const [{
         pipeline: [
           {
             $match: {
+              isDestroyed: false,
               $expr: {
                 $and: [
                   { $eq: ["$classId", "$$classId"] },
@@ -193,13 +204,7 @@ const [{
         as: "nftClass",
       }
     },
-    {
-      $addFields: {
-        nftClass: {
-          $arrayElemAt: ["$nftClass", 0]
-        }
-      }
-    },
+    { $unwind: "$nftClass" },
     {
       $facet: {
         nftInstances: [
@@ -227,16 +232,15 @@ const [{
         ]
       }
     },
-
   ]).toArray();
 
   // Calculate counts
-  const assetsCount = await assetCol.countDocuments();
+  const assetsCount = await assetCol.countDocuments({ destroyedAt: null });
   const holdersCount = await addressCol.countDocuments({
     $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   });
   const transfersCount = await transferCol.countDocuments();
-  const nftClassesCount = await nftClassCol.countDocuments();
+  const nftClassesCount = await nftClassCol.countDocuments({ isDestroyed: false });
 
   return {
     latestBlocks,

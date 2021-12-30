@@ -38,7 +38,7 @@ export default function CopyText({ children, text }) {
   return (
     <Wrapper>
       {children}
-      <StyledIcon onClick={onCopy}></StyledIcon>
+      <StyledIcon onClick={onCopy} />
     </Wrapper>
   );
 }

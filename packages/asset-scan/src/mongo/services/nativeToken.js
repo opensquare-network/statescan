@@ -6,11 +6,11 @@ const {
 const { getAssetTransferCollection } = require("..");
 
 async function saveNativeTokenTransfer(indexer, transfer) {
-  addNativeTransfer(indexer.blockHeight, transfer);
+  addNativeTransfer(indexer.blockHash, transfer);
 }
 
-async function flushNativeTokenTransfersToDb(blockHeight) {
-  const transfers = getBlockNativeTransfers(blockHeight);
+async function flushNativeTokenTransfersToDb(blockHash) {
+  const transfers = getBlockNativeTransfers(blockHash);
   if (transfers.length <= 0) {
     return;
   }
@@ -25,7 +25,7 @@ async function flushNativeTokenTransfersToDb(blockHeight) {
   if (result.result && !result.result.ok) {
     // TODO: handle failure
   }
-  clearNativeTransfers(blockHeight);
+  clearNativeTransfers(blockHash);
 }
 
 module.exports = {

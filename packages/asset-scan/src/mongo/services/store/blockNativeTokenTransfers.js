@@ -1,28 +1,28 @@
-// key: blockHeight, value: native token transfers
+// key: blockHash, value: native token transfers
 const transfersMap = {};
 
-function addTransfer(height, transfer) {
-  if (!transfersMap[height]) {
-    transfersMap[height] = [transfer];
+function addTransfer(blockHash, transfer) {
+  if (!transfersMap[blockHash]) {
+    transfersMap[blockHash] = [transfer];
   } else {
-    transfersMap[height].push(transfer);
+    transfersMap[blockHash].push(transfer);
   }
 }
 
-function addTransfers(height, transfers = []) {
-  if (!transfersMap[height]) {
-    transfersMap[height] = transfers;
+function addTransfers(blockHash, transfers = []) {
+  if (!transfersMap[blockHash]) {
+    transfersMap[blockHash] = transfers;
   } else {
-    transfersMap[height].push(...transfers);
+    transfersMap[blockHash].push(...transfers);
   }
 }
 
-function getBlockTransfers(height) {
-  return transfersMap[height] || [];
+function getBlockTransfers(blockHash) {
+  return transfersMap[blockHash] || [];
 }
 
-function clearTransfers(height) {
-  delete transfersMap[height];
+function clearTransfers(blockHash) {
+  delete transfersMap[blockHash];
 }
 
 module.exports = {

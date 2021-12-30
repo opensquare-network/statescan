@@ -31,4 +31,4 @@ async function flushNativeTokenTransfersToDb(blockHeight) {
 module.exports = {
   saveNativeTokenTransfer,
   flushNativeTokenTransfersToDb
-}
+};

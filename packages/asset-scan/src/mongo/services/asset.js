@@ -113,7 +113,8 @@ async function saveAssetTimeline(
 
   const col = await getAssetTimelineCollection();
   const result = await col.insertOne({
-    asset: assetObj._id,
+    assetId: assetObj.assetId,
+    assetHeight: assetObj.createdAt.blockHeight,
     type: "event",
     section,
     method,

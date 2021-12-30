@@ -8,6 +8,7 @@ const eventCollectionName = "event";
 const extrinsicCollectionName = "extrinsic";
 const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
+const assetTimelineCollectionName = "assetTimeline";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
 
@@ -46,6 +47,7 @@ let eventCol = null;
 let extrinsicCol = null;
 let assetTransferCol = null;
 let assetCol = null;
+let assetTimelineCol = null;
 let assetHolderCol = null;
 let addressCol = null;
 
@@ -66,15 +68,6 @@ let nftTransferCol = null;
 
 let teleportInCol = null;
 let teleportOutCol = null;
-
-function getDbName() {
-  const dbName = process.env.MONGO_DB_NAME;
-  if (!dbName) {
-    throw new Error("MONGO_DB_NAME not set");
-  }
-
-  return dbName;
-}
 
 function getNftDbName() {
   const nftDbName = process.env.MONGO_DB_NFT_NAME;
@@ -123,6 +116,7 @@ async function initDb() {
   assetDb = client.db(assetDbName);
   assetTransferCol = assetDb.collection(assetTransferCollectionName);
   assetCol = assetDb.collection(assetCollectionName);
+  assetTimelineCol = assetDb.collection(assetTimelineCollectionName);
   assetHolderCol = assetDb.collection(assetHolderCollectionName);
   addressCol = assetDb.collection(addressCollectionName);
 
@@ -288,6 +282,11 @@ async function getAssetCollection() {
   return assetCol;
 }
 
+async function getAssetTimelineCollection() {
+  await tryInit(assetTimelineCol);
+  return assetTimelineCol;
+}
+
 async function getAssetHolderCollection() {
   await tryInit(assetHolderCol);
   return assetHolderCol;
@@ -376,6 +375,7 @@ module.exports = {
   getEventCollection,
   getAssetTransferCollection,
   getAssetCollection,
+  getAssetTimelineCollection,
   getAssetHolderCollection,
   getAddressCollection,
   getUnFinalizedBlockCollection,

@@ -3,6 +3,7 @@ const {
   getAssetCollection,
   getAssetHolderCollection,
   getAssetTransferCollection,
+  getAssetTimelineCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
@@ -55,7 +56,10 @@ async function getAsset(ctx) {
   if (item) {
     const timelineCol = await getAssetTimelineCollection();
     item.timeline = await timelineCol
-      .find({ asset: item._id })
+      .find({
+        assetId: item.assetId,
+        assetHeight: item.createdAt.blockHeight
+      })
       .sort({ _id: 1 })
       .toArray();
   }
@@ -71,7 +75,10 @@ async function getAssetById(ctx) {
   if (item) {
     const timelineCol = await getAssetTimelineCollection();
     item.timeline = await timelineCol
-      .find({ asset: item._id })
+      .find({
+        assetId: item.assetId,
+        assetHeight: item.createdAt.blockHeight
+      })
       .sort({ _id: 1 })
       .toArray();
   }

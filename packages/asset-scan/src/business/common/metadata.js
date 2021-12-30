@@ -1,4 +1,4 @@
-const { getMeta, storeMeta } = require("../../store/assetMeta");
+const { getMeta, storeMeta } = require("./store/assetMeta");
 const { findBlockApi } = require("@statescan/common");
 
 async function getAssetsMetadata(blockHash, assetId) {
@@ -11,7 +11,7 @@ async function getAssetsMetadata(blockHash, assetId) {
 
   const raw = await blockApi.query.assets.metadata(assetId);
   const normalized = raw.toJSON();
-  storeMeta(blockHash, normalized, normalized);
+  storeMeta(blockHash, assetId, normalized);
   return normalized;
 }
 

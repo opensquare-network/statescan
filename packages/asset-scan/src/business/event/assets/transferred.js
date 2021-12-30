@@ -39,19 +39,19 @@ async function handleTransferred(
     balance
   );
 
-  const accountFrom = await getAssetsAccount(
+  const assetOfFromAddress = await getAssetsAccount(
     blockIndexer.blockHash,
     assetId,
     from
   );
-  await updateOrCreateAssetHolder(blockIndexer, assetId, from, accountFrom);
+  await updateOrCreateAssetHolder(blockIndexer, assetId, from, assetOfFromAddress);
 
-  const accountTo = await getAssetsAccount(
+  const assetOfToAddress = await getAssetsAccount(
     blockIndexer.blockHash,
     assetId,
     to
   );
-  await updateOrCreateAssetHolder(blockIndexer, assetId, to, accountTo);
+  await updateOrCreateAssetHolder(blockIndexer, assetId, to, assetOfToAddress);
 }
 
 module.exports = {

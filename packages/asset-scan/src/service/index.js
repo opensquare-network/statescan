@@ -1,32 +1,19 @@
 const {
-  getBlockNativeTransfers,
-  clearNativeTransfers,
-} = require("../store/blockNativeTokenTransfers");
-const { getAssetTransferCollection } = require("../mongo");
+  flushAssetsToDb,
+  flushAssetTransfersToDb,
+  flushAssetHoldersToDb,
+} = require("../mongo/services/asset");
+const {
+  flushNativeTokenTransfersToDb,
+} = require("../mongo/services/nativeToken");
 
-async function saveData(indexer) {
-  await saveNativeTokenTransfers(indexer.blockHeight);
-}
-
-async function saveNativeTokenTransfers(blockHeight) {
-  const transfers = getBlockNativeTransfers(blockHeight);
-  if (transfers.length <= 0) {
-    return;
-  }
-
-  const col = await getAssetTransferCollection();
-  const bulk = col.initializeUnorderedBulkOp();
-  for (const transfer of transfers) {
-    bulk.insert(transfer);
-  }
-
-  const result = await bulk.execute();
-  if (result.result && !result.result.ok) {
-    // TODO: handle failure
-  }
-  clearNativeTransfers(blockHeight);
+async function flushData(indexer) {
+  await flushNativeTokenTransfersToDb(indexer.blockHash);
+  await flushAssetsToDb(indexer.blockHash);
+  await flushAssetTransfersToDb(indexer.blockHash);
+  await flushAssetHoldersToDb(indexer.blockHash);
 }
 
 module.exports = {
-  saveData,
+  flushData,
 };

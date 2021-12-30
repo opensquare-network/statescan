@@ -1,6 +1,6 @@
 const { BalancesEvents } = require("@statescan/common");
 const { isBalancesEvent } = require("./utils");
-const { addNativeTransfer } = require("../../../store/blockNativeTokenTransfers");
+const { saveNativeTokenTransfer } = require("../../../mongo/services/nativeToken");
 
 async function handleBalancesEvent(
   event,
@@ -22,7 +22,7 @@ async function handleBalancesEvent(
     const extrinsicHash = extrinsic.hash.toJSON();
     const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
 
-    addNativeTransfer(blockIndexer.blockHeight, {
+    await saveNativeTokenTransfer(blockIndexer, {
       indexer: blockIndexer,
       eventSort,
       extrinsicIndex,

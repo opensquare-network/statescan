@@ -6,38 +6,6 @@ const {
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
-async function getLatestAssets(ctx) {
-  const col = await getAssetCollection();
-  const items = await col
-    .find({})
-    .sort({
-      "createdAt.blockHeight": -1,
-    })
-    .limit(5)
-    .toArray();
-
-  ctx.body = items;
-}
-
-async function getPopularAssets(ctx) {
-  const col = await getAssetCollection();
-  const items = await col
-    .find({})
-    .sort({
-      accounts: -1,
-    })
-    .limit(5)
-    .toArray();
-
-  ctx.body = items;
-}
-
-async function getAssetsCount(ctx) {
-  const col = await getAssetCollection();
-  const count = await col.countDocuments();
-  ctx.body = count;
-}
-
 async function getAssets(ctx) {
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
@@ -84,6 +52,13 @@ async function getAsset(ctx) {
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
   });
+  if (item) {
+    const timelineCol = await getAssetTimelineCollection();
+    item.timeline = await timelineCol
+      .find({ asset: item._id })
+      .sort({ _id: 1 })
+      .toArray();
+  }
 
   ctx.body = item;
 }
@@ -93,6 +68,13 @@ async function getAssetById(ctx) {
   const col = await getAssetCollection();
   const option = { sort: { "createdAt.blockHeight": -1 } };
   const item = await col.findOne({ assetId: parseInt(assetId) }, option);
+  if (item) {
+    const timelineCol = await getAssetTimelineCollection();
+    item.timeline = await timelineCol
+      .find({ asset: item._id })
+      .sort({ _id: 1 })
+      .toArray();
+  }
 
   ctx.body = item;
 }
@@ -237,9 +219,6 @@ async function getAssetHolders(ctx) {
 }
 
 module.exports = {
-  getLatestAssets,
-  getPopularAssets,
-  getAssetsCount,
   getAssets,
   getAsset,
   getAssetById,

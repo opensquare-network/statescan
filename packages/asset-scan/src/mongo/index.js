@@ -12,6 +12,7 @@ function getDbName() {
 const statusCollectionName = "status";
 const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
+const assetTimelineCollectionName = "assetTimeline";
 const assetHolderCollectionName = "assetHolder";
 const addressCollectionName = "address";
 const approvalCollectionName = "approval";
@@ -26,6 +27,7 @@ const mongoUrl = process.env.MONGO_SCAN_URL || "mongodb://localhost:27017";
 let statusCol = null;
 let assetTransferCol = null;
 let assetCol = null;
+let assetTimelineCol = null;
 let assetHolderCol = null;
 let rawAddressCol = null;
 let addressCol = null;
@@ -61,6 +63,7 @@ async function initDb() {
   statusCol = await getCollection(statusCollectionName);
   assetTransferCol = await getCollection(assetTransferCollectionName);
   assetCol = await getCollection(assetCollectionName);
+  assetTimelineCol = await getCollection(assetTimelineCollectionName);
   assetHolderCol = await getCollection(assetHolderCollectionName);
   rawAddressCol = await getCollection("rawAddress");
   addressCol = await getCollection(addressCollectionName);
@@ -107,6 +110,11 @@ async function getAssetCollection() {
   return assetCol;
 }
 
+async function getAssetTimelineCollection() {
+  await tryInit(assetTimelineCol);
+  return assetTimelineCol;
+}
+
 async function getAssetHolderCollection() {
   await tryInit(assetHolderCol);
   return assetHolderCol;
@@ -132,6 +140,7 @@ module.exports = {
   getStatusCollection,
   getAssetTransferCollection,
   getAssetCollection,
+  getAssetTimelineCollection,
   getAssetHolderCollection,
   getAddressCollection,
   getRawAddressCollection,

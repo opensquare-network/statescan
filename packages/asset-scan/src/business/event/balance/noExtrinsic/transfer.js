@@ -1,11 +1,11 @@
 const {
-  addNativeTransfer,
-} = require("../../../../store/blockNativeTokenTransfers");
+  saveNativeTokenTransfer,
+} = require("../../../../mongo/services/nativeToken");
 
 async function handleTransfer(event, eventSort, blockIndexer) {
   const eventData = event.data.toJSON();
   const [from, to, value] = eventData;
-  addNativeTransfer(blockIndexer.blockHeight, {
+  await saveNativeTokenTransfer(blockIndexer, {
     indexer: blockIndexer,
     eventSort,
     from,

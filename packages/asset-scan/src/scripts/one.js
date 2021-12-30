@@ -27,6 +27,7 @@ async function saveBusiness({ block, events }, blockIndexer) {
       const extrinsic = block.extrinsics[phaseValue];
       const extrinsicHash = extrinsic.hash.toHex();
       const extrinsicIndex = phaseValue;
+      const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
 
       const { section, method, data } = event;
       if (section === "assets" && method === "Transferred") {
@@ -41,6 +42,8 @@ async function saveBusiness({ block, events }, blockIndexer) {
           eventSort: sort,
           extrinsicIndex,
           extrinsicHash,
+          module: extrinsicSection,
+          method: extrinsicMethod,
           asset: asset._id,
           from,
           to,
@@ -53,6 +56,8 @@ async function saveBusiness({ block, events }, blockIndexer) {
           eventSort: sort,
           extrinsicIndex,
           extrinsicHash,
+          module: extrinsicSection,
+          method: extrinsicMethod,
           from,
           to,
           balance,

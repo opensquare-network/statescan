@@ -1,6 +1,7 @@
 const metaMap = {};
 
 function storeMeta(blockHash, assetId, metadata) {
+  metaMap[blockHash] = metaMap[blockHash] || {};
   metaMap[blockHash][assetId] = metadata;
 }
 

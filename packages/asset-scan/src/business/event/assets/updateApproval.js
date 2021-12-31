@@ -1,7 +1,7 @@
 const { updateOrCreateApproval } = require("../../../mongo/services/asset");
 const { getAssetsApprovals } = require("../../common/approvals");
 
-async function handleTransferredApproved(event, indexer) {
+async function updateApproval(event, indexer) {
   const eventData = event.data.toJSON();
   const [assetId, owner, delegate] = eventData;
 
@@ -16,5 +16,5 @@ async function handleTransferredApproved(event, indexer) {
 }
 
 module.exports = {
-  handleTransferredApproved,
+  updateApproval,
 };

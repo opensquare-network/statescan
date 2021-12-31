@@ -1,10 +1,6 @@
+const { addAssetId } = require("../../common/store/blockAsset");
 const { addAssetAddresses } = require("../../common/store/blockAssetAddresses");
-const {
-  saveAsset,
-  saveNewAssetTransfer,
-} = require("../../../mongo/services/asset");
-const { getAssetsMetadata } = require("../../common/metadata");
-const { getAssetsAsset } = require("../../common/assetStorage");
+const { saveNewAssetTransfer } = require("../../../mongo/services/asset");
 
 async function handleTransferred(event, indexer, extrinsic) {
   const eventData = event.data.toJSON();
@@ -14,11 +10,7 @@ async function handleTransferred(event, indexer, extrinsic) {
   const { section: extrinsicSection, method: extrinsicMethod } =
     extrinsic.method;
 
-  const asset = await getAssetsAsset(indexer.blockHash, assetId);
-  const metadata = await getAssetsMetadata(indexer.blockHash, assetId);
-
-  // fixme: why do we update asset info when asset transferred?
-  await saveAsset(indexer, assetId, asset, metadata);
+  addAssetId(indexer.blockHeight, assetId);
 
   await saveNewAssetTransfer(
     indexer,

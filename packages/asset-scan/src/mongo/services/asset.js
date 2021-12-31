@@ -5,7 +5,6 @@ const {
   getAssetApprovalCollection,
   getAssetTimelineCollection,
 } = require("..");
-const { storeAsset, getAssets, clearAssets } = require("./store/asset");
 const {
   addAssetTransfer,
   getAssetTransfers,
@@ -52,41 +51,6 @@ async function flushAssetTransfersToDb(blockHash) {
     await bulk.execute();
   }
   clearAssetTransfers(blockHash);
-}
-
-async function saveAsset(blockIndexer, assetId, asset, metadata) {
-  storeAsset(blockIndexer.blockHash, assetId, {
-    $setOnInsert: {
-      createdAt: blockIndexer,
-    },
-    $set: {
-      ...asset,
-      ...metadata,
-      symbol: hexToString(metadata.symbol),
-      name: hexToString(metadata.name),
-    },
-  });
-}
-
-async function flushAssetsToDb(blockHash) {
-  const assets = getAssets(blockHash);
-
-  if (Object.keys(assets).length > 0) {
-    const col = await getAssetCollection();
-    const bulk = col.initializeUnorderedBulkOp();
-    for (const assetId in assets) {
-      const data = assets[assetId];
-      bulk
-        .find({
-          assetId: parseInt(assetId),
-          destroyedAt: null,
-        })
-        .upsert()
-        .update(data);
-    }
-    await bulk.execute();
-  }
-  clearAssets(blockHash);
 }
 
 async function saveAssetTimeline(
@@ -177,8 +141,6 @@ async function updateOrCreateApproval(
 module.exports = {
   saveNewAssetTransfer,
   flushAssetTransfersToDb,
-  saveAsset,
-  flushAssetsToDb,
   saveAssetTimeline,
   destroyAsset,
   updateOrCreateApproval,

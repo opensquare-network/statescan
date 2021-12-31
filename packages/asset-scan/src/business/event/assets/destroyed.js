@@ -1,6 +1,7 @@
+const { saveAssets } = require("../../../service/asset/saveBlockAssets");
 const {
   queryAndSaveAssetAccountsToDb,
-} = require("../../../service/asset/syncAssetAddresses");
+} = require("../../../service/assetAccount/syncAssetAddresses");
 const {
   destroyAsset,
   saveAssetTimeline,
@@ -10,6 +11,7 @@ const { getAssetsAsset } = require("../../common/assetStorage");
 
 async function handleDestroyed(event, indexer, extrinsic) {
   await queryAndSaveAssetAccountsToDb(indexer);
+  await saveAssets(indexer);
 
   const { section, method, data } = event;
   const eventData = data.toJSON();

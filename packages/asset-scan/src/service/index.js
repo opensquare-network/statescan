@@ -1,15 +1,16 @@
-const { queryAndSaveAssetAccountsToDb } = require("./asset/syncAssetAddresses");
+const { saveAssets } = require("./asset/saveBlockAssets");
 const {
-  flushAssetsToDb,
-  flushAssetTransfersToDb,
-} = require("../mongo/services/asset");
+  queryAndSaveAssetAccountsToDb,
+} = require("./assetAccount/syncAssetAddresses");
+const { flushAssetTransfersToDb } = require("../mongo/services/asset");
 const {
   flushNativeTokenTransfersToDb,
 } = require("../mongo/services/nativeToken");
 
 async function flushData(indexer) {
+  await saveAssets(indexer);
+
   await flushNativeTokenTransfersToDb(indexer.blockHash);
-  await flushAssetsToDb(indexer.blockHash);
   await flushAssetTransfersToDb(indexer.blockHash);
 
   await queryAndSaveAssetAccountsToDb(indexer);

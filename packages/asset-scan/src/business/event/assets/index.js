@@ -1,14 +1,6 @@
+const { updateAssetAndTimeline } = require("./updateAssetAndTimeline");
 const { Modules, AssetsEvents } = require("@statescan/common");
-const { handleAssetFrozen } = require("./assetFrozen");
-const { handleAssetStatusChanged } = require("./assetStatusChanged");
-const { handleAssetThawed } = require("./assetThawed");
 const { handleBurned } = require("./burned");
-const { handleCreated } = require("./created");
-const { handleForceCreated } = require("./forceCreated");
-const { handleIssued } = require("./issued");
-const { handleMetadataSet } = require("./metadataSet");
-const { handleOwnerChanged } = require("./ownerChanged");
-const { handleTeamChanged } = require("./teamChanged");
 const { handleDestroyed } = require("./destroyed");
 const { handleTransferred } = require("./transferred");
 const { handleApprovedTransfer } = require("./approvedTransfer");
@@ -21,40 +13,33 @@ function isAssetsEvent(section) {
   return section === Modules.Assets;
 }
 
-async function handleAssetsEvent(
-  event,
-  eventSort,
-  extrinsic,
-  extrinsicIndex,
-  blockIndexer
-) {
-  const { section, method, data } = event;
-
+async function handleAssetsEvent(event, indexer, extrinsic) {
+  const { section, method } = event;
   if (!isAssetsEvent(section)) {
     return false;
   }
 
-  if (AssetsEvents.Created === method) {
-    await handleCreated(...arguments);
-  } else if (AssetsEvents.ForceCreated === method) {
-    await handleForceCreated(...arguments);
-  } else if (AssetsEvents.MetadataSet === method) {
-    await handleMetadataSet(...arguments);
-  } else if (AssetsEvents.AssetStatusChanged === method) {
-    await handleAssetStatusChanged(...arguments);
-  } else if (AssetsEvents.TeamChanged === method) {
-    await handleTeamChanged(...arguments);
-  } else if (AssetsEvents.OwnerChanged === method) {
-    await handleOwnerChanged(...arguments);
-  } else if (AssetsEvents.AssetFrozen === method) {
-    await handleAssetFrozen(...arguments);
-  } else if (AssetsEvents.AssetThawed === method) {
-    await handleAssetThawed(...arguments);
+  if (
+    [
+      AssetsEvents.Created,
+      AssetsEvents.ForceCreated,
+      AssetsEvents.MetadataSet,
+      AssetsEvents.AssetStatusChanged,
+      AssetsEvents.TeamChanged,
+      AssetsEvents.OwnerChanged,
+      AssetsEvents.AssetFrozen,
+      AssetsEvents.AssetThawed,
+      AssetsEvents.Issued,
+    ].includes(method)
+  ) {
+    await updateAssetAndTimeline(...arguments);
   } else if (AssetsEvents.Destroyed === method) {
     await handleDestroyed(...arguments);
-  } else if (AssetsEvents.Issued === method) {
-    await handleIssued(...arguments);
+  } else if (AssetsEvents.Frozen === method) {
+    await handleFrozen(...arguments);
   } else if (AssetsEvents.Burned === method) {
+    // todo: we need update the burned account asset balance
+    // fixme: 1. update the burned account balance; 2. don't have to save timeline
     await handleBurned(...arguments);
   } else if (AssetsEvents.Transferred === method) {
     await handleTransferred(...arguments);
@@ -64,9 +49,12 @@ async function handleAssetsEvent(
     await handleApprovalCancelled(...arguments);
   } else if (AssetsEvents.TransferredApproved === method) {
     await handleTransferredApproved(...arguments);
-  } else if (AssetsEvents.Frozen === method) {
-    await handleFrozen(...arguments);
   } else if (AssetsEvents.Thawed === method) {
+    /**
+     * fixme:
+     * this event present no effect with asset detail change, so we should not save it to timeline and don't have
+     * to update the asset
+     */
     await handleThawed(...arguments);
   }
 

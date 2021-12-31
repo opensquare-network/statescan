@@ -10,18 +10,21 @@ async function handleEvents(events, blockIndexer, extrinsics) {
   }
 
   for (let eventSort = 0; eventSort < events.length; eventSort++) {
+    let indexer = {
+      ...blockIndexer,
+      eventIndex: eventSort,
+    };
+
     const { event, phase } = events[eventSort];
     if (!phase.isNull) {
       const extrinsicIndex = phase.value.toNumber();
-      const extrinsic = extrinsics[extrinsicIndex];
-
-      await handleAssetsEvent(
-        event,
-        eventSort,
-        extrinsic,
+      indexer = {
+        ...indexer,
         extrinsicIndex,
-        blockIndexer
-      );
+      };
+
+      const extrinsic = extrinsics[extrinsicIndex];
+      await handleAssetsEvent(event, indexer, extrinsic);
       await handleBalancesEvent(
         event,
         eventSort,

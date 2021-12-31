@@ -30,20 +30,10 @@ async function handleAssetsEvent(event, indexer, extrinsic) {
     await updateAssetAndTimeline(...arguments);
   } else if (AssetsEvents.Destroyed === method) {
     await handleDestroyed(...arguments);
-  } else if (
-    [
-      AssetsEvents.Issued,
-      AssetsEvents.Burned,
-    ].includes(method)
-  ) {
+  } else if ([AssetsEvents.Issued, AssetsEvents.Burned].includes(method)) {
     await updateAssetAndTimeline(...arguments);
     await updateAssetHolder(...arguments);
-  } else if (
-    [
-      AssetsEvents.Frozen,
-      AssetsEvents.Thawed,
-    ].includes(method)
-  ) {
+  } else if ([AssetsEvents.Frozen, AssetsEvents.Thawed].includes(method)) {
     await updateAssetHolder(...arguments);
   } else if (AssetsEvents.Transferred === method) {
     await handleTransferred(...arguments);
@@ -52,7 +42,7 @@ async function handleAssetsEvent(event, indexer, extrinsic) {
       AssetsEvents.ApprovedTransfer,
       AssetsEvents.ApprovalCancelled,
       AssetsEvents.TransferredApproved,
-    ].inlcudes(method)
+    ].includes(method)
   ) {
     await updateApproval(...arguments);
   }

@@ -1,4 +1,7 @@
 const {
+  queryAndSaveAssetAccountsToDb,
+} = require("../../../service/asset/syncAssetAddresses");
+const {
   destroyAsset,
   saveAssetTimeline,
 } = require("../../../mongo/services/asset");
@@ -26,6 +29,7 @@ async function handleDestroyed(event, indexer, extrinsic) {
     metadata
   );
   await destroyAsset(indexer, assetId);
+  await queryAndSaveAssetAccountsToDb(indexer);
 }
 
 module.exports = {

@@ -1,3 +1,4 @@
+const { queryAndSaveAssetAccountsToDb } = require("./asset/syncAssetAddresses");
 const {
   flushAssetsToDb,
   flushAssetTransfersToDb,
@@ -12,6 +13,8 @@ async function flushData(indexer) {
   await flushAssetsToDb(indexer.blockHash);
   await flushAssetTransfersToDb(indexer.blockHash);
   await flushAssetHoldersToDb(indexer.blockHash);
+
+  await queryAndSaveAssetAccountsToDb(indexer);
 }
 
 module.exports = {

@@ -1,11 +1,10 @@
+const { addAssetAddresses } = require("../../common/store/blockAssetAddresses");
 const {
   saveAsset,
   saveNewAssetTransfer,
-  updateOrCreateAssetHolder,
 } = require("../../../mongo/services/asset");
 const { getAssetsMetadata } = require("../../common/metadata");
 const { getAssetsAsset } = require("../../common/assetStorage");
-const { getAssetsAccount } = require("../../common/accountStorage");
 
 async function handleTransferred(event, indexer, extrinsic) {
   const eventData = event.data.toJSON();
@@ -32,19 +31,7 @@ async function handleTransferred(event, indexer, extrinsic) {
     balance
   );
 
-  const assetOfFromAddress = await getAssetsAccount(
-    indexer.blockHash,
-    assetId,
-    from
-  );
-  await updateOrCreateAssetHolder(indexer, assetId, from, assetOfFromAddress);
-
-  const assetOfToAddress = await getAssetsAccount(
-    indexer.blockHash,
-    assetId,
-    to
-  );
-  await updateOrCreateAssetHolder(indexer, assetId, to, assetOfToAddress);
+  addAssetAddresses(indexer.blockHeight, assetId, [from, to]);
 }
 
 module.exports = {

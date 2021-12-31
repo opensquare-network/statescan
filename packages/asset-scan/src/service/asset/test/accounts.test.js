@@ -22,6 +22,7 @@ describe("Query multiple accounts", () => {
     const accounts = [
       "DTpfcH3CBFgQjLbWm6dWkTDTcAKrK4kq9WhH6WjcjKqyAbo",
       "DQcegDuBQG6V99hgRd87UJ8anZxTcumJEVBAnAGomXCJ3dc",
+      "FV64pYWkY63c6eQ1zE5gvvsabpCXsTgdFGiXQePWtURuCQz",
     ];
     const indexer = {
       blockHeight,
@@ -42,6 +43,14 @@ describe("Query multiple accounts", () => {
         account: "DQcegDuBQG6V99hgRd87UJ8anZxTcumJEVBAnAGomXCJ3dc",
         info: {
           balance: "7588996763754045",
+          isFrozen: false,
+          isSufficient: false,
+        },
+      },
+      {
+        account: "FV64pYWkY63c6eQ1zE5gvvsabpCXsTgdFGiXQePWtURuCQz",
+        info: {
+          balance: "0",
           isFrozen: false,
           isSufficient: false,
         },

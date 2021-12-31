@@ -1,3 +1,4 @@
+const { handleTransferredApproved } = require("./transferedApproved");
 const { Modules, AssetsEvents } = require("@statescan/common");
 const { updateAssetAndTimeline } = require("./updateAssetAndTimeline");
 const { handleDestroyed } = require("./destroyed");
@@ -12,7 +13,7 @@ function isAssetsEvent(section) {
 async function handleAssetsEvent(event, indexer, extrinsic) {
   const { section, method } = event;
   if (!isAssetsEvent(section)) {
-    return false;
+    return;
   }
 
   if (
@@ -38,16 +39,14 @@ async function handleAssetsEvent(event, indexer, extrinsic) {
   } else if (AssetsEvents.Transferred === method) {
     await handleTransferred(...arguments);
   } else if (
-    [
-      AssetsEvents.ApprovedTransfer,
-      AssetsEvents.ApprovalCancelled,
-      AssetsEvents.TransferredApproved,
-    ].includes(method)
+    [AssetsEvents.ApprovedTransfer, AssetsEvents.ApprovalCancelled].includes(
+      method
+    )
   ) {
     await updateApproval(...arguments);
+  } else if (AssetsEvents.TransferredApproved === method) {
+    await handleTransferredApproved(event, indexer);
   }
-
-  return true;
 }
 
 module.exports = {

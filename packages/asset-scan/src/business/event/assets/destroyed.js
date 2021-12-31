@@ -9,6 +9,8 @@ const { getAssetsMetadata } = require("../../common/metadata");
 const { getAssetsAsset } = require("../../common/assetStorage");
 
 async function handleDestroyed(event, indexer, extrinsic) {
+  await queryAndSaveAssetAccountsToDb(indexer);
+
   const { section, method, data } = event;
   const eventData = data.toJSON();
   const [assetId] = eventData;
@@ -29,7 +31,6 @@ async function handleDestroyed(event, indexer, extrinsic) {
     metadata
   );
   await destroyAsset(indexer, assetId);
-  await queryAndSaveAssetAccountsToDb(indexer);
 }
 
 module.exports = {

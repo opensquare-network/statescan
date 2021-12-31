@@ -1,24 +1,16 @@
-const { ObjectId } = require("mongodb");
 const { hexToString } = require("@polkadot/util");
 const {
   getAssetTransferCollection,
   getAssetCollection,
-  getAssetHolderCollection,
   getAssetApprovalCollection,
   getAssetTimelineCollection,
 } = require("..");
 const { storeAsset, getAssets, clearAssets } = require("./store/asset");
-const { toDecimal128 } = require("../../utils");
 const {
   addAssetTransfer,
   getAssetTransfers,
   clearAssetTransfers,
 } = require("./store/assetTransfer");
-const {
-  storeAssetHolder,
-  getAssetHolders,
-  clearAssetHolders,
-} = require("./store/assetHolder");
 
 async function saveNewAssetTransfer(
   indexer,
@@ -143,47 +135,6 @@ async function destroyAsset(blockIndexer, assetId) {
   );
 }
 
-async function updateOrCreateAssetHolder(
-  blockIndexer,
-  assetId,
-  address,
-  account
-) {
-  const assetCol = await getAssetCollection();
-  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
-  if (!asset) {
-    return;
-  }
-
-  storeAssetHolder(blockIndexer.blockHash, asset._id, address, {
-    $set: {
-      ...account,
-      balance: toDecimal128(account.balance),
-      dead: account.balance === 0 ? true : false,
-      lastUpdatedAt: blockIndexer,
-    },
-  });
-}
-
-async function flushAssetHoldersToDb(blockHash) {
-  const assetHolders = getAssetHolders(blockHash);
-
-  if (Object.keys(assetHolders).length > 0) {
-    const col = await getAssetHolderCollection();
-    const bulk = col.initializeUnorderedBulkOp();
-
-    for (const assetHolderId in assetHolders) {
-      const data = assetHolders[assetHolderId];
-      const [assetId, address] = assetHolderId.split("/");
-      const assetObjId = ObjectId(assetId);
-      bulk.find({ asset: assetObjId, address }).upsert().update(data);
-    }
-
-    bulk.execute();
-  }
-  clearAssetHolders(blockHash);
-}
-
 async function updateOrCreateApproval(
   blockIndexer,
   assetId,
@@ -230,7 +181,5 @@ module.exports = {
   flushAssetsToDb,
   saveAssetTimeline,
   destroyAsset,
-  updateOrCreateAssetHolder,
-  flushAssetHoldersToDb,
   updateOrCreateApproval,
 };

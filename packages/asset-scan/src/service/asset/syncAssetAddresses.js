@@ -18,6 +18,13 @@ async function getAllToUpdateAssetAccounts(assetAddressesMap, indexer) {
       assetId: assetId,
       destroyedAt: null,
     });
+
+    if (!asset) {
+      throw new Error(
+        `can not find the asset ${assetId} when update holders at ${indexer.blockHeight}`
+      );
+    }
+
     const assetHeight = asset.createdAt.blockHeight;
     const assetAccounts = await getAssetAccounts(assetId, addrs, indexer);
     if (!assetAccounts) {

@@ -23,7 +23,7 @@ async function saveAssets(indexer) {
 
   for (const { assetId, detail, metadata } of assets) {
     if (!metadata) {
-      console.log("no metadata");
+      throw new Error("No metadata found when save assets");
     }
 
     bulk

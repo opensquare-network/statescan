@@ -1,3 +1,4 @@
+const { toDecimal128 } = require("../../utils");
 const {
   getAssetTransfers,
   clearAssetTransfers,
@@ -41,6 +42,7 @@ async function flushAssetTransfersToDb(blockHash) {
   for (const data of transfers) {
     bulk.insert({
       ...data,
+      balance: toDecimal128(data.balance),
       assetHeight: idToHeightMap[data.assetId],
     });
   }

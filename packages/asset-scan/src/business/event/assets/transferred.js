@@ -1,6 +1,9 @@
 const { addAssetTransfer } = require("../../common/store/assetTransfer");
 const { addAssetId } = require("../../common/store/blockAsset");
 const { addAssetAddresses } = require("../../common/store/blockAssetAddresses");
+const {
+  store: { addAddresses },
+} = require("@statescan/common");
 
 async function handleTransferred(event, indexer, extrinsic) {
   const eventData = event.data.toJSON();
@@ -23,6 +26,7 @@ async function handleTransferred(event, indexer, extrinsic) {
   });
 
   addAssetAddresses(indexer.blockHeight, assetId, [from, to]);
+  addAddresses(indexer.blockHeight, [from, to]);
 }
 
 module.exports = {

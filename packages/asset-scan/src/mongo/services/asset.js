@@ -1,3 +1,7 @@
+const {
+  getAssetTransfers,
+  clearAssetTransfers,
+} = require("../../business/common/store/assetTransfer");
 const { hexToString } = require("@polkadot/util");
 const {
   getAssetTransferCollection,
@@ -5,51 +9,42 @@ const {
   getAssetApprovalCollection,
   getAssetTimelineCollection,
 } = require("..");
-const {
-  addAssetTransfer,
-  getAssetTransfers,
-  clearAssetTransfers,
-} = require("./store/assetTransfer");
-
-async function saveNewAssetTransfer(
-  indexer,
-  extrinsicHash,
-  extrinsicSection,
-  extrinsicMethod,
-  assetId,
-  from,
-  to,
-  balance
-) {
-  const assetCol = await getAssetCollection();
-  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
-  if (!asset) {
-    return;
-  }
-
-  addAssetTransfer(indexer.blockHash, {
-    indexer,
-    extrinsicHash,
-    module: extrinsicSection,
-    method: extrinsicMethod,
-    asset: asset._id,
-    from,
-    to,
-    balance,
-    listIgnore: false,
-  });
-}
 
 async function flushAssetTransfersToDb(blockHash) {
   const transfers = getAssetTransfers(blockHash);
-  if (transfers.length > 0) {
-    const col = await getAssetTransferCollection();
-    const bulk = col.initializeUnorderedBulkOp();
-    for (const data of transfers) {
-      bulk.insert(data);
-    }
-    await bulk.execute();
+  if (transfers.length < 1) {
+    return;
   }
+
+  const assetIds = transfers.map((transfer) => transfer.assetId);
+  const assetCol = await getAssetCollection();
+  const assets = await assetCol
+    .find({
+      assetId: { $in: assetIds },
+      destroyedAt: null,
+    })
+    .toArray();
+  const idToHeightMap = assetIds.reduce((result, assetId) => {
+    const asset = assets.find((item) => item.assetId === assetId);
+    if (!asset) {
+      throw new Error(
+        `Can not find asset ${assetId} from db when save transfer`
+      );
+    }
+
+    result[assetId] = asset.createdAt.blockHeight;
+    return result;
+  }, {});
+
+  const col = await getAssetTransferCollection();
+  const bulk = col.initializeUnorderedBulkOp();
+  for (const data of transfers) {
+    bulk.insert({
+      ...data,
+      assetHeight: idToHeightMap[data.assetId],
+    });
+  }
+  await bulk.execute();
   clearAssetTransfers(blockHash);
 }
 
@@ -139,7 +134,6 @@ async function updateOrCreateApproval(
 }
 
 module.exports = {
-  saveNewAssetTransfer,
   flushAssetTransfersToDb,
   saveAssetTimeline,
   destroyAsset,

@@ -1,3 +1,4 @@
+const { flushAssetTransfersToDb } = require("../../../mongo/services/asset");
 const { saveAssets } = require("../../../service/asset/saveBlockAssets");
 const {
   queryAndSaveAssetAccountsToDb,
@@ -12,6 +13,7 @@ const { getAssetsAsset } = require("../../common/assetStorage");
 async function handleDestroyed(event, indexer, extrinsic) {
   await queryAndSaveAssetAccountsToDb(indexer);
   await saveAssets(indexer);
+  await flushAssetTransfersToDb(indexer.blockHash);
 
   const { section, method, data } = event;
   const eventData = data.toJSON();

@@ -10,7 +10,7 @@ async function getHoldersCount(ctx) {
   const col = await getAssetCollection();
   const [result] = await col
     .aggregate([
-      { $match: { destoryedAt: null } },
+      { $match: { destoryedAt: null } }, // fixme: 1. typo 'destroyed' 2. we should feed the home page panel data with websocket
       {
         $group: {
           _id: null,

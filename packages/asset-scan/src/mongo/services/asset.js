@@ -78,6 +78,7 @@ async function saveAssetTimeline(
     eventData,
     extrinsicHash,
     asset: {
+      // fixme: we do not have to store detailed asset info to timeline
       ...asset,
       ...metadata,
       symbol: hexToString(metadata.symbol),

@@ -8,7 +8,11 @@ const {
 } = require("@statescan/common");
 const { toDecimal128, bigAdd } = require("../utils");
 const { getOnChainAccounts } = require("../utils/getOnChainAccounts");
-const { getRawAddressCollection, getAddressCollection, getStatusCollection } = require("../mongo");
+const {
+  getRawAddressCollection,
+  getAddressCollection,
+  getStatusCollection,
+} = require("../mongo");
 const { getBlockByHeight } = require("../utils/getBlockIndexer");
 
 async function getNextPageAddresses(mongoId) {
@@ -17,12 +21,12 @@ async function getNextPageAddresses(mongoId) {
   const addrObjs = await col
     .find(
       mongoId
-      ? {
-          _id: {
-            $gt: mongoId
+        ? {
+            _id: {
+              $gt: mongoId,
+            },
           }
-        }
-      : {}
+        : {}
     )
     .sort({ _id: 1 })
     .limit(updateAddrStep)
@@ -86,12 +90,12 @@ async function updateAllRawAddrsInDB(indexer) {
 
     lastId = addrObjs[addrObjs.length - 1]._id;
 
-    const addrs = (addrObjs || []).map((obj) => obj.address)
+    const addrs = (addrObjs || []).map((obj) => obj.address);
     await updateAddresses(indexer, addrs);
     logger.info(
       `${(addrs || []).length} addrs updated at ${indexer.blockHeight}`
     );
-  };
+  }
 }
 
 async function main() {

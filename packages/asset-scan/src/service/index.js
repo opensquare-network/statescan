@@ -1,3 +1,4 @@
+const { updateRawAddresses } = require("./updateRawAddresses");
 const { saveAssets } = require("./asset/saveBlockAssets");
 const {
   queryAndSaveAssetAccountsToDb,
@@ -14,6 +15,7 @@ async function flushData(indexer) {
   await flushAssetTransfersToDb(indexer.blockHash);
 
   await queryAndSaveAssetAccountsToDb(indexer);
+  await updateRawAddresses(indexer);
 }
 
 module.exports = {

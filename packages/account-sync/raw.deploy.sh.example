@@ -1,0 +1,1 @@
+NODE_ENV=production pm2 start src/raw.js --name statescan-raw-account-sync-release --log-date-format 'YYYY-MM-DD HH:mm Z' --cron-restart="* * * * *" --no-autorestart --env production

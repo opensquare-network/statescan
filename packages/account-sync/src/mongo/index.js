@@ -13,6 +13,8 @@ let client = null;
 let db = null;
 
 let addressCol = null;
+// collection which mark addresses which exist on chain but maybe not updated to DB
+let rawAddressCol = null;
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost:27017";
 async function initDb() {
@@ -26,6 +28,7 @@ async function initDb() {
   db = client.db(dbName);
 
   addressCol = await db.collection("address");
+  rawAddressCol = await db.collection("rawAddress");
   await _createIndexes();
 }
 
@@ -53,7 +56,13 @@ async function closeDb() {
   await client.close();
 }
 
+async function getRawAddressCollection() {
+  await tryInit(rawAddressCol);
+  return rawAddressCol;
+}
+
 module.exports = {
   getAddressCollection,
+  getRawAddressCollection,
   closeDb,
 };

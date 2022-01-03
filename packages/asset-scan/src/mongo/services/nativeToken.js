@@ -1,9 +1,11 @@
-const { toDecimal128 } = require("../../utils");
 const {
   getBlockNativeTransfers,
   clearNativeTransfers,
 } = require("../../business/common/store/blockNativeTokenTransfers");
 const { getAssetTransferCollection } = require("..");
+const {
+  utils: { toDecimal128 },
+} = require("@statescan/common");
 
 async function flushNativeTokenTransfersToDb(blockHash) {
   const transfers = getBlockNativeTransfers(blockHash);

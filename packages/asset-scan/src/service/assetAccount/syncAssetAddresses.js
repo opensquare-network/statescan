@@ -1,4 +1,3 @@
-const { toDecimal128 } = require("../../utils");
 const { getAssetHolderCollection, getAssetCollection } = require("../../mongo");
 const {
   getAssetAddresses,
@@ -6,7 +5,7 @@ const {
 } = require("../../business/common/store/blockAssetAddresses");
 const { getAssetAccounts } = require("./multipleAccounts");
 const {
-  utils: { gt },
+  utils: { gt, toDecimal128 },
 } = require("@statescan/common");
 
 async function getAllToUpdateAssetAccounts(assetAddressesMap, indexer) {

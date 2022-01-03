@@ -1,4 +1,3 @@
-const { toDecimal128 } = require("../../utils");
 const {
   getAssetTransfers,
   clearAssetTransfers,
@@ -10,6 +9,9 @@ const {
   getAssetApprovalCollection,
   getAssetTimelineCollection,
 } = require("..");
+const {
+  utils: { toDecimal128 },
+} = require("@statescan/common");
 
 async function flushAssetTransfersToDb(blockHash) {
   const transfers = getAssetTransfers(blockHash);

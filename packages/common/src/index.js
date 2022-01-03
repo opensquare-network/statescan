@@ -16,6 +16,7 @@ const utils = require("./utils");
 const store = require("./store");
 const mem = require("./mem");
 const scan = require("./scan");
+const db = require("./mongo");
 
 module.exports = {
   sleep,
@@ -36,4 +37,5 @@ module.exports = {
   mem,
   scan,
   test,
+  db,
 };

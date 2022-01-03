@@ -1,4 +1,3 @@
-const { getScanStep } = require("../env");
 const { MongoClient } = require("mongodb");
 
 function getDbName() {
@@ -69,7 +68,6 @@ async function saveKnownHeights(heights = []) {
 }
 
 async function getNextKnownHeights(beginHeight) {
-  // const step = getScanStep();
   const step = 1;
   const col = await getHeightCollection();
   const records = await col

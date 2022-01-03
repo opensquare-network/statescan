@@ -64,23 +64,6 @@ async function getRawAddressCollection() {
   return rawAddressCol;
 }
 
-async function updateAddrs(addrs = []) {
-  if (addrs.length <= 0) {
-    return;
-  }
-
-  const col = await getRawAddressCollection();
-  const bulk = col.initializeUnorderedBulkOp();
-  for (const addr of addrs) {
-    bulk
-      .find({ address: addr })
-      .upsert()
-      .updateOne({ $set: { updated: false } });
-  }
-
-  await bulk.execute();
-}
-
 module.exports = {
-  updateAddrs,
+  getRawAddressCollection,
 };

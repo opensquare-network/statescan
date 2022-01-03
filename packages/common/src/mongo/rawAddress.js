@@ -1,16 +1,12 @@
-const { getRawAddressCollection } = require("../mongo");
-const {
-  store: { getAddresses },
-  busLogger,
-} = require("@statescan/common");
+const { getAddresses, clearAddresses } = require("../store/blockAddresses");
+const { busLogger } = require("../logger");
 
-async function updateRawAddresses(indexer) {
+async function updateRawAddrs(indexer, col) {
   const addrs = getAddresses(indexer.blockHeight);
-  if (addrs.length < 1) {
+  if (addrs.length <= 0) {
     return;
   }
 
-  const col = await getRawAddressCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const addr of addrs) {
     bulk
@@ -20,11 +16,12 @@ async function updateRawAddresses(indexer) {
   }
 
   await bulk.execute();
+  clearAddresses(indexer.blockHeight);
   busLogger.info(
     `${addrs.length} raw addresses updated at height ${indexer.blockHeight}`
   );
 }
 
 module.exports = {
-  updateRawAddresses,
+  updateRawAddrs,
 };

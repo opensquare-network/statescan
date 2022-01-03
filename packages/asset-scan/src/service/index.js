@@ -1,4 +1,4 @@
-const { updateRawAddresses } = require("./updateRawAddresses");
+const { getRawAddressCollection } = require("../mongo");
 const { saveAssets } = require("./asset/saveBlockAssets");
 const {
   queryAndSaveAssetAccountsToDb,
@@ -7,6 +7,9 @@ const { flushAssetTransfersToDb } = require("../mongo/services/asset");
 const {
   flushNativeTokenTransfersToDb,
 } = require("../mongo/services/nativeToken");
+const {
+  db: { updateRawAddrs },
+} = require("@statescan/common");
 
 async function flushData(indexer) {
   await saveAssets(indexer);
@@ -15,7 +18,7 @@ async function flushData(indexer) {
   await flushAssetTransfersToDb(indexer.blockHash);
 
   await queryAndSaveAssetAccountsToDb(indexer);
-  await updateRawAddresses(indexer);
+  await updateRawAddrs(indexer, await getRawAddressCollection());
 }
 
 module.exports = {

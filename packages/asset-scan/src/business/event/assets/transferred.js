@@ -1,50 +1,32 @@
+const { addAssetTransfer } = require("../../common/store/assetTransfer");
+const { addAssetId } = require("../../common/store/blockAsset");
+const { addAssetAddresses } = require("../../common/store/blockAssetAddresses");
 const {
-  saveAsset,
-  saveNewAssetTransfer,
-  updateOrCreateAssetHolder,
-} = require("../../../mongo/services/asset");
-const { getAssetsMetadata } = require("../../common/metadata");
-const { getAssetsAsset } = require("../../common/assetStorage");
-const { getAssetsAccount } = require("../../common/accountStorage");
+  store: { addAddresses },
+} = require("@statescan/common");
 
 async function handleTransferred(event, indexer, extrinsic) {
   const eventData = event.data.toJSON();
   const [assetId, from, to, balance] = eventData;
 
   const extrinsicHash = extrinsic.hash.toJSON();
-  const { section: extrinsicSection, method: extrinsicMethod } =
-    extrinsic.method;
+  const { section, method } = extrinsic.method;
 
-  const asset = await getAssetsAsset(indexer.blockHash, assetId);
-  const metadata = await getAssetsMetadata(indexer.blockHash, assetId);
-
-  // fixme: why do we update asset info when asset transferred?
-  await saveAsset(indexer, assetId, asset, metadata);
-
-  await saveNewAssetTransfer(
+  addAssetId(indexer.blockHeight, assetId);
+  addAssetTransfer(indexer.blockHash, {
     indexer,
     extrinsicHash,
-    extrinsicSection,
-    extrinsicMethod,
+    module: section,
+    method,
     assetId,
     from,
     to,
-    balance
-  );
+    balance,
+    listIgnore: false,
+  });
 
-  const assetOfFromAddress = await getAssetsAccount(
-    indexer.blockHash,
-    assetId,
-    from
-  );
-  await updateOrCreateAssetHolder(indexer, assetId, from, assetOfFromAddress);
-
-  const assetOfToAddress = await getAssetsAccount(
-    indexer.blockHash,
-    assetId,
-    to
-  );
-  await updateOrCreateAssetHolder(indexer, assetId, to, assetOfToAddress);
+  addAssetAddresses(indexer.blockHeight, assetId, [from, to]);
+  addAddresses(indexer.blockHeight, [from, to]);
 }
 
 module.exports = {

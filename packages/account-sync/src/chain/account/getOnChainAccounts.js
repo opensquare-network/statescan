@@ -1,21 +1,20 @@
-const { findBlockApi, getApi } = require("@statescan/common");
+const { getApi } = require("@statescan/common");
 const { getAccountStorageKey } = require("./accountStorageKey");
 
-async function getOnChainAccounts(indexer, addrs = []) {
+async function getOnChainAccounts(addrs = []) {
   const uniqueAddrs = [...new Set(addrs)];
   const keys = uniqueAddrs.map(getAccountStorageKey);
   const api = await getApi();
-  const result = await api.rpc.state.queryStorageAt(keys, indexer.blockHash);
+  const result = await api.rpc.state.queryStorageAt(keys);
   const accountInfoHexArr = (result || []).map((i) => i.toHex());
 
-  const blockApi = await findBlockApi(indexer.blockHash);
   return uniqueAddrs.reduce((result, address, idx) => {
     const accountInfoHex = accountInfoHexArr[idx];
     if (!accountInfoHex) {
       return result;
     }
 
-    const accountInfo = blockApi.registry.createType(
+    const accountInfo = api.registry.createType(
       "AccountInfo",
       accountInfoHex,
       true

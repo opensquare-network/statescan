@@ -1,39 +1,20 @@
-const { BalancesEvents } = require("@statescan/common");
-const { isBalancesEvent } = require("./utils");
-const { saveNativeTokenTransfer } = require("../../../mongo/services/nativeToken");
+const { addTwoAccountsByEvent } = require("./twoAccount");
+const { addSingleAccountByEvent } = require("./singleAccount");
+const { handleTransfer } = require("./transfer");
+const { Modules, BalancesEvents } = require("@statescan/common");
 
-async function handleBalancesEvent(
-  event,
-  eventSort,
-  extrinsic,
-  extrinsicIndex,
-  blockIndexer
-) {
-  const { section, method, data } = event;
+async function handleBalancesEvent(event, indexer, extrinsic) {
+  const { section, method } = event;
 
-  if (!isBalancesEvent(section)) {
+  if (section !== Modules.Balances) {
     return false;
   }
 
-  if ([BalancesEvents.Transfer].includes(method)) {
-    const eventData = data.toJSON();
-    const [from, to, value] = eventData;
+  addSingleAccountByEvent(...arguments);
+  addTwoAccountsByEvent(...arguments);
 
-    const extrinsicHash = extrinsic.hash.toJSON();
-    const { section: extrinsicSection, method: extrinsicMethod } = extrinsic.method;
-
-    await saveNativeTokenTransfer(blockIndexer, {
-      indexer: blockIndexer,
-      eventSort,
-      extrinsicIndex,
-      extrinsicHash,
-      module: extrinsicSection,
-      method: extrinsicMethod,
-      from,
-      to,
-      balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)
-      listIgnore: false,
-    });
+  if (BalancesEvents.Transfer === method) {
+    await handleTransfer(...arguments);
   }
 }
 

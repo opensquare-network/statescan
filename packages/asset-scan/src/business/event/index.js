@@ -1,6 +1,3 @@
-const {
-  handleBalancesEventWithoutExtrinsic,
-} = require("./balance/noExtrinsic");
 const { handleAssetsEvent } = require("./assets");
 const { handleBalancesEvent } = require("./balance");
 
@@ -25,26 +22,9 @@ async function handleEvents(events, blockIndexer, extrinsics) {
 
       const extrinsic = extrinsics[extrinsicIndex];
       await handleAssetsEvent(event, indexer, extrinsic);
-      await handleBalancesEvent(
-        event,
-        eventSort,
-        extrinsic,
-        extrinsicIndex,
-        blockIndexer
-      );
-    } else {
-      await handleEventWithoutExtrinsic(event, eventSort, blockIndexer, events);
+      await handleBalancesEvent(event, indexer, extrinsic);
     }
   }
-}
-
-async function handleEventWithoutExtrinsic(
-  event,
-  eventSort,
-  blockIndexer,
-  blockEvents
-) {
-  await handleBalancesEventWithoutExtrinsic(...arguments);
 }
 
 module.exports = {

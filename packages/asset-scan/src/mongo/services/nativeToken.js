@@ -1,13 +1,11 @@
 const {
-  addNativeTransfer,
   getBlockNativeTransfers,
   clearNativeTransfers,
-} = require("./store/blockNativeTokenTransfers");
+} = require("../../business/common/store/blockNativeTokenTransfers");
 const { getAssetTransferCollection } = require("..");
-
-async function saveNativeTokenTransfer(indexer, transfer) {
-  addNativeTransfer(indexer.blockHash, transfer);
-}
+const {
+  utils: { toDecimal128 },
+} = require("@statescan/common");
 
 async function flushNativeTokenTransfersToDb(blockHash) {
   const transfers = getBlockNativeTransfers(blockHash);
@@ -18,7 +16,10 @@ async function flushNativeTokenTransfersToDb(blockHash) {
   const col = await getAssetTransferCollection();
   const bulk = col.initializeUnorderedBulkOp();
   for (const transfer of transfers) {
-    bulk.insert(transfer);
+    bulk.insert({
+      ...transfer,
+      balance: toDecimal128(transfer.balance),
+    });
   }
 
   const result = await bulk.execute();
@@ -29,6 +30,5 @@ async function flushNativeTokenTransfersToDb(blockHash) {
 }
 
 module.exports = {
-  saveNativeTokenTransfer,
-  flushNativeTokenTransfersToDb
+  flushNativeTokenTransfersToDb,
 };

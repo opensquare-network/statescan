@@ -168,32 +168,36 @@ export default function SubMenu({
             {menus.map((item, index) => (
               <Fragment key={index}>
                 <Link href={`/${item.value}`} passHref>
-                  <MenuItem
-                    onClick={() => {
-                      closeMenu();
-                      setIsActive(false);
-                    }}
-                    selected={router.pathname === `/${item.value}`}
-                    disabled={item.value === ""}
-                  >
-                    {item.name}
-                  </MenuItem>
+                  <a>
+                    <MenuItem
+                      onClick={() => {
+                        closeMenu();
+                        setIsActive(false);
+                      }}
+                      selected={router.pathname === `/${item.value}`}
+                      disabled={item.value === ""}
+                    >
+                      {item.name}
+                    </MenuItem>
+                  </a>
                 </Link>
                 {index === divideIndex && <Divider />}
                 {(item.children ?? []).map((child, index) => {
                   return (
                     <Fragment key={index}>
                       <Link href={`/${child.value}`} passHref>
-                        <SubMenuItem
-                          onClick={() => {
-                            closeMenu();
-                            setIsActive(false);
-                          }}
-                          selected={router.pathname === `/${child.value}`}
-                          disabled={child.value === ""}
-                        >
-                          {child.name}
-                        </SubMenuItem>
+                        <a>
+                          <SubMenuItem
+                            onClick={() => {
+                              closeMenu();
+                              setIsActive(false);
+                            }}
+                            selected={router.pathname === `/${child.value}`}
+                            disabled={child.value === ""}
+                          >
+                            {child.name}
+                          </SubMenuItem>
+                        </a>
                       </Link>
                     </Fragment>
                   );

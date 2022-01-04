@@ -307,15 +307,15 @@ export default function Address({
       body: (addressTransfers?.items || []).map((item, index) => [
         <InLink
           key={index}
-          to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}
+          to={`/event/${item.indexer.blockHeight}-${item.indexer.eventIndex}`}
         >
-          {`${item.indexer.blockHeight.toLocaleString()}-${item.eventSort}`}
+          {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.eventIndex}`}
         </InLink>,
         item.extrinsicHash ? (
           <InLink
-            to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+            to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
           >{`${item.indexer.blockHeight.toLocaleString()}-${
-            item.extrinsicIndex
+            item.indexer.extrinsicIndex
           }`}</InLink>
         ) : (
           "-"
@@ -335,9 +335,9 @@ export default function Address({
         <>
           {item.assetSymbol
             ? `${bigNumber2Locale(
-                fromAssetUnit(item.balance, item.assetDecimals)
+                fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)
               )} `
-            : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))} `}
+            : `${bigNumber2Locale(fromSymbolUnit(item.balance.$numberDecimal, symbol))} `}
           <SymbolLink assetId={item.assetId} destroyedAt={item.assetDestroyedAt} createdAt={item.assetCreatedAt}>
             {item.assetSymbol ? item.assetSymbol : symbol}
           </SymbolLink>

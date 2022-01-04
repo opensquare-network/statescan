@@ -254,7 +254,7 @@ async function getExtrinsicTransfers(ctx) {
     const [, blockHeight, extrinsicIndex] = match;
     q = {
       "indexer.blockHeight": parseInt(blockHeight),
-      extrinsicIndex: parseInt(extrinsicIndex),
+      "indexer.extrinsicIndex": parseInt(extrinsicIndex),
     };
   } else {
     q = { extrinsicHash: indexOrHash };
@@ -264,7 +264,7 @@ async function getExtrinsicTransfers(ctx) {
   const items = await col
     .aggregate([
       { $match: q },
-      { $sort: { eventSort: 1 } },
+      { $sort: { "indexer.eventIndex": 1 } },
       {
         $lookup: {
           from: "asset",
@@ -275,7 +275,7 @@ async function getExtrinsicTransfers(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -291,7 +291,6 @@ async function getExtrinsicTransfers(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",

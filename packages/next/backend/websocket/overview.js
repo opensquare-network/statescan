@@ -54,7 +54,7 @@ async function calcOverview() {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -70,7 +70,6 @@ async function calcOverview() {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",

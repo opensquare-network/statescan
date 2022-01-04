@@ -104,7 +104,10 @@ async function getAssetTransfers(ctx) {
     throw new HttpError(404, "Asset not found");
   }
 
-  const q = { asset: asset._id };
+  const q = {
+    assetId: parseInt(assetId),
+    assetHeight: parseInt(blockHeight),
+   };
 
   const transferCol = await getAssetTransferCollection();
   const items = await transferCol
@@ -112,46 +115,7 @@ async function getAssetTransfers(ctx) {
       { $match: q },
       { $sort: { "indexer.blockHeight": -1 } },
       { $skip: page * pageSize },
-      { $limit: pageSize },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetId: "$asset.assetId",
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
+      { $limit: pageSize }
     ])
     .toArray();
 
@@ -184,7 +148,8 @@ async function getAssetHolders(ctx) {
   }
 
   const q = {
-    asset: asset._id,
+    assetId: parseInt(assetId),
+    assetHeight: parseInt(blockHeight),
     balance: { $ne: 0 },
   };
 
@@ -195,45 +160,6 @@ async function getAssetHolders(ctx) {
       { $sort: { balance: -1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetId: "$asset.assetId",
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
     ])
     .toArray();
 

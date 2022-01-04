@@ -74,8 +74,8 @@ async function queryAndSaveAssetAccountsToDb(indexer) {
         .upsert()
         .update({
           $set: {
-            balance: toDecimal128(balance),
             ...assetAccount.info,
+            balance: toDecimal128(balance),
             lastUpdatedAt: indexer,
           },
         });

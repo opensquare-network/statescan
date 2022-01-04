@@ -19,7 +19,7 @@ import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import AssetTimeline from "../../components/timeline/assetTimeline";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 import AnalyticsChart from "components/analyticsChart";
 import { getAssetInfo } from "utils/assetInfoData";
 import AssetInfo from "components/assetInfo";
@@ -38,7 +38,7 @@ export default function Asset({
   if (!asset) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Asset" />
+        <PageError resource="Asset" />
       </Layout>
     );
   }
@@ -147,8 +147,8 @@ export default function Asset({
           <Nav
             data={[
               {
-                name: (asset.destroyedAt ? "Destroyed Assets" : "Asset Tracker"),
-                path: (asset.destroyedAt ? `/destroyed/assets` : `/assets`),
+                name: asset.destroyedAt ? "Destroyed Assets" : "Asset Tracker",
+                path: asset.destroyedAt ? `/destroyed/assets` : `/assets`,
               },
               { name: assetSymbol },
             ]}

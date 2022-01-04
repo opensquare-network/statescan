@@ -36,7 +36,7 @@ import Result from "components/result";
 import Pagination from "components/pagination";
 import Tooltip from "components/tooltip";
 import HashEllipsis from "components/hashEllipsis";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 import Identity from "../../components/account/identity";
 import TeleportDirection from "../../components/teleportDirection";
 import ExplorerLink from "../../components/explorerLink";
@@ -106,7 +106,7 @@ export default function Address({
   if (!addressDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Account" />
+        <PageError resource="Account" />
       </Layout>
     );
   }
@@ -499,7 +499,7 @@ export default function Address({
           >
             {`${item.classId}-${item.instanceId}`}
           </NftLink>,
-         item.indexer?.blockTime,
+          item.indexer?.blockTime,
           <Thumbnail
             imageThumbnail={imageThumbnail}
             key={`thumbnail${index}`}
@@ -668,7 +668,9 @@ export async function getServerSideProps(context) {
       pageSize: 25,
     }),
     nextApi.fetch(`addresses/${id}/nft/transfers`, {
-      page: ["nft-transfer", "nft transfer"].includes(activeTab) ? nPage - 1 : 0,
+      page: ["nft-transfer", "nft transfer"].includes(activeTab)
+        ? nPage - 1
+        : 0,
       pageSize: 25,
     }),
   ]);

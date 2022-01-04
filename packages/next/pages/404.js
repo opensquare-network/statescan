@@ -1,5 +1,5 @@
 import Layout from "components/layout";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 import { useEffect, useState } from "react";
 
 export default function Page404({}) {
@@ -10,7 +10,7 @@ export default function Page404({}) {
 
   return (
     <Layout node={node}>
-      <PageNotFound />
+      <PageError />
     </Layout>
   );
 }

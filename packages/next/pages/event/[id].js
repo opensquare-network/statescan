@@ -14,7 +14,7 @@ import {
   bigNumber2Locale,
 } from "utils";
 import { eventHead } from "utils/constants";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 import JsonAttributes from "components/jsonAttributes";
 import { getSymbol } from "utils/hooks";
 
@@ -37,7 +37,7 @@ export default function Block({ node, id, eventDetail }) {
   if (!eventDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Event"/>
+        <PageError resource="Event" />
       </Layout>
     );
   }

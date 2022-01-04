@@ -236,16 +236,18 @@ async function _createIndexes() {
   addressCol.createIndex({ address: 1 });
   addressCol.createIndex({ "data.total": -1 });
 
-  assetCol.createIndex({ assetId: 1 });
+  assetCol.createIndex({ assetId: 1, "createdAt.blockHeight": -1 });
   assetCol.createIndex({ symbol: 1 });
   assetCol.createIndex({ name: 1 });
 
   assetHolderCol.createIndex({ address: 1, balance: -1 });
+  assetHolderCol.createIndex({ assetId: 1, assetHeight: 1, balance: -1 });
 
   assetTransferCol.createIndex({ from: 1, "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ to: 1, "indexer.blockHeight": -1 });
-  assetTransferCol.createIndex({ asset: 1, from: 1 });
-  assetTransferCol.createIndex({ asset: 1, to: 1 });
+  assetTransferCol.createIndex({ assetId: 1, assetHeight: 1 });
+  assetTransferCol.createIndex({ assetId: 1, assetHeight: 1, from: 1 });
+  assetTransferCol.createIndex({ assetId: 1, assetHeight: 1, to: 1 });
   assetTransferCol.createIndex({ "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ listIgnore: 1, "indexer.blockHeight": -1 });
 

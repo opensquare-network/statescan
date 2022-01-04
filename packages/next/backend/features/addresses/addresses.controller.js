@@ -94,13 +94,18 @@ async function getAddressAssets(ctx) {
       {
         $lookup: {
           from: "assetTransfer",
-          let: { asset: "$asset", address: "$address" },
+          let: {
+            assetId: "$assetId",
+            assetHeight: "$assetHeight",
+            address: "$address",
+          },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$asset", "$$asset"] },
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$assetHeight", "$$assetHeight"] },
                     {
                       $or: [
                         { $eq: ["$from", "$$address"] },
@@ -152,7 +157,6 @@ async function getAddressAssets(ctx) {
       },
       {
         $addFields: {
-          asset: "$asset._id",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
@@ -163,14 +167,19 @@ async function getAddressAssets(ctx) {
       {
         $lookup: {
           from: "approval",
-          let: { asset: "$asset", address: "$address" },
+          let: {
+            assetId: "$assetId",
+            assetHeight: "$assetHeight",
+            address: "$address",
+          },
           as: "approved",
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$asset", "$$asset"] },
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$assetHeight", "$$assetHeight"] },
                     { $eq: ["$owner", "$$address"] },
                   ],
                 },

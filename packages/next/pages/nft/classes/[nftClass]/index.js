@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 import Layout from "components/layout";
 import Nav from "components/nav";
 import CopyText from "components/copyText";
-import { EmptyQuery, nftClassHead, nftClassInstanceHead } from "utils/constants";
+import {
+  EmptyQuery,
+  nftClassHead,
+  nftClassInstanceHead,
+} from "utils/constants";
 import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
@@ -31,7 +35,7 @@ import Preview from "components/nft/preview";
 import { useOnClickOutside } from "utils/hooks";
 import { shadow_100 } from "styles/shadows";
 import NftLink from "components/nft/nftLink";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -139,7 +143,7 @@ export default function NftClass({ node, nftClass, nftInstances }) {
   if (!nftClass) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="NFT class"/>
+        <PageError resource="NFT class" />
       </Layout>
     );
   }
@@ -153,18 +157,15 @@ export default function NftClass({ node, nftClass, nftInstances }) {
       total: nftInstances?.total,
       head: nftClassInstanceHead,
       body: (nftInstances?.items || []).map((instance, index) => [
-        <NftLink
-          key={`id${index}`}
-          nftClass={nftClass}
-          nftInstance={instance}
-        >
+        <NftLink key={`id${index}`} nftClass={nftClass} nftInstance={instance}>
           {instance.instanceId}
         </NftLink>,
         <Thumbnail
           imageThumbnail={
-            (instance?.nftMetadata?.recognized === false) ? null :
-              (instance?.nftMetadata?.imageThumbnail ??
-                nftClass?.nftMetadata?.imageThumbnail)
+            instance?.nftMetadata?.recognized === false
+              ? null
+              : instance?.nftMetadata?.imageThumbnail ??
+                nftClass?.nftMetadata?.imageThumbnail
           }
           key={`thumbnail${index}`}
           onClick={() => {
@@ -274,8 +275,8 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           <Nav
             data={[
               {
-                name: (nftClass.isDestroyed ? "Destroyed NFT" : "NFT"),
-                path: (nftClass.isDestroyed ? `/destroyed/nft` : `/nft`),
+                name: nftClass.isDestroyed ? "Destroyed NFT" : "NFT",
+                path: nftClass.isDestroyed ? `/destroyed/nft` : `/nft`,
               },
               { name: `Class` },
               { name: `${nftClass?.classId}` },
@@ -284,7 +285,9 @@ export default function NftClass({ node, nftClass, nftInstances }) {
           />
           <Between>
             <div>
-              <SquareBoxComponent background={nftClass?.nftMetadata?.background}>
+              <SquareBoxComponent
+                background={nftClass?.nftMetadata?.background}
+              >
                 <NftImage nftMetadata={nftClass?.nftMetadata} />
               </SquareBoxComponent>
             </div>
@@ -357,15 +360,12 @@ export async function getServerSideProps(context) {
   const { nftClass: classId, page } = context.query;
   const nPage = parseInt(page) || 1;
 
-  const [
-    { result: nftClass },
-    { result: nftInstances }
-  ] = await Promise.all([
+  const [{ result: nftClass }, { result: nftInstances }] = await Promise.all([
     nextApi.fetch(`nft/classes/${classId}`),
-    nextApi.fetch(
-      `nft/classes/${classId}/instances`,
-      { page: nPage - 1, pageSize: 25 }
-    ),
+    nextApi.fetch(`nft/classes/${classId}/instances`, {
+      page: nPage - 1,
+      pageSize: 25,
+    }),
   ]);
 
   return {

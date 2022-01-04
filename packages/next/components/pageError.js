@@ -97,9 +97,9 @@ const pageMap = new Map([
   ],
 ]);
 
-export default function PageNotFound({ resource, code = "404" }) {
+export default function PageError({ resource, code = "404" }) {
   const router = useRouter();
-  const data = pageMap.get(code);
+  const data = pageMap.get(code) ?? pageMap.get("500");
 
   return (
     <Wrapper>

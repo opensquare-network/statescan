@@ -1,10 +1,10 @@
 import Layout from "components/layout";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 
 export default function Page503({}) {
   return (
     <Layout>
-      <PageNotFound code="503" />
+      <PageError code="503" />
     </Layout>
   );
 }

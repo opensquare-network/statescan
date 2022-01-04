@@ -112,24 +112,30 @@ async function updateOrCreateApproval(
     return;
   }
 
+  const assetHeight = asset.createdAt.blockHeight;
+
   const col = await getAssetApprovalCollection();
 
   if (!approval) {
     await col.deleteOne({
-      asset: asset._id,
+      assetId,
+      assetHeight,
       owner,
       delegate,
     });
   } else {
     await col.updateOne(
       {
-        asset: asset._id,
+        assetId,
+        assetHeight,
         owner,
         delegate,
       },
       {
         $set: {
           ...approval,
+          amount: toDecimal128(approval.amount),
+          deposit: toDecimal128(approval.deposit),
           lastUpdatedAt: blockIndexer,
         },
       },

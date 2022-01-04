@@ -40,7 +40,7 @@ async function getHolderAssets(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -56,7 +56,6 @@ async function getHolderAssets(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",

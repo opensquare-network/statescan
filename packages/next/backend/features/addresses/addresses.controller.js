@@ -136,7 +136,7 @@ async function getAddressAssets(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -153,7 +153,6 @@ async function getAddressAssets(ctx) {
       {
         $addFields: {
           asset: "$asset._id",
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
@@ -241,7 +240,7 @@ async function getAddressTransfers(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -257,7 +256,6 @@ async function getAddressTransfers(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",

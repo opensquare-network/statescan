@@ -161,8 +161,8 @@ export default function Home({ node, overview: ssrOverview, price }) {
         <TransferHeightAge
           key={`${index}-1`}
           node={node}
-          extrinsicIndex={item.extrinsicIndex}
-          age={item?.indexer?.blockTime}
+          extrinsicIndex={item.indexer.extrinsicIndex}
+          age={item.indexer.blockTime}
           isEvent={!item.extrinsicHash}
           blockHeight={item.indexer.blockHeight}
         />,
@@ -173,8 +173,8 @@ export default function Home({ node, overview: ssrOverview, price }) {
           to={item.to}
           amount={
             item?.assetSymbol
-              ? fromAssetUnit(item.balance, item.assetDecimals)
-              : fromSymbolUnit(item.balance, symbol)
+              ? fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)
+              : fromSymbolUnit(item.balance.$numberDecimal, symbol)
           }
           symbol={item.assetSymbol ?? symbol}
           assetId={item.assetId}
@@ -187,10 +187,10 @@ export default function Home({ node, overview: ssrOverview, price }) {
       (overview?.latestTransfers || []).map((item, index) => [
         item.extrinsicHash ? (
           <InLink
-            to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
+            to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
           >
             {`${item.indexer.blockHeight.toLocaleString()}-${
-              item.extrinsicIndex
+              item.indexer.extrinsicIndex
             }`}
           </InLink>
         ) : (
@@ -217,10 +217,10 @@ export default function Home({ node, overview: ssrOverview, price }) {
           to={`/account/${item.to}`}
         />,
         item?.assetSymbol
-          ? `${fromAssetUnit(item.balance, item.assetDecimals)} ${
+          ? `${fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)} ${
               item.assetSymbol
             }`
-          : `${fromSymbolUnit(item.balance, symbol)} ${symbol}`,
+          : `${fromSymbolUnit(item.balance.$numberDecimal, symbol)} ${symbol}`,
       ]),
     [overview?.latestTransfers, symbol]
   );

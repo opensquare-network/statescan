@@ -25,9 +25,9 @@ export default function Transfers({ node, transfers, filter }) {
           body={(transfers?.items || []).map((item, index) => [
             <InLink
               key={`${index}-1`}
-              to={`/event/${item?.indexer?.blockHeight}-${item?.eventSort}`}
+              to={`/event/${item?.indexer?.blockHeight}-${item?.indexer.eventIndex}`}
             >
-              {item?.indexer?.blockHeight.toLocaleString()}-{item?.eventSort}
+              {item?.indexer?.blockHeight.toLocaleString()}-{item?.indexer.eventIndex}
             </InLink>,
             <InLink
               key={`${index}-2`}
@@ -50,9 +50,9 @@ export default function Transfers({ node, transfers, filter }) {
             <>
               {item.assetSymbol
                 ? `${bigNumber2Locale(
-                    fromAssetUnit(item.balance, item.assetDecimals)
+                    fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)
                   )} `
-                : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))} `}
+                : `${bigNumber2Locale(fromSymbolUnit(item.balance.$numberDecimal, symbol))} `}
               <SymbolLink assetId={item.assetId} destroyedAt={item.assetDestroyedAt} createdAt={item.assetCreatedAt}>
                 {item.assetSymbol ? item.assetSymbol : symbol}
               </SymbolLink>

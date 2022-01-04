@@ -15,8 +15,15 @@ async function getTransfer(ctx) {
   }
 
   const assetCol = await getAssetCollection();
-  const asset = transfer.asset
-    ? await assetCol.findOne({ _id: transfer.asset })
+  const asset = (
+    transfer.assetId !== undefined &&
+    transfer.assetHeight !== undefined
+  ) ? await assetCol.findOne(
+        {
+          assetId: transfer.assetId,
+          "createdAt.blockHeight": transfer.assetHeight,
+        }
+      )
     : null;
 
   ctx.body = {
@@ -46,7 +53,7 @@ async function getLatestTransfers(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -62,7 +69,6 @@ async function getLatestTransfers(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
@@ -116,7 +122,7 @@ async function getTransfers(ctx) {
                 $expr: {
                   $and: [
                     { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
                   ]
                 }
               }
@@ -132,7 +138,6 @@ async function getTransfers(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",

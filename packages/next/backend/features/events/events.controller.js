@@ -67,20 +67,26 @@ async function getEvent(ctx) {
     const transferCol = await getAssetTransferCollection();
     const transfer = await transferCol.findOne({
       "indexer.blockHeight": Number(blockHeight),
-      eventSort: Number(eventSort),
+      "indexer.eventIndex": Number(eventSort),
     });
 
     if (transfer) {
       const assetCol = await getAssetCollection();
-      const asset = transfer.asset
-        ? await assetCol.findOne({ _id: transfer.asset })
+      const asset = (
+        transfer.assetId !== undefined &&
+        transfer.assetHeight !== undefined
+      ) ? await assetCol.findOne(
+            {
+              assetId: transfer.assetId,
+              "createdAt.blockHeight": transfer.assetHeight,
+            }
+          )
         : null;
 
       ctx.body = {
         ...event,
         transfer: {
           ...transfer,
-          assetId: asset?.assetId,
           assetCreatedAt: asset?.createdAt,
           assetName: asset?.name,
           assetSymbol: asset?.symbol,

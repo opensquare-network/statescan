@@ -24,7 +24,7 @@ import {
   EmptyQuery,
   blockLogsHead,
 } from "utils/constants";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 
 const FlexWrapper = styled.div`
   display: flex;
@@ -53,7 +53,7 @@ export default function Block({
   if (!blockDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Block" />
+        <PageError resource="Block" />
       </Layout>
     );
   }

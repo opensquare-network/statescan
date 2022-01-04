@@ -25,7 +25,7 @@ import Pagination from "components/pagination";
 import BreakText from "components/breakText";
 import TransfersList from "components/transfersList";
 import MonoText from "components/monoText";
-import PageNotFound from "components/pageNotFound";
+import PageError from "components/pageError";
 import JsonAttributes from "components/jsonAttributes";
 import Address from "components/address";
 import ModuleItem from "components/moduleItem";
@@ -56,7 +56,7 @@ export default function Extrinsic({
   if (!extrinsicDetail) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="Extrinsic" />
+        <PageError resource="Extrinsic" />
       </Layout>
     );
   }

@@ -25,8 +25,7 @@ import Pagination from "components/pagination";
 import InLink from "components/inLink";
 import { text_dark_major } from "styles/textStyles";
 import NftLink from "components/nft/nftLink";
-import PageNotFound from "components/pageNotFound";
-
+import PageError from "components/pageError";
 
 const Between = styled.div`
   margin-bottom: 16px;
@@ -105,21 +104,29 @@ const RowItem = styled.div`
 
 const TextDark = styled.span`
   ${text_dark_major};
-`
+`;
 
-export default function NftInstance({ node, nftClass, nftInstance, nftTransfers }) {
+export default function NftInstance({
+  node,
+  nftClass,
+  nftInstance,
+  nftTransfers,
+}) {
   if (!nftClass || !nftInstance) {
     return (
       <Layout node={node}>
-        <PageNotFound resource="NFT instance"/>
+        <PageError resource="NFT instance" />
       </Layout>
     );
   }
 
   const name = (nftInstance?.nftMetadata ?? nftClass?.nftMetadata)?.name;
-  const imageThumbnail = (nftInstance?.nftMetadata?.recognized === false) ? null : (nftInstance?.nftMetadata?.image
-    ? nftInstance?.nftMetadata?.imageThumbnail
-    : nftClass?.nftMetadata?.imageThumbnail);
+  const imageThumbnail =
+    nftInstance?.nftMetadata?.recognized === false
+      ? null
+      : nftInstance?.nftMetadata?.image
+      ? nftInstance?.nftMetadata?.imageThumbnail
+      : nftClass?.nftMetadata?.imageThumbnail;
   const background = nftInstance?.nftMetadata?.image
     ? nftInstance.nftMetadata.imageMetadata?.background
     : nftClass?.nftMetadata?.imageMetadata?.background;
@@ -173,7 +180,9 @@ export default function NftInstance({ node, nftClass, nftInstance, nftTransfers 
             key={index}
             to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
           >
-            {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.extrinsicIndex}`}
+            {`${item.indexer.blockHeight.toLocaleString()}-${
+              item.indexer.extrinsicIndex
+            }`}
           </InLink>,
           <NftLink
             key={`instance${index}`}
@@ -183,14 +192,24 @@ export default function NftInstance({ node, nftClass, nftInstance, nftTransfers 
             {`${item.classId}-${item.instanceId}`}
           </NftLink>,
           item.indexer?.blockTime,
-          <Thumbnail imageThumbnail={imageThumbnail} key={`thumbnail${index}`}
+          <Thumbnail
+            imageThumbnail={imageThumbnail}
+            key={`thumbnail${index}`}
             background={background}
           />,
           <TextDark key={`name-${index}`}>
             <NftName name={name} />
           </TextDark>,
-          <AddressEllipsis key={`from-${index}`} address={item.from} to={`/account/${item.from}`} />,
-          <AddressEllipsis key={`to-${index}`} address={item.to} to={`/account/${item.to}`} />,
+          <AddressEllipsis
+            key={`from-${index}`}
+            address={item.from}
+            to={`/account/${item.from}`}
+          />,
+          <AddressEllipsis
+            key={`to-${index}`}
+            address={item.to}
+            to={`/account/${item.to}`}
+          />,
         ];
       }),
       foot: (
@@ -200,7 +219,7 @@ export default function NftInstance({ node, nftClass, nftInstance, nftTransfers 
           total={nftTransfers?.total}
         />
       ),
-    }
+    },
   ];
 
   function hex2a(hexx) {
@@ -232,8 +251,8 @@ export default function NftInstance({ node, nftClass, nftInstance, nftTransfers 
           <Nav
             data={[
               {
-                name: (isDestroyed ? "Destroyed NFT" : "NFT"),
-                path: (isDestroyed ? `/destroyed/nft` : `/nft`),
+                name: isDestroyed ? "Destroyed NFT" : "NFT",
+                path: isDestroyed ? `/destroyed/nft` : `/nft`,
               },
               {
                 name: `Class ${nftInstance?.classId}`,
@@ -301,14 +320,9 @@ export async function getServerSideProps(context) {
   const { nftClass: paramClassId, id: paramInstanceId, page } = context.query;
   const nPage = parseInt(page) || 1;
 
-  const [
-    { result: nftClass },
-    { result: nftInstance },
-  ] = await Promise.all([
+  const [{ result: nftClass }, { result: nftInstance }] = await Promise.all([
     nextApi.fetch(`nft/classes/${paramClassId}`),
-    nextApi.fetch(
-      `nft/classes/${paramClassId}/instances/${paramInstanceId}`
-    ),
+    nextApi.fetch(`nft/classes/${paramClassId}/instances/${paramInstanceId}`),
   ]);
   if (!nftClass || !nftInstance) {
     return {
@@ -317,7 +331,7 @@ export async function getServerSideProps(context) {
         nftClass: null,
         nftInstance: null,
         nftTransfers: EmptyQuery,
-      }
+      },
     };
   }
 
@@ -325,13 +339,9 @@ export async function getServerSideProps(context) {
     classId,
     classHeight,
     instanceId,
-    indexer: {
-      blockHeight: instanceHeight
-    }
+    indexer: { blockHeight: instanceHeight },
   } = nftInstance;
-  const [
-    { result: nftTransfers },
-  ] = await Promise.all([
+  const [{ result: nftTransfers }] = await Promise.all([
     nextApi.fetch(
       `nft/classes/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
       { page: nPage - 1, pageSize: 25 }

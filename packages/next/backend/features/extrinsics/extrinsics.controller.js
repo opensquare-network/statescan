@@ -268,8 +268,19 @@ async function getExtrinsicTransfers(ctx) {
       {
         $lookup: {
           from: "asset",
-          localField: "asset",
-          foreignField: "_id",
+          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$indexer.blockHeight", "$$assetHeight"] },
+                  ]
+                }
+              }
+            }
+          ],
           as: "asset",
         },
       },

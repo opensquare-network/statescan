@@ -182,7 +182,7 @@ const menusAssets = [
   {
     name: "Destroyed",
     value: "",
-    children:[
+    children: [
       {
         name: "Assets",
         value: "destroyed/assets",
@@ -192,9 +192,8 @@ const menusAssets = [
         value: "destroyed/nft",
       },
     ],
-  }
+  },
 ];
-
 
 export default function Header({ node }) {
   const router = useRouter();
@@ -240,16 +239,26 @@ export default function Header({ node }) {
           {(isActive || width > 900) && (
             <MenuWrapper ref={ref}>
               <Link href={`/`} passHref>
-                <MenuItem
-                  themecolor={theme.color}
-                  onClick={() => setIsActive(false)}
-                  selected={router.pathname === "/"}
-                >
-                  Home
-                </MenuItem>
+                <a>
+                  <MenuItem
+                    themecolor={theme.color}
+                    onClick={() => setIsActive(false)}
+                    selected={router.pathname === "/"}
+                  >
+                    Home
+                  </MenuItem>
+                </a>
               </Link>
-              <SubMenu category="BlockChain" menus={menusBlockchain} closeMenu={() => setIsActive(false)} />
-              <SubMenu category="Assets" menus={menusAssets} closeMenu={() => setIsActive(false)} divideIndex={1}
+              <SubMenu
+                category="BlockChain"
+                menus={menusBlockchain}
+                closeMenu={() => setIsActive(false)}
+              />
+              <SubMenu
+                category="Assets"
+                menus={menusAssets}
+                closeMenu={() => setIsActive(false)}
+                divideIndex={1}
               />
             </MenuWrapper>
           )}

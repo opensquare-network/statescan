@@ -151,7 +151,7 @@ export default function Overview({ node, overviewData, price }) {
         <OverviewItem
           title="Assets"
           icon="asset.svg"
-          link="assets"
+          link="/assets"
           text={assetsCountDynamic?.toLocaleString()}
         />
         <OverviewItem
@@ -164,7 +164,7 @@ export default function Overview({ node, overviewData, price }) {
           icon="nft-class.svg"
           text={nftClassesCount?.recognized ?? 0}
           textSec={nftClassesCount?.total ?? 0}
-          link="nft"
+          link="/nft"
           tip="Recognized / All"
         />
         <OverviewItem

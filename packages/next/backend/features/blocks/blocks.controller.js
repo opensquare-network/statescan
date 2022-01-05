@@ -10,7 +10,6 @@ const {
 const { extractPage } = require("../../utils");
 const {
   getPagedBlocks,
-  getLatestBlocks: getLatestBlocksFromDb,
 } = require("../../common/latestBlocks");
 
 async function getBlocks(ctx) {
@@ -30,10 +29,6 @@ async function getBlocks(ctx) {
     pageSize,
     total,
   };
-}
-
-async function getLatestBlocks(ctx) {
-  ctx.body = await getLatestBlocksFromDb(5);
 }
 
 async function getBlockHeight(ctx) {
@@ -184,7 +179,6 @@ async function getBlockFromTime(ctx) {
 
 module.exports = {
   getBlocks,
-  getLatestBlocks,
   getBlockHeight,
   getBlock,
   getBlockExtrinsics,

@@ -388,37 +388,17 @@ export async function getServerSideProps() {
   const node = process.env.NEXT_PUBLIC_CHAIN;
 
   const [
-    { result: latestBlocks },
-    { result: popularAssets },
-    { result: latestTransfers },
-    { result: assetsCount },
-    { result: transfersCount },
-    { result: holdersCount },
+    { result: overview },
     { result: price },
-    { result: popularNftClasses },
   ] = await Promise.all([
-    nextApi.fetch(`blocks/latest`),
-    nextApi.fetch(`assets/popular`),
-    nextApi.fetch(`transfers/latest`),
-    nextApi.fetch(`assets/count`),
-    nextApi.fetch(`transfers/count`),
-    nextApi.fetch(`holders/count`),
+    nextApi.fetch(`home/overview`),
     nextApi.fetch(`${node}/prices/daily`),
-    nextApi.fetch(`nft/classes/popular`),
   ]);
 
   return {
     props: {
       node,
-      overview: {
-        latestBlocks: latestBlocks ?? [],
-        latestTransfers: latestTransfers ?? [],
-        popularAssets: popularAssets ?? [],
-        assetsCount: assetsCount ?? 0,
-        transfersCount: transfersCount ?? 0,
-        holdersCount: holdersCount ?? 0,
-        popularNftClasses: popularNftClasses ?? [],
-      },
+      overview,
       price: price ?? [],
     },
   };

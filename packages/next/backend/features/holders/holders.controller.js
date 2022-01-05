@@ -6,23 +6,6 @@ const {
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
-async function getHoldersCount(ctx) {
-  const col = await getAssetCollection();
-  const [result] = await col
-    .aggregate([
-      { $match: { destoryedAt: null } }, // fixme: 1. typo 'destroyed' 2. we should feed the home page panel data with websocket
-      {
-        $group: {
-          _id: null,
-          accounts: { $sum: "$accounts" },
-        },
-      },
-    ])
-    .toArray();
-
-  ctx.body = result?.accounts || 0;
-}
-
 async function getHolderAssets(ctx) {
   const { address } = ctx.params;
 
@@ -129,7 +112,6 @@ async function getHolderTransfers(ctx) {
 }
 
 module.exports = {
-  getHoldersCount,
   getHolderAssets,
   getHolderExtrinsics,
   getHolderTransfers,

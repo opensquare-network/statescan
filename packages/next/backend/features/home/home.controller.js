@@ -1,3 +1,4 @@
+const { getOverview } = require("../../websocket/store");
 const {
   getAssetCollection,
   getAddressCollection,
@@ -545,7 +546,13 @@ async function searchAutoComplete(ctx) {
   };
 }
 
+async function getOverviewData(ctx) {
+  const overview = getOverview();
+  ctx.body = overview;
+}
+
 module.exports = {
   search,
   searchAutoComplete,
+  getOverviewData,
 };

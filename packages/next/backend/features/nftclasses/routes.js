@@ -9,6 +9,5 @@ router.get(
   "/nft/classes/:classId(\\d+)_:blockHeight(\\d+)",
   nftclassesController.getNftClass
 );
-router.get("/nft/classes/popular", nftclassesController.getPopularNftClasses);
 
 module.exports = router;

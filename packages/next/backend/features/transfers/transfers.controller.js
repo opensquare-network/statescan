@@ -36,61 +36,6 @@ async function getTransfer(ctx) {
   };
 }
 
-async function getLatestTransfers(ctx) {
-  const col = await getAssetTransferCollection();
-  const items = await col
-    .aggregate([
-      { $match: { listIgnore: false } },
-      { $sort: { "indexer.blockHeight": -1 } },
-      { $limit: 5 },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: { asset: 0 },
-      },
-    ])
-    .toArray();
-
-  ctx.body = items;
-}
-
-async function getTransfersCount(ctx) {
-  const col = await getAssetTransferCollection();
-  const count = await col.countDocuments();
-  ctx.body = count;
-}
-
 async function getTransfers(ctx) {
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
@@ -163,8 +108,6 @@ async function getTransfers(ctx) {
 }
 
 module.exports = {
-  getLatestTransfers,
-  getTransfersCount,
   getTransfer,
   getTransfers,
 };

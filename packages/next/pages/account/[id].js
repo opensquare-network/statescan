@@ -287,7 +287,7 @@ export default function Address({
             )}`}</AssetPrice>
           )}
         </div>,
-        bigNumber2Locale(fromAssetUnit(item.approved.$numberDecimal || 0, item.assetDecimals)),
+        bigNumber2Locale(fromAssetUnit(item.approved?.$numberDecimal || 0, item.assetDecimals)),
         item.isFrozen?.toString(),
         item.transfers || 0,
       ]),

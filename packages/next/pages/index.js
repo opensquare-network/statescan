@@ -398,7 +398,7 @@ export async function getServerSideProps() {
   return {
     props: {
       node,
-      overview,
+      overview: overview || null,
       price: price ?? [],
     },
   };

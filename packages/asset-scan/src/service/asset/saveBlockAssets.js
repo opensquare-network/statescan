@@ -22,10 +22,6 @@ async function saveAssets(indexer) {
   const bulk = col.initializeUnorderedBulkOp();
 
   for (const { assetId, detail, metadata } of assets) {
-    if (!metadata) {
-      throw new Error("No metadata found when save assets");
-    }
-
     bulk
       .find({
         assetId: parseInt(assetId),

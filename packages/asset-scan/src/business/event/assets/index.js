@@ -1,6 +1,7 @@
 const { handleTransferredApproved } = require("./transferedApproved");
 const { Modules, AssetsEvents } = require("@statescan/common");
 const { updateAssetAndTimeline } = require("./updateAssetAndTimeline");
+const { createAssetAndTimeline } = require("./createAssetAndTimeline");
 const { handleDestroyed } = require("./destroyed");
 const { handleTransferred } = require("./transferred");
 const { saveAssetAddress } = require("./saveAssetAddress");
@@ -16,10 +17,13 @@ async function handleAssetsEvent(event, indexer, extrinsic) {
     return;
   }
 
-  if (
-    [
+  if ([
       AssetsEvents.Created,
       AssetsEvents.ForceCreated,
+  ]) {
+    await createAssetAndTimeline(...arguments);
+  } else if (
+    [
       AssetsEvents.MetadataSet,
       AssetsEvents.AssetStatusChanged,
       AssetsEvents.TeamChanged,

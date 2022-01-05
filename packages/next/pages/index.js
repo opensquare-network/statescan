@@ -391,7 +391,7 @@ export async function getServerSideProps() {
     { result: overview },
     { result: price },
   ] = await Promise.all([
-    nextApi.fetch(`home/overview`),
+    nextApi.fetch(`overview`),
     nextApi.fetch(`${node}/prices/daily`),
   ]);
 

@@ -1,5 +1,6 @@
 const { getRawAddressCollection } = require("../mongo");
 const { saveAssets } = require("./asset/saveBlockAssets");
+const { saveAssetsTimeline } = require("./asset/saveBlockAssetsTimelineItems");
 const {
   queryAndSaveAssetAccountsToDb,
 } = require("./assetAccount/syncAssetAddresses");
@@ -13,6 +14,7 @@ const {
 
 async function flushData(indexer) {
   await saveAssets(indexer);
+  await saveAssetsTimeline(indexer);
 
   await flushNativeTokenTransfersToDb(indexer.blockHash);
   await flushAssetTransfersToDb(indexer.blockHash);

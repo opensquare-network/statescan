@@ -1,5 +1,5 @@
 const { addAssetId } = require("../../common/store/blockAsset");
-const { saveAssetTimeline } = require("../../../mongo/services/asset");
+const { addAssetTimelineItem } = require("../../common/store/assetTimeline");
 const { getAssetsMetadata } = require("../../common/metadata");
 const { getAssetsAsset } = require("../../common/assetStorage");
 
@@ -14,7 +14,7 @@ async function updateAssetAndTimeline(event, indexer, extrinsic) {
   const metadata = await getAssetsMetadata(indexer.blockHash, assetId);
 
   addAssetId(indexer.blockHeight, assetId);
-  await saveAssetTimeline(
+  addAssetTimelineItem(indexer.blockHeight, {
     indexer,
     assetId,
     section,
@@ -23,7 +23,7 @@ async function updateAssetAndTimeline(event, indexer, extrinsic) {
     extrinsicHash,
     asset,
     metadata
-  );
+  });
 }
 
 module.exports = {

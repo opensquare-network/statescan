@@ -20,7 +20,7 @@ async function handleAssetsEvent(event, indexer, extrinsic) {
   if ([
       AssetsEvents.Created,
       AssetsEvents.ForceCreated,
-  ]) {
+  ].includes(method)) {
     await createAssetAndTimeline(...arguments);
   } else if (
     [

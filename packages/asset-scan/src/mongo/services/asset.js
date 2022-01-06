@@ -8,6 +8,7 @@ const {
   getAssetCollection,
   getAssetApprovalCollection,
   getAssetTimelineCollection,
+  getAssetHolderCollection,
 } = require("..");
 const {
   utils: { toDecimal128 },
@@ -88,8 +89,28 @@ async function saveAssetTimeline(
 }
 
 async function destroyAsset(blockIndexer, assetId) {
-  const col = await getAssetCollection();
-  await col.updateOne(
+  const assetCol = await getAssetCollection();
+
+  const asset = await assetCol.findOne({ assetId, destroyedAt: null });
+  if (!asset) {
+    return;
+  }
+
+  // Delete asset holders
+  const holderCol = await getAssetHolderCollection();
+  await holderCol.deleteMany({
+    assetId: asset.assetId,
+    assetHeight: asset.createdAt.blockHeight,
+  });
+
+  // Delete asset approvals
+  const approvalCol = await getAssetApprovalCollection();
+  await approvalCol.deleteMany({
+    assetId: asset.assetId,
+    assetHeight: asset.createdAt.blockHeight,
+  });
+
+  await assetCol.updateOne(
     { assetId, destroyedAt: null },
     {
       $set: {

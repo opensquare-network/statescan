@@ -7,15 +7,16 @@ function assetKey(assetId, assetHeight) {
 
 function getUniqueAssetKeys(objects, assetIdField, assetHeightField) {
   return uniqBy(
-    objects?.map(item => [
-      item[assetIdField],
-      item[assetHeightField]
-    ]),
+    objects?.map(item =>
+      [
+        item[assetIdField],
+        item[assetHeightField]
+      ]) || [],
     item => assetKey(item[0], item[1])
   ).map(item => ({
     assetId: item[0],
     "createdAt.blockHeight": item[1],
-  })) || [];
+  }));
 }
 
 async function findAssetsForObjects(objects, assetIdField, assetHeightField) {

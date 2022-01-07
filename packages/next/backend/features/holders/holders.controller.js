@@ -1,4 +1,4 @@
-const { populateAssetInfo } = require("backend/common/asset");
+const { populateAssetInfo } = require("../../common/asset");
 const {
   getAssetHolderCollection,
   getExtrinsicCollection,

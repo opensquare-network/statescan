@@ -8,6 +8,7 @@ const {
   getNftClassCollection,
   getNftMetadataCollection,
 } = require("../../mongo");
+const { lookupNftMetadata, lookupNftClass } = require("../../common/nft");
 
 function escapeRegex(string) {
   return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
@@ -82,21 +83,7 @@ async function searchNftClassById({ q }) {
           classId: Number(q),
         },
       },
-      {
-        $lookup: {
-          from: "nftMetadata",
-          localField: "dataHash",
-          foreignField: "dataHash",
-          as: "nftMetadata",
-        },
-      },
-      {
-        $addFields: {
-          nftMetadata: {
-            $arrayElemAt: ["$nftMetadata", 0],
-          },
-        },
-      },
+      ...lookupNftMetadata(),
     ])
     .toArray();
 
@@ -113,21 +100,7 @@ async function searchNftClassByText({ icasePattern }) {
           isDestroyed: false,
         },
       },
-      {
-        $lookup: {
-          from: "nftMetadata",
-          localField: "dataHash",
-          foreignField: "dataHash",
-          as: "nftMetadata",
-        },
-      },
-      {
-        $addFields: {
-          nftMetadata: {
-            $arrayElemAt: ["$nftMetadata", 0],
-          },
-        },
-      },
+      ...lookupNftMetadata(),
       {
         $match: {
           "nftMetadata.name": icasePattern,
@@ -163,21 +136,7 @@ async function searchNftInstance({ icasePattern, isNum, isHash, isAddr }) {
           isDestroyed: false,
         },
       },
-      {
-        $lookup: {
-          from: "nftMetadata",
-          localField: "dataHash",
-          foreignField: "dataHash",
-          as: "nftMetadata",
-        },
-      },
-      {
-        $addFields: {
-          nftMetadata: {
-            $arrayElemAt: ["$nftMetadata", 0],
-          },
-        },
-      },
+      ...lookupNftMetadata(),
       {
         $match: {
           "nftMetadata.name": icasePattern,
@@ -295,21 +254,7 @@ async function findNftClassesById({ prefix }) {
           isDestroyed: false,
         },
       },
-      {
-        $lookup: {
-          from: "nftMetadata",
-          localField: "dataHash",
-          foreignField: "dataHash",
-          as: "nftMetadata",
-        },
-      },
-      {
-        $addFields: {
-          nftMetadata: {
-            $arrayElemAt: ["$nftMetadata", 0],
-          },
-        },
-      },
+      ...lookupNftMetadata(),
       { $sort: { "nftMetadata.name": 1 } },
       { $limit: 10 },
     ])
@@ -380,27 +325,12 @@ async function findNftInstancesByPrefix({ icasePrefixPattern }) {
                 },
               },
             },
+            ...lookupNftClass({ isDestroyed: false }),
             {
-              $lookup: {
-                from: "nftClass",
-                let: { classId: "$classId", classHeight: "$classHeight" },
-                pipeline: [
-                  {
-                    $match: {
-                      isDestroyed: false,
-                      $expr: {
-                        $and: [
-                          { $eq: ["$classId", "$$classId"] },
-                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                        ]
-                      }
-                    }
-                  },
-                ],
-                as: "nftClass",
+              $match: {
+                nftClass: { $exists: true },
               }
             },
-            { $unwind: "$nftClass" },
           ],
           as: "nftInstance",
         },

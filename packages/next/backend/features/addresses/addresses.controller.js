@@ -1,3 +1,4 @@
+const { lookupNftMetadata, lookupNftClass, lookupNftInstance } = require("../../common/nft");
 const { populateAssetInfo } = require("../../common/asset");
 const {
   getAddressCollection,
@@ -310,52 +311,8 @@ async function getAddressNftInstances(ctx) {
       { $sort: { instanceId: 1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "nftClass",
-          let: { classId: "$classId", classHeight: "$classHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$classId", "$$classId"] },
-                    { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                  ],
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftMetadata",
-                localField: "dataHash",
-                foreignField: "dataHash",
-                as: "nftMetadata",
-              },
-            },
-            {
-              $addFields: {
-                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-              },
-            },
-          ],
-          as: "class",
-        },
-      },
-      {
-        $lookup: {
-          from: "nftMetadata",
-          localField: "dataHash",
-          foreignField: "dataHash",
-          as: "nftMetadata",
-        },
-      },
-      {
-        $addFields: {
-          nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-          class: { $arrayElemAt: ["$class", 0] },
-        },
-      },
+      ...lookupNftClass(),
+      ...lookupNftMetadata(),
     ])
     .toArray();
 
@@ -387,87 +344,7 @@ async function getAddressNftTransfers(ctx) {
       { $sort: { "indexer.blockHeight": -1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "nftInstance",
-          let: {
-            classId: "$classId",
-            classHeight: "$classHeight",
-            instanceId: "$instanceId",
-            instanceHeight: "$instanceHeight",
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$classId", "$$classId"] },
-                    { $eq: ["$classHeight", "$$classHeight"] },
-                    { $eq: ["$instanceId", "$$instanceId"] },
-                    { $eq: ["$indexer.blockHeight", "$$instanceHeight"] },
-                  ],
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftMetadata",
-                localField: "dataHash",
-                foreignField: "dataHash",
-                as: "nftMetadata",
-              },
-            },
-            {
-              $addFields: {
-                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftClass",
-                let: { classId: "$classId", classHeight: "$classHeight" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$classId", "$$classId"] },
-                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                        ],
-                      },
-                    },
-                  },
-                  {
-                    $lookup: {
-                      from: "nftMetadata",
-                      localField: "dataHash",
-                      foreignField: "dataHash",
-                      as: "nftMetadata",
-                    },
-                  },
-                  {
-                    $addFields: {
-                      nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-                    },
-                  },
-                ],
-                as: "class",
-              },
-            },
-            {
-              $addFields: {
-                class: { $arrayElemAt: ["$class", 0] },
-              },
-            },
-          ],
-          as: "instance",
-        },
-      },
-      {
-        $addFields: {
-          instance: { $arrayElemAt: ["$instance", 0] },
-        },
-      },
+      ...lookupNftInstance(),
     ])
     .toArray();
 

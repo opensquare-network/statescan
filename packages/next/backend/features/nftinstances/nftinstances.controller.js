@@ -8,6 +8,7 @@ const {
   getNftMetadataCollection,
   getNftTransferCollection,
 }  = require("../../mongo");
+const { lookupNftMetadata } = require("../../common/nft");
 
 async function getNftMetadata(nftObj) {
   if (!nftObj?.dataHash) {
@@ -56,21 +57,7 @@ async function getNftInstancesByClassId(ctx) {
     },
     { $skip: page * pageSize },
     { $limit: pageSize },
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: ["$nftMetadata", 0],
-        },
-      }
-    }
+    ...lookupNftMetadata(),
   ]).toArray();
 
   const total = await instanceCol.countDocuments(q);
@@ -118,21 +105,7 @@ async function getNftInstancesByClass(ctx) {
     },
     { $skip: page * pageSize },
     { $limit: pageSize },
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: ["$nftMetadata", 0],
-        },
-      }
-    }
+    ...lookupNftMetadata(),
   ]).toArray();
   const total = await instanceCol.countDocuments(q);
 

@@ -413,23 +413,23 @@ export default function Address({
       total: addressNftInstances?.total,
       head: addressNftInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
-        const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
+        const name = (instance.nftMetadata ?? instance.nftClass.nftMetadata)?.name;
         const imageThumbnail =
           instance?.nftMetadata?.recognized === false
             ? null
             : instance.nftMetadata?.image
             ? instance.nftMetadata.imageThumbnail
-            : instance.class.nftMetadata?.imageThumbnail;
+            : instance.nftClass.nftMetadata?.imageThumbnail;
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
-          : instance.class.nftMetadata?.imageMetadata?.background;
+          : instance.nftClass.nftMetadata?.imageMetadata?.background;
         return [
-          <NftLink key={`classid${index}`} nftClass={instance.class}>
+          <NftLink key={`classid${index}`} nftClass={instance.nftClass}>
             {instance.classId}
           </NftLink>,
           <NftLink
             key={`instanceid${index}`}
-            nftClass={instance.class}
+            nftClass={instance.nftClass}
             nftInstance={instance}
           >
             {instance.instanceId}
@@ -444,7 +444,7 @@ export default function Address({
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <NftLink nftClass={instance.class} nftInstance={instance}>
+            <NftLink nftClass={instance.nftClass} nftInstance={instance}>
               <NftName name={name} />
             </NftLink>
           </TextDark>,
@@ -471,17 +471,17 @@ export default function Address({
       total: addressNftTransfers?.total,
       head: nftTransferHead,
       body: (addressNftTransfers?.items || []).map((item, index) => {
-        const instance = item.instance;
-        const name = (instance.nftMetadata ?? instance.class.nftMetadata)?.name;
+        const instance = item.nftInstance;
+        const name = (instance.nftMetadata ?? instance.nftClass.nftMetadata)?.name;
         const imageThumbnail =
           instance?.nftMetadata?.recognized === false
             ? null
             : instance.nftMetadata?.image
             ? instance.nftMetadata.imageThumbnail
-            : instance.class.nftMetadata?.imageThumbnail;
+            : instance.nftClass.nftMetadata?.imageThumbnail;
         const background = instance.nftMetadata?.image
           ? instance.nftMetadata.imageMetadata?.background
-          : instance.class.nftMetadata?.imageMetadata?.background;
+          : instance.nftClass.nftMetadata?.imageMetadata?.background;
 
         return [
           <InLink
@@ -494,7 +494,7 @@ export default function Address({
           </InLink>,
           <NftLink
             key={`instance${index}`}
-            nftClass={instance.class}
+            nftClass={instance.nftClass}
             nftInstance={instance}
           >
             {`${item.classId}-${item.instanceId}`}
@@ -510,7 +510,7 @@ export default function Address({
             background={background}
           />,
           <TextDark key={`name-${index}`}>
-            <NftLink nftClass={instance.class} nftInstance={instance}>
+            <NftLink nftClass={instance.nftClass} nftInstance={instance}>
               <NftName name={name} />
             </NftLink>
           </TextDark>,
@@ -549,7 +549,7 @@ export default function Address({
       <div ref={ref}>
         <Preview
           open={showModal}
-          nftClass={previewNftInstance?.class}
+          nftClass={previewNftInstance?.nftClass}
           nftInstance={previewNftInstance}
           closeFn={() => {
             setShowModal(false);

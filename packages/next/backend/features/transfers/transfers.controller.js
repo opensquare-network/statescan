@@ -5,7 +5,7 @@ const {
 } = require("../../mongo");
 const { HttpError } = require("../../exc");
 const { extractPage } = require("../../utils");
-const { populateAssetInfo } = require("backend/common/asset");
+const { populateAssetInfo } = require("../../common/asset");
 
 const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 

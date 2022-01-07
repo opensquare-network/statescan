@@ -139,7 +139,7 @@ async function calcOverview() {
                 {
                   $and: [
                     { nftMetadata: null },
-                    { "class.nftMetadata.recognized": true },
+                    { "nftClass.nftMetadata.recognized": true },
                   ],
                 },
               ]

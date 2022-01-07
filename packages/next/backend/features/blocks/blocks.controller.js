@@ -1,3 +1,4 @@
+const NodeCache = require("node-cache");
 const {
   getBlockCollection,
   getStatusCollection,
@@ -12,6 +13,8 @@ const {
   getPagedBlocks,
 } = require("../../common/latestBlocks");
 
+const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
+
 async function getBlocks(ctx) {
   const { page, pageSize } = extractPage(ctx);
   if (pageSize === 0 || page < 0) {
@@ -19,16 +22,34 @@ async function getBlocks(ctx) {
     return;
   }
 
-  const items = await getPagedBlocks(page, pageSize);
-  const col = await getBlockCollection();
-  const total = await col.estimatedDocumentCount();
+  // For default first page, use cached result
+  if (page === 0) {
+    const cachedResult = myCache.get(`blocks-default-first-page-${pageSize}`);
+    if (cachedResult) {
+      ctx.body = cachedResult;
+      return;
+    }
+  }
 
-  ctx.body = {
+  const items = await getPagedBlocks(page, pageSize);
+  const finalizedBlockcol = await getBlockCollection();
+  const unfinalizeBlockCol = await getUnFinalizedBlockCollection();
+  const finalizedTotal = await finalizedBlockcol.estimatedDocumentCount();
+  const unfinalizedTotal = await unfinalizeBlockCol.estimatedDocumentCount();
+
+  const result = {
     items,
     page,
     pageSize,
-    total,
+    total: finalizedTotal + unfinalizedTotal,
   };
+
+  // Cache default first page
+  if (page === 0 && pageSize <= 100) {
+    myCache.set(`blocks-default-first-page-${pageSize}`, result);
+  }
+
+  ctx.body = result;
 }
 
 async function getBlockHeight(ctx) {

@@ -1,4 +1,4 @@
-const NodeCache = require( "node-cache" );
+const NodeCache = require("node-cache");
 const {
   getExtrinsicCollection,
   getEventCollection,
@@ -30,6 +30,20 @@ async function getExtrinsics(ctx) {
     q.listIgnore = false;
   }
 
+  // For default first page, use cached result
+  if (
+    q.listIgnore === false &&
+    !q.section &&
+    !q.method &&
+    page === 0
+  ) {
+    const cachedResult = myCache.get(`extrinsics-default-first-page-${pageSize}`);
+    if (cachedResult) {
+      ctx.body = cachedResult;
+      return;
+    }
+  }
+
   const col = await getExtrinsicCollection();
   const items = await col
     .find(q)
@@ -48,12 +62,25 @@ async function getExtrinsics(ctx) {
     total = await col.countDocuments(q);
   }
 
-  ctx.body = {
+  const result = {
     items,
     page,
     pageSize,
     total,
   };
+
+  // Cache default first page
+  if (
+    q.listIgnore === false &&
+    !q.section &&
+    !q.method &&
+    page === 0 &&
+    pageSize <= 100
+  ) {
+    myCache.set(`extrinsics-default-first-page-${pageSize}`, result);
+  }
+
+  ctx.body = result;
 }
 
 async function getLatestExtrinsics(ctx) {

@@ -1,9 +1,12 @@
+const NodeCache = require("node-cache");
 const {
   getAssetTransferCollection,
   getAssetCollection,
 } = require("../../mongo");
 const { HttpError } = require("../../exc");
 const { extractPage } = require("../../utils");
+
+const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 
 async function getTransfer(ctx) {
   const { extrinsicHash } = ctx.params;
@@ -48,6 +51,18 @@ async function getTransfers(ctx) {
   const q = {};
   if (signOnly === "true") {
     q.listIgnore = false;
+  }
+
+  // For default first page, use cached result
+  if (
+    q.listIgnore === false &&
+    page === 0
+  ) {
+    const cachedResult = myCache.get(`transfers-default-first-page-${pageSize}`);
+    if (cachedResult) {
+      ctx.body = cachedResult;
+      return;
+    }
   }
 
   const col = await getAssetTransferCollection();
@@ -99,12 +114,23 @@ async function getTransfers(ctx) {
     .toArray();
   const total = await col.countDocuments(q);
 
-  ctx.body = {
+  const result = {
     items,
     page,
     pageSize,
     total,
   };
+
+  // Cache default first page
+  if (
+    q.listIgnore === false &&
+    page === 0 &&
+    pageSize <= 100
+  ) {
+    myCache.set(`transfers-default-first-page-${pageSize}`, result);
+  }
+
+  ctx.body = result;
 }
 
 module.exports = {

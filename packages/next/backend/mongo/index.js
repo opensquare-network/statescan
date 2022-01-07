@@ -2,13 +2,17 @@ const { MongoClient } = require("mongodb");
 
 const mongoUrl = process.env.MONGO_SERVER_URL || "mongodb://localhost:27017";
 
+// Asset DB
 const statusCollectionName = "status";
 const blockCollectionName = "block";
 const eventCollectionName = "event";
 const extrinsicCollectionName = "extrinsic";
 const assetTransferCollectionName = "assetTransfer";
 const assetCollectionName = "asset";
+const assetTimelineCollectionName = "assetTimeline";
 const assetHolderCollectionName = "assetHolder";
+
+// Account DB
 const addressCollectionName = "address";
 
 // unFinalized collections
@@ -34,9 +38,12 @@ const teleportInCollectionName = "teleportIn";
 const teleportOutCollectionName = "teleportOut";
 
 let client = null;
-let db = null;
+
 let nftDb = null;
 let xcmDb = null;
+let blockDb = null;
+let assetDb = null;
+let accountDb = null;
 
 let statusCol = null;
 let blockCol = null;
@@ -44,6 +51,7 @@ let eventCol = null;
 let extrinsicCol = null;
 let assetTransferCol = null;
 let assetCol = null;
+let assetTimelineCol = null;
 let assetHolderCol = null;
 let addressCol = null;
 
@@ -65,15 +73,6 @@ let nftTransferCol = null;
 let teleportInCol = null;
 let teleportOutCol = null;
 
-function getDbName() {
-  const dbName = process.env.MONGO_DB_NAME;
-  if (!dbName) {
-    throw new Error("MONGO_DB_NAME not set");
-  }
-
-  return dbName;
-}
-
 function getNftDbName() {
   const nftDbName = process.env.MONGO_DB_NFT_NAME;
   if (!nftDbName) {
@@ -92,29 +91,67 @@ function getXcmDbName() {
   return xcmDbName;
 }
 
+function getBlockDbName() {
+  const dbName = process.env.MONGO_DB_BLOCK_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_BLOCK_NAME not set");
+  }
+
+  return dbName;
+}
+
+function getAssetDbName() {
+  const dbName = process.env.MONGO_DB_ASSET_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_ASSET_NAME not set");
+  }
+
+  return dbName;
+}
+
+function getAccountDbName() {
+  const dbName = process.env.MONGO_DB_ACCOUNT_NAME;
+  if (!dbName) {
+    throw new Error("MONGO_DB_ACCOUNT_NAME not set");
+  }
+
+  return dbName;
+}
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
   });
 
-  const dbName = getDbName();
-  console.log(`Use scan DB name:`, dbName);
+  const assetDbName = getAssetDbName();
+  console.log(`Use asset scan DB name:`, assetDbName);
 
-  db = client.db(dbName);
-  statusCol = db.collection(statusCollectionName);
-  blockCol = db.collection(blockCollectionName);
-  eventCol = db.collection(eventCollectionName);
-  extrinsicCol = db.collection(extrinsicCollectionName);
-  assetTransferCol = db.collection(assetTransferCollectionName);
-  assetCol = db.collection(assetCollectionName);
-  assetHolderCol = db.collection(assetHolderCollectionName);
-  addressCol = db.collection(addressCollectionName);
+  assetDb = client.db(assetDbName);
+  assetTransferCol = assetDb.collection(assetTransferCollectionName);
+  assetCol = assetDb.collection(assetCollectionName);
+  assetTimelineCol = assetDb.collection(assetTimelineCollectionName);
+  assetHolderCol = assetDb.collection(assetHolderCollectionName);
 
-  unFinalizedBlockCol = db.collection(unFinalizedCollectionName);
-  unFinalizedExtrinsicCol = db.collection(unFinalizedExtrinsicCollectionName);
-  unFinalizedEventCol = db.collection(unFinalizedEventCollectionName);
+  dailyAssetStatisticCol = assetDb.collection(dailyAssetStatisticCollectionName);
 
-  dailyAssetStatisticCol = db.collection(dailyAssetStatisticCollectionName);
+  const accountDbName = getAccountDbName();
+  console.log(`Use account DB name:`, accountDbName);
+
+  accountDb = client.db(accountDbName);
+  addressCol = accountDb.collection(addressCollectionName);
+
+  const blockDbName = getBlockDbName();
+  console.log(`Use block scan DB name:`, blockDbName);
+
+  blockDb = client.db(blockDbName);
+  statusCol = blockDb.collection(statusCollectionName);
+  blockCol = blockDb.collection(blockCollectionName);
+  eventCol = blockDb.collection(eventCollectionName);
+  extrinsicCol = blockDb.collection(extrinsicCollectionName);
+
+  unFinalizedBlockCol = blockDb.collection(unFinalizedCollectionName);
+  unFinalizedExtrinsicCol = blockDb.collection(unFinalizedExtrinsicCollectionName);
+  unFinalizedEventCol = blockDb.collection(unFinalizedEventCollectionName);
 
   const nftDbName = getNftDbName();
   console.log(`Use nft scan DB name:`, nftDbName);
@@ -130,6 +167,8 @@ async function initDb() {
   nftTransferCol = nftDb.collection(nftTransferCollectionName);
 
   const xcmDbName = getXcmDbName();
+  console.log(`Use xcm scan DB name:`, nftDbName);
+
   xcmDb = client.db(xcmDbName);
   teleportInCol = xcmDb.collection(teleportInCollectionName);
   teleportOutCol = xcmDb.collection(teleportOutCollectionName);
@@ -138,7 +177,7 @@ async function initDb() {
 }
 
 async function _createIndexes() {
-  if (!db) {
+  if (!assetDb) {
     console.error("Please call initDb first");
     process.exit(1);
   }
@@ -197,16 +236,18 @@ async function _createIndexes() {
   addressCol.createIndex({ address: 1 });
   addressCol.createIndex({ "data.total": -1 });
 
-  assetCol.createIndex({ assetId: 1 });
+  assetCol.createIndex({ assetId: 1, "createdAt.blockHeight": -1 });
   assetCol.createIndex({ symbol: 1 });
   assetCol.createIndex({ name: 1 });
 
   assetHolderCol.createIndex({ address: 1, balance: -1 });
+  assetHolderCol.createIndex({ assetId: 1, assetHeight: 1, balance: -1 });
 
   assetTransferCol.createIndex({ from: 1, "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ to: 1, "indexer.blockHeight": -1 });
-  assetTransferCol.createIndex({ asset: 1, from: 1 });
-  assetTransferCol.createIndex({ asset: 1, to: 1 });
+  assetTransferCol.createIndex({ assetId: 1, assetHeight: 1 });
+  assetTransferCol.createIndex({ assetId: 1, assetHeight: 1, from: 1 });
+  assetTransferCol.createIndex({ assetId: 1, assetHeight: 1, to: 1 });
   assetTransferCol.createIndex({ "indexer.blockHeight": -1 });
   assetTransferCol.createIndex({ listIgnore: 1, "indexer.blockHeight": -1 });
 
@@ -259,6 +300,11 @@ async function getAssetTransferCollection() {
 async function getAssetCollection() {
   await tryInit(assetCol);
   return assetCol;
+}
+
+async function getAssetTimelineCollection() {
+  await tryInit(assetTimelineCol);
+  return assetTimelineCol;
 }
 
 async function getAssetHolderCollection() {
@@ -349,6 +395,7 @@ module.exports = {
   getEventCollection,
   getAssetTransferCollection,
   getAssetCollection,
+  getAssetTimelineCollection,
   getAssetHolderCollection,
   getAddressCollection,
   getUnFinalizedBlockCollection,

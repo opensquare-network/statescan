@@ -8,6 +8,7 @@ const specs = require("./chain/specs");
 const chainHeight = require("./chain/height");
 const fetchBlockMethods = require("./chain/fetchBlocks");
 const testConsts = require("./testCommon/constants");
+const test = require("./testCommon/utils");
 const blockUtils = require("./block");
 const env = require("./env");
 const logger = require("./logger");
@@ -15,6 +16,7 @@ const utils = require("./utils");
 const store = require("./store");
 const mem = require("./mem");
 const scan = require("./scan");
+const db = require("./mongo");
 
 module.exports = {
   sleep,
@@ -34,4 +36,6 @@ module.exports = {
   store,
   mem,
   scan,
+  test,
+  db,
 };

@@ -47,8 +47,19 @@ async function calcOverview() {
       {
         $lookup: {
           from: "asset",
-          localField: "asset",
-          foreignField: "_id",
+          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
+                  ]
+                }
+              }
+            }
+          ],
           as: "asset",
         },
       },
@@ -59,7 +70,6 @@ async function calcOverview() {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",

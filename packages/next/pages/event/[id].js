@@ -84,12 +84,12 @@ export default function Block({ node, id, eventDetail }) {
                 ? eventDetail.transfer.assetSymbol
                   ? `${bigNumber2Locale(
                       fromAssetUnit(
-                        eventDetail.transfer.balance,
+                        eventDetail.transfer.balance.$numberDecimal,
                         eventDetail.transfer.assetDecimals
                       )
                     )} ${eventDetail.transfer.assetSymbol}`
                   : `${bigNumber2Locale(
-                      fromSymbolUnit(eventDetail.transfer.balance, symbol)
+                      fromSymbolUnit(eventDetail.transfer.balance.$numberDecimal, symbol)
                     )} ${symbol}`
                 : "-",
             ]}

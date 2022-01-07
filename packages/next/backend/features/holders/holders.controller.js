@@ -6,23 +6,6 @@ const {
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
-async function getHoldersCount(ctx) {
-  const col = await getAssetCollection();
-  const [result] = await col
-    .aggregate([
-      { $match: { destoryedAt: null } },
-      {
-        $group: {
-          _id: null,
-          accounts: { $sum: "$accounts" },
-        },
-      },
-    ])
-    .toArray();
-
-  ctx.body = result?.accounts || 0;
-}
-
 async function getHolderAssets(ctx) {
   const { address } = ctx.params;
 
@@ -33,8 +16,19 @@ async function getHolderAssets(ctx) {
       {
         $lookup: {
           from: "asset",
-          localField: "asset",
-          foreignField: "_id",
+          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
+                  ]
+                }
+              }
+            }
+          ],
           as: "asset",
         },
       },
@@ -45,7 +39,6 @@ async function getHolderAssets(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
@@ -119,7 +112,6 @@ async function getHolderTransfers(ctx) {
 }
 
 module.exports = {
-  getHoldersCount,
   getHolderAssets,
   getHolderExtrinsics,
   getHolderTransfers,

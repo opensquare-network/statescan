@@ -375,11 +375,11 @@ export default function AssetTimelineItem({ data, asset }) {
       <ItemWrapper>
         <TimelineHeader>
           <BoldText>{getTitle(data)}</BoldText>
-          <Time ts={data.eventIndexer.blockTime} />
-          <BlockHeight height={data.eventIndexer.blockHeight} />
+          <Time ts={data.indexer.blockTime} />
+          <BlockHeight height={data.indexer.blockHeight} />
           <Links>
             <InLink
-              to={`/extrinsic/${data.eventIndexer.blockHeight}-${data.extrinsicIndex}`}
+              to={`/extrinsic/${data.indexer.blockHeight}-${data.indexer.extrinsicIndex}`}
             >
               <LinkItem>
                 <span>{"Extrinsic"}</span>
@@ -387,7 +387,7 @@ export default function AssetTimelineItem({ data, asset }) {
               </LinkItem>
             </InLink>
             <InLink
-              to={`/event/${data.eventIndexer.blockHeight}-${data.eventSort}`}
+              to={`/event/${data.indexer.blockHeight}-${data.indexer.eventIndex}`}
             >
               <LinkItem>
                 <span>{"Event"}</span>

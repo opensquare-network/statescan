@@ -3,40 +3,9 @@ const {
   getAssetCollection,
   getAssetHolderCollection,
   getAssetTransferCollection,
+  getAssetTimelineCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
-
-async function getLatestAssets(ctx) {
-  const col = await getAssetCollection();
-  const items = await col
-    .find({})
-    .sort({
-      "createdAt.blockHeight": -1,
-    })
-    .limit(5)
-    .toArray();
-
-  ctx.body = items;
-}
-
-async function getPopularAssets(ctx) {
-  const col = await getAssetCollection();
-  const items = await col
-    .find({})
-    .sort({
-      accounts: -1,
-    })
-    .limit(5)
-    .toArray();
-
-  ctx.body = items;
-}
-
-async function getAssetsCount(ctx) {
-  const col = await getAssetCollection();
-  const count = await col.countDocuments();
-  ctx.body = count;
-}
 
 async function getAssets(ctx) {
   const { page, pageSize } = extractPage(ctx);
@@ -84,6 +53,16 @@ async function getAsset(ctx) {
     assetId: parseInt(assetId),
     "createdAt.blockHeight": parseInt(blockHeight),
   });
+  if (item) {
+    const timelineCol = await getAssetTimelineCollection();
+    item.timeline = await timelineCol
+      .find({
+        assetId: item.assetId,
+        assetHeight: item.createdAt.blockHeight
+      })
+      .sort({ _id: 1 })
+      .toArray();
+  }
 
   ctx.body = item;
 }
@@ -93,6 +72,16 @@ async function getAssetById(ctx) {
   const col = await getAssetCollection();
   const option = { sort: { "createdAt.blockHeight": -1 } };
   const item = await col.findOne({ assetId: parseInt(assetId) }, option);
+  if (item) {
+    const timelineCol = await getAssetTimelineCollection();
+    item.timeline = await timelineCol
+      .find({
+        assetId: item.assetId,
+        assetHeight: item.createdAt.blockHeight
+      })
+      .sort({ _id: 1 })
+      .toArray();
+  }
 
   ctx.body = item;
 }
@@ -115,7 +104,10 @@ async function getAssetTransfers(ctx) {
     throw new HttpError(404, "Asset not found");
   }
 
-  const q = { asset: asset._id };
+  const q = {
+    assetId: parseInt(assetId),
+    assetHeight: parseInt(blockHeight),
+   };
 
   const transferCol = await getAssetTransferCollection();
   const items = await transferCol
@@ -123,58 +115,7 @@ async function getAssetTransfers(ctx) {
       { $match: q },
       { $sort: { "indexer.blockHeight": -1 } },
       { $skip: page * pageSize },
-      { $limit: pageSize },
-      {
-        $lookup: {
-          from: "extrinsic",
-          localField: "extrinsicHash",
-          foreignField: "hash",
-          as: "extrinsic",
-        },
-      },
-      {
-        $addFields: {
-          extrinsic: { $arrayElemAt: ["$extrinsic", 0] },
-        },
-      },
-      {
-        $addFields: {
-          module: "$extrinsic.section",
-          method: "$extrinsic.name",
-          extrinsicIndex: "$extrinsic.indexer.index",
-        },
-      },
-      {
-        $project: { extrinsic: 0 },
-      },
-      {
-        $lookup: {
-          from: "asset",
-          localField: "asset",
-          foreignField: "_id",
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetId: "$asset.assetId",
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
+      { $limit: pageSize }
     ])
     .toArray();
 
@@ -207,7 +148,8 @@ async function getAssetHolders(ctx) {
   }
 
   const q = {
-    asset: asset._id,
+    assetId: parseInt(assetId),
+    assetHeight: parseInt(blockHeight),
     balance: { $ne: 0 },
   };
 
@@ -218,34 +160,6 @@ async function getAssetHolders(ctx) {
       { $sort: { balance: -1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "asset",
-          localField: "asset",
-          foreignField: "_id",
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetId: "$asset.assetId",
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
     ])
     .toArray();
 
@@ -260,9 +174,6 @@ async function getAssetHolders(ctx) {
 }
 
 module.exports = {
-  getLatestAssets,
-  getPopularAssets,
-  getAssetsCount,
   getAssets,
   getAsset,
   getAssetById,

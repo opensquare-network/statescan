@@ -49,24 +49,18 @@ const easeOutQuart = (t, b, c, d) => {
   return -c * ((t = t / d - 1) * t * t * t - 1) + b;
 };
 
+const tokenMap = new Map([
+  ["westmint", "WND"],
+  ["statemine", "KSM"],
+  ["polkadot", "DOT"],
+]);
+
+const colorMap = new Map([
+  ["KSM", "#0f0f0f"],
+  ["WND", "#F22279"],
+]);
+
 export default function Overview({ node, overviewData, price }) {
-  const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
-  const tokenMap = new Map([
-    ["westmint", "WND"],
-    ["statemine", "KSM"],
-    ["polkadot", "DOT"],
-  ]);
-
-  const colorMap = new Map([
-    ["KSM", "#0f0f0f"],
-    ["WND", "#F22279"],
-  ]);
-
-  const token = tokenMap.get(node) ?? "";
-
-  const color = colorMap.get(token) ?? "#ddd";
-
-  const chartData = price ?? [];
 
   const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
   const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);
@@ -77,7 +71,7 @@ export default function Overview({ node, overviewData, price }) {
   const previousTimeRef = useRef();
   const animationDuration = 500;
 
-  const { nftClassesCount, nftInstancesCount } = overviewData;
+  const blocksHeightData = overviewData?.latestBlocks[0]?.header.number;
 
   useEffect(() => {
     if (overviewData && blocksHeightData) {
@@ -132,6 +126,12 @@ export default function Overview({ node, overviewData, price }) {
     /*eslint-disable */
   }, [blocksHeightData, overviewData]);
   /*eslint-enable */
+
+  const token = tokenMap.get(node) ?? "";
+  const color = colorMap.get(token) ?? "#ddd";
+
+  const chartData = price ?? [];
+  const { nftClassesCount, nftInstancesCount } = overviewData || {};
 
   return (
     <Wrapper>

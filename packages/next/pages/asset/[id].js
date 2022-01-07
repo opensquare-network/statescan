@@ -43,9 +43,7 @@ export default function Asset({
     );
   }
 
-  const assetSymbol = asset?.symbol;
-
-  const symbol = getSymbol(node);
+  const assetSymbol = asset.symbol;
 
   const tabTableData = [
     {
@@ -56,33 +54,29 @@ export default function Asset({
       body: (assetTransfers?.items || []).map((item, index) => [
         <InLink
           key={`${index}-1`}
-          to={`/event/${item.indexer.blockHeight}-${item.eventSort}`}
+          to={`/event/${item.indexer.blockHeight}-${item.indexer.eventIndex}`}
         >
-          {`${item.indexer.blockHeight}-${item.eventSort}`}
+          {`${item.indexer.blockHeight}-${item.indexer.eventIndex}`}
         </InLink>,
         <InLink
           key={`${index}-2`}
-          to={`/extrinsic/${item.indexer.blockHeight}-${item.extrinsicIndex}`}
-        >{`${item.indexer.blockHeight}-${item.extrinsicIndex}`}</InLink>,
+          to={`/extrinsic/${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}
+        >{`${item.indexer.blockHeight}-${item.indexer.extrinsicIndex}`}</InLink>,
         <Tooltip key={`${index}-3`} label={item.method} bg />,
         item.indexer.blockTime,
         <AddressEllipsis
           key={`${index}-4`}
-          address={item?.from}
-          to={`/account/${item?.from}`}
+          address={item.from}
+          to={`/account/${item.from}`}
         />,
         <AddressEllipsis
           key={`${index}-5`}
-          address={item?.to}
-          to={`/account/${item?.to}`}
+          address={item.to}
+          to={`/account/${item.to}`}
         />,
-        item.assetSymbol
-          ? `${bigNumber2Locale(
-              fromAssetUnit(item.balance, item.assetDecimals)
-            )} ${item.assetSymbol}`
-          : `${bigNumber2Locale(
-              fromSymbolUnit(item.balance, symbol)
-            )} ${symbol}`,
+        `${bigNumber2Locale(
+          fromAssetUnit(item.balance.$numberDecimal, asset.decimals)
+        )} ${assetSymbol}`,
       ]),
       foot: (
         <Pagination
@@ -101,11 +95,11 @@ export default function Asset({
         index + assetHolders.page * assetHolders.pageSize + 1,
         <Address
           key={index}
-          address={item?.address}
-          to={`/account/${item?.address}`}
+          address={item.address}
+          to={`/account/${item.address}`}
         />,
         bigNumber2Locale(
-          fromAssetUnit(item?.balance?.$numberDecimal, item?.assetDecimals)
+          fromAssetUnit(item.balance.$numberDecimal, asset.decimals)
         ),
       ]),
       foot: (

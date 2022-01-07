@@ -4,9 +4,6 @@ const statisticController = require("./statistic.controller");
 
 const router = new Router();
 
-router.get("/assets/latest", assetsController.getLatestAssets);
-router.get("/assets/popular", assetsController.getPopularAssets);
-router.get("/assets/count", assetsController.getAssetsCount);
 router.get("/assets", assetsController.getAssets);
 router.get("/assets/:assetId(\\d+)", assetsController.getAssetById);
 router.get(

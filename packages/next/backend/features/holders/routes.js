@@ -3,7 +3,6 @@ const holdersController = require("./holders.controller");
 
 const router = new Router();
 
-router.get("/holders/count", holdersController.getHoldersCount);
 router.get("/holders/:address/assets", holdersController.getHolderAssets);
 router.get(
   "/holders/:address/extrinsics",

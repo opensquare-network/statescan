@@ -189,9 +189,9 @@ export default function TransfersList({ node, assetTransfers, nftTransfers }) {
             <MajorText>
               {item.assetSymbol
                 ? `${bigNumber2Locale(
-                    fromAssetUnit(item.balance, item.assetDecimals)
+                    fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)
                   )}`
-                : `${bigNumber2Locale(fromSymbolUnit(item.balance, symbol))}`}
+                : `${bigNumber2Locale(fromSymbolUnit(item.balance.$numberDecimal, symbol))}`}
             </MajorText>
             {item.assetSymbol ? (
               <InLink

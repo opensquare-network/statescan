@@ -1,3 +1,4 @@
+const { getOverview } = require("../../websocket/store");
 const {
   getAssetCollection,
   getAddressCollection,
@@ -22,7 +23,6 @@ async function searchAssets({ icasePattern, q, isNum, isAddr, isHash }) {
   if (isNum) {
     return await assetCol.findOne(
       { assetId: Number(q) },
-      { projection: { timeline: 0 } }
     );
   }
 
@@ -30,7 +30,6 @@ async function searchAssets({ icasePattern, q, isNum, isAddr, isHash }) {
     {
       $or: [{ name: icasePattern }, { symbol: icasePattern }],
     },
-    { projection: { timeline: 0 } }
   );
 }
 
@@ -98,7 +97,6 @@ async function searchNftClassById({ q }) {
           },
         },
       },
-      { $project: { timeline: 0 } },
     ])
     .toArray();
 
@@ -135,7 +133,6 @@ async function searchNftClassByText({ icasePattern }) {
           "nftMetadata.name": icasePattern,
         },
       },
-      { $project: { timeline: 0 } },
     ])
     .toArray();
 }
@@ -186,7 +183,6 @@ async function searchNftInstance({ icasePattern, isNum, isHash, isAddr }) {
           "nftMetadata.name": icasePattern,
         },
       },
-      { $project: { timeline: 0 } },
     ])
     .toArray();
 
@@ -245,7 +241,6 @@ async function findAssetByPrefix({ icasePrefixPattern }) {
           { symbol: icasePrefixPattern },
         ],
       },
-      { projection: { timeline: 0 } }
     )
     .sort({ name: 1 })
     .limit(10)
@@ -260,7 +255,6 @@ async function findAssetById({ prefix }) {
         destroyedAt: null,
         assetId: Number(prefix),
       },
-      { projection: { timeline: 0 } }
     )
     .toArray();
 }
@@ -316,7 +310,6 @@ async function findNftClassesById({ prefix }) {
           },
         },
       },
-      { $project: { timeline: 0 } },
       { $sort: { "nftMetadata.name": 1 } },
       { $limit: 10 },
     ])
@@ -346,7 +339,6 @@ async function findNftClassesByPrefix({ icasePrefixPattern }) {
                 },
               },
             },
-            { $project: { timeline: 0 } },
           ],
           as: "nftClass",
         },
@@ -388,7 +380,6 @@ async function findNftInstancesByPrefix({ icasePrefixPattern }) {
                 },
               },
             },
-            { $project: { timeline: 0 } },
             {
               $lookup: {
                 from: "nftClass",
@@ -405,7 +396,6 @@ async function findNftInstancesByPrefix({ icasePrefixPattern }) {
                       }
                     }
                   },
-                  { $project: { timeline: 0 } },
                 ],
                 as: "nftClass",
               }
@@ -556,7 +546,13 @@ async function searchAutoComplete(ctx) {
   };
 }
 
+async function getOverviewData(ctx) {
+  const overview = getOverview();
+  ctx.body = overview;
+}
+
 module.exports = {
   search,
   searchAutoComplete,
+  getOverviewData,
 };

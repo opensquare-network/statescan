@@ -11,7 +11,6 @@ const {
 const { extractPage } = require("../../utils");
 const {
   getPagedBlocks,
-  getLatestBlocks: getLatestBlocksFromDb,
 } = require("../../common/latestBlocks");
 
 const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
@@ -51,10 +50,6 @@ async function getBlocks(ctx) {
   }
 
   ctx.body = result;
-}
-
-async function getLatestBlocks(ctx) {
-  ctx.body = await getLatestBlocksFromDb(5);
 }
 
 async function getBlockHeight(ctx) {
@@ -205,7 +200,6 @@ async function getBlockFromTime(ctx) {
 
 module.exports = {
   getBlocks,
-  getLatestBlocks,
   getBlockHeight,
   getBlock,
   getBlockExtrinsics,

@@ -18,8 +18,15 @@ async function getTransfer(ctx) {
   }
 
   const assetCol = await getAssetCollection();
-  const asset = transfer.asset
-    ? await assetCol.findOne({ _id: transfer.asset })
+  const asset = (
+    transfer.assetId !== undefined &&
+    transfer.assetHeight !== undefined
+  ) ? await assetCol.findOne(
+        {
+          assetId: transfer.assetId,
+          "createdAt.blockHeight": transfer.assetHeight,
+        }
+      )
     : null;
 
   ctx.body = {
@@ -30,51 +37,6 @@ async function getTransfer(ctx) {
     assetSymbol: asset?.symbol,
     assetDecimals: asset?.decimals,
   };
-}
-
-async function getLatestTransfers(ctx) {
-  const col = await getAssetTransferCollection();
-  const items = await col
-    .aggregate([
-      { $match: { listIgnore: false } },
-      { $sort: { "indexer.blockHeight": -1 } },
-      { $limit: 5 },
-      {
-        $lookup: {
-          from: "asset",
-          localField: "asset",
-          foreignField: "_id",
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetId: "$asset.assetId",
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: { asset: 0 },
-      },
-    ])
-    .toArray();
-
-  ctx.body = items;
-}
-
-async function getTransfersCount(ctx) {
-  const col = await getAssetTransferCollection();
-  const count = await col.countDocuments();
-  ctx.body = count;
 }
 
 async function getTransfers(ctx) {
@@ -112,32 +74,20 @@ async function getTransfers(ctx) {
       { $limit: pageSize },
       {
         $lookup: {
-          from: "extrinsic",
-          localField: "extrinsicHash",
-          foreignField: "hash",
-          as: "extrinsic",
-        },
-      },
-      {
-        $addFields: {
-          extrinsic: { $arrayElemAt: ["$extrinsic", 0] },
-        },
-      },
-      {
-        $addFields: {
-          module: "$extrinsic.section",
-          method: "$extrinsic.name",
-          extrinsicIndex: "$extrinsic.indexer.index",
-        },
-      },
-      {
-        $project: { extrinsic: 0 },
-      },
-      {
-        $lookup: {
           from: "asset",
-          localField: "asset",
-          foreignField: "_id",
+          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$assetId", "$$assetId"] },
+                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
+                  ]
+                }
+              }
+            }
+          ],
           as: "asset",
         },
       },
@@ -148,7 +98,6 @@ async function getTransfers(ctx) {
       },
       {
         $addFields: {
-          assetId: "$asset.assetId",
           assetCreatedAt: "$asset.createdAt",
           assetDestroyedAt: "$asset.destroyedAt",
           assetSymbol: "$asset.symbol",
@@ -185,8 +134,6 @@ async function getTransfers(ctx) {
 }
 
 module.exports = {
-  getLatestTransfers,
-  getTransfersCount,
   getTransfer,
   getTransfers,
 };

@@ -51,6 +51,31 @@ const statemineInfo = new Map([
     },
   ],
   [
+    16,
+    {
+      icon: "/imgs/icons/asset/polaris.png",
+      about:
+        "Polaris is a DAO-driven investment fund focused on the Polkadot ecosystem.",
+      links: [
+        {
+          name: "Commonwealth",
+          url: "https://commonwealth.im/polaris-dao",
+          icon: "/imgs/icons/link-commonwealth.svg",
+        },
+        {
+          name: "Subsocial",
+          url: "https://app.subsocial.network/2316",
+          icon: "/imgs/icons/link-subsocial.svg",
+        },
+        {
+          name: "Singular",
+          url: "https://singular.rmrk.app/zh/collections/0ce19566b929da831f-POLARIS",
+          icon: "/imgs/icons/link-singular.svg",
+        },
+      ],
+    },
+  ],
+  [
     20,
     {
       icon: "/imgs/icons/asset/bfkk.png",

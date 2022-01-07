@@ -1,4 +1,4 @@
-const NodeCache = require( "node-cache" );
+const NodeCache = require("node-cache");
 const {
   getEventCollection,
   getAssetTransferCollection,
@@ -28,6 +28,20 @@ async function getEvents(ctx) {
     q.listIgnore = false;
   }
 
+  // For default first page, use cached result
+  if (
+    q.listIgnore === false &&
+    !q.section &&
+    !q.method &&
+    page === 0
+  ) {
+    const cachedResult = myCache.get(`events-default-first-page-${pageSize}`);
+    if (cachedResult) {
+      ctx.body = cachedResult;
+      return;
+    }
+  }
+
   const col = await getEventCollection();
   const items = await col
     .find(q)
@@ -46,12 +60,25 @@ async function getEvents(ctx) {
     total = await col.countDocuments(q);
   }
 
-  ctx.body = {
+  const result = {
     items,
     page,
     pageSize,
     total,
   };
+
+  // Cache default first page
+  if (
+    q.listIgnore === false &&
+    !q.section &&
+    !q.method &&
+    page === 0 &&
+    pageSize <= 100
+  ) {
+    myCache.set(`events-default-first-page-${pageSize}`, result);
+  }
+
+  ctx.body = result;
 }
 
 async function getEvent(ctx) {

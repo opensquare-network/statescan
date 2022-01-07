@@ -5,6 +5,7 @@ const {
 } = require("../../mongo");
 const { HttpError } = require("../../exc");
 const { extractPage } = require("../../utils");
+const { populateAssetInfo } = require("backend/common/asset");
 
 const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 
@@ -66,52 +67,15 @@ async function getTransfers(ctx) {
   }
 
   const col = await getAssetTransferCollection();
-  const items = await col
+  let items = await col
     .aggregate([
       { $match: q },
       { $sort: { "indexer.blockHeight": -1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
     ])
     .toArray();
+  items = await populateAssetInfo(items);
   const total = await col.countDocuments(q);
 
   const result = {

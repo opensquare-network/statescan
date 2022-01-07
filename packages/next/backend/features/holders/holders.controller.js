@@ -1,8 +1,8 @@
+const { populateAssetInfo } = require("backend/common/asset");
 const {
   getAssetHolderCollection,
   getExtrinsicCollection,
   getAssetTransferCollection,
-  getAssetCollection,
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 
@@ -10,47 +10,10 @@ async function getHolderAssets(ctx) {
   const { address } = ctx.params;
 
   const holderCol = await getAssetHolderCollection();
-  const holders = await holderCol
-    .aggregate([
-      { $match: { address } },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: { asset: 0 },
-      },
-    ])
+  let holders = await holderCol
+    .find({ address })
     .toArray();
+  holders = await populateAssetInfo(holders);
 
   ctx.body = holders;
 }

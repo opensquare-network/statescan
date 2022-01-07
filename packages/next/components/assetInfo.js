@@ -79,11 +79,17 @@ const RightWrapper = styled.div`
 `;
 
 const AboutEdit = styled.div`
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  :hover {
+    .edit {
+      display: block;
+    }
+  }
 `;
 
 const Edit = styled.div`
+  display: none;
   cursor: pointer;
   margin-left: 12px;
   a {
@@ -121,7 +127,7 @@ export default function AssetInfo({ data, symbol, name }) {
         <RightWrapper>
           <AboutEdit>
             <span className="title">About</span>
-            <Edit>
+            <Edit className="edit">
               <ExternalLink href={`https://forms.gle/9C3zJAS9YzYtoJFs9`}>
                 <EditSvg />
               </ExternalLink>

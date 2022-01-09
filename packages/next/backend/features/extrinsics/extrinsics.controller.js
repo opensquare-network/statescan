@@ -7,6 +7,8 @@ const {
 } = require("../../mongo");
 const { extractPage } = require("../../utils");
 const { HttpError } = require("../../exc");
+const { lookupNftInstance } = require("../../common/nft");
+const { populateAssetInfo } = require("../../common/asset");
 
 const myCache = new NodeCache( { stdTTL: 30, checkperiod: 36 } );
 
@@ -184,87 +186,7 @@ async function getExtrinsicNftTransfers(ctx) {
     .aggregate([
       { $match: q },
       { $sort: { "indexer.eventIndex": 1 } },
-      {
-        $lookup: {
-          from: "nftInstance",
-          let: {
-            classId: "$classId",
-            classHeight: "$classHeight",
-            instanceId: "$instanceId",
-            instanceHeight: "$instanceHeight"
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$classId", "$$classId"] },
-                    { $eq: ["$classHeight", "$$classHeight"] },
-                    { $eq: ["$instanceId", "$$instanceId"] },
-                    { $eq: ["$indexer.blockHeight", "$$instanceHeight"] },
-                  ],
-                },
-              }
-            },
-            {
-              $lookup: {
-                from: "nftMetadata",
-                localField: "dataHash",
-                foreignField: "dataHash",
-                as: "nftMetadata",
-              }
-            },
-            {
-              $addFields: {
-                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftClass",
-                let: { classId: "$classId", classHeight: "$classHeight" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$classId", "$$classId"] },
-                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                        ],
-                      },
-                    },
-                  },
-                  {
-                    $lookup: {
-                      from: "nftMetadata",
-                      localField: "dataHash",
-                      foreignField: "dataHash",
-                      as: "nftMetadata",
-                    }
-                  },
-                  {
-                    $addFields: {
-                      nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-                    },
-                  },
-                ],
-                as: "class",
-              }
-            },
-            {
-              $addFields: {
-                class: { $arrayElemAt: ["$class", 0] },
-              },
-            },
-          ],
-          as: "instance",
-        },
-      },
-      {
-        $addFields: {
-          instance: { $arrayElemAt: ["$instance", 0] },
-        },
-      },
+      ...lookupNftInstance(),
     ])
     .toArray();
 
@@ -288,50 +210,13 @@ async function getExtrinsicTransfers(ctx) {
   }
 
   const col = await getAssetTransferCollection();
-  const items = await col
+  let items = await col
     .aggregate([
       { $match: q },
       { $sort: { "indexer.eventIndex": 1 } },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
     ])
     .toArray();
+  items = await populateAssetInfo(items);
 
   ctx.body = items;
 }

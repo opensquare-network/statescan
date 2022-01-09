@@ -1,3 +1,5 @@
+const { lookupNftMetadata, lookupNftClass, lookupNftInstance } = require("../../common/nft");
+const { populateAssetInfo } = require("../../common/asset");
 const {
   getAddressCollection,
   getAssetHolderCollection,
@@ -85,7 +87,7 @@ async function getAddressAssets(ctx) {
   const q = { address };
 
   const col = await getAssetHolderCollection();
-  const items = await col
+  let items = await col
     .aggregate([
       { $match: q },
       { $sort: { balance: -1 } },
@@ -133,39 +135,6 @@ async function getAddressAssets(ctx) {
       },
       {
         $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $lookup: {
           from: "approval",
           let: {
             assetId: "$assetId",
@@ -201,6 +170,9 @@ async function getAddressAssets(ctx) {
       },
     ])
     .toArray();
+
+  items = await populateAssetInfo(items);
+
   const total = await col.countDocuments(q);
 
   ctx.body = {
@@ -233,52 +205,15 @@ async function getAddressTransfers(ctx) {
   };
 
   const transferCol = await getAssetTransferCollection();
-  const items = await transferCol
+  let items = await transferCol
     .aggregate([
       { $match: q },
       { $sort: { "indexer.blockHeight": -1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: {
-          asset: 0,
-        },
-      },
     ])
     .toArray();
+  items = await populateAssetInfo(items);
 
   const total = await transferCol.countDocuments(q);
 
@@ -376,52 +311,8 @@ async function getAddressNftInstances(ctx) {
       { $sort: { instanceId: 1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "nftClass",
-          let: { classId: "$classId", classHeight: "$classHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$classId", "$$classId"] },
-                    { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                  ],
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftMetadata",
-                localField: "dataHash",
-                foreignField: "dataHash",
-                as: "nftMetadata",
-              },
-            },
-            {
-              $addFields: {
-                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-              },
-            },
-          ],
-          as: "class",
-        },
-      },
-      {
-        $lookup: {
-          from: "nftMetadata",
-          localField: "dataHash",
-          foreignField: "dataHash",
-          as: "nftMetadata",
-        },
-      },
-      {
-        $addFields: {
-          nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-          class: { $arrayElemAt: ["$class", 0] },
-        },
-      },
+      ...lookupNftClass(),
+      ...lookupNftMetadata(),
     ])
     .toArray();
 
@@ -453,87 +344,7 @@ async function getAddressNftTransfers(ctx) {
       { $sort: { "indexer.blockHeight": -1 } },
       { $skip: page * pageSize },
       { $limit: pageSize },
-      {
-        $lookup: {
-          from: "nftInstance",
-          let: {
-            classId: "$classId",
-            classHeight: "$classHeight",
-            instanceId: "$instanceId",
-            instanceHeight: "$instanceHeight",
-          },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$classId", "$$classId"] },
-                    { $eq: ["$classHeight", "$$classHeight"] },
-                    { $eq: ["$instanceId", "$$instanceId"] },
-                    { $eq: ["$indexer.blockHeight", "$$instanceHeight"] },
-                  ],
-                },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftMetadata",
-                localField: "dataHash",
-                foreignField: "dataHash",
-                as: "nftMetadata",
-              },
-            },
-            {
-              $addFields: {
-                nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-              },
-            },
-            {
-              $lookup: {
-                from: "nftClass",
-                let: { classId: "$classId", classHeight: "$classHeight" },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [
-                          { $eq: ["$classId", "$$classId"] },
-                          { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                        ],
-                      },
-                    },
-                  },
-                  {
-                    $lookup: {
-                      from: "nftMetadata",
-                      localField: "dataHash",
-                      foreignField: "dataHash",
-                      as: "nftMetadata",
-                    },
-                  },
-                  {
-                    $addFields: {
-                      nftMetadata: { $arrayElemAt: ["$nftMetadata", 0] },
-                    },
-                  },
-                ],
-                as: "class",
-              },
-            },
-            {
-              $addFields: {
-                class: { $arrayElemAt: ["$class", 0] },
-              },
-            },
-          ],
-          as: "instance",
-        },
-      },
-      {
-        $addFields: {
-          instance: { $arrayElemAt: ["$instance", 0] },
-        },
-      },
+      ...lookupNftInstance(),
     ])
     .toArray();
 

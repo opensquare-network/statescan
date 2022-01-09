@@ -9,6 +9,8 @@ const {
   getNftInstanceCollection,
 } = require("../mongo");
 const { getLatestBlocks } = require("../common/latestBlocks");
+const { populateAssetInfo } = require("../common/asset");
+const { lookupNftMetadata, lookupNftClass } = require("../common/nft");
 
 async function feedOverview(io) {
   try {
@@ -39,49 +41,14 @@ async function calcOverview() {
   const latestBlocks = await getLatestBlocks(5);
 
   // Load latest 5 transfers
-  const latestTransfers = await transferCol
+  let latestTransfers = await transferCol
     .aggregate([
       { $match: { listIgnore: false } },
       { $sort: { "indexer.blockHeight": -1 } },
       { $limit: 5 },
-      {
-        $lookup: {
-          from: "asset",
-          let: { assetId: "$assetId", assetHeight: "$assetHeight" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$assetId", "$$assetId"] },
-                    { $eq: ["$createdAt.blockHeight", "$$assetHeight"] },
-                  ]
-                }
-              }
-            }
-          ],
-          as: "asset",
-        },
-      },
-      {
-        $addFields: {
-          asset: { $arrayElemAt: ["$asset", 0] },
-        },
-      },
-      {
-        $addFields: {
-          assetCreatedAt: "$asset.createdAt",
-          assetDestroyedAt: "$asset.destroyedAt",
-          assetSymbol: "$asset.symbol",
-          assetName: "$asset.name",
-          assetDecimals: "$asset.decimals",
-        },
-      },
-      {
-        $project: { asset: 0 },
-      },
     ])
     .toArray();
+  latestTransfers = await populateAssetInfo(latestTransfers);
 
   // Load 5 most popular assets
   const popularAssets = await assetCol
@@ -107,21 +74,7 @@ async function calcOverview() {
         isDestroyed: false,
       }
     },
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: ["$nftMetadata", 0]
-        }
-      }
-    },
+    ...lookupNftMetadata(),
     {
       $facet: {
         popularNftClasses: [
@@ -164,57 +117,13 @@ async function calcOverview() {
         isDestroyed: false,
       }
     },
+    ...lookupNftMetadata(),
+    ...lookupNftClass({ isDestroyed: false }),
     {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
+      $match: {
+        nftClass: { $exists: true },
+      },
     },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: ["$nftMetadata", 0]
-        }
-      }
-    },
-    {
-      $lookup: {
-        from: "nftClass",
-        let: { classId: "$classId", classHeight: "$classHeight" },
-        pipeline: [
-          {
-            $match: {
-              isDestroyed: false,
-              $expr: {
-                $and: [
-                  { $eq: ["$classId", "$$classId"] },
-                  { $eq: ["$indexer.blockHeight", "$$classHeight"] },
-                ]
-              }
-            }
-          },
-          {
-            $lookup: {
-              from: "nftMetadata",
-              localField: "dataHash",
-              foreignField: "dataHash",
-              as: "nftMetadata",
-            }
-          },
-          {
-            $addFields: {
-              nftMetadata: {
-                $arrayElemAt: ["$nftMetadata", 0]
-              }
-            }
-          },
-        ],
-        as: "nftClass",
-      }
-    },
-    { $unwind: "$nftClass" },
     {
       $facet: {
         nftInstances: [

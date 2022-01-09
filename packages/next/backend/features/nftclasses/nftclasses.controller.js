@@ -6,6 +6,9 @@ const {
   getClassTimelineCollection,
   getNftMetadataCollection,
 }  = require("../../mongo");
+const {
+  lookupNftMetadata, lookupClassDestroyedAt,
+} = require("../../common/nft");
 
 async function getNftMetadata(nftObj) {
   if (!nftObj?.dataHash) {
@@ -28,21 +31,7 @@ async function queryAllClasses(statusQuery, page, pageSize) {
     {
       $facet: {
         items: [
-          {
-            $lookup: {
-              from: "nftMetadata",
-              localField: "dataHash",
-              foreignField: "dataHash",
-              as: "nftMetadata",
-            }
-          },
-          {
-            $addFields: {
-              nftMetadata: {
-                $arrayElemAt: ["$nftMetadata", 0]
-              }
-            }
-          },
+          ...lookupNftMetadata(),
           {
             $sort: {
               "nftMetadata.recognized": -1,
@@ -51,38 +40,7 @@ async function queryAllClasses(statusQuery, page, pageSize) {
           },
           { $skip: page * pageSize },
           { $limit: pageSize },
-          {
-            $lookup: {
-              from: "classTimeline",
-              let: { classId: "$classId", classHeight: "$indexer.blockHeight" },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ["$classId", "$$classId"] },
-                        { $eq: ["$classHeight", "$$classHeight"] },
-                        { $eq: ["$name", "Destroyed"] },
-                      ]
-                    }
-                  }
-                },
-              ],
-              as: "destroyedAt",
-            }
-          },
-          {
-            $addFields: {
-              destroyedAt: {
-                $arrayElemAt: ["$destroyedAt", 0]
-              }
-            }
-          },
-          {
-            $addFields: {
-              destroyedAt: "$destroyedAt.indexer"
-            }
-          }
+          ...lookupClassDestroyedAt(),
         ],
         total: [
           { $count: "count" }
@@ -99,21 +57,7 @@ async function queryRecognizedClasses(statusQuery, page, pageSize)  {
 
   const [result] = await col.aggregate([
     { $match: statusQuery },
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: ["$nftMetadata", 0]
-        }
-      }
-    },
+    ...lookupNftMetadata(),
     {
       $match: {
         "nftMetadata.recognized": true
@@ -125,38 +69,7 @@ async function queryRecognizedClasses(statusQuery, page, pageSize)  {
           { $sort: { classId: 1 } },
           { $skip: page * pageSize },
           { $limit: pageSize },
-          {
-            $lookup: {
-              from: "classTimeline",
-              let: { classId: "$classId", classHeight: "$indexer.blockHeight" },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ["$classId", "$$classId"] },
-                        { $eq: ["$classHeight", "$$classHeight"] },
-                        { $eq: ["$name", "Destroyed"] },
-                      ]
-                    }
-                  }
-                },
-              ],
-              as: "destroyedAt",
-            }
-          },
-          {
-            $addFields: {
-              destroyedAt: {
-                $arrayElemAt: ["$destroyedAt", 0]
-              }
-            }
-          },
-          {
-            $addFields: {
-              destroyedAt: "$destroyedAt.indexer"
-            }
-          }
+          ...lookupClassDestroyedAt(),
         ],
         total: [
           { $count: "count" }
@@ -173,21 +86,7 @@ async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
 
   const [result] = await col.aggregate([
     { $match: statusQuery },
-    {
-      $lookup: {
-        from: "nftMetadata",
-        localField: "dataHash",
-        foreignField: "dataHash",
-        as: "nftMetadata",
-      }
-    },
-    {
-      $addFields: {
-        nftMetadata: {
-          $arrayElemAt: ["$nftMetadata", 0]
-        }
-      }
-    },
+    ...lookupNftMetadata(),
     {
       $match: {
         $or: [
@@ -202,38 +101,7 @@ async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
           { $sort: { classId: 1 } },
           { $skip: page * pageSize },
           { $limit: pageSize },
-          {
-            $lookup: {
-              from: "classTimeline",
-              let: { classId: "$classId", classHeight: "$indexer.blockHeight" },
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      $and: [
-                        { $eq: ["$classId", "$$classId"] },
-                        { $eq: ["$classHeight", "$$classHeight"] },
-                        { $eq: ["$name", "Destroyed"] },
-                      ]
-                    }
-                  }
-                },
-              ],
-              as: "destroyedAt",
-            }
-          },
-          {
-            $addFields: {
-              destroyedAt: {
-                $arrayElemAt: ["$destroyedAt", 0]
-              }
-            }
-          },
-          {
-            $addFields: {
-              destroyedAt: "$destroyedAt.indexer"
-            }
-          }
+          ...lookupClassDestroyedAt(),
         ],
         total: [
           { $count: "count" }

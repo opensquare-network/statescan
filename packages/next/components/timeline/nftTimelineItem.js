@@ -9,6 +9,7 @@ import { bigNumber2Locale, fromAssetUnit } from "utils";
 import BigNumber from "bignumber.js";
 import Address from "components/address";
 import placeholder from "lodash/fp/placeholder";
+import { hexToString, isHex } from "@polkadot/util";
 
 const div = styled.div``;
 
@@ -418,7 +419,13 @@ export default function NftTimelineItem({ data }) {
       case "MetadataSet": {
         return {
           ...timelineItem.args,
-          data: <BreakText>{timelineItem.args.data}</BreakText>,
+          data: (
+            <BreakText>
+              {isHex(timelineItem.args.data)
+                ? hexToString(timelineItem.args.data)
+                : timelineItem.args.data}
+            </BreakText>
+          ),
           isFrozen: timelineItem?.args?.isFrozen?.toString(),
         };
       }

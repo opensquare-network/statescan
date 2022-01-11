@@ -39,17 +39,16 @@ async function fetchMetadataFromIpfsByHex(hexData) {
   const jsonKeys = Object.keys(maybeJsonData);
   if (
     jsonKeys.includes("name") &&
-    jsonKeys.includes("description") &&
     jsonKeys.includes("image")
   ) {
     return {
       cid: maybeCid,
       name: maybeJsonData.name,
-      description: maybeJsonData.description,
+      description: maybeJsonData.description, // Optional
       image: maybeJsonData.image,
     };
   } else {
-    console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData}, 
+    console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData},
     but not contain name, description or image, ignore it`);
   }
 

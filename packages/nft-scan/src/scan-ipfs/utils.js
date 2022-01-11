@@ -7,6 +7,10 @@ const { getAverageColor } = require("fast-average-color-node");
 const ipfsGatewayUrl =
   process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
 
+function isCid(cid) {
+  return isIPFS.cid(cid) || isIPFS.base32cid(cid.toLowerCase());
+}
+
 async function createImageThumbnail(image, width, height) {
   const thumbnail = await image
     .resize({
@@ -29,7 +33,7 @@ async function fetchMetadataFromIpfsByHex(hexData) {
   }
 
   const maybeCid = hexToString(hexData);
-  if (!isIPFS.cid(maybeCid)) {
+  if (!isCid(maybeCid)) {
     console.log(`data ${hexData} can not be converted to CID`);
     return null;
   }
@@ -39,17 +43,16 @@ async function fetchMetadataFromIpfsByHex(hexData) {
   const jsonKeys = Object.keys(maybeJsonData);
   if (
     jsonKeys.includes("name") &&
-    jsonKeys.includes("description") &&
     jsonKeys.includes("image")
   ) {
     return {
       cid: maybeCid,
       name: maybeJsonData.name,
-      description: maybeJsonData.description,
+      description: maybeJsonData.description, // Optional
       image: maybeJsonData.image,
     };
   } else {
-    console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData}, 
+    console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData},
     but not contain name, description or image, ignore it`);
   }
 
@@ -82,6 +85,7 @@ async function fetchAndSharpImage(imageCid) {
 }
 
 module.exports = {
+  isCid,
   fetchMetadataFromIpfsByHex,
   fetchAndSharpImage,
 };

@@ -4,13 +4,12 @@ const { extractBlockTime } = require("@statescan/common");
 function normalizeBlock({ block, events, author }) {
   const hash = block.hash.toHex();
   const blockJson = block.toJSON();
-  const authorJson = author?.toJSON();
   const blockTime = extractBlockTime(block.extrinsics);
 
   return {
     hash,
     blockTime,
-    author: authorJson,
+    author,
     eventsCount: (events || []).length,
     extrinsicsCount: (block.extrinsics || []).length,
     ...omit(blockJson, ["extrinsics"]),

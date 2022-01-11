@@ -40,7 +40,7 @@ async function handleMetadataImage(imageIpfsUrl) {
     return;
   }
 
-  if (!isIPFS.cid(imageCid)) {
+  if (!isIPFS.cid(imageCid) && !isIPFS.base32cid(imageCid.toLowerCase())) {
     return;
   }
 

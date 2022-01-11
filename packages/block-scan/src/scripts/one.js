@@ -13,7 +13,7 @@ const {
 } = require("../mongo");
 
 async function fetchAndSave(height) {
-  const blockData = await fetchOneBlockFromNode(height);
+  const blockData = await fetchOneBlockFromNode(height, true);
   const normalizedBlock = normalizeBlock(blockData);
 
   const col = await getBlockCollection();

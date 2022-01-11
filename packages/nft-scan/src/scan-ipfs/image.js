@@ -1,6 +1,5 @@
 const { getNftMetadataCollection } = require("../mongo");
-const isIPFS = require("is-ipfs");
-const { fetchAndSharpImage } = require("./utils");
+const { fetchAndSharpImage, isCid } = require("./utils");
 
 async function setImageError(imageIpfsUrl) {
   const nftMetadataCol = await getNftMetadataCollection();
@@ -40,7 +39,7 @@ async function handleMetadataImage(imageIpfsUrl) {
     return;
   }
 
-  if (!isIPFS.cid(imageCid) && !isIPFS.base32cid(imageCid.toLowerCase())) {
+  if (!isCid(imageCid)) {
     return;
   }
 

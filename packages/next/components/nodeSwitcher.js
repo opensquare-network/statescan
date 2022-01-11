@@ -109,25 +109,27 @@ export default function NodeSwitcher({ node }) {
       </Dropdown>
       {show && (
         <Options>
-          {nodes.map((item, index) => (
-            <Item
-              key={index}
-              active={item.value === currentNode?.value}
-              onClick={() => {
-                if (item.value === currentNode?.value) {
-                  location.href = "/";
-                } else {
-                  window.open(`https://${item.value}.statescan.io`, "_blank");
-                }
-              }}
-            >
-              <FlexWrapper>
-                <Icon src={item.icon} alt={item.value} />
-                <Text>{item.name}</Text>
-              </FlexWrapper>
-              <Sub>{item.sub}</Sub>
-            </Item>
-          ))}
+          {nodes
+            .filter((item) => !item?.hidden)
+            .map((item, index) => (
+              <Item
+                key={index}
+                active={item.value === currentNode?.value}
+                onClick={() => {
+                  if (item.value === currentNode?.value) {
+                    location.href = "/";
+                  } else {
+                    window.open(`https://${item.value}.statescan.io`, "_blank");
+                  }
+                }}
+              >
+                <FlexWrapper>
+                  <Icon src={item.icon} alt={item.value} />
+                  <Text>{item.name}</Text>
+                </FlexWrapper>
+                <Sub>{item.sub}</Sub>
+              </Item>
+            ))}
         </Options>
       )}
     </Wrapper>

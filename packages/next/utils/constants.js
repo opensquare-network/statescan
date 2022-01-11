@@ -24,6 +24,7 @@ export const nodes = [
     color: "#E6007A",
     colorSecondary: "#FDE5F2",
     buttonColor: "#E6007A",
+    hidden: true,
   },
   {
     name: "Westmint",

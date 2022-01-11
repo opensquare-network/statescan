@@ -33,7 +33,7 @@ async function updateUnFinalized() {
     return;
   }
 
-  const promises = heights.map((height) => fetchOneBlockFromNode(height));
+  const promises = heights.map((height) => fetchOneBlockFromNode(height, true));
   const blockDataArr = await Promise.all(promises);
 
   const normalizedBlocks = blockDataArr.map(normalizeBlock);

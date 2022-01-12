@@ -17,6 +17,7 @@ let addressCol = null;
 let rawAddressCol = null;
 
 const mongoUrl = process.env.MONGO_URL || "mongodb://localhost:27017";
+
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
     useUnifiedTopology: true,
@@ -53,7 +54,9 @@ async function getAddressCollection() {
 }
 
 async function closeDb() {
-  await client.close();
+  if (client) {
+    await client.close();
+  }
 }
 
 async function getRawAddressCollection() {

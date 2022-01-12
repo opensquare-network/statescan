@@ -20,7 +20,13 @@ async function makeAssetStatistics(blockIndexer) {
 
   const promises = [];
   for (const asset of assets) {
-    promises.push(getAssetData(asset._id, blockIndexer.blockTime));
+    promises.push(
+      getAssetData(
+        asset.assetId,
+        asset.createdAt.blockHeight,
+        blockIndexer.blockTime
+      )
+    );
   }
 
   const dataArr = await Promise.all(promises);
@@ -42,25 +48,26 @@ async function makeAssetStatistics(blockIndexer) {
 async function getAllAssets() {
   const col = await getAssetCollection();
   return await col
-    .find({}, { projection: { assetId: 1, symbol: 1 } })
+    .find({}, { projection: { assetId: 1, symbol: 1, createdAt: 1 } })
     .toArray();
 }
 
-async function getAssetData(assetMongoId, timestamp) {
+async function getAssetData(assetId, assetHeight, timestamp) {
   const [{ count, amount }, holderCount] = await Promise.all([
-    getAssetDayTransferData(assetMongoId, timestamp),
-    getHoldersCountByAssetId(assetMongoId),
+    getAssetDayTransferData(assetId, assetHeight, timestamp),
+    getHoldersCountByAssetId(assetId, assetHeight),
   ]);
 
   return {
-    asset: assetMongoId,
+    assetId,
+    assetHeight,
     transferCount: count,
     transferAmount: amount,
     holderCount,
   };
 }
 
-async function getAssetDayTransferData(assetId, timestamp) {
+async function getAssetDayTransferData(assetId, assetHeight, timestamp) {
   const startTime = moment(timestamp).utc().startOf("day").toDate().getTime();
 
   const col = await getAssetTransferCollection();
@@ -71,6 +78,7 @@ async function getAssetDayTransferData(assetId, timestamp) {
           { "indexer.blockTime": { $gte: startTime } },
           { "indexer.blockTime": { $lte: timestamp } },
           { assetId }, // fixme: asset should have created height
+          { assetHeight },
         ],
       },
       {
@@ -89,9 +97,9 @@ async function getAssetDayTransferData(assetId, timestamp) {
   };
 }
 
-async function getHoldersCountByAssetId(assetId) {
+async function getHoldersCountByAssetId(assetId, assetHeight) {
   const col = await getAssetHolderCollection();
-  return await col.count({ asset: assetId });
+  return await col.count({ assetId, assetHeight });
 }
 
 module.exports = {

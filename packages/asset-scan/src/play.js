@@ -1,5 +1,7 @@
 require("dotenv").config();
-
+const { getLastBlockIndexer } = require("./statistic/date");
+const { makeAssetStatistics } = require("./statistic");
+const { isNewDay } = require("./statistic/date");
 const { scanNormalizedBlock } = require("./scan");
 const {
   getBlockIndexer,
@@ -8,20 +10,35 @@ const {
 } = require("@statescan/common");
 const { initDb } = require("./mongo");
 
+async function scanBlock(blockInfo) {
+  const blockIndexer = getBlockIndexer(blockInfo.block);
+  if (isNewDay(blockIndexer.blockTime)) {
+    await makeAssetStatistics(getLastBlockIndexer());
+  }
+
+  await scanNormalizedBlock(blockInfo.block, blockInfo.events, blockIndexer);
+}
+
 async function test() {
   await initDb();
-  const height = 759406;
+  const heights = [
+    408735, 410637, 757876, 759287, 759406, 759850, 785373, 793450,
+  ];
   // const height = 917004;
-  await setSpecHeights([height]);
+  await setSpecHeights(heights);
 
-  const api = await getApi();
-  const blockHash = await api.rpc.chain.getBlockHash(height);
-  const block = await api.rpc.chain.getBlock(blockHash);
-  const allEvents = await api.query.system.events.at(blockHash);
+  for (const height of heights) {
+    const api = await getApi();
+    const blockHash = await api.rpc.chain.getBlockHash(height);
+    const block = await api.rpc.chain.getBlock(blockHash);
+    const allEvents = await api.query.system.events.at(blockHash);
 
-  const blockIndexer = getBlockIndexer(block.block);
+    await scanBlock({
+      block: block.block,
+      events: allEvents,
+    });
+  }
 
-  await scanNormalizedBlock(block.block, allEvents, blockIndexer);
   console.log("finished");
 }
 

@@ -70,7 +70,7 @@ async function getAssetDayTransferData(assetId, timestamp) {
         $and: [
           { "indexer.blockTime": { $gte: startTime } },
           { "indexer.blockTime": { $lte: timestamp } },
-          { asset: assetId },
+          { assetId }, // fixme: asset should have created height
         ],
       },
       {
@@ -91,7 +91,7 @@ async function getAssetDayTransferData(assetId, timestamp) {
 
 async function getHoldersCountByAssetId(assetId) {
   const col = await getAssetHolderCollection();
-  return await col.count({ asset: assetId, dead: false });
+  return await col.count({ asset: assetId });
 }
 
 module.exports = {

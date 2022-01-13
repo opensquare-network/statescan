@@ -52,16 +52,16 @@ const easeOutQuart = (t, b, c, d) => {
 const tokenMap = new Map([
   ["westmint", "WND"],
   ["statemine", "KSM"],
-  ["polkadot", "DOT"],
+  ["statemint", "DOT"],
 ]);
 
 const colorMap = new Map([
   ["KSM", "#0f0f0f"],
   ["WND", "#F22279"],
+  ["DOT", "#E6007A"],
 ]);
 
 export default function Overview({ node, overviewData, price }) {
-
   const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
   const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);
   const [transfersCountDynamic, setTransfersCountDynamic] = useState(0);

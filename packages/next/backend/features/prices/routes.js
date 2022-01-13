@@ -4,7 +4,7 @@ const pricesController = require("./prices.controller");
 const router = new Router();
 
 router.get(
-  "/:chain(westmint|statemine)/prices/daily",
+  "/:chain(westmint|statemine|statemint)/prices/daily",
   pricesController.getDailyPrices
 );
 

@@ -3,7 +3,7 @@ import { Line } from "react-chartjs-2";
 import styled from "styled-components";
 import moment from "moment";
 
-import { fromAssetUnit } from "utils";
+import { fromAssetUnit, abbreviateBigNumber } from "utils";
 import Header from "./header";
 import Footer from "./footer";
 import { card_border } from "styles/textStyles";
@@ -108,7 +108,7 @@ export default function AnalyticsChart({ data, symbol, name, decimals }) {
           ticks: {
             beginAtZero: true,
             callback: function (value) {
-              return value / 1000 + "k";
+              return abbreviateBigNumber(value);
             },
           },
         },

@@ -217,9 +217,10 @@ export default function Home({ node, overview: ssrOverview, price }) {
           to={`/account/${item.to}`}
         />,
         item?.assetSymbol
-          ? `${fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)} ${
-              item.assetSymbol
-            }`
+          ? `${fromAssetUnit(
+              item.balance.$numberDecimal,
+              item.assetDecimals
+            )} ${item.assetSymbol}`
           : `${fromSymbolUnit(item.balance.$numberDecimal, symbol)} ${symbol}`,
       ]),
     [overview?.latestTransfers, symbol]
@@ -330,7 +331,10 @@ export default function Home({ node, overview: ssrOverview, price }) {
               noMinWidth={true}
               title="Total Supply"
             >
-              {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
+              {abbreviateBigNumber(
+                fromAssetUnit(item.supply, item.decimals),
+                0
+              )}
             </Tooltip>,
           ])}
           foot={
@@ -387,10 +391,7 @@ export default function Home({ node, overview: ssrOverview, price }) {
 export async function getServerSideProps() {
   const node = process.env.NEXT_PUBLIC_CHAIN;
 
-  const [
-    { result: overview },
-    { result: price },
-  ] = await Promise.all([
+  const [{ result: overview }, { result: price }] = await Promise.all([
     nextApi.fetch(`overview`),
     nextApi.fetch(`${node}/prices/daily`),
   ]);

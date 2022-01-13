@@ -1,13 +1,12 @@
 const { HttpError } = require("../../exc");
 const {
-  getAssetCollection,
   getDailyAssetStatisticCollection,
 } = require("../../mongo");
 const omit = require("lodash.omit");
 
-function getQuery(assetId, from, to) {
+function getQuery(assetId, assetHeight, from, to) {
   if (!from && !to) {
-    return { asset: assetId };
+    return { assetId, assetHeight };
   }
 
   let startTime = parseInt(from) * 1000;
@@ -19,7 +18,8 @@ function getQuery(assetId, from, to) {
   if (!isNaN(startTime) && !isNaN(endTime)) {
     return {
       $and: [
-        { asset: assetId },
+        { assetId },
+        { assetHeight },
         { "indexer.blockTime": { $gte: startTime } },
         { "indexer.blockTime": { $lte: endTime } },
       ],
@@ -28,38 +28,36 @@ function getQuery(assetId, from, to) {
 
   if (!isNaN(startTime)) {
     return {
-      $and: [{ asset: assetId }, { "indexer.blockTime": { $gte: startTime } }],
+      $and: [
+        { assetId },
+        { assetHeight },
+        { "indexer.blockTime": { $gte: startTime } }
+      ],
     };
   }
 
   if (!isNaN(endTime)) {
     return {
-      $and: [{ asset: assetId }, { "indexer.blockTime": { $lte: endTime } }],
+      $and: [
+        { assetId },
+        { assetHeight },
+        { "indexer.blockTime": { $lte: endTime } }
+      ],
     };
   }
 
-  return { asset: assetId };
+  return { assetId, assetHeight };
 }
 
 async function getStatistic(ctx) {
   const { blockHeight, assetId } = ctx.params;
-
-  const assetCol = await getAssetCollection();
-  const asset = await assetCol.findOne({
-    assetId: parseInt(assetId),
-    "createdAt.blockHeight": parseInt(blockHeight),
-  });
-  if (!asset) {
-    throw new HttpError(404, "Asset not found");
-  }
-
   const { from, to } = ctx.query;
-  const q = getQuery(asset._id, from, to);
+  const q = getQuery(parseInt(assetId), parseInt(blockHeight), from, to);
 
   const col = await getDailyAssetStatisticCollection();
   const items = await col.find(q).sort({ "indexer.blockHeight": 1 }).toArray();
 
-  ctx.body = (items || []).map((item) => omit(item, ["_id", "asset"]));
+  ctx.body = (items || []).map((item) => omit(item, ["_id", "assetId", "assetHeight"]));
 }
 
 module.exports = {

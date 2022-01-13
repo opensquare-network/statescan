@@ -130,7 +130,7 @@ export function fromAssetUnit(value, decimals) {
   return new BigNumber(value).dividedBy(Math.pow(10, decimals)).toString();
 }
 
-export function abbreviateBigNumber(x) {
+export function abbreviateBigNumber(x, fixed = 2) {
   const n = new BigNumber(x);
   const fmt = {
     decimalSeparator: ".",
@@ -139,6 +139,8 @@ export function abbreviateBigNumber(x) {
   };
   let divideBy = new BigNumber("1");
   const bigNumbers = [
+    { bigNumber: new BigNumber("1000"), abbr: "K" },
+    { bigNumber: new BigNumber("1000000"), abbr: "M" },
     { bigNumber: new BigNumber("1000000000"), abbr: "B" },
     { bigNumber: new BigNumber("1000000000000"), abbr: "T" },
     { bigNumber: new BigNumber("1000000000000000"), abbr: "Q" },
@@ -150,7 +152,7 @@ export function abbreviateBigNumber(x) {
     }
   });
   BigNumber.config({ FORMAT: fmt });
-  return new BigNumber(n.dividedBy(divideBy).toFixed(0)).toFormat();
+  return new BigNumber(n.dividedBy(divideBy).toFixed(fixed)).toFormat();
 }
 
 export function bigNumber2Locale(x) {

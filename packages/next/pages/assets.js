@@ -56,7 +56,10 @@ export default function Assets({ node, assets }) {
               isCopy
               noMinWidth={true}
             >
-              {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
+              {abbreviateBigNumber(
+                fromAssetUnit(item.supply, item.decimals),
+                0
+              )}
             </Tooltip>,
           ])}
           foot={

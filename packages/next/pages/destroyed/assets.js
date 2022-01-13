@@ -16,22 +16,19 @@ import { ssrNextApi as nextApi } from "services/nextApi";
 import Name from "components/account/name";
 import Tooltip from "components/tooltip";
 
-export default function Assets({node, assets}) {
+export default function Assets({ node, assets }) {
   return (
     <Layout node={node}>
       <section>
-        <Nav
-          data={[{name: "Destroyed"}, {name: "Assets"}]}
-          node={node}
-        />
+        <Nav data={[{ name: "Destroyed" }, { name: "Assets" }]} node={node} />
         <Table
           head={destroyedAssetsHead}
           body={(assets?.items || []).map((item, index) => [
             <InLink
               key={`${index}-1`}
-              to={
-                `/asset/${item.assetId}${item.destroyedAt ? `_${item.createdAt.blockHeight}` : ""}`
-              }
+              to={`/asset/${item.assetId}${
+                item.destroyedAt ? `_${item.createdAt.blockHeight}` : ""
+              }`}
             >{`#${item.assetId}`}</InLink>,
             <Symbol
               key={`${index}-2`}
@@ -40,7 +37,7 @@ export default function Assets({node, assets}) {
               destroyedAt={item.destroyedAt}
               createdAt={item.createdAt}
             />,
-            <Name key={`${index}-3`} name={item.name}/>,
+            <Name key={`${index}-3`} name={item.name} />,
             time(item.destroyedAt.blockTime),
             <AddressEllipsis
               key={`${index}-4`}
@@ -56,7 +53,10 @@ export default function Assets({node, assets}) {
               isCopy
               noMinWidth={true}
             >
-              {abbreviateBigNumber(fromAssetUnit(item.supply, item.decimals))}
+              {abbreviateBigNumber(
+                fromAssetUnit(item.supply, item.decimals),
+                0
+              )}
             </Tooltip>,
           ])}
           foot={
@@ -75,11 +75,11 @@ export default function Assets({node, assets}) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const {page} = context.query;
+  const { page } = context.query;
 
   const nPage = parseInt(page) || 1;
 
-  const {result: assets} = await nextApi.fetch(`assets`, {
+  const { result: assets } = await nextApi.fetch(`assets`, {
     page: nPage - 1,
     pageSize: 25,
     status: "destroyed",

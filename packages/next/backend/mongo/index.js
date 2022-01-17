@@ -167,7 +167,7 @@ async function initDb() {
   nftTransferCol = nftDb.collection(nftTransferCollectionName);
 
   const xcmDbName = getXcmDbName();
-  console.log(`Use xcm scan DB name:`, nftDbName);
+  console.log(`Use xcm scan DB name:`, xcmDbName);
 
   xcmDb = client.db(xcmDbName);
   teleportInCol = xcmDb.collection(teleportInCollectionName);

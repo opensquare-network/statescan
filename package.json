@@ -11,11 +11,11 @@
     "node": ">=15.0.0"
   },
   "scripts": {
-    "scan": "yarn workspace @statescan/scan scan",
+    "blockscan": "yarn workspace @statescan/block-scan scan",
+    "assetscan": "yarn workspace @statescan/asset-scan scan",
     "nftscan": "yarn workspace @statescan/nft-scan scan",
     "xcmscan": "yarn workspace @statescan/xcm-scan scan",
     "relayscan": "yarn workspace @statescan/xcm-relay-scan scan",
-    "test": "yarn workspace @statescan/scan test",
     "lint": "yarn workspace @statescan/server lint"
   },
   "devDependencies": {

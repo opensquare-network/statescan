@@ -364,3 +364,20 @@ export const teleportDirection = {
   in: 0,
   out: 1,
 };
+
+export const assetGovernances = {
+  /* Asset ID */ 8: [
+    {
+      spaceLogo: "/imgs/icons/asset-governance-rmrk.svg",
+      spaceName: "RMRK",
+      projectName: "RMRK",
+      link: "https://opensquare.io/space/rmrk",
+    },
+    {
+      spaceLogo: "/imgs/icons/asset-governance-rmrk-curation.png",
+      spaceName: "RMRK Curation",
+      projectName: "RMRK",
+      link: "https://opensquare.io/space/rmrk-curation",
+    },
+  ],
+};

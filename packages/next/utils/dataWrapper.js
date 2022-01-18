@@ -44,6 +44,14 @@ export function convertArgsForTableView(args, section, method, chain) {
                 <LongText key={`arg-${index}`} text={arg.value} />,
               ];
             }
+
+            if (
+              section === "parachainSystem" &&
+              method === "sudoSendUpwardMessage"
+            ) {
+              return [arg.name, arg.value];
+            }
+
             return [arg.name, hexToString(arg.value)];
           }
           case "Balance":
@@ -103,6 +111,14 @@ export function convertArgsForJsonView(args, section, method, chain) {
                 ? arg.value
                 : hexEllipsis(arg.value);
             }
+
+            if (
+              section === "parachainSystem" &&
+              method === "sudoSendUpwardMessage"
+            ) {
+              return arg.value;
+            }
+
             return hexToString(arg.value);
           }
           default: {

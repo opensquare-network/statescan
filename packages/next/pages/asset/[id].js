@@ -26,6 +26,7 @@ import AssetInfo from "components/assetInfo";
 import Status from "../../components/status";
 import CopyText from "../../components/copyText";
 import AssetPrice from "components/assetPrice";
+import { assetGovernances } from "utils/constants";
 
 export default function Asset({
   node,
@@ -197,6 +198,7 @@ export default function Asset({
             ]}
             info={
               <AssetInfo
+                governances={assetGovernances[asset?.assetId]}
                 data={assetInfoData}
                 symbol={asset.symbol}
                 name={asset.name}

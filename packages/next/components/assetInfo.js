@@ -3,6 +3,7 @@ import styled from "styled-components";
 import ExternalLink from "./externalLink";
 import Tooltip from "./tooltip";
 import EditSvg from "public/imgs/icons/edit.svg";
+import Governance from "components/governance";
 
 const Wrapper = styled.div`
   margin-top: 8px;
@@ -88,6 +89,17 @@ const AboutEdit = styled.div`
   }
 `;
 
+const GovernanceTitle = styled.div`
+  display: inline-flex;
+  align-items: center;
+  margin-top: 27.33px;
+`;
+
+const GovernanceList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`;
+
 const Edit = styled.div`
   display: none;
   cursor: pointer;
@@ -109,7 +121,7 @@ const LinkIcon = styled.img`
   height: 20px;
 `;
 
-export default function AssetInfo({ data, symbol, name }) {
+export default function AssetInfo({ governances, data, symbol, name }) {
   return (
     <>
       <Wrapper>
@@ -144,6 +156,18 @@ export default function AssetInfo({ data, symbol, name }) {
               </Tooltip>
             ))}
           </LinksWrapper>
+          {governances?.length > 0 && (
+            <>
+              <GovernanceTitle>
+                <span className="title">Governance</span>
+              </GovernanceTitle>
+              <GovernanceList>
+                {governances.map((item, index) => (
+                  <Governance key={`gov-${index}`} {...item} />
+                ))}
+              </GovernanceList>
+            </>
+          )}
         </RightWrapper>
       </Wrapper>
       <Divider />

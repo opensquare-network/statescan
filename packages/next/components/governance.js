@@ -10,8 +10,6 @@ const GovernanceItem = styled.div`
   border: 1px solid #eeeeee;
   box-sizing: border-box;
   border-radius: 4px;
-  margin-bottom: 12px;
-  margin-right: 12px;
   width: 269.33px;
   height: 60px;
   .space-logo {
@@ -35,10 +33,11 @@ const GovernanceItem = styled.div`
   }
   > div {
     display: flex;
-    :hover {
-      svg > path {
-        stroke-opacity: 0.65;
-      }
+  }
+  :hover {
+    border: 1px solid #dddddd;
+    svg > path {
+      stroke-opacity: 0.65;
     }
   }
 `;
@@ -50,19 +49,19 @@ export default function Governance({
   link,
 }) {
   return (
-    <GovernanceItem>
-      <div>
-        <img className="space-logo" src={spaceLogo} />
+    <ExternalLink href={link}>
+      <GovernanceItem>
         <div>
-          <div className="space-name">{spaceName}</div>
-          <div className="project-name">{projectName}</div>
+          <img className="space-logo" src={spaceLogo} />
+          <div>
+            <div className="space-name">{spaceName}</div>
+            <div className="project-name">{projectName}</div>
+          </div>
         </div>
-      </div>
-      <div>
-        <ExternalLink href={link}>
+        <div>
           <OpenLinkSvg />
-        </ExternalLink>
-      </div>
-    </GovernanceItem>
+        </div>
+      </GovernanceItem>
+    </ExternalLink>
   );
 }

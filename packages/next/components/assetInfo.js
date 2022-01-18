@@ -92,7 +92,7 @@ const AboutEdit = styled.div`
 const GovernanceTitle = styled.div`
   display: inline-flex;
   align-items: center;
-  margin-top: 27.33px !important;
+  margin-top: 16px !important;
 `;
 
 const GovernanceList = styled.div`

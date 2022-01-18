@@ -92,12 +92,13 @@ const AboutEdit = styled.div`
 const GovernanceTitle = styled.div`
   display: inline-flex;
   align-items: center;
-  margin-top: 27.33px;
+  margin-top: 27.33px !important;
 `;
 
 const GovernanceList = styled.div`
   display: flex;
   flex-wrap: wrap;
+  gap: 12px;
 `;
 
 const Edit = styled.div`

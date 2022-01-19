@@ -69,6 +69,7 @@ const MouseWrapper = styled.div`
     position: static;
     left: 0;
     transform: none;
+    padding-top: 0;
   }
 `;
 
@@ -82,6 +83,7 @@ const MenuWrapper = styled.div`
     box-shadow: none;
     transform: none;
     padding: 0;
+    border: none;
   }
 `;
 
@@ -93,6 +95,7 @@ const MenuItem = styled.div`
   line-height: 20px;
   :hover {
     background: #fafafa;
+    color: ${(p) => p.themecolor};
   }
   @media screen and (max-width: 900px) {
     padding: 8px 12px 8px 24px;
@@ -176,6 +179,7 @@ export default function SubMenu({
                       }}
                       selected={router.pathname === `/${item.value}`}
                       disabled={item.value === ""}
+                      themecolor={theme.color}
                     >
                       {item.name}
                     </MenuItem>

@@ -52,7 +52,7 @@ export default function Governance({
     <ExternalLink href={link}>
       <GovernanceItem>
         <div>
-          <img className="space-logo" src={spaceLogo} />
+          <img className="space-logo" alt="space logo" src={spaceLogo} />
           <div>
             <div className="space-name">{spaceName}</div>
             <div className="project-name">{projectName}</div>

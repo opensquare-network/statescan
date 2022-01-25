@@ -55,7 +55,7 @@ const statemineInfo = new Map([
     {
       icon: "/imgs/icons/asset/polaris.png",
       about:
-        "Polaris is a DAO-driven investment fund focused on the Polkadot ecosystem.",
+        "An investment-based Ventures DAO focused on the Polkadot ecosystem. Manage fungible tokens and NFT assets and conduct secondary market transactions.",
       links: [
         {
           name: "Twitter",
@@ -69,7 +69,12 @@ const statemineInfo = new Map([
         },
         {
           name: "Singular",
-          url: "https://singular.rmrk.app/zh/collections/0ce19566b929da831f-POLARIS",
+          url: "https://singular.rmrk.app/collections/0ce19566b929da831f-POLARIS",
+          icon: "/imgs/icons/link-singular.svg",
+        },
+        {
+          name: "Singular",
+          url: "https://singular.rmrk.app/collections/0ce19566b929da831f-YFZGC?page=2",
           icon: "/imgs/icons/link-singular.svg",
         },
         {

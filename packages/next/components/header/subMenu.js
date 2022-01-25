@@ -198,6 +198,7 @@ export default function SubMenu({
                             }}
                             selected={router.pathname === `/${child.value}`}
                             disabled={child.value === ""}
+                            themecolor={theme.color}
                           >
                             {child.name}
                           </SubMenuItem>

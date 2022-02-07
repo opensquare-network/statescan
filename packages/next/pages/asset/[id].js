@@ -145,7 +145,7 @@ export default function Asset({
   const seoTitle = asset?.name || "Statescan";
   const seoDescription = assetInfoData?.about || "Kusama & Polkadot Asset Explorer";
   const seoImages = [{
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}/${assetInfoData?.icon ?? "/imgs/icons/default.svg"}`,
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}${assetInfoData?.icon ?? "imgs/icons/default.svg"}`,
     width: 1200,
     height: 628,
   },];

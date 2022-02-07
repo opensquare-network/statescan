@@ -1,6 +1,5 @@
 import Layout from "components/layout";
 import Nav from "components/nav";
-import { getSymbol } from "utils/hooks";
 import {
   assetTransfersHead,
   assetHoldersHead,
@@ -27,6 +26,8 @@ import Status from "../../components/status";
 import CopyText from "../../components/copyText";
 import AssetPrice from "components/assetPrice";
 import { assetGovernances } from "utils/constants";
+import { NextSeo } from 'next-seo';
+
 
 export default function Asset({
   node,
@@ -141,8 +142,29 @@ export default function Asset({
     status = "Destroyed";
   }
 
+  const seoTitle = asset?.name || "Statescan";
+  const seoDescription = assetInfoData?.about || "Kusama & Polkadot Asset Explorer";
+  const seoImages = [];
+
+
   return (
     <Layout node={node}>
+      <NextSeo
+        title={seoTitle}
+        description={seoDescription}
+        openGraph={{
+          url: process.env.NEXT_PUBLIC_API_END_POINT,
+          title: seoTitle,
+          description: seoDescription,
+          images:seoImages,
+          site_name: 'Statescan',
+        }}
+        twitter={{
+          handle: "@handle",
+          site: "@site",
+          cardType: "summary_large_image",
+        }}
+      />
       <Section>
         <div>
           <Nav

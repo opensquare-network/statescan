@@ -63,6 +63,11 @@ const statemineInfo = new Map([
           icon: "/imgs/icons/link-twitter.svg",
         },
         {
+          name: "Commonwealth",
+          url: "https://commonwealth.im/polaris-dao",
+          icon: "/imgs/icons/link-commonwealth.svg",
+        },
+        {
           name: "Subsocial",
           url: "https://app.subsocial.network/2316",
           icon: "/imgs/icons/link-subsocial.svg",

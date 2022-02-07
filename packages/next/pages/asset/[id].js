@@ -144,7 +144,11 @@ export default function Asset({
 
   const seoTitle = asset?.name || "Statescan";
   const seoDescription = assetInfoData?.about || "Kusama & Polkadot Asset Explorer";
-  const seoImages = [];
+  const seoImages = [{
+    url: `${process.env.NEXT_PUBLIC_SITE_URL}/${assetInfoData?.icon ?? "/imgs/icons/default.svg"}`,
+    width: 1200,
+    height: 628,
+  },];
 
 
   return (
@@ -153,10 +157,10 @@ export default function Asset({
         title={seoTitle}
         description={seoDescription}
         openGraph={{
-          url: process.env.NEXT_PUBLIC_API_END_POINT,
+          url: `${process.env.NEXT_PUBLIC_SITE_URL}/asset/${asset?.assetId}`,
           title: seoTitle,
           description: seoDescription,
-          images:seoImages,
+          images: seoImages,
           site_name: 'Statescan',
         }}
         twitter={{

@@ -13,6 +13,15 @@ async function getApi() {
     provider = new WsProvider(wsEndpoint, 1000);
     api = await ApiPromise.create({ provider });
 
+    api.on("error", (err) => {
+      console.error("api error, will restart:", err);
+      process.exit(0);
+    });
+    api.on("disconnected", () => {
+      console.error("api disconnected, will restart:");
+      process.exit(0);
+    });
+
     console.log(`Connected to endpoint:`, wsEndpoint);
   }
 

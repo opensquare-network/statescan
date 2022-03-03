@@ -54,8 +54,7 @@ const statemineInfo = new Map([
     16,
     {
       icon: "/imgs/icons/asset/polaris.png",
-      about:
-        "An investment-based Ventures DAO focused on the Polkadot ecosystem. Manage fungible tokens and NFT assets and conduct secondary market transactions.",
+      about: "A community-managed DAO serving the Polkadot ecosystem.",
       links: [
         {
           name: "Twitter",
@@ -63,9 +62,14 @@ const statemineInfo = new Map([
           icon: "/imgs/icons/link-twitter.svg",
         },
         {
-          name: "Commonwealth",
-          url: "https://commonwealth.im/polaris-dao",
-          icon: "/imgs/icons/link-commonwealth.svg",
+          name: "Gitbook",
+          url: "https://polaris-dao.gitbook.io/polarisdao/",
+          icon: "/imgs/icons/link-default.svg",
+        },
+        {
+          name: "Voting",
+          url: "https://voting.opensquare.io/space/polarisdao",
+          icon: "/imgs/icons/link-osn.svg",
         },
         {
           name: "Subsocial",
@@ -73,19 +77,14 @@ const statemineInfo = new Map([
           icon: "/imgs/icons/link-subsocial.svg",
         },
         {
-          name: "Singular",
-          url: "https://singular.rmrk.app/collections/0ce19566b929da831f-POLARIS",
-          icon: "/imgs/icons/link-singular.svg",
+          name: "Discord",
+          url: "https://discord.gg/bayqHZ9akq",
+          icon: "/imgs/icons/link-discord.svg",
         },
         {
-          name: "Singular",
-          url: "https://singular.rmrk.app/collections/0ce19566b929da831f-YFZGC?page=2",
-          icon: "/imgs/icons/link-singular.svg",
-        },
-        {
-          name: "Email",
-          url: "mailto:polarisdao@protonmail.com",
-          icon: "/imgs/icons/link-email.svg",
+          name: "Telegram",
+          url: "https://t.me/+QXciIOX85zdkM2Zl",
+          icon: "/imgs/icons/link-telegram.svg",
         },
       ],
     },

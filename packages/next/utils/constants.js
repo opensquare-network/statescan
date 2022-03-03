@@ -380,4 +380,12 @@ export const assetGovernances = {
       link: "https://opensquare.io/space/rmrk-curation",
     },
   ],
+  16: [
+    {
+      spaceLogo: "/imgs/icons/asset-governance-polarisDAO.png",
+      spaceName: "PolarisDAO",
+      projectName: "PolarisDAO",
+      link: "https://voting.opensquare.io/space/polarisdao",
+    },
+  ],
 };

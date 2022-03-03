@@ -10,6 +10,9 @@
   "engines": {
     "node": ">=15.0.0"
   },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
+  },
   "scripts": {
     "blockscan": "yarn workspace @statescan/block-scan scan",
     "assetscan": "yarn workspace @statescan/asset-scan scan",
@@ -17,10 +20,11 @@
     "xcmscan": "yarn workspace @statescan/xcm-scan scan",
     "relayscan": "yarn workspace @statescan/xcm-relay-scan scan",
     "lint": "yarn workspace @statescan/server lint",
-    "prepare": "husky install && husky set .husky/pre-commit \"pretty-quick --staged\""
+    "prepare": "husky install && husky set .husky/pre-commit \"npx lint-staged\""
   },
   "devDependencies": {
     "husky": "^7.0.4",
+    "lint-staged": "^12.3.4",
     "prettier": "^2.5.1",
     "pretty-quick": "^3.1.1"
   }

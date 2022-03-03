@@ -3,6 +3,7 @@ node_modules
 log
 .DS_Store
 .idea
+.husky
 
 *-image.sh
 *.deploy.sh

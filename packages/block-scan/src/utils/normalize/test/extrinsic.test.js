@@ -20,7 +20,10 @@ describe("Extrinsics", () => {
   let provider;
 
   beforeAll(async () => {
-    provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
+    provider = new WsProvider(
+      "wss://statemine.api.onfinality.io/public-ws",
+      1000
+    );
     api = await ApiPromise.create({ provider });
     setApi(api);
     setProvider(provider);

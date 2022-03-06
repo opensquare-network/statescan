@@ -1,5 +1,5 @@
 const {
-  testConsts: { testTimeout, elaraStatemine },
+  testConsts: { testTimeout, onFinalityStatemine },
 } = require("@statescan/common");
 const { queryInstanceDetails } = require("./storage");
 const { setApi } = require("@statescan/common");
@@ -11,7 +11,7 @@ describe("Query instance details", () => {
   let provider;
 
   beforeAll(async () => {
-    provider = new WsProvider(elaraStatemine, 1000);
+    provider = new WsProvider(onFinalityStatemine, 1000);
     api = await ApiPromise.create({ provider });
     setApi(api);
   });

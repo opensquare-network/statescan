@@ -1,5 +1,5 @@
 const { setApi } = require("../api");
-const { elaraStatemine } = require("../testCommon/constants");
+const { onFinalityStatemine } = require("../testCommon/constants");
 const { fetchOneBlockFromNode } = require("./fetchBlocks");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(3000000);
@@ -9,7 +9,7 @@ describe("Get one block", () => {
   let provider;
 
   beforeAll(async () => {
-    provider = new WsProvider(elaraStatemine, 1000);
+    provider = new WsProvider(onFinalityStatemine, 1000);
     api = await ApiPromise.create({ provider });
     setApi(api);
   });

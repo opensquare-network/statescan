@@ -1,7 +1,7 @@
 const { queryClassAttributeByHeight } = require("./attribute");
 const {
   setApi,
-  testConsts: { elaraWestmint, testTimeout },
+  testConsts: { parityWestmint, testTimeout },
 } = require("@statescan/common");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
@@ -11,7 +11,7 @@ describe("Query westmint class attribute", () => {
   let provider;
 
   beforeAll(async () => {
-    provider = new WsProvider(elaraWestmint, 1000);
+    provider = new WsProvider(parityWestmint, 1000);
     api = await ApiPromise.create({ provider });
     setApi(api);
   });

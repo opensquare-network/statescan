@@ -2,7 +2,10 @@ const { setApi, setProvider, getProvider } = require("../../api");
 const { ApiPromise, WsProvider } = require("@polkadot/api");
 
 async function setupApi() {
-  const provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
+  const provider = new WsProvider(
+    "wss://statemine.api.onfinality.io/public-ws",
+    1000
+  );
   const api = await ApiPromise.create({ provider });
   setProvider(provider);
   setApi(api);

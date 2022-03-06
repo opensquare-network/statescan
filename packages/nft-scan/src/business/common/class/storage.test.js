@@ -1,23 +1,19 @@
 const {
-  testConsts: { testTimeout, elaraStatemine },
+  testConsts: { testTimeout },
 } = require("@statescan/common");
 const { getClassByHeight } = require("./storage");
-const { setApi } = require("@statescan/common");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
+const {
+  test: { setupApi, disconnect },
+} = require("@statescan/common");
 jest.setTimeout(testTimeout);
 
 describe("Query class details", () => {
-  let api;
-  let provider;
-
   beforeAll(async () => {
-    provider = new WsProvider(elaraStatemine, 1000);
-    api = await ApiPromise.create({ provider });
-    setApi(api);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("of 0 works", async () => {

@@ -1,6 +1,5 @@
 const {
-  setApi,
-  setProvider,
+  test: { setupApi, disconnect },
   specs: { findRegistry, setSpecHeights },
 } = require("@statescan/common");
 const { normalizeExtrinsics } = require("../extrinsic");
@@ -13,21 +12,14 @@ const {
 jest.setTimeout(3000000);
 
 const { GenericBlock } = require("@polkadot/types");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
 
 describe("Extrinsics", () => {
-  let api;
-  let provider;
-
   beforeAll(async () => {
-    provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
-    api = await ApiPromise.create({ provider });
-    setApi(api);
-    setProvider(provider);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("Extract", async () => {

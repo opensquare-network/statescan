@@ -1,7 +1,6 @@
 const { findBlockHash } = require("../../../block/findBlockHash");
 const {
-  setApi,
-  setProvider,
+  test: { setupApi, disconnect },
   specs: { findRegistry, setSpecHeights },
 } = require("@statescan/common");
 const {
@@ -12,22 +11,15 @@ const {
 jest.setTimeout(3000000);
 
 const { GenericBlock } = require("@polkadot/types");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
 const { normalizeCall } = require("../call");
 
 describe("normalizeCall", () => {
-  let api;
-  let provider;
-
   beforeAll(async () => {
-    provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
-    api = await ApiPromise.create({ provider });
-    setProvider(provider);
-    setApi(api);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("Extract", async () => {

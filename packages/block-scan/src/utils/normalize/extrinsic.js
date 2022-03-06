@@ -6,7 +6,7 @@ const { u8aToHex } = require("@polkadot/util");
 function normalizeExtrinsic(extrinsic, events, extrinsicIndexer) {
   const hash = extrinsic.hash.toHex();
   const call = normalizeCall(extrinsic.method);
-  let signer = extrinsic._raw.signature.get("signer").toString();
+  let signer = extrinsic.signer.toString();
   //如果signer的解析长度不正确，则该交易是无签名交易
   if (signer.length < 47) {
     signer = "";

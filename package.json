@@ -20,7 +20,8 @@
     "xcmscan": "yarn workspace @statescan/xcm-scan scan",
     "relayscan": "yarn workspace @statescan/xcm-relay-scan scan",
     "lint": "yarn workspace @statescan/server lint",
-    "prepare": "husky install && husky set .husky/pre-commit \"npx lint-staged\""
+    "prepare": "husky install && husky set .husky/pre-commit \"npx lint-staged\"",
+    "test": "yarn workspace @statescan/asset-scan test && yarn workspace @statescan/block-scan test && yarn workspace @statescan/nft-scan test"
   },
   "devDependencies": {
     "husky": "^7.0.4",

@@ -1,25 +1,23 @@
 const { getAssetsMetadata } = require("./metadata");
-const { setApi } = require("@statescan/common");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
+const {
+  getApi,
+  test: { setupApi, disconnect },
+} = require("@statescan/common");
 jest.setTimeout(3000000);
 
-describe("Get asset", () => {
-  let api;
-  let provider;
-
+describe("Get metadata", () => {
   beforeAll(async () => {
-    provider = new WsProvider("wss://pub.elara.patract.io/statemine", 1000);
-    api = await ApiPromise.create({ provider });
-    setApi(api);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("works", async () => {
     const height = 954733;
 
+    const api = await getApi();
     const blockHash = await api.rpc.chain.getBlockHash(height);
     const account = await getAssetsMetadata(blockHash, 8);
 

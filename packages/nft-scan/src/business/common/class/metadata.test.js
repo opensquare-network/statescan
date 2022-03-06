@@ -1,23 +1,17 @@
 const { queryClassMetadataByHeight } = require("./metadata");
-const { setApi } = require("@statescan/common");
 const {
-  testConsts: { onFinalityStatemine, testTimeout },
+  testConsts: { testTimeout },
+  test: { setupApi, disconnect },
 } = require("@statescan/common");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
 jest.setTimeout(testTimeout);
 
 describe("Query class metadata", () => {
-  let api;
-  let provider;
-
   beforeAll(async () => {
-    provider = new WsProvider(onFinalityStatemine, 1000);
-    api = await ApiPromise.create({ provider });
-    setApi(api);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("of 0 works", async () => {

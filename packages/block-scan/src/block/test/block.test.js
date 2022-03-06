@@ -8,31 +8,20 @@ const {
 } = require("../../testCommon/data");
 const { extractBlock } = require("../index");
 const {
-  setApi,
-  setProvider,
+  test: { setupApi, disconnect },
   specs: { setSpecHeights, findRegistry },
 } = require("@statescan/common");
 jest.setTimeout(3000000);
 
 const { GenericBlock } = require("@polkadot/types");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
 
 describe("Block", () => {
-  let api;
-  let provider;
-
   beforeAll(async () => {
-    provider = new WsProvider(
-      "wss://statemine.api.onfinality.io/public-ws",
-      1000
-    );
-    api = await ApiPromise.create({ provider });
-    setProvider(provider);
-    setApi(api);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("Extract", async () => {

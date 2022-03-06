@@ -1,21 +1,16 @@
-const { setApi } = require("../api");
-const { onFinalityStatemine } = require("../testCommon/constants");
 const { fetchOneBlockFromNode } = require("./fetchBlocks");
-const { ApiPromise, WsProvider } = require("@polkadot/api");
+const {
+  test: { setupApi, disconnect },
+} = require("@statescan/common");
 jest.setTimeout(3000000);
 
 describe("Get one block", () => {
-  let api;
-  let provider;
-
   beforeAll(async () => {
-    provider = new WsProvider(onFinalityStatemine, 1000);
-    api = await ApiPromise.create({ provider });
-    setApi(api);
+    await setupApi();
   });
 
   afterAll(async () => {
-    await provider.disconnect();
+    await disconnect();
   });
 
   test("at height works", async () => {

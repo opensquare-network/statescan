@@ -7,8 +7,9 @@ const { allNetworks } = require("@polkadot/networks");
 function getRelayChainNetwork(chain) {
   if (chain === "statemine") {
     return "kusama";
+  } else if (chain === "westmint") {
+    return "westend";
   }
-
   return "polkadot";
 }
 

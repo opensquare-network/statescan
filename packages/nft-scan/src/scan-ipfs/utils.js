@@ -1,15 +1,10 @@
 const axios = require("axios");
-const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
-const { isHex, hexToString } = require("@polkadot/util");
+const { extractCid } = require("./common/extractCid");
+const { isCid } = require("./common/isCid");
 const { getAverageColor } = require("fast-average-color-node");
 
-const ipfsGatewayUrl =
-  process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
-
-function isCid(cid) {
-  return isIPFS.cid(cid) || isIPFS.base32cid(cid.toLowerCase());
-}
+const ipfsGatewayUrl = process.env.IPFS_GATEWAY_URL || "https://ipfs.io/ipfs/";
 
 async function createImageThumbnail(image, width, height) {
   const thumbnail = await image
@@ -24,15 +19,7 @@ async function createImageThumbnail(image, width, height) {
 }
 
 async function fetchMetadataFromIpfsByHex(hexData) {
-  if (!hexData) {
-    throw new Error(`No data provided to fetch metadata from IPFS`);
-  }
-
-  if (!isHex(hexData)) {
-    return null;
-  }
-
-  const maybeCid = hexToString(hexData);
+  const maybeCid = extractCid(hexData);
   if (!isCid(maybeCid)) {
     console.log(`data ${hexData} can not be converted to CID`);
     return null;
@@ -41,10 +28,7 @@ async function fetchMetadataFromIpfsByHex(hexData) {
   // fetch data from ipfs
   const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${maybeCid}`)).data;
   const jsonKeys = Object.keys(maybeJsonData);
-  if (
-    jsonKeys.includes("name") &&
-    jsonKeys.includes("image")
-  ) {
+  if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
     return {
       cid: maybeCid,
       name: maybeJsonData.name,
@@ -85,7 +69,6 @@ async function fetchAndSharpImage(imageCid) {
 }
 
 module.exports = {
-  isCid,
   fetchMetadataFromIpfsByHex,
   fetchAndSharpImage,
 };

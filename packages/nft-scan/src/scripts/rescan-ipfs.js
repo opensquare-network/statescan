@@ -61,7 +61,7 @@ async function scanClass(classId, classHeight) {
 async function main() {
   const args = minimist(process.argv.slice(2));
 
-  if (!args.classId) {
+  if (typeof args.classId === "undefined" || args.classId === null) {
     console.log("--classId=[classId] is not provided");
     process.exit(0);
   }
@@ -71,7 +71,7 @@ async function main() {
   const instanceId = parseInt(args.instanceId);
   const instanceHeight = parseInt(args.instanceHeight);
 
-  if (instanceId) {
+  if (!isNaN(instanceId)) {
     await scanInstance(classId, classHeight, instanceId, instanceHeight);
   } else {
     await scanClass(classId, classHeight);

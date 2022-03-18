@@ -1,3 +1,5 @@
+import charwnna from "./statemine/asset-567";
+
 // asset id => asset info
 const statemineInfo = new Map([
   [
@@ -129,6 +131,7 @@ const statemineInfo = new Map([
       ],
     },
   ],
+  charwnna,
 ]);
 
 // node => assets info

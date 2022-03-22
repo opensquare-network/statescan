@@ -1,7 +1,7 @@
 const charwnna = [
   567,
   {
-    icon: "/imgs/icons/asset/charwnna.svg",
+    icon: "/imgs/icons/asset/chrawnna.svg",
     about:
       "This is a community and incentive token for WagMedia. It will now act as a gov token.",
     links: [

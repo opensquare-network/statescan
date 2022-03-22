@@ -388,4 +388,12 @@ export const assetGovernances = {
       link: "https://voting.opensquare.io/space/polarisdao",
     },
   ],
+  567: [
+    {
+      spaceLogo: "/imgs/icons/asset/chrawnna.svg",
+      spaceName: "Chrawnna",
+      projectName: "Chrawnna",
+      link: "https://voting.opensquare.io/space/chrwna",
+    },
+  ],
 };

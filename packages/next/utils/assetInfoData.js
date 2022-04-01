@@ -131,6 +131,14 @@ const statemineInfo = new Map([
       ],
     },
   ],
+  [
+    223,
+    {
+      icon: "/imgs/icons/asset/bill.svg",
+      about: "For educational purposes only.",
+      links: [],
+    },
+  ],
   charwnna,
 ]);
 

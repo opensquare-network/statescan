@@ -53,15 +53,6 @@ const statemineInfo = new Map([
     },
   ],
   [
-    11,
-    {
-      icon: "/imgs/icons/asset/usdt.svg",
-      about:
-        "Tether gives you the joint benefits of open blockchain technology and traditional currency by converting your cash into a stable digital currency equivalent.",
-      name: "Tether USD",
-    },
-  ],
-  [
     16,
     {
       icon: "/imgs/icons/asset/polaris.png",

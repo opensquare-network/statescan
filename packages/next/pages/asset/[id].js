@@ -188,7 +188,9 @@ export default function Asset({
             head={assetHead}
             body={[
               <MinorText key="1">{asset?.symbol}</MinorText>,
-              <MinorText key="2">{asset?.name}</MinorText>,
+              <MinorText key="2">
+                {assetInfoData?.name || asset?.name}
+              </MinorText>,
               <MinorText key="3">{`#${asset?.assetId}`}</MinorText>,
               <CopyText key="4" text={asset?.owner}>
                 <Address

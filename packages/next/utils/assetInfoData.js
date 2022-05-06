@@ -64,7 +64,8 @@ const statemineInfo = new Map([
     16,
     {
       icon: "/imgs/icons/asset/polarisdao.svg",
-      about: "A community-managed DAO serving the Polkadot ecosystem.",
+      about:
+        "PolarisDAO is a community-managed DAO with members from Web3 developers, artists, and venture capitalists. We are committed to advancing the NFTs market in the Dotsama ecosystem and identifying early investment opportunities. ARIS is PolarisDAO’s native token. It will be used for protocol governance and voting on expenditures of the PolarisDAO Vault (treasury).",
       links: [
         {
           name: "Twitter",

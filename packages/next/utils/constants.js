@@ -382,7 +382,7 @@ export const assetGovernances = {
   ],
   16: [
     {
-      spaceLogo: "/imgs/icons/asset-governance-polarisDAO.png",
+      spaceLogo: "/imgs/icons/asset-governance-polarisDAO.svg",
       spaceName: "PolarisDAO",
       projectName: "PolarisDAO",
       link: "https://voting.opensquare.io/space/polarisdao",

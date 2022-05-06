@@ -63,7 +63,7 @@ const statemineInfo = new Map([
   [
     16,
     {
-      icon: "/imgs/icons/asset/polaris.png",
+      icon: "/imgs/icons/asset/polarisdao.svg",
       about: "A community-managed DAO serving the Polkadot ecosystem.",
       links: [
         {
@@ -72,19 +72,14 @@ const statemineInfo = new Map([
           icon: "/imgs/icons/link-twitter.svg",
         },
         {
+          name: "Medium",
+          url: "https://medium.com/@polarisdao",
+          icon: "/imgs/icons/link-medium.svg",
+        },
+        {
           name: "Gitbook",
           url: "https://polaris-dao.gitbook.io/polarisdao/",
-          icon: "/imgs/icons/link-default.svg",
-        },
-        {
-          name: "Voting",
-          url: "https://voting.opensquare.io/space/polarisdao",
-          icon: "/imgs/icons/link-osn.svg",
-        },
-        {
-          name: "Subsocial",
-          url: "https://app.subsocial.network/2316",
-          icon: "/imgs/icons/link-subsocial.svg",
+          icon: "/imgs/icons/link-gitbook.svg",
         },
         {
           name: "Discord",
@@ -92,9 +87,19 @@ const statemineInfo = new Map([
           icon: "/imgs/icons/link-discord.svg",
         },
         {
-          name: "Telegram",
-          url: "https://t.me/+QXciIOX85zdkM2Zl",
-          icon: "/imgs/icons/link-telegram.svg",
+          name: "CommonWealth",
+          url: "https://commonwealth.im/polaris-dao/",
+          icon: "/imgs/icons/link-commonwealth.svg",
+        },
+        {
+          name: "Voting",
+          url: "https://voting.opensquare.io/space/polarisdao",
+          icon: "/imgs/icons/link-osn.svg",
+        },
+        {
+          name: "Linktree",
+          url: "https://linktr.ee/PolarisDAO",
+          icon: "/imgs/icons/link-linktree.svg",
         },
       ],
     },

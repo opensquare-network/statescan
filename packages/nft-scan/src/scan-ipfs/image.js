@@ -49,13 +49,11 @@ async function handleMetadataImage(imageIpfsUrl) {
 }
 
 async function handleMetadataDataURLImage(imageDataURL) {
-  console.log("handleMetadataDataURLImage");
   try {
     const { imageMetadata, imageThumbnail } = await sharpDataURL(imageDataURL);
     if (!imageMetadata || !imageThumbnail) {
       return;
     }
-    console.log({ imageMetadata, imageThumbnail });
     await setImageData(imageDataURL, imageMetadata, imageThumbnail);
   } catch (e) {
     console.log(e.message);

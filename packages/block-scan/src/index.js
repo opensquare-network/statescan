@@ -33,9 +33,9 @@ async function main() {
     // chainHeight is the current on-chain last block height
     const finalizedHeight = getLatestFinalizedHeight();
 
-    if (scanFinalizedHeight >= finalizedHeight) {
-      await updateUnFinalized();
-    }
+    // if (scanFinalizedHeight >= finalizedHeight) {
+    //   await updateUnFinalized();
+    // }
 
     if (scanFinalizedHeight > finalizedHeight) {
       // Just wait if the to scan height greater than current chain height
@@ -85,7 +85,7 @@ async function scanBlock(blockInfo) {
     blockInfo.block,
     blockInfo.events,
     blockInfo.author,
-    blockIndexer,
+    blockIndexer
   );
 }
 

@@ -1,4 +1,4 @@
-const { getRawAddressCollection } = require("./mongo/account");
+// const { getRawAddressCollection } = require("./mongo/account");
 const {
   removeBlockApi,
   db: { updateRawAddrs },
@@ -25,7 +25,7 @@ async function scanNormalizedBlock(block, blockEvents, author, blockIndexer) {
   await handleExtrinsics(block.extrinsics, blockEvents, blockIndexer);
   await handleEvents(blockEvents, blockIndexer, block.extrinsics);
 
-  await updateRawAddrs(blockIndexer, await getRawAddressCollection());
+  // await updateRawAddrs(blockIndexer, await getRawAddressCollection());
 
   await saveData(
     blockIndexer,

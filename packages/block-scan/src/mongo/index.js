@@ -62,11 +62,11 @@ async function initDb() {
   blockCol = await getCollection(blockCollectionName);
   eventCol = await getCollection(eventCollectionName);
   extrinsicCol = await getCollection(extrinsicCollectionName);
-  unFinalizedBlockCol = await getCollection(unFinalizedCollectionName);
-  unFinalizedExtrinsicCol = await getCollection(
-    unFinalizedExtrinsicCollectionName
-  );
-  unFinalizedEventCol = await getCollection(unFinalizedEventCollectionName);
+  // unFinalizedBlockCol = await getCollection(unFinalizedCollectionName);
+  // unFinalizedExtrinsicCol = await getCollection(
+  //   unFinalizedExtrinsicCollectionName
+  // );
+  // unFinalizedEventCol = await getCollection(unFinalizedEventCollectionName);
 
   await _createIndexes();
 }

@@ -38,11 +38,11 @@ async function deleteEventsFromHeight(height) {
 }
 
 async function deleteFromHeight(height) {
-  await deleteUnFinalizedEventsFromHeight(height);
+  // await deleteUnFinalizedEventsFromHeight(height);
   await deleteEventsFromHeight(height);
-  await deleteUnFinalizedExtrinsicsFromHeight(height);
+  // await deleteUnFinalizedExtrinsicsFromHeight(height);
   await deleteExtrinsicsFromHeight(height);
-  await deleteUnFinalizedBlockFromHeight(height);
+  // await deleteUnFinalizedBlockFromHeight(height);
   await deleteBlockFromHeight(height);
 }
 

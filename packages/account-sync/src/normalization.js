@@ -7,8 +7,9 @@ const { allNetworks } = require("@polkadot/networks");
 function getRelayChainNetwork(chain) {
   if (chain === "statemine") {
     return "kusama";
+  } else if (chain === "westmint") {
+    return "westend";
   }
-
   return "polkadot";
 }
 
@@ -18,7 +19,7 @@ function normalizeEntry([key, value]) {
     ({ network }) => network === relayChain
   );
   const pubKeyU8a = key.slice(48);
-  const addr = encodeAddress(pubKeyU8a, targetNetwork.prefix);
+  const addr = encodeAddress(pubKeyU8a, targetNetwork?.prefix || 42);
   const detail = value.toJSON();
 
   return {

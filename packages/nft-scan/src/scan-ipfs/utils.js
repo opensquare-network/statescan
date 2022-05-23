@@ -1,16 +1,11 @@
 const axios = require("axios");
-const isIPFS = require("is-ipfs");
 const sharp = require("sharp");
-const parseDataURL = require("data-urls");
-const { isHex, hexToString } = require("@polkadot/util");
+const { extractCid } = require("./common/extractCid");
+const { isCid } = require("./common/isCid");
 const { getAverageColor } = require("fast-average-color-node");
+const parseDataURL = require("data-urls");
 
-const ipfsGatewayUrl =
-  process.env.IPFS_GATEWAY_URL || "https://cloudflare-ipfs.com/ipfs/";
-
-function isCid(cid) {
-  return isIPFS.cid(cid) || isIPFS.base32cid(cid.toLowerCase());
-}
+const ipfsGatewayUrl = process.env.IPFS_GATEWAY_URL || "https://ipfs.io/ipfs/";
 
 async function createImageThumbnail(image, width, height) {
   const thumbnail = await image
@@ -26,32 +21,22 @@ async function createImageThumbnail(image, width, height) {
 }
 
 async function fetchMetadataFromIpfsByHex(hexData) {
-  if (!hexData) {
-    throw new Error(`No data provided to fetch metadata from IPFS`);
-  }
-
-  if (!isHex(hexData)) {
+  const maybeCid = extractCid(hexData);
+  if (!isCid(maybeCid)) {
+    console.log(`data ${hexData} can not be converted to CID`);
     return null;
   }
 
-  const maybeCid = hexToString(hexData);
-  if (isCid(maybeCid)) {
-    const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${maybeCid}`))
-      .data;
-
-    // fetch data from ipfs
-    const jsonKeys = Object.keys(maybeJsonData);
-    if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
-      return {
-        cid: maybeCid,
-        name: maybeJsonData.name,
-        description: maybeJsonData.description, // Optional
-        image: maybeJsonData.image,
-      };
-    } else {
-      console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData},
-      but not contain name or image, ignore it`);
-    }
+  // fetch data from ipfs
+  const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${maybeCid}`)).data;
+  const jsonKeys = Object.keys(maybeJsonData);
+  if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
+    return {
+      cid: maybeCid,
+      name: maybeJsonData.name,
+      description: maybeJsonData.description, // Optional
+      image: maybeJsonData.image,
+    };
   } else {
     try {
       const maybeJsonData = JSON.parse(maybeCid);
@@ -157,7 +142,6 @@ async function sharpDataURL(imageDataURL) {
 }
 
 module.exports = {
-  isCid,
   fetchMetadataFromIpfsByHex,
   fetchAndSharpImage,
   sharpDataURL,

@@ -35,6 +35,32 @@ async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
   }
 }
 
+async function scanAllInstancesOfClass(classId, classHeight) {
+  console.log(`Re-scan all instances of class `, classId);
+
+  const query = { classId };
+  if (classHeight) {
+    query.classHeight = classHeight;
+  }
+
+  const instanceCol = await getInstanceCollection();
+  const nftInstances = await instanceCol
+    .find(query, {
+      sort: {
+        classHeight: -1,
+        "indexer.blockHeight": -1,
+      },
+    })
+    .toArray();
+
+  for (const instance of nftInstances) {
+    if (instance.dataHash) {
+      await scanMetadataAndSave(instance.dataHash, instance.metadata.data);
+      await handleImageByDataHash(instance.dataHash);
+    }
+  }
+}
+
 async function scanClass(classId, classHeight) {
   console.log(`Re-scan class data from IPFS for`, classId);
 
@@ -56,12 +82,14 @@ async function scanClass(classId, classHeight) {
     await scanMetadataAndSave(nftClass.dataHash, nftClass.metadata.data);
     await handleImageByDataHash(nftClass.dataHash);
   }
+
+  await scanMetadataAndSave(classId, classHeight);
 }
 
 async function main() {
   const args = minimist(process.argv.slice(2));
 
-  if (!args.classId) {
+  if (typeof args.classId === "undefined" || args.classId === null) {
     console.log("--classId=[classId] is not provided");
     process.exit(0);
   }
@@ -71,7 +99,7 @@ async function main() {
   const instanceId = parseInt(args.instanceId);
   const instanceHeight = parseInt(args.instanceHeight);
 
-  if (instanceId) {
+  if (!isNaN(instanceId)) {
     await scanInstance(classId, classHeight, instanceId, instanceHeight);
   } else {
     await scanClass(classId, classHeight);

@@ -6,7 +6,7 @@ const { initDb } = require("./mongo");
 
 async function test() {
   await initDb();
-  const heights = [323750, 338600, 338775];
+  const heights = [2096247];
 
   for (const height of heights) {
     const api = await getApi();

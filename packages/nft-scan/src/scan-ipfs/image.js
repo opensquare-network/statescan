@@ -1,10 +1,11 @@
+const parseDataURL = require("data-urls");
 const { getNftMetadataCollection } = require("../mongo");
-const { fetchAndSharpImage, isCid } = require("./utils");
+const { fetchAndSharpImage, isCid, sharpDataURL } = require("./utils");
 
-async function setImageError(imageIpfsUrl) {
+async function setImageError(imageUrl) {
   const nftMetadataCol = await getNftMetadataCollection();
   await nftMetadataCol.updateMany(
-    { image: imageIpfsUrl },
+    { image: imageUrl },
     {
       $set: {
         error: "imageError",
@@ -13,10 +14,10 @@ async function setImageError(imageIpfsUrl) {
   );
 }
 
-async function setImageData(imageIpfsUrl, imageMetadata, imageThumbnail) {
+async function setImageData(imageUrl, imageMetadata, imageThumbnail) {
   const nftMetadataCol = await getNftMetadataCollection();
   await nftMetadataCol.updateMany(
-    { image: imageIpfsUrl },
+    { image: imageUrl },
     {
       $set: {
         imageMetadata,
@@ -29,11 +30,7 @@ async function setImageData(imageIpfsUrl, imageMetadata, imageThumbnail) {
   );
 }
 
-async function handleMetadataImage(imageIpfsUrl) {
-  if (!imageIpfsUrl.startsWith("ipfs://")) {
-    return;
-  }
-
+async function handleIpfsMetadataImage(imageIpfsUrl) {
   const imageCid = imageIpfsUrl.split("/").pop();
   if (!imageCid) {
     return;
@@ -50,6 +47,32 @@ async function handleMetadataImage(imageIpfsUrl) {
     await setImageData(imageIpfsUrl, imageMetadata, imageThumbnail);
   } catch (e) {
     await setImageError(imageIpfsUrl);
+  }
+}
+
+async function handleMetadataDataURLImage(imageDataURL) {
+  console.log("handleMetadataDataURLImage");
+  try {
+    const { imageMetadata, imageThumbnail } = await sharpDataURL(imageDataURL);
+    if (!imageMetadata || !imageThumbnail) {
+      return;
+    }
+    console.log({ imageMetadata, imageThumbnail });
+    await setImageData(imageDataURL, imageMetadata, imageThumbnail);
+  } catch (e) {
+    console.log(e.message);
+    await setImageError(imageDataURL);
+  }
+}
+
+async function handleMetadataImage(imageUrl) {
+  if (imageUrl.startsWith("ipfs://")) {
+    await handleIpfsMetadataImage(imageUrl);
+  }
+
+  const parsedDataUrl = parseDataURL(imageUrl);
+  if (parsedDataUrl) {
+    await handleMetadataDataURLImage(imageUrl);
   }
 }
 
@@ -87,4 +110,5 @@ async function handleImageByDataHash(dataHash) {
 module.exports = {
   fetchAndSaveMetadataImagesFromIpfs,
   handleImageByDataHash,
+  handleMetadataImage,
 };

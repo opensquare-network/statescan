@@ -16,7 +16,9 @@
   },
   "dependencies": {
     "@polkadot/api": "7.10.1",
+    "@statescan/common": "1.0.0",
     "axios": "^0.24.0",
+    "data-urls": "^3.0.2",
     "dotenv": "^10.0.0",
     "fast-average-color-node": "^2.1.0",
     "is-ipfs": "^6.0.2",
@@ -25,8 +27,7 @@
     "lodash.omit": "^4.5.0",
     "log4js": "^6.4.0",
     "minimist": "^1.2.5",
-    "mongodb": "4.1.2",
-    "@statescan/common": "1.0.0"
+    "mongodb": "4.1.2"
   },
   "devDependencies": {
     "@types/node": "^16.10.1",

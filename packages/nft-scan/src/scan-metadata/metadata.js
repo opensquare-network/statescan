@@ -16,31 +16,22 @@ async function parseMetadataAndSave(dataHash, data) {
   }
 
   const nftMetadataCol = await getNftMetadataCollection();
-  if (!nftImageData) {
-    await nftMetadataCol.updateOne(
-      { dataHash },
-      {
-        $set: {
-          recognized: false,
-          timestamp: new Date(),
-        },
-      }
-    );
-    console.log(`Result: unrecognized.`);
-    return;
-  }
-
   await nftMetadataCol.updateOne(
     { dataHash },
     {
       $set: {
-        ...nftImageData,
-        recognized: true,
+        recognized: !!nftImageData,
         timestamp: new Date(),
+        ...(nftImageData || {}),
       },
     }
   );
-  console.log("Result: recognized. data:", nftImageData);
+
+  if (!nftImageData) {
+    console.log(`Result: unrecognized.`);
+  } else {
+    console.log("Result: recognized. data:", nftImageData);
+  }
 }
 
 async function processNewMetadata() {

@@ -40,7 +40,6 @@ async function fetchIpfsMetadata(cid) {
 }
 
 async function handleJsonMetadata(json) {
-  // fetch data from ipfs
   const jsonKeys = Object.keys(json);
   if (jsonKeys.includes("image")) {
     return {
@@ -50,7 +49,7 @@ async function handleJsonMetadata(json) {
     };
   } else {
     console.log(`Got on-chain json data: ${JSON.stringify(json)},
-    but not contain name or image, ignore it`);
+    but not contain image, ignore it`);
   }
 }
 

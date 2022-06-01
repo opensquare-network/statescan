@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const { processNewMetadata } = require("./metadata");
-const { fetchAndSaveMetadataImagesFromIpfs } = require("./image");
+const { processAndSaveMetadataImages } = require("./image");
 const {
   getClassCollection,
   getInstanceCollection,
@@ -39,7 +39,7 @@ async function main() {
   await addMetadataParsingTask(instanceCol);
 
   await processNewMetadata();
-  await fetchAndSaveMetadataImagesFromIpfs();
+  await processAndSaveMetadataImages();
 }
 
 main()

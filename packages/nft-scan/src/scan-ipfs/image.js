@@ -1,7 +1,7 @@
 const { extractCid } = require("./common/extractCid");
 const { isCid } = require("./common/isCid");
 const { getNftMetadataCollection } = require("../mongo");
-const { fetchAndSharpImage } = require("./utils");
+const { fetchAndSharpImage, sharpDataURL } = require("./utils");
 const parseDataURL = require("data-urls");
 
 async function setImageError(imageUrl) {
@@ -32,7 +32,7 @@ async function setImageData(imageUrl, imageMetadata, imageThumbnail) {
   );
 }
 
-async function handleMetadataImage(imageIpfsUrl) {
+async function handleIpfsMetadataImage(imageIpfsUrl) {
   const imageCid = extractCid(imageIpfsUrl);
   if (!isCid(imageCid)) {
     return;

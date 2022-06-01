@@ -120,7 +120,7 @@ export default function NftInstance({
     );
   }
 
-  const name = (nftInstance?.nftMetadata ?? nftClass?.nftMetadata)?.name;
+  const name = nftInstance?.nftMetadata?.name ?? nftClass?.nftMetadata?.name;
   const imageThumbnail =
     nftInstance?.nftMetadata?.recognized === false
       ? null
@@ -130,6 +130,8 @@ export default function NftInstance({
   const background = nftInstance?.nftMetadata?.image
     ? nftInstance.nftMetadata.imageMetadata?.background
     : nftClass?.nftMetadata?.imageMetadata?.background;
+  const description =
+    nftInstance?.nftMetadata?.description ?? nftClass?.nftMetadata?.description;
 
   const tab = null;
   const nftMetadata = nftInstance?.nftMetadata
@@ -296,8 +298,8 @@ export default function NftInstance({
               info={
                 <NftInfo
                   data={{
-                    title: nftMetadata?.name ?? "[Unrecognized]",
-                    description: nftMetadata?.description ?? "-",
+                    title: name ?? "[Unrecognized]",
+                    description: description ?? "-",
                   }}
                 />
               }

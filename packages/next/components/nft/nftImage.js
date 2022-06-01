@@ -16,6 +16,20 @@ const transparentThumbnail =
   "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 export default function NftImage({ nftMetadata }) {
+  if (nftMetadata?.imageMetadata?.isDataUrl) {
+    return (
+      <ImgWrapper>
+        <Image
+          src={nftMetadata.image}
+          width={nftMetadata?.imageMetadata?.width ?? 480}
+          height={nftMetadata?.imageMetadata?.height ?? 480}
+          alt=""
+          layout="fill"
+        />
+      </ImgWrapper>
+    );
+  }
+
   let imageCid;
   if (nftMetadata?.image?.startsWith("ipfs://")) {
     imageCid = nftMetadata?.image.split("/").pop();

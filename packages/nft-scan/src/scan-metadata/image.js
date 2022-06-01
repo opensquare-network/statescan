@@ -1,12 +1,13 @@
+const parseDataURL = require("data-urls");
+const { getNftMetadataCollection } = require("../mongo");
+const { fetchAndSharpImage, sharpDataURL } = require("./utils");
 const { extractCid } = require("./common/extractCid");
 const { isCid } = require("./common/isCid");
-const { getNftMetadataCollection } = require("../mongo");
-const { fetchAndSharpImage } = require("./utils");
 
-async function setImageError(imageIpfsUrl) {
+async function setImageError(imageUrl) {
   const nftMetadataCol = await getNftMetadataCollection();
   await nftMetadataCol.updateMany(
-    { image: imageIpfsUrl },
+    { image: imageUrl },
     {
       $set: {
         error: "imageError",
@@ -15,10 +16,10 @@ async function setImageError(imageIpfsUrl) {
   );
 }
 
-async function setImageData(imageIpfsUrl, imageMetadata, imageThumbnail) {
+async function setImageData(imageUrl, imageMetadata, imageThumbnail) {
   const nftMetadataCol = await getNftMetadataCollection();
   await nftMetadataCol.updateMany(
-    { image: imageIpfsUrl },
+    { image: imageUrl },
     {
       $set: {
         imageMetadata,
@@ -31,7 +32,7 @@ async function setImageData(imageIpfsUrl, imageMetadata, imageThumbnail) {
   );
 }
 
-async function handleMetadataImage(imageIpfsUrl) {
+async function handleIpfsMetadataImage(imageIpfsUrl) {
   const imageCid = extractCid(imageIpfsUrl);
   if (!isCid(imageCid)) {
     return;
@@ -47,7 +48,30 @@ async function handleMetadataImage(imageIpfsUrl) {
   }
 }
 
-async function fetchAndSaveMetadataImagesFromIpfs() {
+async function handleMetadataDataURLImage(imageDataURL) {
+  try {
+    const { imageMetadata, imageThumbnail } = await sharpDataURL(imageDataURL);
+    if (!imageMetadata || !imageThumbnail) {
+      return;
+    }
+    await setImageData(imageDataURL, imageMetadata, imageThumbnail);
+  } catch (e) {
+    await setImageError(imageDataURL);
+  }
+}
+
+async function handleMetadataImage(imageUrl) {
+  if (imageUrl.toLowerCase().startsWith("ipfs://")) {
+    await handleIpfsMetadataImage(imageUrl);
+  }
+
+  const parsedDataUrl = parseDataURL(imageUrl);
+  if (parsedDataUrl) {
+    await handleMetadataDataURLImage(imageUrl);
+  }
+}
+
+async function processAndSaveMetadataImages() {
   const nftMetadataCol = await getNftMetadataCollection();
   const items = await nftMetadataCol
     .find({
@@ -60,11 +84,9 @@ async function fetchAndSaveMetadataImagesFromIpfs() {
 
   const promises = [];
   for (const metadata of items || []) {
-    if (!metadata.recognized || !metadata.image) {
-      continue;
+    if (metadata.image) {
+      promises.push(handleMetadataImage(metadata.image));
     }
-
-    promises.push(handleMetadataImage(metadata.image));
   }
 
   await Promise.all(promises);
@@ -73,12 +95,12 @@ async function fetchAndSaveMetadataImagesFromIpfs() {
 async function handleImageByDataHash(dataHash) {
   const nftMetadataCol = await getNftMetadataCollection();
   const metadata = await nftMetadataCol.findOne({ dataHash });
-  if (metadata.recognized && metadata.image) {
+  if (metadata?.recognized && metadata?.image) {
     await handleMetadataImage(metadata.image);
   }
 }
 
 module.exports = {
-  fetchAndSaveMetadataImagesFromIpfs,
+  processAndSaveMetadataImages,
   handleImageByDataHash,
 };

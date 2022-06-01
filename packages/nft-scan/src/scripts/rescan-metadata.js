@@ -2,8 +2,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const minimist = require("minimist");
-const { handleImageByDataHash } = require("../scan-ipfs/image");
-const { scanMetadataAndSave } = require("../scan-ipfs/metadata");
+const { handleImageByDataHash } = require("../scan-metadata/image");
+const { parseMetadataAndSave } = require("../scan-metadata/metadata");
 const { getClassCollection, getInstanceCollection } = require("../mongo");
 
 async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
@@ -30,7 +30,7 @@ async function scanInstance(classId, classHeight, instanceId, instanceHeight) {
   }
   console.log(`Re-scan instance object`, nftInstance._id);
   if (nftInstance.dataHash) {
-    await scanMetadataAndSave(nftInstance.dataHash, nftInstance.metadata.data);
+    await parseMetadataAndSave(nftInstance.dataHash, nftInstance.metadata.data);
     await handleImageByDataHash(nftInstance.dataHash);
   }
 }
@@ -55,7 +55,7 @@ async function scanAllInstancesOfClass(classId, classHeight) {
 
   for (const instance of nftInstances) {
     if (instance.dataHash) {
-      await scanMetadataAndSave(instance.dataHash, instance.metadata.data);
+      await parseMetadataAndSave(instance.dataHash, instance.metadata.data);
       await handleImageByDataHash(instance.dataHash);
     }
   }
@@ -79,11 +79,11 @@ async function scanClass(classId, classHeight) {
   }
   console.log(`Re-scan class object`, nftClass._id);
   if (nftClass.dataHash) {
-    await scanMetadataAndSave(nftClass.dataHash, nftClass.metadata.data);
+    await parseMetadataAndSave(nftClass.dataHash, nftClass.metadata.data);
     await handleImageByDataHash(nftClass.dataHash);
   }
 
-  await scanMetadataAndSave(classId, classHeight);
+  await parseMetadataAndSave(classId, classHeight);
 }
 
 async function main() {

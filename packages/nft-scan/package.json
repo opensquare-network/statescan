@@ -17,6 +17,7 @@
   "dependencies": {
     "@polkadot/api": "8.5.1",
     "axios": "^0.24.0",
+    "data-urls": "^3.0.2",
     "dotenv": "^10.0.0",
     "fast-average-color-node": "^2.1.0",
     "is-ipfs": "^6.0.2",

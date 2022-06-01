@@ -1,14 +1,14 @@
 require("dotenv").config();
 
-const { fetchAndSaveMetaDataFromIpfs } = require("./metadata");
-const { fetchAndSaveMetadataImagesFromIpfs } = require("./image");
+const { processNewMetadata } = require("./metadata");
+const { processAndSaveMetadataImages } = require("./image");
 const {
   getClassCollection,
   getInstanceCollection,
   getNftMetadataCollection,
 } = require("../mongo");
 
-async function queueIpfsTask(nftCol) {
+async function addMetadataParsingTask(nftCol) {
   const items =
     (await nftCol.find({ dataHash: { $ne: null } }).toArray()) || [];
   if (items.length === 0) {
@@ -35,11 +35,11 @@ async function main() {
   const classCol = await getClassCollection();
   const instanceCol = await getInstanceCollection();
 
-  await queueIpfsTask(classCol);
-  await queueIpfsTask(instanceCol);
+  await addMetadataParsingTask(classCol);
+  await addMetadataParsingTask(instanceCol);
 
-  await fetchAndSaveMetaDataFromIpfs();
-  await fetchAndSaveMetadataImagesFromIpfs();
+  await processNewMetadata();
+  await processAndSaveMetadataImages();
 }
 
 main()

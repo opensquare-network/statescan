@@ -21,57 +21,61 @@ async function createImageThumbnail(image, width, height) {
   return thumbnail;
 }
 
-async function fetchMetadataFromIpfsByHex(hexData) {
+async function fetchIpfsMetadata(cid) {
+  const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${cid}`)).data;
+
+  // fetch data from ipfs
+  const jsonKeys = Object.keys(maybeJsonData);
+  if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
+    return {
+      cid,
+      name: maybeJsonData.name,
+      description: maybeJsonData.description, // Optional
+      image: maybeJsonData.image,
+    };
+  } else {
+    console.log(`Got IPFS response by cid: ${cid} from data: ${hexData},
+    but not contain name or image, ignore it`);
+  }
+}
+
+async function handleJsonMetadata(json) {
+  // fetch data from ipfs
+  const jsonKeys = Object.keys(json);
+  if (jsonKeys.includes("image")) {
+    return {
+      name: json.name,
+      description: json.description, // Optional
+      image: json.image,
+    };
+  } else {
+    console.log(`Got on-chain json data: ${JSON.stringify(json)},
+    but not contain name or image, ignore it`);
+  }
+}
+
+async function parseRawOnchainMetadata(hexData) {
   if (!hexData) {
-    throw new Error(`No data provided to fetch metadata from IPFS`);
+    throw new Error(`No data provided`);
   }
 
   if (!isHex(hexData)) {
-    return null;
+    throw new Error(`Not hex metadata`);
   }
 
   const dataText = hexToString(hexData);
   const maybeCid = extractCid(dataText);
   if (isCid(maybeCid)) {
-    const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${maybeCid}`))
-      .data;
-
-    // fetch data from ipfs
-    const jsonKeys = Object.keys(maybeJsonData);
-    if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
-      return {
-        cid: maybeCid,
-        name: maybeJsonData.name,
-        description: maybeJsonData.description, // Optional
-        image: maybeJsonData.image,
-      };
-    } else {
-      console.log(`Got IPFS response by cid: ${maybeCid} from data: ${hexData},
-      but not contain name or image, ignore it`);
-    }
-  } else {
-    try {
-      const maybeJsonData = JSON.parse(dataText);
-
-      // fetch data from ipfs
-      const jsonKeys = Object.keys(maybeJsonData);
-      if (jsonKeys.includes("image")) {
-        return {
-          name: maybeJsonData.name,
-          description: maybeJsonData.description, // Optional
-          image: maybeJsonData.image,
-        };
-      } else {
-        console.log(`Got on-chain json data: ${JSON.stringify(maybeJsonData)},
-        but not contain name or image, ignore it`);
-      }
-    } catch (e) {
-      console.log(`data ${hexData} can not be converted to CID or JSON`);
-      return null;
-    }
+    return await fetchIpfsMetadata(maybeCid);
   }
 
-  return null;
+  try {
+    const jsonData = JSON.parse(dataText);
+    return await handleJsonMetadata(jsonData);
+  } catch (e) {
+    console.log(`data ${hexData} can not be converted to CID or JSON`);
+    return null;
+  }
 }
 
 async function handleImageData(imageData) {
@@ -154,7 +158,7 @@ async function sharpDataURL(imageDataURL) {
 }
 
 module.exports = {
-  fetchMetadataFromIpfsByHex,
+  parseRawOnchainMetadata,
   fetchAndSharpImage,
   sharpDataURL,
 };

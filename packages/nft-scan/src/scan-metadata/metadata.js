@@ -1,22 +1,22 @@
-const { fetchMetadataFromIpfsByHex } = require("./utils");
+const { parseRawOnchainMetadata } = require("./utils");
 const { getNftMetadataCollection } = require("../mongo");
 
-async function scanMetadataAndSave(dataHash, data) {
+async function parseMetadataAndSave(dataHash, data) {
   if (!data) {
     return;
   }
 
-  console.log(`Scanning ipfs meta data for`, dataHash);
-  let nftIPFSData;
+  console.log(`Scanning meta data for`, dataHash);
+  let nftImageData;
   try {
-    nftIPFSData = await fetchMetadataFromIpfsByHex(data);
+    nftImageData = await parseRawOnchainMetadata(data);
   } catch (e) {
     // fixme: should not set unrecognized when fail due to network connection problem
-    console.error("Error with fetching data from ipfs", e);
+    console.error("Error with fetching data", e);
   }
 
   const nftMetadataCol = await getNftMetadataCollection();
-  if (!nftIPFSData) {
+  if (!nftImageData) {
     await nftMetadataCol.updateOne(
       { dataHash },
       {
@@ -34,25 +34,25 @@ async function scanMetadataAndSave(dataHash, data) {
     { dataHash },
     {
       $set: {
-        ...nftIPFSData,
+        ...nftImageData,
         recognized: true,
         timestamp: new Date(),
       },
     }
   );
-  console.log("Result: recognized. data:", nftIPFSData);
+  console.log("Result: recognized. data:", nftImageData);
 }
 
-async function fetchAndSaveMetaDataFromIpfs() {
+async function processNewMetadata() {
   const nftMetadataCol = await getNftMetadataCollection();
   let items =
     (await nftMetadataCol.find({ recognized: null }).limit(10).toArray()) || [];
   await Promise.all(
-    items.map((item) => scanMetadataAndSave(item.dataHash, item.data))
+    items.map((item) => parseMetadataAndSave(item.dataHash, item.data))
   );
 }
 
 module.exports = {
-  fetchAndSaveMetaDataFromIpfs,
-  scanMetadataAndSave,
+  processNewMetadata,
+  parseMetadataAndSave,
 };

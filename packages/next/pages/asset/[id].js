@@ -10,7 +10,7 @@ import DetailTable from "components/detailTable";
 import Section from "components/section";
 import MinorText from "components/minorText";
 import AddressEllipsis from "components/addressEllipsis";
-import { bigNumber2Locale, fromAssetUnit, fromSymbolUnit } from "utils";
+import { bigNumber2Locale, fromAssetUnit } from "utils";
 import InLink from "components/inLink";
 import Address from "components/address";
 import TabTable from "components/tabTable";
@@ -26,8 +26,7 @@ import Status from "../../components/status";
 import CopyText from "../../components/copyText";
 import AssetPrice from "components/assetPrice";
 import { assetGovernances } from "utils/constants";
-import { NextSeo } from 'next-seo';
-
+import { NextSeo } from "next-seo";
 
 export default function Asset({
   node,
@@ -143,13 +142,17 @@ export default function Asset({
   }
 
   const seoTitle = asset?.name || "Statescan";
-  const seoDescription = assetInfoData?.about || "Kusama & Polkadot Asset Explorer";
-  const seoImages = [{
-    url: `${process.env.NEXT_PUBLIC_SITE_URL}${assetInfoData?.icon ?? "imgs/icons/default.svg"}`,
-    width: 1200,
-    height: 628,
-  },];
-
+  const seoDescription =
+    assetInfoData?.about || "Kusama & Polkadot Asset Explorer";
+  const seoImages = [
+    {
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}${
+        assetInfoData?.icon ?? "imgs/icons/default.svg"
+      }`,
+      width: 1200,
+      height: 628,
+    },
+  ];
 
   return (
     <Layout node={node}>
@@ -161,7 +164,7 @@ export default function Asset({
           title: seoTitle,
           description: seoDescription,
           images: seoImages,
-          site_name: 'Statescan',
+          site_name: "Statescan",
         }}
         twitter={{
           handle: "@handle",

@@ -84,11 +84,9 @@ async function processAndSaveMetadataImages() {
 
   const promises = [];
   for (const metadata of items || []) {
-    if (!metadata.recognized || !metadata.image) {
-      continue;
+    if (metadata.image) {
+      promises.push(handleMetadataImage(metadata.image));
     }
-
-    promises.push(handleMetadataImage(metadata.image));
   }
 
   await Promise.all(promises);
@@ -97,7 +95,7 @@ async function processAndSaveMetadataImages() {
 async function handleImageByDataHash(dataHash) {
   const nftMetadataCol = await getNftMetadataCollection();
   const metadata = await nftMetadataCol.findOne({ dataHash });
-  if (metadata.recognized && metadata.image) {
+  if (metadata?.recognized && metadata?.image) {
     await handleMetadataImage(metadata.image);
   }
 }
@@ -105,5 +103,4 @@ async function handleImageByDataHash(dataHash) {
 module.exports = {
   processAndSaveMetadataImages,
   handleImageByDataHash,
-  handleMetadataImage,
 };

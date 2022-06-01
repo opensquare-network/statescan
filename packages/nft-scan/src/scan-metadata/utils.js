@@ -9,7 +9,7 @@ const { getAverageColor } = require("fast-average-color-node");
 const ipfsGatewayUrl = process.env.IPFS_GATEWAY_URL || "https://ipfs.io/ipfs/";
 
 async function createImageThumbnail(image, width, height) {
-  const thumbnail = await image
+  return image
     .resize({
       fit: sharp.fit.outside,
       width,
@@ -17,8 +17,6 @@ async function createImageThumbnail(image, width, height) {
     })
     .png({ compressionLevel: 9, adaptiveFiltering: true, force: true })
     .toBuffer();
-
-  return thumbnail;
 }
 
 async function fetchIpfsMetadata(cid) {

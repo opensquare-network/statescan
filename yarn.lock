@@ -3148,7 +3148,7 @@ color-string@^1.9.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^4.0.1, color@^4.2.3:
+color@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/color/-/color-4.2.3.tgz#d781ecb5e57224ee43ea9627560107c0e0c6463a"
   integrity sha512-1rXeuUUiGGrykh+CeBdu5Ie7OJwinCgQY0bc7GCRxy5xVHy+moaqkpL/jqQq0MtQOeYcrqEz4abc5f0KtU7W4A==
@@ -3568,11 +3568,6 @@ detect-browser@^5.0.0, detect-browser@^5.1.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/detect-browser/-/detect-browser-5.3.0.tgz#9705ef2bddf46072d0f7265a1fe300e36fe7ceca"
   integrity sha512-53rsFbGdwMwlF7qvCt0ypLM5V5/Mbl0szB7GPN8y9NCcbknYOeVVXdrXEq+90IwAfrrzt6Hd+u2E2ntakICU8w==
-
-detect-libc@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
-  integrity sha1-+hN8S9aY7fVc1c0CrFWfkaTEups=
 
 detect-libc@^2.0.0, detect-libc@^2.0.1:
   version "2.0.1"
@@ -4177,18 +4172,19 @@ ext@^1.1.2:
   dependencies:
     type "^2.5.0"
 
-fast-average-color-node@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/fast-average-color-node/-/fast-average-color-node-2.1.0.tgz#0378df83b8667b34ba4bfa5202f8d808c168a839"
-  integrity sha512-FXoeArWmYBy63PQTggfPGriFZ5DaCDnjJXazMR0Xd9PZ7aZsfk/aKCf2J2L3nIlMRn4ucgusupriitHYidxFEg==
+fast-average-color-node@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/fast-average-color-node/-/fast-average-color-node-2.2.0.tgz#c2ea13753a6434bff1ed5eb050f05b39cd006ecb"
+  integrity sha512-vow8Xy3O7PMjoduWwlgOrF2B9zPfb8S5EGUubz3Amide9p46ExxnTJ9ot98H+0RzO+n26Zh5ikgoZ6vwzoCP2A==
   dependencies:
-    fast-average-color "^7.0.1"
-    sharp "^0.29.2"
+    fast-average-color "^7.1.0"
+    node-fetch "^2.6.7"
+    sharp "^0.30.3"
 
-fast-average-color@^7.0.1:
-  version "7.0.1"
-  resolved "https://registry.yarnpkg.com/fast-average-color/-/fast-average-color-7.0.1.tgz#2304cc62578f4427c1bc48844faa1c5178835b67"
-  integrity sha512-M9Lg7mO/sSGezi7cB/i+I9ym33IBcdeREHk222//3sbtj2+Aq9Cv3DIVY1asn3fu4rX2ENQ2iv2mCSaVpC68SQ==
+fast-average-color@^7.1.0:
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/fast-average-color/-/fast-average-color-7.1.0.tgz#8411161a524bddd613cadf7489da4ccdb0150507"
+  integrity sha512-eTc18sdbr2P2xZFMhvWmo+T7MJ403k4jSiapTMoOcvkptu7SWOU+TzN4tFL4B9sIKUSXA63Xu7Mpc4fmncDZ+Q==
   dependencies:
     "@types/offscreencanvas" "^2019.6.4"
 
@@ -6104,11 +6100,6 @@ node-abi@^3.3.0:
   dependencies:
     semver "^7.3.5"
 
-node-addon-api@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-4.2.0.tgz#117cbb5a959dff0992e1c586ae0393573e4d2a87"
-  integrity sha512-eazsqzwG2lskuzBqCGPi7Ac2UgOoMz8JVOXVhTvvPDYhthvNpefx8jWD8Np7Gv+2Sz0FlPWZk0nJV0z598Wn8Q==
-
 node-addon-api@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/node-addon-api/-/node-addon-api-5.0.0.tgz#7d7e6f9ef89043befdb20c1989c905ebde18c501"
@@ -6501,7 +6492,7 @@ postcss@8.4.5:
     picocolors "^1.0.0"
     source-map-js "^1.0.1"
 
-prebuild-install@^7.0.0, prebuild-install@^7.1.0:
+prebuild-install@^7.1.0:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/prebuild-install/-/prebuild-install-7.1.0.tgz#991b6ac16c81591ba40a6d5de93fb33673ac1370"
   integrity sha512-CNcMgI1xBypOyGqjp3wOc8AAo1nMhZS3Cwd3iHIxOdAUbb+YxdNuM4Z5iIrZ8RLvOsf3F3bl7b7xGq6DjQoNYA==
@@ -7127,17 +7118,17 @@ shallowequal@^1.1.0:
   resolved "https://registry.yarnpkg.com/shallowequal/-/shallowequal-1.1.0.tgz#188d521de95b9087404fd4dcb68b13df0ae4e7f8"
   integrity sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==
 
-sharp@^0.29.2:
-  version "0.29.3"
-  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.29.3.tgz#0da183d626094c974516a48fab9b3e4ba92eb5c2"
-  integrity sha512-fKWUuOw77E4nhpyzCCJR1ayrttHoFHBT2U/kR/qEMRhvPEcluG4BKj324+SCO1e84+knXHwhJ1HHJGnUt4ElGA==
+sharp@^0.30.3:
+  version "0.30.6"
+  resolved "https://registry.yarnpkg.com/sharp/-/sharp-0.30.6.tgz#02264e9826b5f1577509f70bb627716099778873"
+  integrity sha512-lSdVxFxcndzcXggDrak6ozdGJgmIgES9YVZWtAFrwi+a/H5vModaf51TghBtMPw+71sLxUsTy2j+aB7qLIODQg==
   dependencies:
-    color "^4.0.1"
-    detect-libc "^1.0.3"
-    node-addon-api "^4.2.0"
-    prebuild-install "^7.0.0"
-    semver "^7.3.5"
-    simple-get "^4.0.0"
+    color "^4.2.3"
+    detect-libc "^2.0.1"
+    node-addon-api "^5.0.0"
+    prebuild-install "^7.1.0"
+    semver "^7.3.7"
+    simple-get "^4.0.1"
     tar-fs "^2.1.1"
     tunnel-agent "^0.6.0"
 

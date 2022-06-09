@@ -37,9 +37,15 @@ async function fetchIpfsMetadata(cid) {
   }
 }
 
-async function handleJsonMetadata(json) {
-  const jsonKeys = Object.keys(json);
-  if (jsonKeys.includes("image")) {
+async function handleJsonMetadata(json = {}) {
+  const normalizedJson = Object.entries(json).reduce((result, [key, value]) => {
+    const lowercaseKey = (key || "").toLowerCase();
+    result[lowercaseKey] = value;
+
+    return result;
+  }, {});
+
+  if (normalizedJson["image"]) {
     return {
       name: json.name,
       description: json.description, // Optional

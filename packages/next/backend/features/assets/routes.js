@@ -7,8 +7,16 @@ const router = new Router();
 router.get("/assets", assetsController.getAssets);
 router.get("/assets/:assetId(\\d+)", assetsController.getAssetById);
 router.get(
+  "/assets/:assetId(\\d+)/timeline",
+  assetsController.getAssetTimelineById
+);
+router.get(
   "/assets/:assetId(\\d+)_:blockHeight(\\d+)",
   assetsController.getAsset
+);
+router.get(
+  "/assets/:assetId(\\d+)_:blockHeight(\\d+)/timeline",
+  assetsController.getAssetTimeline
 );
 router.get(
   "/assets/:assetId(\\d+)_:blockHeight(\\d+)/transfers",

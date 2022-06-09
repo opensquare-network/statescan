@@ -32,6 +32,7 @@ export default function Asset({
   node,
   tab,
   asset,
+  assetTimeline,
   assetTransfers,
   assetHolders,
   assetAnalytics,
@@ -113,9 +114,10 @@ export default function Asset({
     },
     {
       name: "Timeline",
-      total: asset?.timeline?.length,
+      page: assetTimeline?.page,
+      total: assetTimeline?.total,
       component: (
-        <AssetTimeline data={asset?.timeline} node={node} asset={asset} />
+        <AssetTimeline data={assetTimeline?.items} node={node} asset={asset} />
       ),
     },
     {
@@ -257,20 +259,31 @@ export async function getServerSideProps(context) {
 
   const assetKey = `${asset.assetId}_${asset.createdAt.blockHeight}`;
 
-  const nPage = parseInt(page) || 1;
   const activeTab = tab ?? "transfers";
 
+  let nPage;
+  if (activeTab === "timeline") {
+    nPage = parseInt(page) - 1 || "last";
+  } else {
+    nPage = (parseInt(page) || 1) - 1;
+  }
+
   const [
+    { result: assetTimeline },
     { result: assetTransfers },
     { result: assetHolders },
     { result: assetAnalytics },
   ] = await Promise.all([
+    nextApi.fetch(`assets/${assetKey}/timeline`, {
+      page: activeTab === "timeline" ? nPage : 0,
+      pageSize: 3,
+    }),
     nextApi.fetch(`assets/${assetKey}/transfers`, {
-      page: activeTab === "transfers" ? nPage - 1 : 0,
+      page: activeTab === "transfers" ? nPage : 0,
       pageSize: 25,
     }),
     nextApi.fetch(`assets/${assetKey}/holders`, {
-      page: activeTab === "holders" ? nPage - 1 : 0,
+      page: activeTab === "holders" ? nPage : 0,
       pageSize: 25,
     }),
     nextApi.fetch(`assets/${assetKey}/statistic`),
@@ -282,6 +295,7 @@ export async function getServerSideProps(context) {
       id,
       tab: activeTab,
       asset: asset ?? null,
+      assetTimeline: assetTimeline ?? EmptyQuery,
       assetTransfers: assetTransfers ?? EmptyQuery,
       assetHolders: assetHolders ?? EmptyQuery,
       assetAnalytics: assetAnalytics ?? EmptyQuery,

@@ -19,9 +19,6 @@ const Wrapper = styled.div`
     }
   }
   :last-child {
-    .bot-line {
-      visibility: hidden;
-    }
     .fileds {
       border-bottom: none;
     }
@@ -366,7 +363,7 @@ export default function AssetTimelineItem({ data, asset }) {
   const Icon = getIcon(data);
 
   return (
-    <Wrapper>
+    <Wrapper className="asset-timeline-item">
       <ItemLine>
         <TopLine className="top-line" />
         <Icon />

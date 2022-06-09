@@ -5,9 +5,10 @@ const {
   getClassAttributeCollection,
   getClassTimelineCollection,
   getNftMetadataCollection,
-}  = require("../../mongo");
+} = require("../../mongo");
 const {
-  lookupNftMetadata, lookupClassDestroyedAt,
+  lookupNftMetadata,
+  lookupClassDestroyedAt,
 } = require("../../common/nft");
 
 async function getNftMetadata(nftObj) {
@@ -26,57 +27,57 @@ async function getNftMetadata(nftObj) {
 async function queryAllClasses(statusQuery, page, pageSize) {
   const col = await getNftClassCollection();
 
-  const [result] = await col.aggregate([
-    { $match: statusQuery },
-    {
-      $facet: {
-        items: [
-          ...lookupNftMetadata(),
-          {
-            $sort: {
-              "nftMetadata.recognized": -1,
-              classId: 1,
-            }
-          },
-          { $skip: page * pageSize },
-          { $limit: pageSize },
-          ...lookupClassDestroyedAt(),
-        ],
-        total: [
-          { $count: "count" }
-        ],
-      }
-    },
-  ]).toArray();
+  const [result] = await col
+    .aggregate([
+      { $match: statusQuery },
+      {
+        $facet: {
+          items: [
+            ...lookupNftMetadata(),
+            {
+              $sort: {
+                "nftMetadata.recognized": -1,
+                classId: 1,
+              },
+            },
+            { $skip: page * pageSize },
+            { $limit: pageSize },
+            ...lookupClassDestroyedAt(),
+          ],
+          total: [{ $count: "count" }],
+        },
+      },
+    ])
+    .toArray();
 
   return result;
 }
 
-async function queryRecognizedClasses(statusQuery, page, pageSize)  {
+async function queryRecognizedClasses(statusQuery, page, pageSize) {
   const col = await getNftClassCollection();
 
-  const [result] = await col.aggregate([
-    { $match: statusQuery },
-    ...lookupNftMetadata(),
-    {
-      $match: {
-        "nftMetadata.recognized": true
-      }
-    },
-    {
-      $facet: {
-        items: [
-          { $sort: { classId: 1 } },
-          { $skip: page * pageSize },
-          { $limit: pageSize },
-          ...lookupClassDestroyedAt(),
-        ],
-        total: [
-          { $count: "count" }
-        ],
+  const [result] = await col
+    .aggregate([
+      { $match: statusQuery },
+      ...lookupNftMetadata(),
+      {
+        $match: {
+          "nftMetadata.recognized": true,
+        },
       },
-    },
-  ]).toArray();
+      {
+        $facet: {
+          items: [
+            { $sort: { classId: 1 } },
+            { $skip: page * pageSize },
+            { $limit: pageSize },
+            ...lookupClassDestroyedAt(),
+          ],
+          total: [{ $count: "count" }],
+        },
+      },
+    ])
+    .toArray();
 
   return result;
 }
@@ -84,31 +85,31 @@ async function queryRecognizedClasses(statusQuery, page, pageSize)  {
 async function queryUnrecognizedClasses(statusQuery, page, pageSize) {
   const col = await getNftClassCollection();
 
-  const [result] = await col.aggregate([
-    { $match: statusQuery },
-    ...lookupNftMetadata(),
-    {
-      $match: {
-        $or: [
-          { "nftMetadata.recognized": false },
-          { "nftMetadata.recognized": { $exists: false } },
-        ]
-      }
-    },
-    {
-      $facet: {
-        items: [
-          { $sort: { classId: 1 } },
-          { $skip: page * pageSize },
-          { $limit: pageSize },
-          ...lookupClassDestroyedAt(),
-        ],
-        total: [
-          { $count: "count" }
-        ],
+  const [result] = await col
+    .aggregate([
+      { $match: statusQuery },
+      ...lookupNftMetadata(),
+      {
+        $match: {
+          $or: [
+            { "nftMetadata.recognized": false },
+            { "nftMetadata.recognized": { $exists: false } },
+          ],
+        },
       },
-    },
-  ]).toArray();
+      {
+        $facet: {
+          items: [
+            { $sort: { classId: 1 } },
+            { $skip: page * pageSize },
+            { $limit: pageSize },
+            ...lookupClassDestroyedAt(),
+          ],
+          total: [{ $count: "count" }],
+        },
+      },
+    ])
+    .toArray();
 
   return result;
 }
@@ -129,8 +130,7 @@ async function getNftClasses(ctx) {
   }
   if (status === "destroyed") {
     statusQuery.isDestroyed = true;
-  }
-  else if (status === "frozen") {
+  } else if (status === "frozen") {
     statusQuery["details.isFrozen"] = true;
   }
 
@@ -174,25 +174,64 @@ async function getNftClassById(ctx) {
     throw new HttpError(400, "Class not found");
   }
 
-  const timelineCol = await getClassTimelineCollection();
-  const timeline = await timelineCol.find({
-    classId: item.classId,
-    classHeight: item.indexer.blockHeight,
-  }, { sort: { "indexer.blockTime": -1 } }).toArray();
-
   const attrCol = await getClassAttributeCollection();
-  const attributes = await attrCol.find({
-    classId: item.classId,
-    classHeight: item.indexer.blockHeight,
-  }).toArray();
+  const attributes = await attrCol
+    .find({
+      classId: item.classId,
+      classHeight: item.indexer.blockHeight,
+    })
+    .toArray();
 
   const nftMetadata = await getNftMetadata(item);
 
   ctx.body = {
     ...item,
-    timeline,
     attributes,
     nftMetadata,
+  };
+}
+
+async function getNftClassTimelineById(ctx) {
+  let { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { classId } = ctx.params;
+  const col = await getNftClassCollection();
+  const option = { sort: { "indexer.blockHeight": -1 } };
+  const item = await col.findOne({ classId: parseInt(classId) }, option);
+
+  if (!item) {
+    throw new HttpError(400, "Class not found");
+  }
+
+  const q = {
+    classId: item.classId,
+    classHeight: item.indexer.blockHeight,
+  };
+
+  const timelineCol = await getClassTimelineCollection();
+  const total = await timelineCol.countDocuments(q);
+
+  if (page === "last") {
+    const pageCount = Math.ceil(total / pageSize);
+    page = Math.max(pageCount - 1, 0);
+  }
+
+  const timeline = await timelineCol
+    .find(q)
+    .sort({ "indexer.blockHeight": -1, _id: -1 })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  ctx.body = {
+    items: timeline,
+    page,
+    pageSize,
+    total,
   };
 }
 
@@ -208,30 +247,64 @@ async function getNftClass(ctx) {
     throw new HttpError(400, "Class not found");
   }
 
-  const timelineCol = await getClassTimelineCollection();
-  const timeline = await timelineCol.find({
-    classId: item.classId,
-    classHeight: item.indexer.blockHeight,
-  }, { sort: { "indexer.blockTime": -1 } }).toArray();
-
   const attrCol = await getClassAttributeCollection();
-  const attributes = await attrCol.find({
-    classId: item.classId,
-    classHeight: item.indexer.blockHeight,
-  }).toArray();
+  const attributes = await attrCol
+    .find({
+      classId: item.classId,
+      classHeight: item.indexer.blockHeight,
+    })
+    .toArray();
 
   const nftMetadata = await getNftMetadata(item);
 
   ctx.body = {
     ...item,
-    timeline,
     attributes,
     nftMetadata,
+  };
+}
+
+async function getNftClassTimeline(ctx) {
+  let { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { blockHeight, classId } = ctx.params;
+
+  const q = {
+    classId: parseInt(classId),
+    classHeight: parseInt(blockHeight),
+  };
+
+  const timelineCol = await getClassTimelineCollection();
+  const total = await timelineCol.countDocuments(q);
+
+  if (page === "last") {
+    const pageCount = Math.ceil(total / pageSize);
+    page = Math.max(pageCount - 1, 0);
+  }
+
+  const timeline = await timelineCol
+    .find(q)
+    .sort({ "indexer.blockHeight": -1, _id: -1 })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  ctx.body = {
+    items: timeline,
+    page,
+    pageSize,
+    total,
   };
 }
 
 module.exports = {
   getNftClasses,
   getNftClassById,
+  getNftClassTimelineById,
   getNftClass,
+  getNftClassTimeline,
 };

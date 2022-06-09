@@ -2,6 +2,7 @@ export const DEFAULT_THEME_COLOR = "#F22279";
 export const DEFAULT_THEME_COLOR_SECONDARY = "#FEE4EF";
 export const DEFAULT_THEME_BUTTON_COLOR = "#F22279";
 export const DEFAULT_THEME_LOGO = "logo-img-1.svg";
+export const PAGE_OFFSET = 1;
 
 export const nodes = [
   {

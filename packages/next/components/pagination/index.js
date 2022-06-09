@@ -6,6 +6,7 @@ import ArrowLeft from "./arrow-left.svg";
 import ArrowRight from "./arrow-right.svg";
 import { encodeURIQuery } from "../../utils";
 import { useTheme } from "utils/hooks";
+import { PAGE_OFFSET } from "utils/constants";
 
 const Wrapper = styled.div`
   display: flex;
@@ -78,8 +79,6 @@ const Ellipsis = styled.div`
     display: none;
   }
 `;
-
-const PAGE_OFFSET = 1;
 
 export default function Pagination({ page, pageSize, total }) {
   const router = useRouter();

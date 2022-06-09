@@ -114,10 +114,14 @@ export default function Asset({
     },
     {
       name: "Timeline",
-      page: assetTimeline?.page,
       total: assetTimeline?.total,
       component: (
-        <AssetTimeline data={assetTimeline?.items} node={node} asset={asset} />
+        <AssetTimeline
+          data={assetTimeline?.items}
+          node={node}
+          asset={asset}
+          meta={assetTimeline}
+        />
       ),
     },
     {
@@ -263,7 +267,7 @@ export async function getServerSideProps(context) {
 
   let nPage;
   if (activeTab === "timeline") {
-    nPage = parseInt(page) - 1 || "last";
+    nPage = page ? parseInt(page) - 1 : "last";
   } else {
     nPage = (parseInt(page) || 1) - 1;
   }
@@ -275,8 +279,8 @@ export async function getServerSideProps(context) {
     { result: assetAnalytics },
   ] = await Promise.all([
     nextApi.fetch(`assets/${assetKey}/timeline`, {
-      page: activeTab === "timeline" ? nPage : 0,
-      pageSize: 3,
+      page: activeTab === "timeline" ? nPage : "last",
+      pageSize: 25,
     }),
     nextApi.fetch(`assets/${assetKey}/transfers`, {
       page: activeTab === "transfers" ? nPage : 0,

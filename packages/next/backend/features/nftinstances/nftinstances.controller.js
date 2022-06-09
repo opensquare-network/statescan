@@ -7,7 +7,7 @@ const {
   getInstanceTimelineCollection,
   getNftMetadataCollection,
   getNftTransferCollection,
-}  = require("../../mongo");
+} = require("../../mongo");
 const { lookupNftMetadata } = require("../../common/nft");
 
 async function getNftMetadata(nftObj) {
@@ -48,17 +48,19 @@ async function getNftInstancesByClassId(ctx) {
   };
 
   const instanceCol = await getNftInstanceCollection();
-  const items = await instanceCol.aggregate([
-    { $match: q },
-    {
-      $sort: {
-        instanceId: 1,
+  const items = await instanceCol
+    .aggregate([
+      { $match: q },
+      {
+        $sort: {
+          instanceId: 1,
+        },
       },
-    },
-    { $skip: page * pageSize },
-    { $limit: pageSize },
-    ...lookupNftMetadata(),
-  ]).toArray();
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      ...lookupNftMetadata(),
+    ])
+    .toArray();
 
   const total = await instanceCol.countDocuments(q);
 
@@ -80,12 +82,10 @@ async function getNftInstancesByClass(ctx) {
   const { classId, classHeight } = ctx.params;
 
   const classCol = await getNftClassCollection();
-  const nftClass = await classCol.findOne(
-    {
-      classId: parseInt(classId),
-      "indexer.blockHeight": parseInt(classHeight),
-    },
-  );
+  const nftClass = await classCol.findOne({
+    classId: parseInt(classId),
+    "indexer.blockHeight": parseInt(classHeight),
+  });
   if (!nftClass) {
     throw new HttpError(404, "NFT class not found");
   }
@@ -96,17 +96,19 @@ async function getNftInstancesByClass(ctx) {
     isDestroyed: false,
   };
   const instanceCol = await getNftInstanceCollection();
-  const items = await instanceCol.aggregate([
-    { $match: q },
-    {
-      $sort: {
-        instanceId: 1,
+  const items = await instanceCol
+    .aggregate([
+      { $match: q },
+      {
+        $sort: {
+          instanceId: 1,
+        },
       },
-    },
-    { $skip: page * pageSize },
-    { $limit: pageSize },
-    ...lookupNftMetadata(),
-  ]).toArray();
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+      ...lookupNftMetadata(),
+    ])
+    .toArray();
   const total = await instanceCol.countDocuments(q);
 
   ctx.body = {
@@ -142,41 +144,38 @@ async function getNftInstanceById(ctx) {
     throw new HttpError(404, "NFT instance not found");
   }
 
-  const timelineCol = await getInstanceTimelineCollection();
-  const timeline = await timelineCol.find({
-    classId: nftInstance.classId,
-    classHeight: nftInstance.classHeight,
-    instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.indexer.blockHeight,
-  }, { sort: { "indexer.blockTime": -1 } }).toArray();
-
   const attrCol = await getInstanceAttributeCollection();
-  const attributes = await attrCol.find({
-    classId: nftInstance.classId,
-    classHeight: nftInstance.classHeight,
-    instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.indexer.blockHeight,
-  }).toArray();
+  const attributes = await attrCol
+    .find({
+      classId: nftInstance.classId,
+      classHeight: nftInstance.classHeight,
+      instanceId: nftInstance.instanceId,
+      instanceHeight: nftInstance.indexer.blockHeight,
+    })
+    .toArray();
 
   const nftMetadata = await getNftMetadata(nftInstance);
 
   ctx.body = {
     ...nftInstance,
-    timeline,
     attributes,
     nftMetadata,
   };
 }
 
-async function getNftInstance(ctx) {
-  const { classId, classHeight, instanceId, instanceHeight } = ctx.params;
+async function getNftInstanceTimelineById(ctx) {
+  let { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { classId, instanceId } = ctx.params;
 
   const classCol = await getNftClassCollection();
   const nftClass = await classCol.findOne(
-    {
-      classId: parseInt(classId),
-      "indexer.blockHeight": parseInt(classHeight),
-    },
+    { classId: parseInt(classId) },
+    { sort: { "indexer.blockHeight": -1 } }
   );
   if (!nftClass) {
     throw new HttpError(404, "NFT class not found");
@@ -188,36 +187,121 @@ async function getNftInstance(ctx) {
       classId: nftClass.classId,
       classHeight: nftClass.indexer.blockHeight,
       instanceId: parseInt(instanceId),
-      "indexer.blockHeight": parseInt(instanceHeight),
     },
+    { sort: { "indexer.blockHeight": -1 } }
   );
   if (!nftInstance) {
     throw new HttpError(404, "NFT instance not found");
   }
 
-  const timelineCol = await getInstanceTimelineCollection();
-  const timeline = await timelineCol.find({
+  const q = {
     classId: nftInstance.classId,
     classHeight: nftInstance.classHeight,
     instanceId: nftInstance.instanceId,
     instanceHeight: nftInstance.indexer.blockHeight,
-  }, { sort: { "indexer.blockTime": -1 } }).toArray();
+  };
+
+  const timelineCol = await getInstanceTimelineCollection();
+  const total = await timelineCol.countDocuments(q);
+
+  if (page === "last") {
+    const pageCount = Math.ceil(total / pageSize);
+    page = Math.max(pageCount - 1, 0);
+  }
+
+  const timeline = await timelineCol
+    .find(q)
+    .sort({ "indexer.blockHeight": -1, _id: -1 })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  ctx.body = {
+    items: timeline,
+    page,
+    pageSize,
+    total,
+  };
+}
+
+async function getNftInstance(ctx) {
+  const { classId, classHeight, instanceId, instanceHeight } = ctx.params;
+
+  const classCol = await getNftClassCollection();
+  const nftClass = await classCol.findOne({
+    classId: parseInt(classId),
+    "indexer.blockHeight": parseInt(classHeight),
+  });
+  if (!nftClass) {
+    throw new HttpError(404, "NFT class not found");
+  }
+
+  const instanceCol = await getNftInstanceCollection();
+  const nftInstance = await instanceCol.findOne({
+    classId: nftClass.classId,
+    classHeight: nftClass.indexer.blockHeight,
+    instanceId: parseInt(instanceId),
+    "indexer.blockHeight": parseInt(instanceHeight),
+  });
+  if (!nftInstance) {
+    throw new HttpError(404, "NFT instance not found");
+  }
 
   const attrCol = await getInstanceAttributeCollection();
-  const attributes = await attrCol.find({
-    classId: nftInstance.classId,
-    classHeight: nftInstance.classHeight,
-    instanceId: nftInstance.instanceId,
-    instanceHeight: nftInstance.indexer.blockHeight,
-  }).toArray();
+  const attributes = await attrCol
+    .find({
+      classId: nftInstance.classId,
+      classHeight: nftInstance.classHeight,
+      instanceId: nftInstance.instanceId,
+      instanceHeight: nftInstance.indexer.blockHeight,
+    })
+    .toArray();
 
   const nftMetadata = await getNftMetadata(nftInstance);
 
   ctx.body = {
     ...nftInstance,
-    timeline,
     attributes,
     nftMetadata,
+  };
+}
+
+async function getNftInstanceTimeline(ctx) {
+  let { page, pageSize } = extractPage(ctx);
+  if (pageSize === 0 || page < 0) {
+    ctx.status = 400;
+    return;
+  }
+
+  const { classId, classHeight, instanceId, instanceHeight } = ctx.params;
+
+  const q = {
+    classId: parseInt(classId),
+    classHeight: parseInt(classHeight),
+    instanceId: parseInt(instanceId),
+    instanceHeight: parseInt(instanceHeight),
+  };
+
+  const timelineCol = await getInstanceTimelineCollection();
+  const total = await timelineCol.countDocuments(q);
+
+  if (page === "last") {
+    const pageCount = Math.ceil(total / pageSize);
+    page = Math.max(pageCount - 1, 0);
+  }
+
+  const timeline = await timelineCol
+    .find(q)
+    .sort({ "indexer.blockHeight": -1, _id: -1 })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .toArray();
+
+  ctx.body = {
+    items: timeline,
+    page,
+    pageSize,
+    total,
   };
 }
 
@@ -237,16 +321,18 @@ async function getNftInstanceTransfers(ctx) {
     instanceId: parseInt(instanceId),
     instanceHeight: parseInt(instanceHeight),
   };
-  const items = await transferCol.aggregate([
-    { $match: q },
-    {
-      $sort: {
-        "indexer.blockHeight": -1,
+  const items = await transferCol
+    .aggregate([
+      { $match: q },
+      {
+        $sort: {
+          "indexer.blockHeight": -1,
+        },
       },
-    },
-    { $skip: page * pageSize },
-    { $limit: pageSize },
-  ]).toArray();
+      { $skip: page * pageSize },
+      { $limit: pageSize },
+    ])
+    .toArray();
 
   const total = await transferCol.countDocuments(q);
 
@@ -258,11 +344,12 @@ async function getNftInstanceTransfers(ctx) {
   };
 }
 
-
 module.exports = {
   getNftInstancesByClassId,
   getNftInstancesByClass,
   getNftInstanceById,
+  getNftInstanceTimelineById,
   getNftInstance,
+  getNftInstanceTimeline,
   getNftInstanceTransfers,
 };

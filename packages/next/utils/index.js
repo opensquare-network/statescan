@@ -201,3 +201,22 @@ export function textEllipsis(text, start, end) {
   if (!text.slice) return text;
   return `${text.slice(0, start)}...${text.slice(-end)}`;
 }
+
+export function calcPagination(options = {}) {
+  const { offset = 0, page: currentPage, pageSize, total } = options;
+
+  const page = currentPage + offset;
+  const totalPages = Math.ceil(total / pageSize) || 1;
+  const prevPage = Math.max(1, page + 1 - 1 - offset);
+  const nextPage = Math.min(totalPages, page + 1 + 1 - offset);
+
+  const isLastPage = page === totalPages;
+
+  return {
+    page,
+    totalPages,
+    prevPage,
+    nextPage,
+    isLastPage,
+  };
+}

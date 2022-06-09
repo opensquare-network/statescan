@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 import ArrowLeft from "./arrow-left.svg";
 import ArrowRight from "./arrow-right.svg";
-import { encodeURIQuery } from "../../utils";
+import { encodeURIQuery, calcPagination } from "../../utils";
 import { useTheme } from "utils/hooks";
 import { PAGE_OFFSET } from "utils/constants";
 
@@ -84,13 +84,19 @@ export default function Pagination({ page, pageSize, total }) {
   const router = useRouter();
   const theme = useTheme();
 
-  page = page + PAGE_OFFSET;
-  const totalPages = Math.ceil(total / pageSize)
-    ? Math.ceil(total / pageSize)
-    : 1;
+  const {
+    page: newPage,
+    totalPages,
+    prevPage,
+    nextPage,
+  } = calcPagination({
+    offset: PAGE_OFFSET,
+    page,
+    pageSize,
+    total,
+  });
 
-  const prevPage = Math.max(1, page + 1 - 1 - PAGE_OFFSET);
-  const nextPage = Math.min(totalPages, page + 1 + 1 - PAGE_OFFSET);
+  page = newPage;
 
   return (
     <Wrapper>

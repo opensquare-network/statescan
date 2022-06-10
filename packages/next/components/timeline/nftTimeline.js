@@ -1,3 +1,4 @@
+// TODO: if refactor needed, this component now is 95% similar to `assetTimeline`
 import styled, { css } from "styled-components";
 import NftTimelineItem from "./nftTimelineItem";
 import Pagination from "../pagination";
@@ -32,44 +33,7 @@ const FooterWrapper = styled.div`
   justify-content: flex-end;
 `;
 
-function sortTimeline(data) {
-  data?.sort((itemA, itemB) => {
-    const {
-      blockHeight: blockHeightA,
-      extrinsicIndex: extrinsicIndexA,
-      eventIndex: eventIndexA,
-    } = itemA.indexer;
-    const {
-      blockHeight: blockHeightB,
-      extrinsicIndex: extrinsicIndexB,
-      eventIndex: eventIndexB,
-    } = itemB.indexer;
-
-    if (blockHeightA > blockHeightB) {
-      return 1;
-    }
-    if (blockHeightA < blockHeightB) {
-      return -1;
-    }
-    if (extrinsicIndexA > extrinsicIndexB) {
-      return 1;
-    }
-    if (extrinsicIndexA < extrinsicIndexB) {
-      return -1;
-    }
-    if (eventIndexA > eventIndexB) {
-      return 1;
-    }
-    if (eventIndexA < eventIndexB) {
-      return -1;
-    }
-    return 0;
-  });
-}
-
 export default function NftTimeline({ data, node, asset, meta }) {
-  sortTimeline(data);
-
   const { isLastPage } = calcPagination({
     offset: PAGE_OFFSET,
     ...meta,

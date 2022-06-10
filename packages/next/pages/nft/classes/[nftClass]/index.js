@@ -127,7 +127,12 @@ const BgWhite = styled.div`
   border-radius: 8px;
 `;
 
-export default function NftClass({ node, nftClass, nftInstances }) {
+export default function NftClass({
+  node,
+  nftClass,
+  nftInstances,
+  nftClassTimeline,
+}) {
   const [showModal, setShowModal] = useState(false);
   const [previewNftInstance, setPreviewNftInstance] = useState(null);
   const ref = useRef();
@@ -209,8 +214,14 @@ export default function NftClass({ node, nftClass, nftInstances }) {
     },
     {
       name: "Timeline",
-      total: nftClass?.timeline?.length,
-      component: <Timeline data={nftClass?.timeline} node={node} />,
+      total: nftClassTimeline?.total,
+      component: (
+        <Timeline
+          data={nftClassTimeline?.items}
+          node={node}
+          meta={nftClassTimeline}
+        />
+      ),
     },
     {
       name: "Attributes",
@@ -357,11 +368,25 @@ export default function NftClass({ node, nftClass, nftInstances }) {
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { nftClass: classId, page } = context.query;
-  const nPage = parseInt(page) || 1;
+  const { nftClass: classId, page, tab: activeTab } = context.query;
 
-  const [{ result: nftClass }, { result: nftInstances }] = await Promise.all([
+  let nPage;
+  if (activeTab === "timeline") {
+    nPage = page ? parseInt(page) - 1 : "last";
+  } else {
+    nPage = (parseInt(page) || 1) - 1;
+  }
+
+  const [
+    { result: nftClass },
+    { result: nftClassTimeline },
+    { result: nftInstances },
+  ] = await Promise.all([
     nextApi.fetch(`nft/classes/${classId}`),
+    nextApi.fetch(`nft/classes/${classId}/timeline`, {
+      page: activeTab === "timeline" ? nPage : "last",
+      pageSize: 25,
+    }),
     nextApi.fetch(`nft/classes/${classId}/instances`, {
       page: nPage - 1,
       pageSize: 25,
@@ -372,6 +397,7 @@ export async function getServerSideProps(context) {
     props: {
       node,
       nftClass: nftClass ?? null,
+      nftClassTimeline: nftClassTimeline ?? EmptyQuery,
       nftInstances: nftInstances ?? EmptyQuery,
     },
   };

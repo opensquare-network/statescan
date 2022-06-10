@@ -1,6 +1,7 @@
 import styled, { css } from "styled-components";
 import NftTimelineItem from "./nftTimelineItem";
 import Pagination from "../pagination";
+import NoData from "components/table/noData";
 
 import { card_border } from "styles/textStyles";
 import { calcPagination } from "utils";
@@ -68,12 +69,19 @@ function sortTimeline(data) {
 
 export default function NftTimeline({ data, node, asset, meta }) {
   sortTimeline(data);
-  console.log(meta);
 
   const { isLastPage } = calcPagination({
     offset: PAGE_OFFSET,
     ...meta,
   });
+
+  if (!data?.length) {
+    return (
+      <Wrapper>
+        <NoData />
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper isLastPage={isLastPage}>

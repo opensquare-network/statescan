@@ -127,6 +127,7 @@ const FieldBody = styled.div`
   @media screen and (max-width: 900px) {
     padding-left: 0px;
   }
+  text-transform: none;
 `;
 
 const FieldText = styled.p`

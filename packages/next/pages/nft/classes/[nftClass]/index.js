@@ -388,7 +388,7 @@ export async function getServerSideProps(context) {
       pageSize: 25,
     }),
     nextApi.fetch(`nft/classes/${classId}/instances`, {
-      page: nPage - 1,
+      page: nPage,
       pageSize: 25,
     }),
   ]);

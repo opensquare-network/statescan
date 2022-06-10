@@ -365,7 +365,7 @@ export async function getServerSideProps(context) {
     await Promise.all([
       nextApi.fetch(
         `nft/classes/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
-        { page: nPage - 1, pageSize: 25 }
+        { page: nPage, pageSize: 25 }
       ),
       nextApi.fetch(`nft/classes/${classId}/instances/${instanceId}/timeline`, {
         page: activeTab === "timeline" ? nPage : "last",

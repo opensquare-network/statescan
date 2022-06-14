@@ -111,6 +111,7 @@ export default function NftInstance({
   nftClass,
   nftInstance,
   nftTransfers,
+  nftInstanceTimeline,
 }) {
   if (!nftClass || !nftInstance) {
     return (
@@ -140,8 +141,14 @@ export default function NftInstance({
   const tabTableData = [
     {
       name: "Timeline",
-      total: nftInstance?.timeline?.length,
-      component: <Timeline data={nftInstance?.timeline} node={node} />,
+      total: nftInstanceTimeline?.total,
+      component: (
+        <Timeline
+          data={nftInstanceTimeline?.items}
+          node={node}
+          meta={nftInstanceTimeline}
+        />
+      ),
     },
     {
       name: "Attributes",
@@ -319,8 +326,19 @@ export default function NftInstance({
 
 export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
-  const { nftClass: paramClassId, id: paramInstanceId, page } = context.query;
-  const nPage = parseInt(page) || 1;
+  const {
+    nftClass: paramClassId,
+    id: paramInstanceId,
+    page,
+    tab: activeTab,
+  } = context.query;
+
+  let nPage;
+  if (activeTab === "timeline") {
+    nPage = page ? parseInt(page) - 1 : "last";
+  } else {
+    nPage = (parseInt(page) || 1) - 1;
+  }
 
   const [{ result: nftClass }, { result: nftInstance }] = await Promise.all([
     nextApi.fetch(`nft/classes/${paramClassId}`),
@@ -343,18 +361,24 @@ export async function getServerSideProps(context) {
     instanceId,
     indexer: { blockHeight: instanceHeight },
   } = nftInstance;
-  const [{ result: nftTransfers }] = await Promise.all([
-    nextApi.fetch(
-      `nft/classes/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
-      { page: nPage - 1, pageSize: 25 }
-    ),
-  ]);
+  const [{ result: nftTransfers }, { result: nftInstanceTimeline }] =
+    await Promise.all([
+      nextApi.fetch(
+        `nft/classes/${classId}_${classHeight}/instances/${instanceId}_${instanceHeight}/transfers`,
+        { page: nPage, pageSize: 25 }
+      ),
+      nextApi.fetch(`nft/classes/${classId}/instances/${instanceId}/timeline`, {
+        page: activeTab === "timeline" ? nPage : "last",
+        pageSize: 25,
+      }),
+    ]);
   return {
     props: {
       node,
       nftClass: nftClass,
       nftInstance: nftInstance,
       nftTransfers: nftTransfers ?? EmptyQuery,
+      nftInstanceTimeline: nftInstanceTimeline ?? EmptyQuery,
     },
   };
 }

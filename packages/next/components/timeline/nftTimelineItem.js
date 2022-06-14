@@ -25,10 +25,6 @@ const Wrapper = styled.div`
   }
 
   :last-child {
-    .bot-line {
-      visibility: hidden;
-    }
-
     .fileds {
       border-bottom: none;
     }
@@ -441,7 +437,7 @@ export default function NftTimelineItem({ data }) {
   const Icon = getIcon(data);
 
   return (
-    <Wrapper>
+    <Wrapper className="nft-timeline-item">
       <ItemLine>
         <TopLine className="top-line" />
         <Icon />

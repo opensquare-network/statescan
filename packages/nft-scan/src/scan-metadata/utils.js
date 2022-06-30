@@ -7,7 +7,7 @@ const { isCid } = require("./common/isCid");
 const { getAverageColor } = require("fast-average-color-node");
 
 const ipfsGatewayUrls = (
-  process.env.IPFS_GATEWAY_URL || "https://ipfs.io/ipfs/"
+  process.env.IPFS_GATEWAY_URLS || "https://ipfs.io/ipfs/"
 ).split(";");
 
 async function ipfsFetchJson(cid) {

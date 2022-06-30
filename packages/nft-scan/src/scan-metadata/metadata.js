@@ -12,6 +12,13 @@ async function parseMetadataAndSave(dataHash, data) {
     nftImageData = await parseRawOnchainMetadata(data);
   } catch (e) {
     console.error("Error with fetching data", e.toString());
+    await nftMetadataCol.updateOne(
+      { dataHash },
+      {
+        $inc: { retries: 1 },
+        $set: { lastRetryTime: new Date() },
+      }
+    );
     return;
   }
 
@@ -37,7 +44,13 @@ async function parseMetadataAndSave(dataHash, data) {
 async function processNewMetadata() {
   const nftMetadataCol = await getNftMetadataCollection();
   let items =
-    (await nftMetadataCol.find({ recognized: null }).limit(10).toArray()) || [];
+    (await nftMetadataCol
+      .find({
+        recognized: null,
+        $or: [{ retries: null }, { retries: { $ne: null, $lt: 20 } }],
+      })
+      .limit(10)
+      .toArray()) || [];
   await Promise.all(
     items.map((item) => parseMetadataAndSave(item.dataHash, item.data))
   );

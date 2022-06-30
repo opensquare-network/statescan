@@ -59,7 +59,7 @@ async function fetchIpfsMetadata(cid) {
       image: maybeJsonData.image,
     };
   } else {
-    console.log(`Got IPFS response by cid: ${cid} from data: ${hexData},
+    console.log(`Got IPFS response by cid: ${cid},
     but not contain name or image, ignore it`);
     return null;
   }

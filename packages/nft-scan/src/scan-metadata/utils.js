@@ -6,7 +6,34 @@ const { extractCid } = require("./common/extractCid");
 const { isCid } = require("./common/isCid");
 const { getAverageColor } = require("fast-average-color-node");
 
-const ipfsGatewayUrl = process.env.IPFS_GATEWAY_URL || "https://ipfs.io/ipfs/";
+const ipfsGatewayUrls = (
+  process.env.IPFS_GATEWAY_URLS || "https://ipfs.io/ipfs/"
+).split(";");
+
+async function ipfsFetchJson(cid) {
+  return await Promise.any(
+    ipfsGatewayUrls.map(
+      async (ipfsGatewayUrl) =>
+        (
+          await axios.get(`${ipfsGatewayUrl}${cid}`)
+        ).data
+    )
+  );
+}
+
+async function ipfsFetchImage(imageCid) {
+  return await Promise.any(
+    ipfsGatewayUrls.map(
+      async (ipfsGatewayUrl) =>
+        (
+          await axios({
+            url: `${ipfsGatewayUrl}${imageCid}`,
+            responseType: "arraybuffer",
+          })
+        ).data
+    )
+  );
+}
 
 async function createImageThumbnail(image, width, height) {
   return image
@@ -20,7 +47,7 @@ async function createImageThumbnail(image, width, height) {
 }
 
 async function fetchIpfsMetadata(cid) {
-  const maybeJsonData = (await axios.get(`${ipfsGatewayUrl}${cid}`)).data;
+  const maybeJsonData = await ipfsFetchJson(cid);
 
   // fetch data from ipfs
   const jsonKeys = Object.keys(maybeJsonData);
@@ -34,6 +61,7 @@ async function fetchIpfsMetadata(cid) {
   } else {
     console.log(`Got IPFS response by cid: ${cid} from data: ${hexData},
     but not contain name or image, ignore it`);
+    return null;
   }
 }
 
@@ -54,16 +82,17 @@ async function handleJsonMetadata(json = {}) {
   } else {
     console.log(`Got on-chain json data: ${JSON.stringify(json)},
     but not contain image, ignore it`);
+    return null;
   }
 }
 
 async function parseRawOnchainMetadata(hexData) {
   if (!hexData) {
-    throw new Error(`No data provided`);
+    return null;
   }
 
   if (!isHex(hexData)) {
-    throw new Error(`Not hex metadata`);
+    return null;
   }
 
   const dataText = hexToString(hexData);
@@ -105,12 +134,7 @@ async function fetchAndSharpImage(imageCid) {
   console.log(`Will fetch image by cid`, imageCid);
 
   // fetch image from ipfs link item.image
-  const ipfsImage = await axios({
-    url: `${ipfsGatewayUrl}${imageCid}`,
-    responseType: "arraybuffer",
-  });
-  const imageData = ipfsImage.data;
-
+  const imageData = await ipfsFetchImage(imageCid);
   return handleImageData(imageData);
 }
 

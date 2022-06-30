@@ -11,8 +11,8 @@ async function parseMetadataAndSave(dataHash, data) {
   try {
     nftImageData = await parseRawOnchainMetadata(data);
   } catch (e) {
-    // fixme: should not set unrecognized when fail due to network connection problem
-    console.error("Error with fetching data", e);
+    console.error("Error with fetching data", e.toString());
+    return;
   }
 
   const nftMetadataCol = await getNftMetadataCollection();

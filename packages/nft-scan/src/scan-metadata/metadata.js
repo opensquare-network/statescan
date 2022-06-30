@@ -6,6 +6,8 @@ async function parseMetadataAndSave(dataHash, data) {
     return;
   }
 
+  const nftMetadataCol = await getNftMetadataCollection();
+
   console.log(`Scanning meta data for`, dataHash);
   let nftImageData;
   try {
@@ -22,7 +24,6 @@ async function parseMetadataAndSave(dataHash, data) {
     return;
   }
 
-  const nftMetadataCol = await getNftMetadataCollection();
   await nftMetadataCol.updateOne(
     { dataHash },
     {

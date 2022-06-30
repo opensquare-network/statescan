@@ -135,6 +135,7 @@ async function fetchAndSharpImage(imageCid) {
 
   // fetch image from ipfs link item.image
   const imageData = await ipfsFetchImage(imageCid);
+  console.log(`Image fetch succeed. cid: ${imageCid}`);
   return handleImageData(imageData);
 }
 

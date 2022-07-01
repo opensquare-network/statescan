@@ -50,7 +50,19 @@ async function fetchIpfsMetadata(cid) {
   const maybeJsonData = await ipfsFetchJson(cid);
 
   // fetch data from ipfs
-  const jsonKeys = Object.keys(maybeJsonData);
+  let jsonKeys;
+  try {
+    jsonKeys = Object.keys(maybeJsonData);
+  } catch (e) {
+    // When maybeJsonData is not JSON
+    // RangeError: Too many properties to enumerate
+    console.log(e.toString());
+    console.log(
+      `Got IPFS response by cid: ${cid}, but it is not JSON, ignore it`
+    );
+    return null;
+  }
+
   if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
     return {
       cid,

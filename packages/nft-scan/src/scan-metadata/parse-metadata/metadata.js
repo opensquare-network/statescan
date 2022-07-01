@@ -1,5 +1,5 @@
-const { parseRawOnchainMetadata } = require("./utils");
-const { getNftMetadataCollection } = require("../mongo");
+const { parseRawOnchainMetadata } = require("../common/utils");
+const { getNftMetadataCollection } = require("../../mongo");
 
 async function parseMetadataAndSave(dataHash, data) {
   if (!data) {
@@ -13,7 +13,7 @@ async function parseMetadataAndSave(dataHash, data) {
   try {
     nftImageData = await parseRawOnchainMetadata(data);
   } catch (e) {
-    console.error("Error with fetching data", e.toString());
+    console.error("Error with fetching data", e.toString(), data);
     await nftMetadataCol.updateOne(
       { dataHash },
       {

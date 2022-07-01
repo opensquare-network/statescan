@@ -2,8 +2,8 @@ const axios = require("axios");
 const sharp = require("sharp");
 const parseDataURL = require("data-urls");
 const { isHex, hexToString } = require("@polkadot/util");
-const { extractCid } = require("./common/extractCid");
-const { isCid } = require("./common/isCid");
+const { extractCid } = require("./extractCid");
+const { isCid } = require("./isCid");
 const { getAverageColor } = require("fast-average-color-node");
 
 const ipfsGatewayUrls = (

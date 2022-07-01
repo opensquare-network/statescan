@@ -1,12 +1,11 @@
 require("dotenv").config();
 
 const { processNewMetadata } = require("./metadata");
-const { processAndSaveMetadataImages } = require("./image");
 const {
   getClassCollection,
   getInstanceCollection,
   getNftMetadataCollection,
-} = require("../mongo");
+} = require("../../mongo");
 
 async function addMetadataParsingTask(nftCol) {
   const items =
@@ -39,7 +38,6 @@ async function main() {
   await addMetadataParsingTask(instanceCol);
 
   await processNewMetadata();
-  await processAndSaveMetadataImages();
 }
 
 main()

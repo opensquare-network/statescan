@@ -2,8 +2,8 @@ const axios = require("axios");
 const sharp = require("sharp");
 const parseDataURL = require("data-urls");
 const { isHex, hexToString } = require("@polkadot/util");
-const { extractCid } = require("./common/extractCid");
-const { isCid } = require("./common/isCid");
+const { extractCid } = require("./extractCid");
+const { isCid } = require("./isCid");
 const { getAverageColor } = require("fast-average-color-node");
 
 const ipfsGatewayUrls = (
@@ -50,7 +50,19 @@ async function fetchIpfsMetadata(cid) {
   const maybeJsonData = await ipfsFetchJson(cid);
 
   // fetch data from ipfs
-  const jsonKeys = Object.keys(maybeJsonData);
+  let jsonKeys;
+  try {
+    jsonKeys = Object.keys(maybeJsonData);
+  } catch (e) {
+    // When maybeJsonData is not JSON
+    // RangeError: Too many properties to enumerate
+    console.log(e.toString());
+    console.log(
+      `Got IPFS response by cid: ${cid}, but it is not JSON, ignore it`
+    );
+    return null;
+  }
+
   if (jsonKeys.includes("name") && jsonKeys.includes("image")) {
     return {
       cid,

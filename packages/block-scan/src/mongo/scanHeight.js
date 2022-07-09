@@ -1,6 +1,6 @@
 const { getStatusCollection } = require("./index");
 
-const genesisHeight = 1;
+const genesisHeight = parseInt(process.env.SCAN_FROM_HEIGHT) || 1;
 const mainScanName = "main-scan-height";
 
 async function getNextScanHeight() {

@@ -1,48 +1,25 @@
 import styled from "styled-components";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Layout from "components/layout";
 import Overview from "components/overview";
 import Table from "components/table";
 import MinorText from "components/minorText";
 import InLink from "components/inLink";
-import Symbol from "components/symbol";
 import AddressEllipsis from "components/addressEllipsis";
-import {
-  abbreviateBigNumber,
-  bigNumber2Locale,
-  fromAssetUnit,
-  fromSymbolUnit,
-  time,
-  timeDuration,
-  getNftStatus,
-} from "utils";
-import {
-  blocksLatestHead,
-  transfersLatestHead,
-  assetsHead,
-  nftsHead,
-} from "utils/constants";
-import { getSymbol, useWindowSize } from "utils/hooks";
+import { fromAssetUnit, fromSymbolUnit, time, timeDuration } from "utils";
+import { blocksLatestHead, transfersLatestHead } from "utils/constants";
+import { getSymbol, useOnClickOutside, useWindowSize } from "utils/hooks";
 import { useSelector } from "react-redux";
 import { overviewSelector } from "store/reducers/chainSlice";
 import { ssrNextApi as nextApi } from "services/nextApi";
-import { useEffect, useState } from "react";
 import { connect } from "services/websocket";
 import HeightAge from "../components/block/heightAge";
 import TransferHeightAge from "../components/transfer/heightAge";
 import AddressCounts from "../components/block/addressCounts";
 import AmountFromTo from "../components/transfer/amountFromTo";
-import Name from "../components/account/name";
-import Tooltip from "../components/tooltip";
-import NftLink from "components/nft/nftLink";
-import Thumbnail from "components/nft/thumbnail";
-import NftName from "components/nft/name";
 import { text_dark_minor } from "styles/textStyles";
-import Status from "components/status";
 import Preview from "components/nft/preview";
-import { useOnClickOutside } from "utils/hooks";
-import AssetPrice from "components/assetPrice";
 
 const Wrapper = styled.section`
   > :not(:first-child) {
@@ -291,98 +268,6 @@ export default function Home({ node, overview: ssrOverview, price }) {
             }
           />
         </TableWrapper>
-        <Table
-          title="Assets"
-          head={assetsHead}
-          body={(overview?.popularAssets || []).map((item, index) => [
-            <InLink
-              key={`${index}-1`}
-              to={
-                `/asset/${item.assetId}` +
-                (item.destroyedAt ? `_${item.createdAt.blockHeight}` : "")
-              }
-            >{`#${item.assetId}`}</InLink>,
-            <Symbol
-              key={`${index}-2`}
-              symbol={item.symbol}
-              assetId={item.assetId}
-              createdAt={item.createdAt}
-              destroyedAt={item.destroyedAt}
-            />,
-            <Name key={`${index}-3`} name={item.name} />,
-            <AddressEllipsis
-              key={`${index}-4`}
-              address={item.owner}
-              to={`/account/${item.owner}`}
-            />,
-            <AddressEllipsis
-              key={`${index}-5`}
-              address={item.issuer}
-              to={`/account/${item.issuer}`}
-            />,
-            <AssetPrice price={item.price?.value} key={`${index}-6`} />,
-            item.accounts,
-            <Tooltip
-              key={`${index}-7`}
-              content={bigNumber2Locale(
-                fromAssetUnit(item.supply, item.decimals)
-              )}
-              isCopy
-              noMinWidth={true}
-              title="Total Supply"
-            >
-              {abbreviateBigNumber(
-                fromAssetUnit(item.supply, item.decimals),
-                0
-              )}
-            </Tooltip>,
-          ])}
-          foot={
-            <FootWrapper>
-              <InLink to={`/assets`}>View all</InLink>
-            </FootWrapper>
-          }
-          collapse={collapseSize}
-        />
-        <Table
-          title="NFT"
-          head={nftsHead}
-          body={(overview?.popularNftClasses || []).map((nftClass, index) => [
-            <NftLink key={`id${index}`} nftClass={nftClass}>
-              {nftClass.classId}
-            </NftLink>,
-            <Thumbnail
-              key={`thumbnail${index}`}
-              imageThumbnail={nftClass?.nftMetadata?.imageThumbnail}
-              background={nftClass?.nftMetadata?.imageMetadata?.background}
-              onClick={() => {
-                setPreviewNftClass(nftClass);
-                setShowModal(true);
-              }}
-            />,
-            <NftLink key={`name${index}`} nftClass={nftClass}>
-              <NftName name={nftClass?.nftMetadata?.name} />
-            </NftLink>,
-            <TextDarkMinor key={`time-${index}`}>
-              {time(nftClass?.indexer?.blockTime)}
-            </TextDarkMinor>,
-            <AddressEllipsis
-              key={`owner-${index}`}
-              address={nftClass.details?.owner}
-              to={`/account/${nftClass.details?.owner}`}
-            />,
-            <TextDarkMinor key={`instance-${index}`}>
-              {nftClass.details?.instances}
-            </TextDarkMinor>,
-            <Status key={`status-${index}`} status={getNftStatus(nftClass)} />,
-          ])}
-          foot={
-            <FootWrapper>
-              <InLink to={`/nft`}>View all</InLink>
-            </FootWrapper>
-          }
-          collapse={collapseSize}
-        />
       </Wrapper>
     </Layout>
   );

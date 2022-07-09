@@ -160,10 +160,10 @@ const menusBlockchain = [
     name: "Transfers",
     value: "transfers",
   },
-  {
-    name: "Teleports",
-    value: "teleports",
-  },
+  // {
+  //   name: "Teleports",
+  //   value: "teleports",
+  // },
   {
     name: "Accounts",
     value: "accounts",
@@ -254,18 +254,18 @@ export default function Header({ node }) {
                 menus={menusBlockchain}
                 closeMenu={() => setIsActive(false)}
               />
-              <SubMenu
-                category="Assets"
-                menus={menusAssets}
-                closeMenu={() => setIsActive(false)}
-                divideIndex={1}
-              />
+              {/*<SubMenu*/}
+              {/*  category="Assets"*/}
+              {/*  menus={menusAssets}*/}
+              {/*  closeMenu={() => setIsActive(false)}*/}
+              {/*  divideIndex={1}*/}
+              {/*/>*/}
             </MenuWrapper>
           )}
         </FlexWrapper>
         <FlexWrapper>
-          <SearchS />
-          <NodeSwitcher node={node} />
+          {/*<SearchS />*/}
+          {/*<NodeSwitcher node={node} />*/}
         </FlexWrapper>
       </Wrapper>
       {isHomePage && <Subheader node={node} />}

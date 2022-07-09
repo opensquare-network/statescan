@@ -149,36 +149,11 @@ export default function Overview({ node, overviewData, price }) {
           text={transfersCountDynamic?.toLocaleString()}
         />
         <OverviewItem
-          title="Assets"
-          icon="asset.svg"
-          link="/assets"
-          text={assetsCountDynamic?.toLocaleString()}
-        />
-        <OverviewItem
           title="Holders"
           icon="holder.svg"
           text={holdersCountDynamic?.toLocaleString()}
         />
-        <OverviewItem
-          title="NFT Class"
-          icon="nft-class.svg"
-          text={nftClassesCount?.recognized ?? 0}
-          textSec={nftClassesCount?.total ?? 0}
-          link="/nft"
-          tip="Recognized / All"
-        />
-        <OverviewItem
-          title="NFT Instance"
-          icon="nft-class.svg"
-          text={nftInstancesCount?.recognized ?? 0}
-          textSec={nftInstancesCount?.total ?? 0}
-          tip="Recognized / All"
-        />
       </ItemWrapper>
-      <Divider />
-      <ChartWrapper>
-        <LineChart token={token} data={chartData} color={color} />
-      </ChartWrapper>
     </Wrapper>
   );
 }

@@ -37,6 +37,17 @@ export const nodes = [
     colorSecondary: "#FAE6F2",
     buttonColor: "#DA68A7",
   },
+  {
+    name: "Gov2",
+    sub: "Westend",
+    value: "gov2",
+    symbol: "UNIT",
+    icon: "/imgs/icons/westend.svg",
+    color: "#3765DC",
+    colorSecondary: "#EAF0FF",
+    buttonColor: "#000000",
+    logo: "logo-img-2.svg",
+  },
 ];
 
 export const blocksLatestHead = [

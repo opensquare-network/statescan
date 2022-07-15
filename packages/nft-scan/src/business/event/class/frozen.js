@@ -1,5 +1,5 @@
 const { insertClassTimelineItem } = require("../../../mongo/service/class");
-const { TimelineItemTypes, UniquesEvents } = require("@statescan/common");
+const { TimelineItemTypes } = require("@statescan/common");
 const { updateClassWithDetails } = require("./common");
 
 async function handleFrozen(event, indexer) {
@@ -8,7 +8,7 @@ async function handleFrozen(event, indexer) {
 
   const timelineItem = {
     indexer,
-    name: UniquesEvents.ClassFrozen,
+    name: event.method,
     type: TimelineItemTypes.event,
     args: {
       classId,

@@ -27,19 +27,36 @@ async function handleEvent(event, indexer, blockEvents, extrinsic) {
     await handleAttributeCleared(...arguments);
   } else if (UniquesEvents.AttributeSet === method) {
     await handleAttributeSet(...arguments);
-  } else if (UniquesEvents.ClassMetadataSet === method) {
+  } else if (
+    [
+      UniquesEvents.ClassMetadataSet,
+      UniquesEvents.CollectionMetadataSet,
+    ].includes(method)
+  ) {
     await handleMetadataSet(...arguments);
-  } else if (UniquesEvents.ClassFrozen === method) {
+  } else if (
+    [UniquesEvents.ClassFrozen, UniquesEvents.CollectionFrozen].includes(method)
+  ) {
     await handleFrozen(...arguments);
-  } else if (UniquesEvents.ClassThawed === method) {
+  } else if (
+    [UniquesEvents.ClassThawed, UniquesEvents.CollectionThawed].includes(method)
+  ) {
     await handleThawed(...arguments);
   } else if (UniquesEvents.Destroyed === method) {
     await handleDestroyed(...arguments);
-  } else if (UniquesEvents.ClassMetadataCleared === method) {
+  } else if (
+    [
+      UniquesEvents.ClassMetadataCleared,
+      UniquesEvents.CollectionMetadataCleared,
+    ].includes(method)
+  ) {
     await handleMetadataCleared(...arguments);
   } else if (UniquesEvents.TeamChanged === method) {
     await handleTeamChanged(...arguments);
-  } else if (UniquesEvents.AssetStatusChanged === method) {
+  } else if (
+    [UniquesEvents.AssetStatusChanged, UniquesEvents.ItemStatusChanged] ===
+    method
+  ) {
     await handleAssetStatusChanged(...arguments);
   } else if (UniquesEvents.OwnerChanged === method) {
     await handleOwnerChanged(...arguments);

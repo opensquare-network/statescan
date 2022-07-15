@@ -86,6 +86,13 @@ const UniquesEvents = Object.freeze({
   ClassMetadataCleared: "ClassMetadataCleared",
   Redeposited: "Redeposited",
 
+  // class v2 events
+  CollectionMetadataSet: "CollectionMetadataSet",
+  CollectionFrozen: "CollectionFrozen",
+  CollectionThawed: "CollectionThawed",
+  CollectionMetadataCleared: "CollectionMetadataCleared",
+  ItemStatusChanged: "ItemStatusChanged",
+
   // instance events
   Issued: "Issued",
   Transferred: "Transferred",

@@ -9,6 +9,7 @@ const {
   getNftMetadataCollection,
 } = require("../../mongo");
 const { lookupNftMetadata, lookupNftClass } = require("../../common/nft");
+const { isAddress } = require("@polkadot/util-crypto");
 
 function escapeRegex(string) {
   return string.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
@@ -22,25 +23,12 @@ async function searchAssets({ icasePattern, q, isNum, isAddr, isHash }) {
   const assetCol = await getAssetCollection();
 
   if (isNum) {
-    return await assetCol.findOne(
-      { assetId: Number(q) },
-    );
+    return await assetCol.findOne({ assetId: Number(q) });
   }
 
-  return await assetCol.findOne(
-    {
-      $or: [{ name: icasePattern }, { symbol: icasePattern }],
-    },
-  );
-}
-
-async function searchAddresses({ q, isAddr }) {
-  if (!isAddr) {
-    return null;
-  }
-
-  const addressCol = await getAddressCollection();
-  return addressCol.findOne({ address: q });
+  return await assetCol.findOne({
+    $or: [{ name: icasePattern }, { symbol: icasePattern }],
+  });
 }
 
 async function searchBlocks({ isNum, isHash, q, lowerQuery }) {
@@ -163,16 +151,26 @@ async function search(ctx) {
     return;
   }
 
+  let isAddr = false;
+  try {
+    isAddr = isAddress(q);
+  } catch (e) {
+    // Fail to check address
+  }
+  if (isAddr) {
+    ctx.body = {
+      address: q,
+    };
+  }
+
   const lowerQuery = q.toLowerCase();
   const isHash = !!lowerQuery.match(/^0x[0-9a-f]{64}$/);
   const isNum = q.match(/^[0-9]+$/);
-  const isAddr = q.match(/^[0-9a-zA-Z]{47,48}$/);
   const icasePattern = new RegExp(`^${escapeRegex(q)}$`, "i");
 
   const [asset, address, block, extrinsic, nftClass, nftInstance] =
     await Promise.all([
       searchAssets({ icasePattern, q, isNum, isAddr, isHash }),
-      searchAddresses({ q, isAddr }),
       searchBlocks({ q, lowerQuery, isNum, isHash }),
       searchExtriniscs({ isHash, lowerQuery }),
       searchNftClass({ q, icasePattern, isNum }),
@@ -192,15 +190,10 @@ async function search(ctx) {
 async function findAssetByPrefix({ icasePrefixPattern }) {
   const assetCol = await getAssetCollection();
   return await assetCol
-    .find(
-      {
-        destroyedAt: null,
-        $or: [
-          { name: icasePrefixPattern },
-          { symbol: icasePrefixPattern },
-        ],
-      },
-    )
+    .find({
+      destroyedAt: null,
+      $or: [{ name: icasePrefixPattern }, { symbol: icasePrefixPattern }],
+    })
     .sort({ name: 1 })
     .limit(10)
     .toArray();
@@ -209,12 +202,10 @@ async function findAssetByPrefix({ icasePrefixPattern }) {
 async function findAssetById({ prefix }) {
   const assetCol = await getAssetCollection();
   return await assetCol
-    .find(
-      {
-        destroyedAt: null,
-        assetId: Number(prefix),
-      },
-    )
+    .find({
+      destroyedAt: null,
+      assetId: Number(prefix),
+    })
     .toArray();
 }
 
@@ -329,7 +320,7 @@ async function findNftInstancesByPrefix({ icasePrefixPattern }) {
             {
               $match: {
                 nftClass: { $exists: true },
-              }
+              },
             },
           ],
           as: "nftInstance",

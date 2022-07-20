@@ -16,12 +16,14 @@ import Redeposited from "./redeposit.svg";
 import ApprovedTransfer from "./approve-transfer.svg";
 import ApprovalCancelled from "./cancel-approval.svg";
 import LinkIcon from "./link.svg";
+import Placeholder from "./placeholder.svg";
 
 const icons = {
   Created,
   ForceCreated,
   MetadataSet,
   ClassMetadataSet: MetadataSet,
+  CollectionMetadataSet: MetadataSet,
   MetadataCleared,
   ClassMetadataCleared: MetadataCleared,
   AssetStatusChanged,
@@ -43,6 +45,7 @@ const icons = {
   ApprovedTransfer,
   ApprovalCancelled,
   LinkIcon,
+  Placeholder,
 };
 
 export default icons;

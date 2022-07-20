@@ -22,6 +22,7 @@ const icons = {
   ForceCreated,
   MetadataSet,
   ClassMetadataSet: MetadataSet,
+  CollectionMetadataSet: MetadataSet,
   MetadataCleared,
   ClassMetadataCleared: MetadataCleared,
   AssetStatusChanged,

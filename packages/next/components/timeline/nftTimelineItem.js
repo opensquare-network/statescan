@@ -413,6 +413,7 @@ export default function NftTimelineItem({ data }) {
         };
       }
       case "ClassMetadataSet":
+      case "CollectionMetadataSet":
       case "MetadataSet": {
         return {
           ...timelineItem.args,

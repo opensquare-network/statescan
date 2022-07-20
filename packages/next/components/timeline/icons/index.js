@@ -16,6 +16,7 @@ import Redeposited from "./redeposit.svg";
 import ApprovedTransfer from "./approve-transfer.svg";
 import ApprovalCancelled from "./cancel-approval.svg";
 import LinkIcon from "./link.svg";
+import Placeholder from "./placeholder.svg";
 
 const icons = {
   Created,
@@ -44,6 +45,7 @@ const icons = {
   ApprovedTransfer,
   ApprovalCancelled,
   LinkIcon,
+  Placeholder,
 };
 
 export default icons;

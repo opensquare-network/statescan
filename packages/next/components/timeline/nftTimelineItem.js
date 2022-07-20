@@ -10,6 +10,7 @@ import BigNumber from "bignumber.js";
 import Address from "components/address";
 import placeholder from "lodash/fp/placeholder";
 import { hexToString, isHex } from "@polkadot/util";
+import Placeholder from "./icons/placeholder.svg";
 
 const div = styled.div``;
 
@@ -221,7 +222,8 @@ export default function NftTimelineItem({ data }) {
   const getTitle = (timelineItem) =>
     Titles[timelineItem.name] || timelineItem.name;
 
-  const getIcon = (timelineItem) => icons[timelineItem.name] || div;
+  const getIcon = (timelineItem) =>
+    icons[timelineItem.name] || icons.Placeholder;
 
   const getFields = (timelineItem) => {
     switch (timelineItem.name) {

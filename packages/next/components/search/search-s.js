@@ -77,6 +77,17 @@ export default function SearchS() {
   useEffect(() => {
     clearTimeout(inputTimeOutId);
     if (hintCache.has(searchKeyword)) return;
+    if (isAddress(searchKeyword)) {
+      hintCache.set(searchKeyword, {
+        addresses: [
+          {
+            _id: searchKeyword,
+            address: searchKeyword,
+          },
+        ],
+      });
+      return;
+    }
     //debounce query
     const timerId = setTimeout(() => {
       controller.abort();

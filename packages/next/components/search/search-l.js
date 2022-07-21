@@ -104,6 +104,17 @@ export default function SearchL({ node }) {
       clearTimeout(inputTimeOutId);
     }
     if (hintCache.has(searchKeyword)) return;
+    if (isAddress(searchKeyword)) {
+      hintCache.set(searchKeyword, {
+        addresses: [
+          {
+            _id: searchKeyword,
+            address: searchKeyword,
+          },
+        ],
+      });
+      return;
+    }
     //debounce query
     const timerId = setTimeout(() => {
       controller.abort();
@@ -234,6 +245,10 @@ export default function SearchL({ node }) {
       router.push(
         `/nft/classes/${selectedHint?.classId}/instances/${selectedHint.instanceId}`
       );
+      return true;
+    }
+    if (type === "addresses") {
+      router.push(`/account/${selectedHint?.address}`);
       return true;
     }
     return false;

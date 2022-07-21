@@ -126,7 +126,7 @@ const Divider = styled.div`
 `;
 
 export default function SearchHints({ hints, focus, selectedHint, toPage }) {
-  // if (!focus) return null;
+  if (!focus) return null;
   if (
     !hints ||
     (hints.addresses?.length === 0 &&

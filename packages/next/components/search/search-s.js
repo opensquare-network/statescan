@@ -148,10 +148,7 @@ export default function SearchS() {
   };
 
   const onSearch = () => {
-    if (
-      [46, 47, 48].includes(searchKeyword?.length) &&
-      isAddress(searchKeyword)
-    ) {
+    if (isAddress(searchKeyword)) {
       return router.push(`/account/${searchKeyword}`);
     }
     nextApi.fetch(`search?q=${searchKeyword}`).then((res) => {

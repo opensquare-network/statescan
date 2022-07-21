@@ -52,6 +52,11 @@ const AddressItem = styled(BlockItem)`
   justify-content: flex-start;
   gap: 8px;
 
+  :hover {
+    div > a {
+      background-color: #fafafa;
+    }
+  }
   span > div {
     display: flex;
   }

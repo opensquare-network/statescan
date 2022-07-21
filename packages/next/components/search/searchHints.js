@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import Symbol from "components/symbol";
 import { card_border } from "styles/textStyles";
 import Thumbnail from "../nft/thumbnail";
+import Address from "../address";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -51,8 +52,15 @@ const AddressItem = styled(BlockItem)`
   justify-content: flex-start;
   gap: 8px;
 
-  span {
+  span > div {
+    display: flex;
+  }
+
+  div > a {
+    max-width: 414px;
+    pointer-events: none;
     font-size: 15px;
+    color: #111111;
     line-height: 20px;
     overflow: hidden;
     white-space: nowrap;
@@ -149,7 +157,10 @@ export default function SearchHints({ hints, focus, selectedHint, toPage }) {
               onClick={() => toPage({ type: "addresses", ...item })}
             >
               <img src="/imgs/icons/account.svg" alt="" />
-              <span>{item.address}</span>
+              <Address
+                address={item?.address}
+                to={`/account/${item?.address}`}
+              />
             </AddressItem>
           ))}
         </>

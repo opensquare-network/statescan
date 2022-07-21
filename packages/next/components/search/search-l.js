@@ -41,6 +41,7 @@ const ExploreWrapper = styled.div`
 const ExploreInput = styled.input`
   width: 100%;
   padding: 12px 16px;
+  padding-right: 32px;
   background: #ffffff;
   border: 1px solid #eeeeee;
   border-radius: 8px;

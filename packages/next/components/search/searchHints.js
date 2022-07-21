@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import Symbol from "components/symbol";
 import { card_border } from "styles/textStyles";
 import Thumbnail from "../nft/thumbnail";
+import Address from "../address";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -39,10 +40,32 @@ const BlockItem = styled.div`
   }
 
   ${(p) =>
-          p.selected &&
-          css`
-            background-color: #fafafa;
-          `}
+    p.selected &&
+    css`
+      background-color: #fafafa;
+    `}
+`;
+
+const AddressItem = styled(BlockItem)`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+
+  span > div {
+    display: flex;
+  }
+
+  div > a {
+    max-width: 414px;
+    pointer-events: none;
+    font-size: 15px;
+    color: #111111;
+    line-height: 20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 `;
 
 const BlockWrapper = styled.div`
@@ -72,10 +95,10 @@ const AssetItem = styled.div`
   }
 
   ${(p) =>
-          p.selected &&
-          css`
-            background-color: #fafafa;
-          `}
+    p.selected &&
+    css`
+      background-color: #fafafa;
+    `}
 `;
 
 const AssetWrapper = styled.div`
@@ -108,15 +131,40 @@ const IndexWrapper = styled.div`
 
 const Divider = styled.div`
   height: 4px;
-`
+`;
 
-export default function SearchHints({hints, focus, selectedHint, toPage}) {
+export default function SearchHints({ hints, focus, selectedHint, toPage }) {
   if (!focus) return null;
-  if (!hints || (hints.assets?.length === 0 && hints.blocks?.length === 0 && hints.nftClasses.length === 0 && hints.nftInstances.length === 0))
+  if (
+    !hints ||
+    (hints.addresses?.length === 0 &&
+      hints.assets?.length === 0 &&
+      hints.blocks?.length === 0 &&
+      hints.nftClasses.length === 0 &&
+      hints.nftInstances.length === 0)
+  )
     return null;
 
   return (
     <Wrapper>
+      {hints.addresses?.length > 0 && (
+        <>
+          <Title>Address</Title>
+          {hints.addresses.map((item, index) => (
+            <AddressItem
+              key={index}
+              selected={selectedHint?._id === item._id}
+              onClick={() => toPage({ type: "addresses", ...item })}
+            >
+              <img src="/imgs/icons/account.svg" alt="" />
+              <Address
+                address={item?.address}
+                to={`/account/${item?.address}`}
+              />
+            </AddressItem>
+          ))}
+        </>
+      )}
       {hints.blocks?.length > 0 && (
         <>
           <Title>BLOCKS</Title>
@@ -124,10 +172,10 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
             <BlockItem
               selected={selectedHint?._id === item._id}
               key={index}
-              onClick={() => toPage({type: "blocks", ...item})}
+              onClick={() => toPage({ type: "blocks", ...item })}
             >
               <BlockWrapper>
-                <img src="/imgs/icons/latest-blocks.svg" alt=""/>
+                <img src="/imgs/icons/latest-blocks.svg" alt="" />
                 <div>Block</div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.header?.number}`}</IndexWrapper>
@@ -135,7 +183,7 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
           ))}
         </>
       )}
-      {(hints.blocks?.length > 0 && hints.assets?.length > 0) && <Divider/>}
+      {hints.blocks?.length > 0 && hints.assets?.length > 0 && <Divider />}
       {hints.assets?.length > 0 && (
         <>
           <Title>ASSETS</Title>
@@ -143,10 +191,10 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
             <AssetItem
               key={index}
               selected={selectedHint?._id === item._id}
-              onClick={() => toPage({type: "assets", ...item})}
+              onClick={() => toPage({ type: "assets", ...item })}
             >
               <AssetWrapper>
-                <Symbol assetId={item.assetId}/>
+                <Symbol assetId={item.assetId} />
                 <div>{item.symbol}</div>
               </AssetWrapper>
               <AssetName>{item.name}</AssetName>
@@ -162,13 +210,16 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
             <AssetItem
               key={index}
               selected={selectedHint?._id === item._id}
-              onClick={() => toPage({type: "nftClasses", ...item})}
+              onClick={() => toPage({ type: "nftClasses", ...item })}
             >
               <BlockWrapper>
-                <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
-                <div style={{marginLeft: 8, fontWeight: 400}}>{
-                  item?.nftMetadata?.name ?? `[Unrecognized]`
-                }</div>
+                <Thumbnail
+                  imageThumbnail={item?.nftMetadata?.imageThumbnail}
+                  size={24}
+                />
+                <div style={{ marginLeft: 8, fontWeight: 400 }}>
+                  {item?.nftMetadata?.name ?? `[Unrecognized]`}
+                </div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.classId}`}</IndexWrapper>
             </AssetItem>
@@ -182,13 +233,16 @@ export default function SearchHints({hints, focus, selectedHint, toPage}) {
             <AssetItem
               key={index}
               selected={selectedHint?._id === item._id}
-              onClick={() => toPage( {type: "nftInstances", ...item})}
+              onClick={() => toPage({ type: "nftInstances", ...item })}
             >
               <BlockWrapper>
-                <Thumbnail imageThumbnail={item?.nftMetadata?.imageThumbnail} size={24}/>
-                <div style={{marginLeft: 8, fontWeight: 400}}>{
-                  item?.nftMetadata?.name ?? `[Unrecognized]`
-                }</div>
+                <Thumbnail
+                  imageThumbnail={item?.nftMetadata?.imageThumbnail}
+                  size={24}
+                />
+                <div style={{ marginLeft: 8, fontWeight: 400 }}>
+                  {item?.nftMetadata?.name ?? `[Unrecognized]`}
+                </div>
               </BlockWrapper>
               <IndexWrapper>{`#${item.instanceId}`}</IndexWrapper>
             </AssetItem>

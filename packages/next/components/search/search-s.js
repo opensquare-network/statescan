@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import nextApi from "services/nextApi";
 import SearchHints from "./searchHints";
 import ClearIcon from "../../public/imgs/icons/clear.svg";
+import { isAddress } from "@polkadot/util-crypto";
 
 const Clear = styled(ClearIcon)`
   position: absolute;
@@ -31,6 +32,7 @@ const ExploreWrapper = styled.div`
 
 const Input = styled.input`
   padding-left: 44px;
+  padding-right: 44px;
   width: 280px;
   font-size: 15px;
   line-height: 36px;
@@ -63,7 +65,11 @@ export default function SearchS() {
   const hintCache = useMemo(() => new Map(), []);
   const forceUpdate = useForceUpdate();
   const [selectedHint, setSelectedHint] = useState(null);
-  const [linkedList, setLinkedList] = useState({head: null, current: null, tail: null});
+  const [linkedList, setLinkedList] = useState({
+    head: null,
+    current: null,
+    tail: null,
+  });
   const [inputTimeOutId, setInputTimeOut] = useState(null);
   const [controller, setAbortController] = useState(new AbortController());
 
@@ -71,33 +77,51 @@ export default function SearchS() {
   useEffect(() => {
     clearTimeout(inputTimeOutId);
     if (hintCache.has(searchKeyword)) return;
+    if (isAddress(searchKeyword)) {
+      hintCache.set(searchKeyword, {
+        addresses: [
+          {
+            _id: searchKeyword,
+            address: searchKeyword,
+          },
+        ],
+      });
+      return;
+    }
     //debounce query
-    const timerId = setTimeout(
-      () => {
-        controller.abort();
-        if(searchKeyword === ''){
-          return ;
-        }
-        const newController = new AbortController();
-        let { signal } = newController;
-        setAbortController(newController);
-        nextApi.fetch(`search/autocomplete?prefix=${searchKeyword}`, {}, {signal}).then((res) => {
-          if(!res?.result){
+    const timerId = setTimeout(() => {
+      controller.abort();
+      if (searchKeyword === "") {
+        return;
+      }
+      const newController = new AbortController();
+      let { signal } = newController;
+      setAbortController(newController);
+      nextApi
+        .fetch(`search/autocomplete?prefix=${searchKeyword}`, {}, { signal })
+        .then((res) => {
+          if (!res?.result) {
             return;
           }
-          const categories = ['blocks', 'assets', 'addresses', 'nftClasses', 'nftInstances'];
-          const hintsList = ({head: null, current: null, tail: null});
+          const categories = [
+            "blocks",
+            "assets",
+            "addresses",
+            "nftClasses",
+            "nftInstances",
+          ];
+          const hintsList = { head: null, current: null, tail: null };
           setSelectedHint(null);
-          categories.forEach(category => {
-            res.result[category].forEach(hint => {
-              const node = {type: category, ...hint};
+          categories.forEach((category) => {
+            res.result[category].forEach((hint) => {
+              const node = { type: category, ...hint };
               if (!hintsList.head) {
                 hintsList.head = node;
                 hintsList.current = node;
                 hintsList.tail = node;
               } else {
                 node.previous = hintsList.current;
-                node.next = hintsList.head;//loop linked list
+                node.next = hintsList.head; //loop linked list
                 hintsList.current.next = node;
                 hintsList.current = node;
                 hintsList.tail = node;
@@ -109,8 +133,7 @@ export default function SearchS() {
           hintCache.set(searchKeyword, res?.result);
           forceUpdate();
         });
-      }
-      , 200);
+    }, 200);
     setInputTimeOut(timerId);
   }, [searchKeyword, hintCache, forceUpdate]);
   /*eslint-enable */
@@ -125,6 +148,9 @@ export default function SearchS() {
   };
 
   const onSearch = () => {
+    if (isAddress(searchKeyword)) {
+      return router.push(`/account/${searchKeyword}`);
+    }
     nextApi.fetch(`search?q=${searchKeyword}`).then((res) => {
       const { asset, extrinsic, block, address } = res.result || {};
       if (asset) {
@@ -164,7 +190,7 @@ export default function SearchS() {
     if (e.code === "ArrowDown") {
       e.preventDefault();
       selectedHint?.next && setSelectedHint(selectedHint?.next);
-      if(selectedHint === null){
+      if (selectedHint === null) {
         setSelectedHint(linkedList.head);
       }
     }
@@ -174,13 +200,15 @@ export default function SearchS() {
     if (!selectedHint) {
       return false;
     }
-    const {type} = selectedHint;
+    const { type } = selectedHint;
     if (type === "blocks") {
       router.push(`/block/${selectedHint?.header?.number}`);
       return true;
     }
     if (type === "assets") {
-      router.push(`/asset/${selectedHint.assetId}_${selectedHint.createdAt.blockHeight}`);
+      router.push(
+        `/asset/${selectedHint.assetId}_${selectedHint.createdAt.blockHeight}`
+      );
       return true;
     }
     if (type === "nftClasses") {
@@ -188,7 +216,9 @@ export default function SearchS() {
       return true;
     }
     if (type === "nftInstances") {
-      router.push(`/nft/classes/${selectedHint?.classId}/instances/${selectedHint?.instanceId}`);
+      router.push(
+        `/nft/classes/${selectedHint?.classId}/instances/${selectedHint?.instanceId}`
+      );
       return true;
     }
     return false;
@@ -199,9 +229,13 @@ export default function SearchS() {
   return (
     <ExploreWrapper>
       <SearchWrapper>
-        {searchKeyword && <Clear onClick={() => {
-          setSearchKeyword('')
-        }}/>}
+        {searchKeyword && (
+          <Clear
+            onClick={() => {
+              setSearchKeyword("");
+            }}
+          />
+        )}
         <Input
           value={searchKeyword}
           onChange={onInput}

@@ -4,6 +4,7 @@ import Symbol from "components/symbol";
 import { card_border } from "styles/textStyles";
 import Thumbnail from "../nft/thumbnail";
 import Address from "../address";
+import { encodeAddressToChain } from "../../utils";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -163,7 +164,7 @@ export default function SearchHints({ hints, focus, selectedHint, toPage }) {
             >
               <img src="/imgs/icons/account.svg" alt="" />
               <Address
-                address={item?.address}
+                address={encodeAddressToChain(item?.address)}
                 to={`/account/${item?.address}`}
               />
             </AddressItem>

@@ -1,5 +1,6 @@
 import moment from "moment";
 import BigNumber from "bignumber.js";
+import { encodeAddress } from "@polkadot/keyring";
 
 BigNumber.config({ EXPONENTIAL_AT: 36 });
 
@@ -220,3 +221,19 @@ export function calcPagination(options = {}) {
     isLastPage,
   };
 }
+
+export const encodeAddressToChain = (address) => {
+  const chain = process.env.NEXT_PUBLIC_CHAIN;
+  const ss58PrefixMap = new Map([
+    ["statemine", 2],
+    ["statemint", 0],
+    ["westmint", 42],
+  ]);
+  const ss58Prefix = ss58PrefixMap.get(chain);
+
+  try {
+    return encodeAddress(address, ss58Prefix);
+  } catch {
+    return "";
+  }
+};

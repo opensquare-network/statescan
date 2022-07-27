@@ -2,8 +2,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const minimist = require("minimist");
-const { handleImageByDataHash } = require("../scan-metadata/image");
-const { parseMetadataAndSave } = require("../scan-metadata/metadata");
+const { handleImageByDataHash } = require("../scan-metadata/parse-image/image");
+const {
+  parseMetadataAndSave,
+} = require("../scan-metadata/parse-metadata/metadata");
 const { getClassCollection, getInstanceCollection } = require("../mongo");
 
 async function scanInstance(classId, classHeight, instanceId, instanceHeight) {

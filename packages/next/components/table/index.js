@@ -258,7 +258,7 @@ export default function Table({
   const color = useTheme().color;
   const node = useNode();
 
-  // Hanlding expand json data by default
+  // Handling expand json data by default
   const initExpand = useMemo(() => [], []);
   if (expand >= 0) {
     initExpand[expand] = true;

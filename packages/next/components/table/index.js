@@ -145,25 +145,6 @@ const TableDataItem = styled.pre`
   overflow-x: auto;
 `;
 
-const CollapseTableDataItem = styled.pre`
-  background: #fafafa;
-  border-radius: 4px;
-  padding: 32px;
-  font-size: 14px;
-  line-height: 20px;
-  margin: 0;
-  word-break: break-all;
-  word-wrap: break-word;
-  white-space: pre-wrap;
-  font-family: "SF Mono";
-  letter-spacing: -0.5px;
-
-  overflow-x: auto;
-  :-webkit-scrollbar {
-    display: none;
-  }
-`;
-
 const CollapseWrapper = styled.div`
   background: #ffffff;
   ${card_border};
@@ -413,7 +394,7 @@ export default function Table({
                               </div>
                             )}
                             {!head?.[index]?.type && item}
-                            <div className="border-bottom"></div>
+                            <div className="border-bottom" />
                           </td>
                         );
                       })}
@@ -470,7 +451,7 @@ export default function Table({
                           <tr key={index}>
                             {head?.[index].type === "data" && (
                               <>
-                                <CollapseHead></CollapseHead>
+                                <CollapseHead />
                                 <CollapseBody>
                                   <IconWrapper>
                                     <DataImg
@@ -548,7 +529,7 @@ export default function Table({
                         />
                       </CollapseTableDataWrapper>
                     )}
-                    <div className="border-bottom"></div>
+                    <div className="border-bottom" />
                   </CollapseTableWrapper>
                 ))}
               </div>

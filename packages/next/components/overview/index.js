@@ -53,12 +53,14 @@ const tokenMap = new Map([
   ["westmint", "WND"],
   ["statemine", "KSM"],
   ["statemint", "DOT"],
+  ["litmus", "LIT"],
 ]);
 
 const colorMap = new Map([
   ["KSM", "#0f0f0f"],
   ["WND", "#F22279"],
   ["DOT", "#E6007A"],
+  ["LIT", "#6431EC"],
 ]);
 
 export default function Overview({ node, overviewData, price }) {

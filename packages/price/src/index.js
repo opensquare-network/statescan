@@ -115,7 +115,7 @@ async function main() {
   }
 
   while (true) {
-    if (["DOT", "KSM"].includes(args.symbol)) {
+    if (["DOT", "KSM", "LIT"].includes(args.symbol)) {
       let latestOpenTime = null;
 
       try {

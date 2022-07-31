@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const AbortController = require("abort-controller");
 
 async function getLatest(symbol) {

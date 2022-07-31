@@ -5,18 +5,10 @@
   "engines": {
     "node": ">=15.0.0"
   },
-  "scripts": {
-    "deploy:priceKsm": "pm2 start ecosystem.config.js --only ksm-daily-price-tracker",
-    "deploy:priceDot": "pm2 start ecosystem.config.js --only dot-daily-price-tracker",
-    "deploy:priceRmrk": "pm2 start ecosystem.config.js --only rmrk-daily-price-tracker",
-    "deploy:priceSync": "pm2 start ecosystem.config.js --only asset-price-sync"
-  },
   "dependencies": {
     "abort-controller": "^3.0.0",
     "dayjs": "^1.10.4",
     "dotenv": "^8.2.0",
-    "minimist": "^1.2.6",
-    "mongodb": "4.1.2",
-    "node-fetch": "^3.1.1"
+    "mongodb": "4.1.2"
   }
 }

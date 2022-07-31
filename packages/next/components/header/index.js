@@ -161,10 +161,6 @@ const menusBlockchain = [
     value: "transfers",
   },
   {
-    name: "Teleports",
-    value: "teleports",
-  },
-  {
     name: "Accounts",
     value: "accounts",
   },
@@ -253,12 +249,6 @@ export default function Header({ node }) {
                 category="BlockChain"
                 menus={menusBlockchain}
                 closeMenu={() => setIsActive(false)}
-              />
-              <SubMenu
-                category="Assets"
-                menus={menusAssets}
-                closeMenu={() => setIsActive(false)}
-                divideIndex={1}
               />
             </MenuWrapper>
           )}

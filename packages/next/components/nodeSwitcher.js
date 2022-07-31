@@ -127,7 +127,7 @@ export default function NodeSwitcher({ node }) {
                   <Icon src={item.icon} alt={item.value} />
                   <Text>{item.name}</Text>
                 </FlexWrapper>
-                <Sub>{item.sub}</Sub>
+                <Sub>{item.father || item.sub}</Sub>
               </Item>
             ))}
         </Options>

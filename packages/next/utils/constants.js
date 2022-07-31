@@ -39,8 +39,9 @@ export const nodes = [
   },
   {
     name: "Litmus",
+    father: "Litentry",
     sub: "Kusama",
-    value: "statemine",
+    value: "litmus",
     symbol: "LIT",
     icon: "/imgs/icons/litmus.svg",
     color: "#6431EC",

@@ -6,8 +6,7 @@ async function getKlines(symbol, startTime = 0) {
   url.searchParams.set("startTime", `${startTime}`);
 
   const res = await fetch(url);
-  const json = await res.json();
-  return json;
+  return await res.json();
 }
 
 module.exports = {

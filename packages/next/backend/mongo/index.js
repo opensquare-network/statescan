@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 
-const mongoUrl = process.env.MONGO_SERVER_URL || "mongodb://localhost:27017";
+const mongoUrl = process.env.MONGO_SERVER_URL || "mongodb://127.0.0.1:27017";
 
 // Asset DB
 const statusCollectionName = "status";
@@ -132,7 +132,9 @@ async function initDb() {
   assetTimelineCol = assetDb.collection(assetTimelineCollectionName);
   assetHolderCol = assetDb.collection(assetHolderCollectionName);
 
-  dailyAssetStatisticCol = assetDb.collection(dailyAssetStatisticCollectionName);
+  dailyAssetStatisticCol = assetDb.collection(
+    dailyAssetStatisticCollectionName
+  );
 
   const accountDbName = getAccountDbName();
   console.log(`Use account DB name:`, accountDbName);
@@ -150,7 +152,9 @@ async function initDb() {
   extrinsicCol = blockDb.collection(extrinsicCollectionName);
 
   unFinalizedBlockCol = blockDb.collection(unFinalizedCollectionName);
-  unFinalizedExtrinsicCol = blockDb.collection(unFinalizedExtrinsicCollectionName);
+  unFinalizedExtrinsicCol = blockDb.collection(
+    unFinalizedExtrinsicCollectionName
+  );
   unFinalizedEventCol = blockDb.collection(unFinalizedEventCollectionName);
 
   const nftDbName = getNftDbName();

@@ -7,21 +7,15 @@ async function getKlines(symbol, startTime = 0) {
   url.searchParams.set("limit", "500");
   url.searchParams.set("startTime", `${startTime}`);
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => {
-    controller.abort();
-  }, 3000);
-
   try {
-    const res = await fetch(url, { signal: controller.signal });
+    const res = await fetch(url);
     const json = await res.json();
     return json;
-  } catch (error) {
-    if (error.name === "AbortError") {
+  } catch (err) {
+    console.log(err);
+    if (err.name === "AbortError") {
       console.log("request was aborted");
     }
-  } finally {
-    clearTimeout(timeout);
   }
 
   return [];

@@ -37,6 +37,16 @@ export const nodes = [
     colorSecondary: "#FAE6F2",
     buttonColor: "#DA68A7",
   },
+  {
+    name: "Litmus",
+    sub: "Kusama",
+    value: "statemine",
+    symbol: "LIT",
+    icon: "/imgs/icons/litmus.svg",
+    color: "#6431EC",
+    colorSecondary: "#EAF0FF",
+    buttonColor: "#000000",
+  },
 ];
 
 export const blocksLatestHead = [

@@ -37,15 +37,15 @@ async function calcOverview() {
   const nftClassCol = await getNftClassCollection();
   const nftInstanceCol = await getNftInstanceCollection();
 
-  // Load latest 5 blocks
-  const latestBlocks = await getLatestBlocks(5);
+  // Load latest 10 blocks
+  const latestBlocks = await getLatestBlocks(10);
 
-  // Load latest 5 transfers
+  // Load latest 10 transfers
   let latestTransfers = await transferCol
     .aggregate([
       { $match: { listIgnore: false } },
       { $sort: { "indexer.blockHeight": -1 } },
-      { $limit: 5 },
+      { $limit: 10 },
     ])
     .toArray();
   latestTransfers = await populateAssetInfo(latestTransfers);
@@ -63,95 +63,93 @@ async function calcOverview() {
     {
       popularNftClasses,
       recognizedNftClasses: [
-        {
-          count: recognizedNftClassesCount
-        } = { count: 0 }
-      ]
-    }
-  ] = await nftClassCol.aggregate([
-    {
-      $match: {
-        isDestroyed: false,
-      }
+        { count: recognizedNftClassesCount } = { count: 0 },
+      ],
     },
-    ...lookupNftMetadata(),
-    {
-      $facet: {
-        popularNftClasses: [
-          {
-            $sort: {
-              "nftMetadata.recognized": -1,
-              "details.instances": -1,
-            }
-          },
-          { $limit: 5 },
-        ],
-        recognizedNftClasses: [
-          {
-            $match: {
-              "nftMetadata.recognized": true,
-            }
-          },
-          {
-            $count: "count"
-          }
-        ],
-      }
-    },
-  ]).toArray();
-
-  const [{
-    nftInstances: [
+  ] = await nftClassCol
+    .aggregate([
       {
-        count: nftInstancesCount
-      } = { count: 0 }
-    ],
-    recognizedNftInstances: [
-      {
-        count: recognizedNftInstancesCount
-      } = { count: 0 }
-    ],
-  }] = await nftInstanceCol.aggregate([
-    {
-      $match: {
-        isDestroyed: false,
-      }
-    },
-    ...lookupNftMetadata(),
-    ...lookupNftClass({ isDestroyed: false }),
-    {
-      $match: {
-        nftClass: { $exists: true },
+        $match: {
+          isDestroyed: false,
+        },
       },
-    },
+      ...lookupNftMetadata(),
+      {
+        $facet: {
+          popularNftClasses: [
+            {
+              $sort: {
+                "nftMetadata.recognized": -1,
+                "details.instances": -1,
+              },
+            },
+            { $limit: 5 },
+          ],
+          recognizedNftClasses: [
+            {
+              $match: {
+                "nftMetadata.recognized": true,
+              },
+            },
+            {
+              $count: "count",
+            },
+          ],
+        },
+      },
+    ])
+    .toArray();
+
+  const [
     {
-      $facet: {
-        nftInstances: [
-          {
-            $count: "count"
-          }
-        ],
-        recognizedNftInstances: [
-          {
-            $match: {
-              $or: [
-                { "nftMetadata.recognized": true },
-                {
-                  $and: [
-                    { nftMetadata: null },
-                    { "nftClass.nftMetadata.recognized": true },
-                  ],
-                },
-              ]
-            }
-          },
-          {
-            $count: "count"
-          }
-        ]
-      }
+      nftInstances: [{ count: nftInstancesCount } = { count: 0 }],
+      recognizedNftInstances: [
+        { count: recognizedNftInstancesCount } = { count: 0 },
+      ],
     },
-  ]).toArray();
+  ] = await nftInstanceCol
+    .aggregate([
+      {
+        $match: {
+          isDestroyed: false,
+        },
+      },
+      ...lookupNftMetadata(),
+      ...lookupNftClass({ isDestroyed: false }),
+      {
+        $match: {
+          nftClass: { $exists: true },
+        },
+      },
+      {
+        $facet: {
+          nftInstances: [
+            {
+              $count: "count",
+            },
+          ],
+          recognizedNftInstances: [
+            {
+              $match: {
+                $or: [
+                  { "nftMetadata.recognized": true },
+                  {
+                    $and: [
+                      { nftMetadata: null },
+                      { "nftClass.nftMetadata.recognized": true },
+                    ],
+                  },
+                ],
+              },
+            },
+            {
+              $count: "count",
+            },
+          ],
+        },
+      },
+    ])
+    .toArray();
 
   // Calculate counts
   const assetsCount = await assetCol.countDocuments({ destroyedAt: null });
@@ -159,7 +157,9 @@ async function calcOverview() {
     $or: [{ providers: { $ne: 0 } }, { sufficients: { $ne: 0 } }],
   });
   const transfersCount = await transferCol.countDocuments();
-  const nftClassesCount = await nftClassCol.countDocuments({ isDestroyed: false });
+  const nftClassesCount = await nftClassCol.countDocuments({
+    isDestroyed: false,
+  });
 
   return {
     latestBlocks,
@@ -176,7 +176,7 @@ async function calcOverview() {
     nftInstancesCount: {
       total: nftInstancesCount,
       recognized: recognizedNftInstancesCount,
-    }
+    },
   };
 }
 

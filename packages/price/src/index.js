@@ -1,7 +1,6 @@
 const dotenv = require("dotenv");
 dotenv.config();
 
-const minimist = require("minimist");
 const dayjs = require("dayjs");
 const { getKlines } = require("./binance");
 const { getLatest } = require("./gate");
@@ -102,15 +101,10 @@ async function tickEveryMinute(symbol) {
 }
 
 async function main() {
-  const args = minimist(process.argv.slice(2));
+  const symbol = process.env.SYMBOL;
 
-  if (!args.symbol) {
-    console.log("Must specify symbol with argument --symbol=[DOT|KSM|RMRK]");
-    return;
-  }
-
-  if (!["DOT", "KSM", "RMRK"].includes(args.symbol)) {
-    console.log(`Unknown symbol "${args.symbol}"`);
+  if (!["DOT", "KSM", "RMRK"].includes(symbol)) {
+    console.log(`Unknown symbol "${symbol}"`);
     return;
   }
 
@@ -119,9 +113,9 @@ async function main() {
       let latestOpenTime = null;
 
       try {
-        latestOpenTime = await tick(args.symbol);
+        latestOpenTime = await tick(symbol);
         console.log(
-          `${args.symbol} price saved: ${dayjs(latestOpenTime).format(
+          `${symbol} price saved: ${dayjs(latestOpenTime).format(
             "YYYY-MM-DD HH:mm:ss"
           )}`
         );
@@ -138,8 +132,8 @@ async function main() {
       } else {
         await sleep(2 * 1000);
       }
-    } else if (["RMRK"].includes(args.symbol)) {
-      await tickEveryMinute(args.symbol);
+    } else if (["RMRK"].includes(symbol)) {
+      await tickEveryMinute(symbol);
       await sleep(60 * 1000);
     }
   }

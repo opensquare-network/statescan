@@ -8,6 +8,7 @@ const {
   getKsmUsdtDailyCollection,
   getDotUsdtDailyCollection,
   getRmrkUsdtDailyCollection,
+  getLitUsdtDailyCollection,
 } = require("./mongo");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -19,6 +20,8 @@ function getCollection(symbol) {
     return getKsmUsdtDailyCollection();
   } else if (symbol === "RMRK") {
     return getRmrkUsdtDailyCollection();
+  } else if (symbol === "LIT") {
+    return getLitUsdtDailyCollection();
   } else {
     throw new Error("Unsupport symbol " + symbol);
   }
@@ -103,7 +106,7 @@ async function tickEveryMinute(symbol) {
 async function main() {
   const symbol = process.env.SYMBOL;
 
-  if (!["DOT", "KSM", "RMRK"].includes(symbol)) {
+  if (!["DOT", "KSM", "RMRK", "LIT"].includes(symbol)) {
     console.log(`Unknown symbol "${symbol}"`);
     return;
   }

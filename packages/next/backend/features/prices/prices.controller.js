@@ -1,6 +1,7 @@
 const {
   getKsmUsdtDailyCollection,
   getDotUsdtDailyCollection,
+  getLitUsdtDailyCollection,
 } = require("../../mongo/pricedb");
 
 async function getDailyPrices(ctx) {
@@ -9,11 +10,16 @@ async function getDailyPrices(ctx) {
   let items = [];
 
   // Kusama data only
+  let col = null;
   if (chain === "statemine") {
-    const col = await getKsmUsdtDailyCollection();
-    items = await col.find({}).sort({ openTime: -1 }).limit(30).toArray();
+    col = await getKsmUsdtDailyCollection();
   } else if (chain === "statemint") {
-    const col = await getDotUsdtDailyCollection();
+    col = await getDotUsdtDailyCollection();
+  } else if (chain === "litmus") {
+    col = await getLitUsdtDailyCollection();
+  }
+
+  if (col) {
     items = await col.find({}).sort({ openTime: -1 }).limit(30).toArray();
   }
 

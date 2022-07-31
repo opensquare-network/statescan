@@ -4,6 +4,7 @@ const dbName = process.env.MONGO_DB_PRICE_NAME || "price";
 
 const ksmUsdtDailyCollectionName = "ksmUsdtDaily";
 const dotUsdtDailyCollectionName = "dotUsdtDaily";
+const litUsdtDailyCollectionName = "litUsdtDaily";
 
 let client = null;
 let db = null;
@@ -11,6 +12,7 @@ let db = null;
 const mongoUrl = process.env.MONGO_PRICE_URL || "mongodb://localhost:27017";
 let ksmUsdtDailyCol = null;
 let dotUsdtDailyCol = null;
+let litUsdtDailyCol = null;
 
 async function initDb() {
   client = await MongoClient.connect(mongoUrl, {
@@ -20,6 +22,7 @@ async function initDb() {
   db = client.db(dbName);
   ksmUsdtDailyCol = db.collection(ksmUsdtDailyCollectionName);
   dotUsdtDailyCol = db.collection(dotUsdtDailyCollectionName);
+  litUsdtDailyCol = db.collection(litUsdtDailyCollectionName);
 
   await _createIndexes();
 }
@@ -49,8 +52,14 @@ async function getDotUsdtDailyCollection() {
   return dotUsdtDailyCol;
 }
 
+async function getLitUsdtDailyCollection() {
+  await tryInit(litUsdtDailyCol);
+  return litUsdtDailyCol;
+}
+
 module.exports = {
   initDb,
   getDotUsdtDailyCollection,
   getKsmUsdtDailyCollection,
+  getLitUsdtDailyCollection,
 };

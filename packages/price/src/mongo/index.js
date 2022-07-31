@@ -59,8 +59,8 @@ async function getDotUsdtDailyCollection() {
 }
 
 async function getLitUsdtDailyCollection() {
-  await tryInit(dotUsdtDailyCol);
-  return dotUsdtDailyCol;
+  await tryInit(litUsdtDailyCol);
+  return litUsdtDailyCol;
 }
 
 async function getRmrkUsdtDailyCollection() {

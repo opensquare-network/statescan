@@ -33,8 +33,10 @@ async function main() {
   const start = await getNextStart();
   const klineArray = await getKlines(symbol, start);
   const normalizedArray = (klineArray || []).map(normalizeBinanceKline);
-
   await batch(normalizedArray);
+
+  console.log(`${normalizedArray.length} items saved!`);
+  process.exit(0);
 }
 
 main().then(console.log);

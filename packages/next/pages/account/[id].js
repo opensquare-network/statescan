@@ -8,6 +8,7 @@ import AddressEllipsis from "components/addressEllipsis";
 import {
   addressEllipsis,
   bigNumber2Locale,
+  encodeAddressToChain,
   fromAssetUnit,
   fromSymbolUnit,
 } from "utils";
@@ -287,7 +288,9 @@ export default function Address({
             )}`}</AssetPrice>
           )}
         </div>,
-        bigNumber2Locale(fromAssetUnit(item.approved?.$numberDecimal || 0, item.assetDecimals)),
+        bigNumber2Locale(
+          fromAssetUnit(item.approved?.$numberDecimal || 0, item.assetDecimals)
+        ),
         item.isFrozen?.toString(),
         item.transfers || 0,
       ]),
@@ -309,7 +312,9 @@ export default function Address({
           key={index}
           to={`/event/${item.indexer.blockHeight}-${item.indexer.eventIndex}`}
         >
-          {`${item.indexer.blockHeight.toLocaleString()}-${item.indexer.eventIndex}`}
+          {`${item.indexer.blockHeight.toLocaleString()}-${
+            item.indexer.eventIndex
+          }`}
         </InLink>,
         item.extrinsicHash ? (
           <InLink
@@ -337,8 +342,14 @@ export default function Address({
             ? `${bigNumber2Locale(
                 fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)
               )} `
-            : `${bigNumber2Locale(fromSymbolUnit(item.balance.$numberDecimal, symbol))} `}
-          <SymbolLink assetId={item.assetId} destroyedAt={item.assetDestroyedAt} createdAt={item.assetCreatedAt}>
+            : `${bigNumber2Locale(
+                fromSymbolUnit(item.balance.$numberDecimal, symbol)
+              )} `}
+          <SymbolLink
+            assetId={item.assetId}
+            destroyedAt={item.assetDestroyedAt}
+            createdAt={item.assetCreatedAt}
+          >
             {item.assetSymbol ? item.assetSymbol : symbol}
           </SymbolLink>
         </>,
@@ -413,7 +424,8 @@ export default function Address({
       total: addressNftInstances?.total,
       head: addressNftInstanceHead,
       body: (addressNftInstances?.items || []).map((instance, index) => {
-        const name = (instance.nftMetadata ?? instance.nftClass.nftMetadata)?.name;
+        const name = (instance.nftMetadata ?? instance.nftClass.nftMetadata)
+          ?.name;
         const imageThumbnail =
           instance?.nftMetadata?.recognized === false
             ? null
@@ -472,7 +484,8 @@ export default function Address({
       head: nftTransferHead,
       body: (addressNftTransfers?.items || []).map((item, index) => {
         const instance = item.nftInstance;
-        const name = (instance.nftMetadata ?? instance.nftClass.nftMetadata)?.name;
+        const name = (instance.nftMetadata ?? instance.nftClass.nftMetadata)
+          ?.name;
         const imageThumbnail =
           instance?.nftMetadata?.recognized === false
             ? null
@@ -618,6 +631,17 @@ export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const { id } = context.params;
   const { tab, page, direction } = context.query;
+
+  const address = encodeAddressToChain(id);
+  if (address !== id) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/account/${address}`,
+      },
+      props: {},
+    };
+  }
 
   const relayChain =
     nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";

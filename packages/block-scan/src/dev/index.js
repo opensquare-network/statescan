@@ -10,7 +10,7 @@ const { initDb } = require("../mongo");
 
 async function test() {
   await initDb();
-  const height = 1062098;
+  const height = 1751712;
   // const height = 917004;
   await setSpecHeights([height]);
 
@@ -21,12 +21,7 @@ async function test() {
 
   const blockIndexer = getBlockIndexer(block.block);
 
-  await scanNormalizedBlock(
-    block.block,
-    allEvents,
-    "",
-    blockIndexer,
-  );
+  await scanNormalizedBlock(block.block, allEvents, "", blockIndexer);
 }
 
 test();

@@ -10,7 +10,6 @@ import BigNumber from "bignumber.js";
 import Address from "components/address";
 import placeholder from "lodash/fp/placeholder";
 import { hexToString, isHex } from "@polkadot/util";
-import Placeholder from "./icons/placeholder.svg";
 
 const div = styled.div``;
 

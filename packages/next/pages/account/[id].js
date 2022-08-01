@@ -633,19 +633,20 @@ export async function getServerSideProps(context) {
   const { id } = context.params;
   const { tab, page, direction } = context.query;
 
-  if (isAddress(id)) {
-    const address = encodeAddressToChain(id);
-    if (id !== address) {
-      return {
-        redirect: {
-          permanent: true,
-          destination: `/account/${address}`,
-        },
-        props: {},
-      };
-    }
-  } else {
+  if (!isAddress(id)) {
     return { notFound: true };
+  }
+
+  const address = encodeAddressToChain(id);
+
+  if (id !== address) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/account/${address}`,
+      },
+      props: {},
+    };
   }
 
   const relayChain =

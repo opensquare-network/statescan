@@ -54,6 +54,7 @@ import { useRef, useState } from "react";
 import Preview from "components/nft/preview";
 import NftLink from "components/nft/nftLink";
 import Filter from "components/filter";
+import { isAddress } from "@polkadot/util-crypto";
 
 const TextDark = styled.span`
   ${text_dark_major};
@@ -632,15 +633,19 @@ export async function getServerSideProps(context) {
   const { id } = context.params;
   const { tab, page, direction } = context.query;
 
-  const address = encodeAddressToChain(id);
-  if (address !== id) {
-    return {
-      redirect: {
-        permanent: true,
-        destination: `/account/${address}`,
-      },
-      props: {},
-    };
+  if (isAddress(id)) {
+    const address = encodeAddressToChain(id);
+    if (id !== address) {
+      return {
+        redirect: {
+          permanent: true,
+          destination: `/account/${address}`,
+        },
+        props: {},
+      };
+    }
+  } else {
+    return { notFound: true };
   }
 
   const relayChain =

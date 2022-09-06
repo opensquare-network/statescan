@@ -18,6 +18,7 @@ function getSs58Format() {
   const chain = currentChain();
   let possibleValue = {
     litmus: 131,
+    litentry: 31,
   }[chain];
 
   if (!isNil(possibleValue)) {

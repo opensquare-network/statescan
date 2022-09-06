@@ -48,6 +48,17 @@ export const nodes = [
     colorSecondary: "#EAF0FF",
     buttonColor: "#000000",
   },
+  {
+    name: "Litentry",
+    father: "Litentry",
+    sub: "Polkadot",
+    value: "litentry",
+    symbol: "LIT",
+    icon: "/imgs/icons/litentry.svg",
+    color: "#1CC776",
+    colorSecondary: "#E8F9F1",
+    buttonColor: "#000000",
+  },
 ];
 
 export const blocksLatestHead = [

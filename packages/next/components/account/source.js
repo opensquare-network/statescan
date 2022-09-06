@@ -42,15 +42,6 @@ export default function Sources({ address, relayChain }) {
   return (
     <Wrapper>
       <Source
-        href={`https://polkascan.io/${relayChain}/account/${address}`}
-        target="_blank"
-        title="polka-scan"
-        style={{ margin: 0 }}
-      >
-        <PolkascanGrey className="hover-hide" />
-        <Polkascan className="hover-show" />
-      </Source>
-      <Source
         href={`https://${relayChain}.subscan.io/account/${address}`}
         target="_blank"
         title="sub-scan"

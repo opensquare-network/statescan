@@ -15,7 +15,7 @@ async function getDailyPrices(ctx) {
     col = await getKsmUsdtDailyCollection();
   } else if (chain === "statemint") {
     col = await getDotUsdtDailyCollection();
-  } else if (chain === "litmus") {
+  } else if (["litmus", "litentry"].includes(chain)) {
     col = await getLitUsdtDailyCollection();
   }
 

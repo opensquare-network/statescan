@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 const ItemWrapper = styled.div`
   flex-grow: 1;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 240px);
+  grid-template-columns: repeat(auto-fill, 360px);
   row-gap: 32px;
 `;
 
@@ -30,7 +30,6 @@ const Divider = styled.div`
   align-self: stretch;
   margin: 0 40px 0 0;
   @media screen and (max-width: 1200px) {
-    margin-right: 0;
     width: 100%;
     height: 1px;
     margin: 24px 0;
@@ -135,7 +134,6 @@ export default function Overview({ node, overviewData, price }) {
   const color = colorMap.get(token) ?? "#ddd";
 
   const chartData = price ?? [];
-  const { nftClassesCount, nftInstancesCount } = overviewData || {};
 
   return (
     <Wrapper>
@@ -162,21 +160,6 @@ export default function Overview({ node, overviewData, price }) {
           title="Holders"
           icon="holder.svg"
           text={holdersCountDynamic?.toLocaleString()}
-        />
-        <OverviewItem
-          title="NFT Class"
-          icon="nft-class.svg"
-          text={nftClassesCount?.recognized ?? 0}
-          textSec={nftClassesCount?.total ?? 0}
-          link="/nft"
-          tip="Recognized / All"
-        />
-        <OverviewItem
-          title="NFT Instance"
-          icon="nft-class.svg"
-          text={nftInstancesCount?.recognized ?? 0}
-          textSec={nftInstancesCount?.total ?? 0}
-          tip="Recognized / All"
         />
       </ItemWrapper>
       <Divider />

@@ -7,6 +7,7 @@ const {
   getAddressCollection,
   getNftClassCollection,
   getNftInstanceCollection,
+  getExtrinsicCollection,
 } = require("../mongo");
 const { getLatestBlocks } = require("../common/latestBlocks");
 const { populateAssetInfo } = require("../common/asset");
@@ -161,6 +162,11 @@ async function calcOverview() {
     isDestroyed: false,
   });
 
+  const extrinsicCol = await getExtrinsicCollection();
+  const signedExtrinsicCount = await extrinsicCol.countDocuments({
+    listIgnore: false,
+  });
+
   return {
     latestBlocks,
     latestTransfers,
@@ -169,6 +175,7 @@ async function calcOverview() {
     assetsCount,
     holdersCount,
     transfersCount,
+    signedExtrinsicCount,
     nftClassesCount: {
       total: nftClassesCount,
       recognized: recognizedNftClassesCount,

@@ -229,6 +229,7 @@ export const encodeAddressToChain = (address) => {
     ["statemint", 0],
     ["westmint", 42],
     ["litmus", 131],
+    ["litentry", 31],
   ]);
   const ss58Prefix = ss58PrefixMap.get(chain);
 

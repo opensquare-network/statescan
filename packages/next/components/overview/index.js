@@ -67,6 +67,7 @@ const colorMap = new Map([
 export default function Overview({ node, overviewData, price }) {
   const [blocksHeightDynamic, setBlocksHeightDynamic] = useState(0);
   const [assetsCountDynamic, setAssetsCountDynamic] = useState(0);
+  const [extrinsicCountDynamic, setExtrinsicCountDynamic] = useState(0);
   const [transfersCountDynamic, setTransfersCountDynamic] = useState(0);
   const [holdersCountDynamic, setHolderCountDynamic] = useState(0);
 
@@ -82,7 +83,8 @@ export default function Overview({ node, overviewData, price }) {
         blocksHeightData === blocksHeightDynamic &&
         overviewData.assetsCount === assetsCountDynamic &&
         overviewData.transfersCount === transfersCountDynamic &&
-        overviewData.holdersCount === holdersCountDynamic
+        overviewData.holdersCount === holdersCountDynamic &&
+        overviewData.signedExtrinsicCount === extrinsicCountDynamic
       ) {
         return;
       }
@@ -92,6 +94,8 @@ export default function Overview({ node, overviewData, price }) {
       const diffTransfersCount =
         overviewData.transfersCount - transfersCountDynamic;
       const diffHoldersCount = overviewData.holdersCount - holdersCountDynamic;
+      const diffExtrinsicCount =
+        overviewData.signedExtrinsicCount - extrinsicCountDynamic;
 
       const tick = (now) => {
         const elapsed = now - previousTimeRef.current;
@@ -110,6 +114,9 @@ export default function Overview({ node, overviewData, price }) {
           setHolderCountDynamic(
             holdersCountDynamic + Math.round(progress * diffHoldersCount)
           );
+          setExtrinsicCountDynamic(
+            holdersCountDynamic + Math.round(progress * diffExtrinsicCount)
+          );
         }
 
         if (elapsed < animationDuration) {
@@ -119,6 +126,7 @@ export default function Overview({ node, overviewData, price }) {
           setAssetsCountDynamic(overviewData.assetsCount);
           setTransfersCountDynamic(overviewData.transfersCount);
           setHolderCountDynamic(overviewData.holdersCount);
+          setExtrinsicCountDynamic(overviewData.signedExtrinsicCount);
         }
       };
 
@@ -151,10 +159,10 @@ export default function Overview({ node, overviewData, price }) {
           text={transfersCountDynamic?.toLocaleString()}
         />
         <OverviewItem
-          title="Assets"
+          title="Signed Extrinsics"
           icon="asset.svg"
-          link="/assets"
-          text={assetsCountDynamic?.toLocaleString()}
+          link="/extrinsics"
+          text={extrinsicCountDynamic?.toLocaleString()}
         />
         <OverviewItem
           title="Holders"

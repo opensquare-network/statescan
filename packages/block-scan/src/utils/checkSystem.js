@@ -22,7 +22,7 @@ function ignoreInEventList(wrappedEvent) {
   }
 
   if (
-    phase.isNull &&
+    phase.isNone &&
     Modules.Balances === section &&
     [BalancesEvents.Transfer].includes(method)
   ) {

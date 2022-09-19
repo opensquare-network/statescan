@@ -6,22 +6,22 @@ async function handleTransfer(event, indexer, extrinsic) {
   const eventData = event.data.toJSON();
   const [from, to, value] = eventData;
 
-  const { section: extrinsicSection, method: extrinsicMethod } =
-    extrinsic.method;
   let transfer = {
     indexer,
-    module: extrinsicSection,
-    method: extrinsicMethod,
     from,
     to,
     balance: value, // FIXME: value should be converted to decimal 128(call toDecimal128)
-    listIgnore: false,
+    listIgnore: !!!extrinsic,
   };
 
   if (extrinsic) {
+    const { section: extrinsicSection, method: extrinsicMethod } =
+      extrinsic.method;
     const extrinsicHash = extrinsic.hash.toJSON();
     transfer = {
       ...transfer,
+      module: extrinsicSection,
+      method: extrinsicMethod,
       extrinsicHash,
     };
   }

@@ -21,9 +21,7 @@ async function scanBlock(blockInfo) {
 
 async function test() {
   await initDb();
-  const heights = [
-    408735, 410637, 757876, 759287, 759406, 759850, 785373, 793450,
-  ];
+  const heights = [2869931];
   // const height = 917004;
   await setSpecHeights(heights);
 

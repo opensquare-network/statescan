@@ -24,16 +24,16 @@ export default function Transfers({ node, transfers, filter }) {
           head={transfersHead}
           body={(transfers?.items || []).map((item, index) => [
             <InLink
-              key={`${index}-1`}
-              to={`/event/${item?.indexer?.blockHeight}-${item?.indexer.eventIndex}`}
-            >
-              {item?.indexer?.blockHeight.toLocaleString()}-{item?.indexer.eventIndex}
-            </InLink>,
-            <InLink
               key={`${index}-2`}
               to={`/block/${item?.indexer?.blockHeight}`}
             >
               {item?.indexer?.blockHeight.toLocaleString()}
+            </InLink>,
+            <InLink
+              key={`${index}-1`}
+              to={`/event/${item?.indexer?.blockHeight}-${item?.indexer.eventIndex}`}
+            >
+              {item?.indexer.eventIndex}
             </InLink>,
             item.extrinsicHash ? <Tooltip label={item.method} bg /> : "-",
             item?.indexer?.blockTime,
@@ -50,10 +50,19 @@ export default function Transfers({ node, transfers, filter }) {
             <>
               {item.assetSymbol
                 ? `${bigNumber2Locale(
-                    fromAssetUnit(item.balance.$numberDecimal, item.assetDecimals)
+                    fromAssetUnit(
+                      item.balance.$numberDecimal,
+                      item.assetDecimals
+                    )
                   )} `
-                : `${bigNumber2Locale(fromSymbolUnit(item.balance.$numberDecimal, symbol))} `}
-              <SymbolLink assetId={item.assetId} destroyedAt={item.assetDestroyedAt} createdAt={item.assetCreatedAt}>
+                : `${bigNumber2Locale(
+                    fromSymbolUnit(item.balance.$numberDecimal, symbol)
+                  )} `}
+              <SymbolLink
+                assetId={item.assetId}
+                destroyedAt={item.assetDestroyedAt}
+                createdAt={item.assetCreatedAt}
+              >
                 {item.assetSymbol ? item.assetSymbol : symbol}
               </SymbolLink>
             </>,

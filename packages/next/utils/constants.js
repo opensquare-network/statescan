@@ -197,8 +197,8 @@ export const eventsHead = [
 ];
 
 export const transfersHead = [
-  { name: "Event ID", width: 136 },
   { name: "Block", width: 136 },
+  { name: "Event index", width: 136 },
   { name: "Method", width: 200 },
   { name: "Time", type: "time", width: 200 },
   { name: "From", width: 160 },

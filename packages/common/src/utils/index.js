@@ -4,7 +4,7 @@ const { Decimal128 } = require("mongodb");
 function extractExtrinsicEvents(events, extrinsicIndex) {
   return events.filter((event) => {
     const { phase } = event;
-    return !phase.isNull && phase.value.toNumber() === extrinsicIndex;
+    return !phase.isNone && phase.value.toNumber() === extrinsicIndex;
   });
 }
 

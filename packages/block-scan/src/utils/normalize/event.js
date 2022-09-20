@@ -14,7 +14,7 @@ function normalizeEvents(events, blockIndexer, extrinsics) {
     const phaseType = phase.type;
     let [phaseValue, extrinsicHash] = [null, null];
 
-    if (!phase.isNull) {
+    if (!phase.isNone) {
       phaseValue = phase.value.toNumber();
       const extrinsic = extrinsics[phaseValue];
       extrinsicHash = extrinsic.hash.toHex();
@@ -26,7 +26,7 @@ function normalizeEvents(events, blockIndexer, extrinsics) {
     const method = event.method;
     const data = event.data.toJSON();
 
-    const isExtrinsicEvent = !phase.isNull;
+    const isExtrinsicEvent = !phase.isNone;
 
     result.push({
       indexer: blockIndexer,

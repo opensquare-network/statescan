@@ -7,6 +7,7 @@ import AddressEllipsis from "components/addressEllipsis";
 import {
   addressEllipsis,
   bigNumber2Locale,
+  encodeAddressToChain,
   fromAssetUnit,
   fromSymbolUnit,
 } from "utils";
@@ -34,6 +35,7 @@ import PageError from "components/pageError";
 import Identity from "../../components/account/identity";
 import Source from "../../components/account/source";
 import SymbolLink from "components/symbolLink";
+import { isAddress } from "@polkadot/util-crypto";
 
 export default function Address({
   node,
@@ -215,6 +217,22 @@ export async function getServerSideProps(context) {
   const node = process.env.NEXT_PUBLIC_CHAIN;
   const { id } = context.params;
   const { tab, page } = context.query;
+
+  if (!isAddress(id)) {
+    return { notFound: true };
+  }
+
+  const address = encodeAddressToChain(id);
+
+  if (id !== address) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: `/account/${address}`,
+      },
+      props: {},
+    };
+  }
 
   const relayChain =
     nodes.find((item) => item.value === node)?.sub?.toLowerCase() || "kusama";

@@ -5,7 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@statescan/common": "1.0.0",
-    "@polkadot/api": "9.4.1",
+    "@polkadot/api": "9.10.5",
     "dotenv": "^10.0.0",
     "lodash.isnil": "^4.0.0",
     "mongodb": "4.1.2"
